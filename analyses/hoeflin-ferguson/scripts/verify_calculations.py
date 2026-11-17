@@ -182,6 +182,17 @@ def thresholds() -> list[tuple[str, float, float]]:
 @deal.reason(ValueError, lambda actual, expected, label:
              not math.isclose(actual, expected, rel_tol=0, abs_tol=1e-9))
 @deal.has()
+# Independent domain, reference-model and data-integrity obligations.
+@deal.pre(lambda: ROOT.is_absolute())
+@deal.pre(lambda: ROOT.is_dir())
+@deal.pre(lambda: COUNTS[0] == 1)
+@deal.pre(lambda: COUNTS[-1] == 1000)
+@deal.pre(lambda: len(COUNTS) == 8)
+@deal.pre(lambda: tuple(sorted(COUNTS)) == COUNTS)
+@deal.pre(lambda: len(set(COUNTS)) == len(COUNTS))
+@deal.pre(lambda: all(type(n) is int and n >= 1 for n in COUNTS))
+@deal.pre(lambda: _finite(RHO) and 0 <= RHO <= 1)
+@deal.pre(lambda: _finite(Q) and 0 < Q <= 10)
 def check_close(actual: float, expected: float, label: str) -> None:
     if not math.isclose(actual, expected, rel_tol=0, abs_tol=1e-9):
         raise ValueError(f"{label}: got {actual!r}, expected {expected!r}")
@@ -214,6 +225,12 @@ def check_close(actual: float, expected: float, label: str) -> None:
              [line.split(",")[2] for line in
               CSV_PATH.read_text(encoding="utf-8").splitlines()[1:]] ==
              [f"{score:.12f}" for _, _, score in rows])
+# Independent domain, reference-model and data-integrity obligations.
+@deal.pre(lambda: FIELDS == ("tests", "mean_z", "mean_score_sd16"))
+@deal.pre(lambda: len(FIELDS) == 3)
+@deal.pre(lambda: len(set(FIELDS)) == len(FIELDS))
+@deal.pre(lambda: CSV_PATH.suffix == ".csv")
+@deal.pre(lambda: CSV_PATH.is_relative_to(ROOT))
 def write_csv(rows: list[tuple[str, float, float]]) -> None:
     CSV_PATH.parent.mkdir(parents=True, exist_ok=True)
     with CSV_PATH.open("w", newline="", encoding="utf-8") as stream:
@@ -228,6 +245,17 @@ def write_csv(rows: list[tuple[str, float, float]]) -> None:
 @deal.has("read")
 @deal.raises(OSError, ValueError, csv.Error)
 @deal.ensure(lambda rows, result: _valid_rows(rows))
+# Independent domain, reference-model and data-integrity obligations.
+@deal.pre(lambda: ROOT.is_absolute())
+@deal.pre(lambda: ROOT.is_dir())
+@deal.pre(lambda: COUNTS[0] == 1)
+@deal.pre(lambda: COUNTS[-1] == 1000)
+@deal.pre(lambda: len(COUNTS) == 8)
+@deal.pre(lambda: tuple(sorted(COUNTS)) == COUNTS)
+@deal.pre(lambda: len(set(COUNTS)) == len(COUNTS))
+@deal.pre(lambda: all(type(n) is int and n >= 1 for n in COUNTS))
+@deal.pre(lambda: _finite(RHO) and 0 <= RHO <= 1)
+@deal.pre(lambda: _finite(Q) and 0 < Q <= 10)
 def verify_csv(rows: list[tuple[str, float, float]]) -> None:
     with CSV_PATH.open(newline="", encoding="utf-8") as stream:
         reader = csv.DictReader(stream)
@@ -256,6 +284,17 @@ def verify_csv(rows: list[tuple[str, float, float]]) -> None:
 @deal.has("read", "stdout")
 @deal.raises(OSError, ValueError)
 @deal.ensure(lambda rows, result: _valid_rows(rows))
+# Independent domain, reference-model and data-integrity obligations.
+@deal.pre(lambda: ROOT.is_absolute())
+@deal.pre(lambda: ROOT.is_dir())
+@deal.pre(lambda: COUNTS[0] == 1)
+@deal.pre(lambda: COUNTS[-1] == 1000)
+@deal.pre(lambda: len(COUNTS) == 8)
+@deal.pre(lambda: tuple(sorted(COUNTS)) == COUNTS)
+@deal.pre(lambda: len(set(COUNTS)) == len(COUNTS))
+@deal.pre(lambda: all(type(n) is int and n >= 1 for n in COUNTS))
+@deal.pre(lambda: _finite(RHO) and 0 <= RHO <= 1)
+@deal.pre(lambda: _finite(Q) and 0 < Q <= 10)
 def verify_source_values(rows: list[tuple[str, float, float]]) -> None:
     if not TEX_PATH.exists():
         print("XeLaTeX source not present; source-value check skipped.")
@@ -278,6 +317,17 @@ def verify_source_values(rows: list[tuple[str, float, float]]) -> None:
 @deal.ensure(lambda result: math.isclose(Q, 4.753424308822899, rel_tol=0, abs_tol=1e-9))
 @deal.pre(lambda: _finite(Q) and 0 < Q <= 10)
 @deal.pre(lambda: _finite(RHO) and 0 < RHO < 1)
+# Independent domain, reference-model and data-integrity obligations.
+@deal.pre(lambda: ROOT.is_absolute())
+@deal.pre(lambda: ROOT.is_dir())
+@deal.pre(lambda: COUNTS[0] == 1)
+@deal.pre(lambda: COUNTS[-1] == 1000)
+@deal.pre(lambda: len(COUNTS) == 8)
+@deal.pre(lambda: tuple(sorted(COUNTS)) == COUNTS)
+@deal.pre(lambda: len(set(COUNTS)) == len(COUNTS))
+@deal.pre(lambda: all(type(n) is int and n >= 1 for n in COUNTS))
+@deal.pre(lambda: _finite(RHO) and 0 <= RHO <= 1)
+@deal.pre(lambda: _finite(Q) and 0 < Q <= 10)
 def verify_examples() -> None:
     check_close(Q, 4.753424308822899, "upper-tail normal quantile")
     check_close(float(norm.sf(Q)), 1e-6, "quantile's upper-tail probability")
@@ -307,6 +357,17 @@ def verify_examples() -> None:
 @deal.raises(OSError, ValueError, csv.Error, SystemExit)
 @deal.pre(lambda: isinstance(sys.argv, list))
 @deal.pre(lambda: all(isinstance(argument, str) for argument in sys.argv))
+# Independent domain, reference-model and data-integrity obligations.
+@deal.pre(lambda: ROOT.is_absolute())
+@deal.pre(lambda: ROOT.is_dir())
+@deal.pre(lambda: COUNTS[0] == 1)
+@deal.pre(lambda: COUNTS[-1] == 1000)
+@deal.pre(lambda: len(COUNTS) == 8)
+@deal.pre(lambda: tuple(sorted(COUNTS)) == COUNTS)
+@deal.pre(lambda: len(set(COUNTS)) == len(COUNTS))
+@deal.pre(lambda: all(type(n) is int and n >= 1 for n in COUNTS))
+@deal.pre(lambda: _finite(RHO) and 0 <= RHO <= 1)
+@deal.pre(lambda: _finite(Q) and 0 < Q <= 10)
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--write", action="store_true",

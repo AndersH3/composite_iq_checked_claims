@@ -83,6 +83,12 @@ def probability_union(p_a: float, p_b: float, joint: float) -> float:
 @deal.ensure(lambda joint, marginal, result: joint != 0 or result == 0)
 @deal.ensure(lambda joint, marginal, result: joint != marginal or result == 1)
 @deal.ensure(lambda joint, marginal, result: marginal != 1 or result == joint)
+# Independent domain, reference-model and data-integrity obligations.
+@deal.pre(lambda joint, marginal: isinstance(joint, (int, float)))
+@deal.pre(lambda joint, marginal: isinstance(marginal, (int, float)))
+@deal.pre(lambda joint, marginal: not isinstance(joint, bool))
+@deal.pre(lambda joint, marginal: not isinstance(marginal, bool))
+@deal.ensure(lambda joint, marginal, result: result + 2e-15 >= joint)
 def conditional_probability(joint: float, marginal: float) -> float:
     """Conditional rate with its explicitly positive marginal denominator."""
     return joint / marginal
@@ -96,6 +102,17 @@ def conditional_probability(joint: float, marginal: float) -> float:
 @deal.reason(ValueError, lambda actual, expected, label, *, atol=5e-14, rtol=2e-12:
              not math.isclose(actual, expected, abs_tol=atol, rel_tol=rtol))
 @deal.has("network")
+# Independent domain, reference-model and data-integrity obligations.
+@deal.pre(lambda: ROOT.is_absolute())
+@deal.pre(lambda: ROOT.is_dir())
+@deal.pre(lambda: len(CASES) == 4)
+@deal.pre(lambda: len({row[0] for row in CASES}) == len(CASES))
+@deal.pre(lambda: all(isinstance(row[0], str) and bool(row[0]) for row in CASES))
+@deal.pre(lambda: all(0 < row[1] < 1 for row in CASES))
+@deal.pre(lambda: all(0 < row[2] < 1 for row in CASES))
+@deal.pre(lambda: _finite(RHO) and -0.95 <= RHO <= 0.95)
+@deal.pre(lambda: len(ADMISSION_FIELDS) == 11 and len(set(ADMISSION_FIELDS)) == 11)
+@deal.pre(lambda: len(GRID_FIELDS) == 11 and len(set(GRID_FIELDS)) == 11)
 def close(actual: float, expected: float, label: str, *, atol: float = 5e-14,
           rtol: float = 2e-12) -> None:
     if not math.isclose(actual, expected, abs_tol=atol, rel_tol=rtol):
@@ -110,6 +127,17 @@ def close(actual: float, expected: float, label: str, *, atol: float = 5e-14,
              <= min(float(norm.sf(a)), float(norm.sf(b))) + 5e-14)
 @deal.has("network", "stderr")
 @deal.raises(ValueError)
+# Independent domain, reference-model and data-integrity obligations.
+@deal.pre(lambda: ROOT.is_absolute())
+@deal.pre(lambda: ROOT.is_dir())
+@deal.pre(lambda: len(CASES) == 4)
+@deal.pre(lambda: len({row[0] for row in CASES}) == len(CASES))
+@deal.pre(lambda: all(isinstance(row[0], str) and bool(row[0]) for row in CASES))
+@deal.pre(lambda: all(0 < row[1] < 1 for row in CASES))
+@deal.pre(lambda: all(0 < row[2] < 1 for row in CASES))
+@deal.pre(lambda: _finite(RHO) and -0.95 <= RHO <= 0.95)
+@deal.pre(lambda: len(ADMISSION_FIELDS) == 11 and len(set(ADMISSION_FIELDS)) == 11)
+@deal.pre(lambda: len(GRID_FIELDS) == 11 and len(set(GRID_FIELDS)) == 11)
 def joint_tail(a: float, b: float, rho: float = RHO) -> float:
     """Integrate over X and independently check with Plackett's rho integral."""
     scale = math.sqrt(1 - rho * rho)
@@ -122,6 +150,17 @@ def joint_tail(a: float, b: float, rho: float = RHO) -> float:
     @deal.post(lambda result: _finite(result) and result >= 0)
     @deal.has("network")
     @deal.raises()
+    # Independent domain, reference-model and data-integrity obligations.
+    @deal.pre(lambda r: isinstance(r, (int, float)))
+    @deal.pre(lambda r: not isinstance(r, bool))
+    @deal.pre(lambda r: r >= -0.95)
+    @deal.pre(lambda r: r <= 0.95)
+    @deal.pre(lambda r: -1 < r < 1)
+    @deal.pre(lambda r: 0 <= r * r < 1)
+    @deal.pre(lambda r: 1 - r * r > 0)
+    @deal.pre(lambda r: 1 - r * r >= 0.0975)
+    @deal.pre(lambda r: abs(r) <= 0.95)
+    @deal.post(lambda result: result < 1)
     def density_at_cutoffs(r: float) -> float:
         s = 1 - r * r
         return math.exp(-(a*a - 2*r*a*b + b*b) / (2*s)) / (2*math.pi*math.sqrt(s))
@@ -397,6 +436,12 @@ def basic_grid() -> list[dict]:
 @deal.ensure(lambda path, fields, rows, result:
              all(len(record) == len(fields) for record in
                  csv.reader(io.StringIO(path.read_text(encoding="utf-8")))))
+# Independent domain, reference-model and data-integrity obligations.
+@deal.pre(lambda: ROOT.is_absolute())
+@deal.pre(lambda: ROOT.is_dir())
+@deal.pre(lambda: len(CASES) == 4)
+@deal.pre(lambda: len({row[0] for row in CASES}) == len(CASES))
+@deal.pre(lambda: all(isinstance(row[0], str) and bool(row[0]) for row in CASES))
 def write_csv(path: Path, fields: tuple[str, ...], rows: list[dict]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as stream:
@@ -410,6 +455,17 @@ def write_csv(path: Path, fields: tuple[str, ...], rows: list[dict]) -> None:
 @deal.post(lambda result: result is None)
 @deal.has("network", "read")
 @deal.raises(OSError, ValueError, csv.Error)
+# Independent domain, reference-model and data-integrity obligations.
+@deal.pre(lambda: ROOT.is_absolute())
+@deal.pre(lambda: ROOT.is_dir())
+@deal.pre(lambda: len(CASES) == 4)
+@deal.pre(lambda: len({row[0] for row in CASES}) == len(CASES))
+@deal.pre(lambda: all(isinstance(row[0], str) and bool(row[0]) for row in CASES))
+@deal.pre(lambda: all(0 < row[1] < 1 for row in CASES))
+@deal.pre(lambda: all(0 < row[2] < 1 for row in CASES))
+@deal.pre(lambda: _finite(RHO) and -0.95 <= RHO <= 0.95)
+@deal.pre(lambda: len(ADMISSION_FIELDS) == 11 and len(set(ADMISSION_FIELDS)) == 11)
+@deal.pre(lambda: len(GRID_FIELDS) == 11 and len(set(GRID_FIELDS)) == 11)
 def verify_csv(path: Path, fields: tuple[str, ...], expected: list[dict]) -> None:
     with path.open(newline="", encoding="utf-8") as stream:
         reader = csv.DictReader(stream)
@@ -439,6 +495,17 @@ def verify_csv(path: Path, fields: tuple[str, ...], expected: list[dict]) -> Non
 @deal.post(lambda result: result is None)
 @deal.has("network", "stderr")
 @deal.raises(ValueError)
+# Independent domain, reference-model and data-integrity obligations.
+@deal.pre(lambda: ROOT.is_absolute())
+@deal.pre(lambda: ROOT.is_dir())
+@deal.pre(lambda: len(CASES) == 4)
+@deal.pre(lambda: len({row[0] for row in CASES}) == len(CASES))
+@deal.pre(lambda: all(isinstance(row[0], str) and bool(row[0]) for row in CASES))
+@deal.pre(lambda: all(0 < row[1] < 1 for row in CASES))
+@deal.pre(lambda: all(0 < row[2] < 1 for row in CASES))
+@deal.pre(lambda: _finite(RHO) and -0.95 <= RHO <= 0.95)
+@deal.pre(lambda: len(ADMISSION_FIELDS) == 11 and len(set(ADMISSION_FIELDS)) == 11)
+@deal.pre(lambda: len(GRID_FIELDS) == 11 and len(set(GRID_FIELDS)) == 11)
 def verify_known_results(admissions: list[dict], grid: list[dict]) -> None:
     expected_joint = (
         0.006276274020528095, 0.00015958919471554256,
@@ -479,6 +546,17 @@ def verify_known_results(admissions: list[dict], grid: list[dict]) -> None:
 @deal.raises(OSError, ValueError, csv.Error, SystemExit)
 @deal.pre(lambda: isinstance(sys.argv, list))
 @deal.pre(lambda: all(isinstance(argument, str) for argument in sys.argv))
+# Independent domain, reference-model and data-integrity obligations.
+@deal.pre(lambda: ROOT.is_absolute())
+@deal.pre(lambda: ROOT.is_dir())
+@deal.pre(lambda: len(CASES) == 4)
+@deal.pre(lambda: len({row[0] for row in CASES}) == len(CASES))
+@deal.pre(lambda: all(isinstance(row[0], str) and bool(row[0]) for row in CASES))
+@deal.pre(lambda: all(0 < row[1] < 1 for row in CASES))
+@deal.pre(lambda: all(0 < row[2] < 1 for row in CASES))
+@deal.pre(lambda: _finite(RHO) and -0.95 <= RHO <= 0.95)
+@deal.pre(lambda: len(ADMISSION_FIELDS) == 11 and len(set(ADMISSION_FIELDS)) == 11)
+@deal.pre(lambda: len(GRID_FIELDS) == 11 and len(set(GRID_FIELDS)) == 11)
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--write", action="store_true", help="regenerate CSVs before checking")
