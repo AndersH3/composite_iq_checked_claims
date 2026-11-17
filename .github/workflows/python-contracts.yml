@@ -31,6 +31,7 @@ jobs:
       - name: Validate scaled 40-million-sample Dask task budget without execution
         run: python -m reporting.simulate --plan --trials 5000000 --chunk 500000 --replicates 8
       - name: Python/Dask numerical and property tests
+        if: always()
         run: python -m pytest -q tests
       # These executions write only into the disposable Actions checkout.
       # They validate Dask worker serialization and output dependencies,
