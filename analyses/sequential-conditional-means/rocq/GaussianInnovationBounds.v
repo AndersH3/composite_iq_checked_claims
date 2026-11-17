@@ -506,7 +506,7 @@ Qed.
 *)
 Theorem gib_innovation_batch_strict_score_order_positive : forall n k c s t u:R, 0<c -> 0<sequential_d (n+k) c -> t<u -> hp (n+k) c (s+t)<hp (n+k) c (s+u).
 Proof.
-  intros n k c s t u Hc Hd Htu; apply positive_correlation_history_strict_order; [exact Hc|exact Hd|lra].
+  intros n k c s t u Hc Hd Htu; apply gib_positive_correlation_history_strict_order; [exact Hc|exact Hd|lra].
 Qed.
 
 (** [gib_innovation_batch_strict_score_order_negative] (theorem).
@@ -526,6 +526,6 @@ Qed.
 *)
 Theorem gib_innovation_batch_strict_score_order_negative : forall n k c s t u:R, c<0 -> 0<sequential_d (n+k) c -> t<u -> hp (n+k) c (s+u)<hp (n+k) c (s+t).
 Proof.
-  intros n k c s t u Hc Hd Htu; apply negative_correlation_history_strict_order; [exact Hc|exact Hd|lra].
+  intros n k c s t u Hc Hd Htu; apply gib_negative_correlation_history_strict_order; [exact Hc|exact Hd|lra].
 Qed.
 
