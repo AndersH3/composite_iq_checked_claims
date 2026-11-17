@@ -97,27 +97,35 @@ theorem gaussian_regression_condExp
     (hInnovationMean : (∫ ω, innovation ω ∂μ) = 0) :
     μ[predictor + innovation | MeasurableSpace.comap observed inferInstance]
       =ᵐ[μ] predictor := by
-  let mObs : MeasurableSpace Ω := MeasurableSpace.comap observed inferInstance
-  let mInnovation : MeasurableSpace Ω := MeasurableSpace.comap innovation inferInstance
-  have hIndep : Indep mInnovation mObs μ := by
-    exact gaussian_innovation_independent_of_observations hGaussian hCross
-  have hStrongInnovation : StronglyMeasurable[mInnovation] innovation := by
-    have hm : Measurable[mInnovation] innovation := by
+  -- No local measurable-space instances are introduced: the ambient
+  -- probability space must remain the same throughout the independence
+  -- and conditional expectation statements.
+  have hIndep :
+      Indep (MeasurableSpace.comap innovation inferInstance)
+        (MeasurableSpace.comap observed inferInstance) μ :=
+    gaussian_innovation_independent_of_observations hGaussian hCross
+  have hStrongInnovation :
+      StronglyMeasurable[MeasurableSpace.comap innovation inferInstance]
+        innovation := by
+    have hm :
+        Measurable[MeasurableSpace.comap innovation inferInstance]
+          innovation := by
       exact measurable_iff_comap_le.mpr le_rfl
     exact hm.stronglyMeasurable
   have hInnovCE :
-      μ[innovation | mObs] =ᵐ[μ] (fun _ => (0 : ℝ)) := by
+      μ[innovation | MeasurableSpace.comap observed inferInstance] =ᵐ[μ]
+        (fun _ => (0 : ℝ)) := by
     have hIndCE :=
       condExp_indep_eq hInnovation.comap_le hObs.comap_le
         hStrongInnovation hIndep
     simpa only [hInnovationMean] using hIndCE
-  have hPredCE : μ[predictor | mObs] = predictor :=
+  have hPredCE :
+      μ[predictor | MeasurableSpace.comap observed inferInstance] = predictor :=
     condExp_of_stronglyMeasurable hObs.comap_le hPredictor hPredictorInt
   have hInnovationInt : Integrable innovation μ := hGaussian.fst.integrable
-  refine (condExp_add hPredictorInt hInnovationInt mObs).trans ?_
+  refine (condExp_add hPredictorInt hInnovationInt
+    (MeasurableSpace.comap observed inferInstance)).trans ?_
   filter_upwards [hInnovCE] with ω hzero
-  simpa [hPredCE, hzero] using
-    (show μ[predictor | mObs] ω + μ[innovation | mObs] ω =
-      predictor ω + 0 by rw [hPredCE, hzero])
+  simp [hPredCE, hzero]
 
 end CompositeIQ.GaussianRegression
