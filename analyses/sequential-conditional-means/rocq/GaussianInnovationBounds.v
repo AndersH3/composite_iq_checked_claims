@@ -529,3 +529,509 @@ Proof.
   intros n k c s t u Hc Hd Htu; apply gib_negative_correlation_history_strict_order; [exact Hc|exact Hd|lra].
 Qed.
 
+
+(** [gib_observed_denominator_positive_given_full_psd] (theorem).
+ Mathematical meaning: A feasible common-mode eigenvalue for the full battery and at least one future score forces the observed common mode to be strictly positive, without an independent inverse hypothesis.
+ Exact checked proposition: forall n k c:R, 1<=n -> 0<k -> 0<=sequential_d (n+k) c -> 0<sequential_d n c.
+ Premises and side conditions: Count n represents at least one observed
+ score and k denotes at least one future score where specified.
+ Signed correlations require the complete common/contrast eigenvalue
+ feasibility conditions before a probabilistic interpretation.
+ Proof/definition method: Eliminate the otherwise redundant observed
+ invertibility hypothesis through the checked equicorrelation update
+ identity, or reuse previously proved exact Schur spectral and residual
+ covariance formulas and Stdlib order algebra.
+ Library reuse: SequentialReport, EquicorrelationSpectral,
+ GaussianCovarianceDomain and Rocq Stdlib Reals/Lra/Psatz/Field.
+ Boundary: Exact deterministic covariance or regression arithmetic;
+ no new Gaussian probability space, random variable or conditional
+ expectation independence claim is introduced.
+*)
+Theorem gib_observed_denominator_positive_given_full_psd : forall n k c:R, 1<=n -> 0<k -> 0<=sequential_d (n+k) c -> 0<sequential_d n c.
+Proof.
+  intros n k c Hn Hk Hfull.
+  destruct (Rlt_le_dec c 0) as [Hneg|Hnonneg].
+  - rewrite sequential_denominator_add in Hfull.
+    assert (Hkc:k*c<0) by nra; lra.
+  - apply sequential_denominator_positive_nonnegative_correlation; assumption.
+Qed.
+
+(** [gib_observed_denominator_positive_given_full_pd] (theorem).
+ Mathematical meaning: Strictly positive full common mode also forces strict observed-block invertibility, including signed correlation.
+ Exact checked proposition: forall n k c:R, 1<=n -> 0<k -> 0<sequential_d (n+k) c -> 0<sequential_d n c.
+ Premises and side conditions: Count n represents at least one observed
+ score and k denotes at least one future score where specified.
+ Signed correlations require the complete common/contrast eigenvalue
+ feasibility conditions before a probabilistic interpretation.
+ Proof/definition method: Eliminate the otherwise redundant observed
+ invertibility hypothesis through the checked equicorrelation update
+ identity, or reuse previously proved exact Schur spectral and residual
+ covariance formulas and Stdlib order algebra.
+ Library reuse: SequentialReport, EquicorrelationSpectral,
+ GaussianCovarianceDomain and Rocq Stdlib Reals/Lra/Psatz/Field.
+ Boundary: Exact deterministic covariance or regression arithmetic;
+ no new Gaussian probability space, random variable or conditional
+ expectation independence claim is introduced.
+*)
+Theorem gib_observed_denominator_positive_given_full_pd : forall n k c:R, 1<=n -> 0<k -> 0<sequential_d (n+k) c -> 0<sequential_d n c.
+Proof.
+  intros n k c Hn Hk Hfull.
+  apply (gib_observed_denominator_positive_given_full_psd n k c Hn Hk); lra.
+Qed.
+
+(** [gib_observed_denominator_positive_at_full_singularity] (theorem).
+ Mathematical meaning: A singular full common mode still leaves the proper observed block invertible when at least one future score exists.
+ Exact checked proposition: forall n k c:R, 1<=n -> 0<k -> sequential_d (n+k) c=0 -> 0<sequential_d n c.
+ Premises and side conditions: Count n represents at least one observed
+ score and k denotes at least one future score where specified.
+ Signed correlations require the complete common/contrast eigenvalue
+ feasibility conditions before a probabilistic interpretation.
+ Proof/definition method: Eliminate the otherwise redundant observed
+ invertibility hypothesis through the checked equicorrelation update
+ identity, or reuse previously proved exact Schur spectral and residual
+ covariance formulas and Stdlib order algebra.
+ Library reuse: SequentialReport, EquicorrelationSpectral,
+ GaussianCovarianceDomain and Rocq Stdlib Reals/Lra/Psatz/Field.
+ Boundary: Exact deterministic covariance or regression arithmetic;
+ no new Gaussian probability space, random variable or conditional
+ expectation independence claim is introduced.
+*)
+Theorem gib_observed_denominator_positive_at_full_singularity : forall n k c:R, 1<=n -> 0<k -> sequential_d (n+k) c=0 -> 0<sequential_d n c.
+Proof.
+  intros n k c Hn Hk Hfull.
+  apply (gib_observed_denominator_positive_given_full_psd n k c Hn Hk); lra.
+Qed.
+
+(** [gib_full_common_singularity_requires_negative_correlation] (theorem).
+ Mathematical meaning: If the full common-mode eigenvalue vanishes at a genuine battery length, the exchangeable correlation must be strictly negative.
+ Exact checked proposition: forall n k c:R, 1<=n -> 0<k -> sequential_d (n+k) c=0 -> c<0.
+ Premises and side conditions: Count n represents at least one observed
+ score and k denotes at least one future score where specified.
+ Signed correlations require the complete common/contrast eigenvalue
+ feasibility conditions before a probabilistic interpretation.
+ Proof/definition method: Eliminate the otherwise redundant observed
+ invertibility hypothesis through the checked equicorrelation update
+ identity, or reuse previously proved exact Schur spectral and residual
+ covariance formulas and Stdlib order algebra.
+ Library reuse: SequentialReport, EquicorrelationSpectral,
+ GaussianCovarianceDomain and Rocq Stdlib Reals/Lra/Psatz/Field.
+ Boundary: Exact deterministic covariance or regression arithmetic;
+ no new Gaussian probability space, random variable or conditional
+ expectation independence claim is introduced.
+*)
+Theorem gib_full_common_singularity_requires_negative_correlation : forall n k c:R, 1<=n -> 0<k -> sequential_d (n+k) c=0 -> c<0.
+Proof.
+  intros n k c Hn Hk Hfull.
+  destruct (Rlt_le_dec c 0) as [Hneg|Hnonneg]; [exact Hneg|].
+  assert (Hnk:1<=n+k) by lra.
+  pose proof (sequential_denominator_positive_nonnegative_correlation
+                (n+k) c Hnk Hnonneg) as Hstrict; lra.
+Qed.
+
+(** [gib_observed_denominator_positive_negative_full_domain] (theorem).
+ Mathematical meaning: A negative correlation with feasible full common-mode energy produces a strictly positive observed common-mode eigenvalue.
+ Exact checked proposition: forall n k c:R, 0<k -> c<0 -> 0<=sequential_d (n+k) c -> 0<sequential_d n c.
+ Premises and side conditions: Count n represents at least one observed
+ score and k denotes at least one future score where specified.
+ Signed correlations require the complete common/contrast eigenvalue
+ feasibility conditions before a probabilistic interpretation.
+ Proof/definition method: Eliminate the otherwise redundant observed
+ invertibility hypothesis through the checked equicorrelation update
+ identity, or reuse previously proved exact Schur spectral and residual
+ covariance formulas and Stdlib order algebra.
+ Library reuse: SequentialReport, EquicorrelationSpectral,
+ GaussianCovarianceDomain and Rocq Stdlib Reals/Lra/Psatz/Field.
+ Boundary: Exact deterministic covariance or regression arithmetic;
+ no new Gaussian probability space, random variable or conditional
+ expectation independence claim is introduced.
+*)
+Theorem gib_observed_denominator_positive_negative_full_domain : forall n k c:R, 0<k -> c<0 -> 0<=sequential_d (n+k) c -> 0<sequential_d n c.
+Proof.
+  intros n k c Hk Hneg Hfull.
+  rewrite sequential_denominator_add in Hfull.
+  assert (Hkc:k*c<0) by nra; lra.
+Qed.
+
+(** [gib_future_one_denominator_nonnegative_given_full_psd] (theorem).
+ Mathematical meaning: For an admissible future battery of size at least one, the leading one-future-score common mode is nonnegative.
+ Exact checked proposition: forall n k c:R, 1<=n -> 1<=k -> 0<=sequential_d (n+k) c -> 0<=sequential_d (n+1) c.
+ Premises and side conditions: Count n represents at least one observed
+ score and k denotes at least one future score where specified.
+ Signed correlations require the complete common/contrast eigenvalue
+ feasibility conditions before a probabilistic interpretation.
+ Proof/definition method: Eliminate the otherwise redundant observed
+ invertibility hypothesis through the checked equicorrelation update
+ identity, or reuse previously proved exact Schur spectral and residual
+ covariance formulas and Stdlib order algebra.
+ Library reuse: SequentialReport, EquicorrelationSpectral,
+ GaussianCovarianceDomain and Rocq Stdlib Reals/Lra/Psatz/Field.
+ Boundary: Exact deterministic covariance or regression arithmetic;
+ no new Gaussian probability space, random variable or conditional
+ expectation independence claim is introduced.
+*)
+Theorem gib_future_one_denominator_nonnegative_given_full_psd : forall n k c:R, 1<=n -> 1<=k -> 0<=sequential_d (n+k) c -> 0<=sequential_d (n+1) c.
+Proof.
+  intros n k c Hn Hk Hfull.
+  destruct (Rlt_le_dec c 0) as [Hneg|Hnonneg].
+  - pose proof (sequential_denominator_add (n+1) (k-1) c) as Hsplit.
+    replace ((n+1)+(k-1)) with (n+k) in Hsplit by ring.
+    assert (Hprod:(k-1)*c<=0) by nra.
+    rewrite Hsplit in Hfull; lra.
+  - assert (Hone:1<=n+1) by lra.
+    pose proof (sequential_denominator_positive_nonnegative_correlation
+                  (n+1) c Hone Hnonneg) as Hpositive; lra.
+Qed.
+
+(** [gib_future_one_denominator_positive_given_full_pd] (theorem).
+ Mathematical meaning: Positive full common-mode energy yields a strictly positive leading one-future-score common mode.
+ Exact checked proposition: forall n k c:R, 1<=n -> 1<=k -> 0<sequential_d (n+k) c -> 0<sequential_d (n+1) c.
+ Premises and side conditions: Count n represents at least one observed
+ score and k denotes at least one future score where specified.
+ Signed correlations require the complete common/contrast eigenvalue
+ feasibility conditions before a probabilistic interpretation.
+ Proof/definition method: Eliminate the otherwise redundant observed
+ invertibility hypothesis through the checked equicorrelation update
+ identity, or reuse previously proved exact Schur spectral and residual
+ covariance formulas and Stdlib order algebra.
+ Library reuse: SequentialReport, EquicorrelationSpectral,
+ GaussianCovarianceDomain and Rocq Stdlib Reals/Lra/Psatz/Field.
+ Boundary: Exact deterministic covariance or regression arithmetic;
+ no new Gaussian probability space, random variable or conditional
+ expectation independence claim is introduced.
+*)
+Theorem gib_future_one_denominator_positive_given_full_pd : forall n k c:R, 1<=n -> 1<=k -> 0<sequential_d (n+k) c -> 0<sequential_d (n+1) c.
+Proof.
+  intros n k c Hn Hk Hfull.
+  destruct (Rlt_le_dec c 0) as [Hneg|Hnonneg].
+  - pose proof (sequential_denominator_add (n+1) (k-1) c) as Hsplit.
+    replace ((n+1)+(k-1)) with (n+k) in Hsplit by ring.
+    assert (Hprod:(k-1)*c<=0) by nra.
+    rewrite Hsplit in Hfull; lra.
+  - assert (Hone:1<=n+1) by lra.
+    exact (sequential_denominator_positive_nonnegative_correlation
+             (n+1) c Hone Hnonneg).
+Qed.
+
+(** [gib_next_variance_nonnegative_full_psd] (theorem).
+ Mathematical meaning: The scalar conditional Schur variance is nonnegative in the full signed covariance feasibility domain without assuming observed invertibility separately.
+ Exact checked proposition: forall n k c:R, 1<=n -> 1<=k -> c<=1 -> 0<=sequential_d (n+k) c -> 0<=equicorr_schur_diagonal n c.
+ Premises and side conditions: Count n represents at least one observed
+ score and k denotes at least one future score where specified.
+ Signed correlations require the complete common/contrast eigenvalue
+ feasibility conditions before a probabilistic interpretation.
+ Proof/definition method: Eliminate the otherwise redundant observed
+ invertibility hypothesis through the checked equicorrelation update
+ identity, or reuse previously proved exact Schur spectral and residual
+ covariance formulas and Stdlib order algebra.
+ Library reuse: SequentialReport, EquicorrelationSpectral,
+ GaussianCovarianceDomain and Rocq Stdlib Reals/Lra/Psatz/Field.
+ Boundary: Exact deterministic covariance or regression arithmetic;
+ no new Gaussian probability space, random variable or conditional
+ expectation independence claim is introduced.
+*)
+Theorem gib_next_variance_nonnegative_full_psd : forall n k c:R, 1<=n -> 1<=k -> c<=1 -> 0<=sequential_d (n+k) c -> 0<=equicorr_schur_diagonal n c.
+Proof.
+  intros n k c Hn Hk Hc Hfull.
+  assert (Hdn:0<sequential_d n c)
+    by (apply (gib_observed_denominator_positive_given_full_psd n k c); lra).
+  assert (Hone:0<=sequential_d (n+1) c)
+    by (apply (gib_future_one_denominator_nonnegative_given_full_psd n k c); assumption).
+  exact (d052_diagonal_nonnegative n c Hc Hdn Hone).
+Qed.
+
+(** [gib_next_variance_positive_full_pd] (theorem).
+ Mathematical meaning: Under a strict feasible full Gaussian covariance, each future coordinate has strictly positive conditional variance.
+ Exact checked proposition: forall n k c:R, 1<=n -> 1<=k -> c<1 -> 0<sequential_d (n+k) c -> 0<equicorr_schur_diagonal n c.
+ Premises and side conditions: Count n represents at least one observed
+ score and k denotes at least one future score where specified.
+ Signed correlations require the complete common/contrast eigenvalue
+ feasibility conditions before a probabilistic interpretation.
+ Proof/definition method: Eliminate the otherwise redundant observed
+ invertibility hypothesis through the checked equicorrelation update
+ identity, or reuse previously proved exact Schur spectral and residual
+ covariance formulas and Stdlib order algebra.
+ Library reuse: SequentialReport, EquicorrelationSpectral,
+ GaussianCovarianceDomain and Rocq Stdlib Reals/Lra/Psatz/Field.
+ Boundary: Exact deterministic covariance or regression arithmetic;
+ no new Gaussian probability space, random variable or conditional
+ expectation independence claim is introduced.
+*)
+Theorem gib_next_variance_positive_full_pd : forall n k c:R, 1<=n -> 1<=k -> c<1 -> 0<sequential_d (n+k) c -> 0<equicorr_schur_diagonal n c.
+Proof.
+  intros n k c Hn Hk Hc Hfull.
+  assert (Hdn:0<sequential_d n c)
+    by (apply (gib_observed_denominator_positive_given_full_psd n k c); lra).
+  assert (Hone:0<sequential_d (n+1) c)
+    by (apply (gib_future_one_denominator_positive_given_full_pd n k c); assumption).
+  exact (d052_diagonal_strict n c Hc Hdn Hone).
+Qed.
+
+(** [gib_future_common_mode_nonnegative_full_psd] (theorem).
+ Mathematical meaning: The full signed covariance feasibility conditions alone guarantee a nonnegative conditional common-mode eigenvalue.
+ Exact checked proposition: forall n k c:R, 1<=n -> 0<k -> c<=1 -> 0<=sequential_d (n+k) c -> 0<=equicorr_schur_diagonal n c+(k-1)*equicorr_schur_cross n c.
+ Premises and side conditions: Count n represents at least one observed
+ score and k denotes at least one future score where specified.
+ Signed correlations require the complete common/contrast eigenvalue
+ feasibility conditions before a probabilistic interpretation.
+ Proof/definition method: Eliminate the otherwise redundant observed
+ invertibility hypothesis through the checked equicorrelation update
+ identity, or reuse previously proved exact Schur spectral and residual
+ covariance formulas and Stdlib order algebra.
+ Library reuse: SequentialReport, EquicorrelationSpectral,
+ GaussianCovarianceDomain and Rocq Stdlib Reals/Lra/Psatz/Field.
+ Boundary: Exact deterministic covariance or regression arithmetic;
+ no new Gaussian probability space, random variable or conditional
+ expectation independence claim is introduced.
+*)
+Theorem gib_future_common_mode_nonnegative_full_psd : forall n k c:R, 1<=n -> 0<k -> c<=1 -> 0<=sequential_d (n+k) c -> 0<=equicorr_schur_diagonal n c+(k-1)*equicorr_schur_cross n c.
+Proof.
+  intros n k c Hn Hk Hc Hfull.
+  apply d052_common_mode_nonnegative; try assumption.
+  apply (gib_observed_denominator_positive_given_full_psd n k c); assumption.
+Qed.
+
+(** [gib_future_common_mode_positive_full_pd] (theorem).
+ Mathematical meaning: A strictly feasible full exchangeable covariance yields strictly positive residual common-mode variance.
+ Exact checked proposition: forall n k c:R, 1<=n -> 0<k -> c<1 -> 0<sequential_d (n+k) c -> 0<equicorr_schur_diagonal n c+(k-1)*equicorr_schur_cross n c.
+ Premises and side conditions: Count n represents at least one observed
+ score and k denotes at least one future score where specified.
+ Signed correlations require the complete common/contrast eigenvalue
+ feasibility conditions before a probabilistic interpretation.
+ Proof/definition method: Eliminate the otherwise redundant observed
+ invertibility hypothesis through the checked equicorrelation update
+ identity, or reuse previously proved exact Schur spectral and residual
+ covariance formulas and Stdlib order algebra.
+ Library reuse: SequentialReport, EquicorrelationSpectral,
+ GaussianCovarianceDomain and Rocq Stdlib Reals/Lra/Psatz/Field.
+ Boundary: Exact deterministic covariance or regression arithmetic;
+ no new Gaussian probability space, random variable or conditional
+ expectation independence claim is introduced.
+*)
+Theorem gib_future_common_mode_positive_full_pd : forall n k c:R, 1<=n -> 0<k -> c<1 -> 0<sequential_d (n+k) c -> 0<equicorr_schur_diagonal n c+(k-1)*equicorr_schur_cross n c.
+Proof.
+  intros n k c Hn Hk Hc Hfull.
+  apply d052_common_mode_strict; try assumption.
+  apply (gib_observed_denominator_positive_given_full_psd n k c Hn Hk); lra.
+Qed.
+
+(** [gib_future_sum_variance_nonnegative_full_psd] (theorem).
+ Mathematical meaning: A future batch-total residual variance is nonnegative over the full signed Gaussian covariance PSD domain.
+ Exact checked proposition: forall n k c:R, 1<=n -> 0<k -> c<=1 -> 0<=sequential_d (n+k) c -> 0<=k*equicorr_schur_diagonal n c+k*(k-1)*equicorr_schur_cross n c.
+ Premises and side conditions: Count n represents at least one observed
+ score and k denotes at least one future score where specified.
+ Signed correlations require the complete common/contrast eigenvalue
+ feasibility conditions before a probabilistic interpretation.
+ Proof/definition method: Eliminate the otherwise redundant observed
+ invertibility hypothesis through the checked equicorrelation update
+ identity, or reuse previously proved exact Schur spectral and residual
+ covariance formulas and Stdlib order algebra.
+ Library reuse: SequentialReport, EquicorrelationSpectral,
+ GaussianCovarianceDomain and Rocq Stdlib Reals/Lra/Psatz/Field.
+ Boundary: Exact deterministic covariance or regression arithmetic;
+ no new Gaussian probability space, random variable or conditional
+ expectation independence claim is introduced.
+*)
+Theorem gib_future_sum_variance_nonnegative_full_psd : forall n k c:R, 1<=n -> 0<k -> c<=1 -> 0<=sequential_d (n+k) c -> 0<=k*equicorr_schur_diagonal n c+k*(k-1)*equicorr_schur_cross n c.
+Proof.
+  intros n k c Hn Hk Hc Hfull.
+  apply d052_future_sum_nonnegative; try assumption; try lra.
+  apply (gib_observed_denominator_positive_given_full_psd n k c); assumption.
+Qed.
+
+(** [gib_future_sum_variance_positive_full_pd] (theorem).
+ Mathematical meaning: Every nonempty future batch has strictly positive residual total-score variance in the strict covariance domain.
+ Exact checked proposition: forall n k c:R, 1<=n -> 0<k -> c<1 -> 0<sequential_d (n+k) c -> 0<k*equicorr_schur_diagonal n c+k*(k-1)*equicorr_schur_cross n c.
+ Premises and side conditions: Count n represents at least one observed
+ score and k denotes at least one future score where specified.
+ Signed correlations require the complete common/contrast eigenvalue
+ feasibility conditions before a probabilistic interpretation.
+ Proof/definition method: Eliminate the otherwise redundant observed
+ invertibility hypothesis through the checked equicorrelation update
+ identity, or reuse previously proved exact Schur spectral and residual
+ covariance formulas and Stdlib order algebra.
+ Library reuse: SequentialReport, EquicorrelationSpectral,
+ GaussianCovarianceDomain and Rocq Stdlib Reals/Lra/Psatz/Field.
+ Boundary: Exact deterministic covariance or regression arithmetic;
+ no new Gaussian probability space, random variable or conditional
+ expectation independence claim is introduced.
+*)
+Theorem gib_future_sum_variance_positive_full_pd : forall n k c:R, 1<=n -> 0<k -> c<1 -> 0<sequential_d (n+k) c -> 0<k*equicorr_schur_diagonal n c+k*(k-1)*equicorr_schur_cross n c.
+Proof.
+  intros n k c Hn Hk Hc Hfull.
+  apply d052_future_sum_strict; try assumption.
+  apply (gib_observed_denominator_positive_given_full_psd n k c Hn Hk); lra.
+Qed.
+
+(** [gib_feasible_energy_nonnegative_full_psd] (theorem).
+ Mathematical meaning: Every Cauchy-feasible abstract future quadratic summary has nonnegative Schur residual energy under full-battery covariance feasibility.
+ Exact checked proposition: forall n k c energy total:R, 1<=n -> 0<k -> c<=1 -> 0<=sequential_d (n+k) c -> 0<=energy-total*total/k -> 0<=equicorr_schur_energy n c energy total.
+ Premises and side conditions: Count n represents at least one observed
+ score and k denotes at least one future score where specified.
+ Signed correlations require the complete common/contrast eigenvalue
+ feasibility conditions before a probabilistic interpretation.
+ Proof/definition method: Eliminate the otherwise redundant observed
+ invertibility hypothesis through the checked equicorrelation update
+ identity, or reuse previously proved exact Schur spectral and residual
+ covariance formulas and Stdlib order algebra.
+ Library reuse: SequentialReport, EquicorrelationSpectral,
+ GaussianCovarianceDomain and Rocq Stdlib Reals/Lra/Psatz/Field.
+ Boundary: Exact deterministic covariance or regression arithmetic;
+ no new Gaussian probability space, random variable or conditional
+ expectation independence claim is introduced.
+*)
+Theorem gib_feasible_energy_nonnegative_full_psd : forall n k c energy total:R, 1<=n -> 0<k -> c<=1 -> 0<=sequential_d (n+k) c -> 0<=energy-total*total/k -> 0<=equicorr_schur_energy n c energy total.
+Proof.
+  intros n k c energy total Hn Hk Hc Hfull Hfeasible.
+  apply gcd_schur_psd_arbitrary_sign; try assumption.
+  apply (gib_observed_denominator_positive_given_full_psd n k c); assumption.
+Qed.
+
+(** [gib_feasible_energy_positive_full_pd] (theorem).
+ Mathematical meaning: Every nonzero Cauchy-feasible future energy summary has strictly positive Schur energy when the full covariance is PD.
+ Exact checked proposition: forall n k c energy total:R, 1<=n -> 0<k -> c<1 -> 0<sequential_d (n+k) c -> 0<energy -> 0<=energy-total*total/k -> 0<equicorr_schur_energy n c energy total.
+ Premises and side conditions: Count n represents at least one observed
+ score and k denotes at least one future score where specified.
+ Signed correlations require the complete common/contrast eigenvalue
+ feasibility conditions before a probabilistic interpretation.
+ Proof/definition method: Eliminate the otherwise redundant observed
+ invertibility hypothesis through the checked equicorrelation update
+ identity, or reuse previously proved exact Schur spectral and residual
+ covariance formulas and Stdlib order algebra.
+ Library reuse: SequentialReport, EquicorrelationSpectral,
+ GaussianCovarianceDomain and Rocq Stdlib Reals/Lra/Psatz/Field.
+ Boundary: Exact deterministic covariance or regression arithmetic;
+ no new Gaussian probability space, random variable or conditional
+ expectation independence claim is introduced.
+*)
+Theorem gib_feasible_energy_positive_full_pd : forall n k c energy total:R, 1<=n -> 0<k -> c<1 -> 0<sequential_d (n+k) c -> 0<energy -> 0<=energy-total*total/k -> 0<equicorr_schur_energy n c energy total.
+Proof.
+  intros n k c energy total Hn Hk Hc Hfull Henergy Hfeasible.
+  apply gcd_schur_pd_arbitrary_sign; try assumption.
+  apply (gib_observed_denominator_positive_given_full_psd n k c Hn Hk); lra.
+Qed.
+
+(** [gib_singular_full_common_mode_zero] (theorem).
+ Mathematical meaning: At the lower singular covariance boundary the future all-ones residual eigenvalue is exactly zero.
+ Exact checked proposition: forall n k c:R, 1<=n -> 0<k -> sequential_d (n+k) c=0 -> equicorr_schur_diagonal n c+(k-1)*equicorr_schur_cross n c=0.
+ Premises and side conditions: Count n represents at least one observed
+ score and k denotes at least one future score where specified.
+ Signed correlations require the complete common/contrast eigenvalue
+ feasibility conditions before a probabilistic interpretation.
+ Proof/definition method: Eliminate the otherwise redundant observed
+ invertibility hypothesis through the checked equicorrelation update
+ identity, or reuse previously proved exact Schur spectral and residual
+ covariance formulas and Stdlib order algebra.
+ Library reuse: SequentialReport, EquicorrelationSpectral,
+ GaussianCovarianceDomain and Rocq Stdlib Reals/Lra/Psatz/Field.
+ Boundary: Exact deterministic covariance or regression arithmetic;
+ no new Gaussian probability space, random variable or conditional
+ expectation independence claim is introduced.
+*)
+Theorem gib_singular_full_common_mode_zero : forall n k c:R, 1<=n -> 0<k -> sequential_d (n+k) c=0 -> equicorr_schur_diagonal n c+(k-1)*equicorr_schur_cross n c=0.
+Proof.
+  intros n k c Hn Hk Hzero.
+  assert (Hdn:0<sequential_d n c)
+    by (apply (gib_observed_denominator_positive_given_full_psd n k c); lra).
+  rewrite d051_schur_common_mode by lra.
+  rewrite Hzero; unfold Rdiv; ring.
+Qed.
+
+(** [gib_singular_full_future_total_variance_zero] (theorem).
+ Mathematical meaning: At the singular full common mode, the sum of future Gaussian residuals has exactly zero model variance.
+ Exact checked proposition: forall n k c:R, 1<=n -> 0<k -> sequential_d (n+k) c=0 -> k*equicorr_schur_diagonal n c+k*(k-1)*equicorr_schur_cross n c=0.
+ Premises and side conditions: Count n represents at least one observed
+ score and k denotes at least one future score where specified.
+ Signed correlations require the complete common/contrast eigenvalue
+ feasibility conditions before a probabilistic interpretation.
+ Proof/definition method: Eliminate the otherwise redundant observed
+ invertibility hypothesis through the checked equicorrelation update
+ identity, or reuse previously proved exact Schur spectral and residual
+ covariance formulas and Stdlib order algebra.
+ Library reuse: SequentialReport, EquicorrelationSpectral,
+ GaussianCovarianceDomain and Rocq Stdlib Reals/Lra/Psatz/Field.
+ Boundary: Exact deterministic covariance or regression arithmetic;
+ no new Gaussian probability space, random variable or conditional
+ expectation independence claim is introduced.
+*)
+Theorem gib_singular_full_future_total_variance_zero : forall n k c:R, 1<=n -> 0<k -> sequential_d (n+k) c=0 -> k*equicorr_schur_diagonal n c+k*(k-1)*equicorr_schur_cross n c=0.
+Proof.
+  intros n k c Hn Hk Hzero.
+  assert (Hdn:0<sequential_d n c)
+    by (apply (gib_observed_denominator_positive_given_full_psd n k c); lra).
+  rewrite d051_schur_future_sum_variance by lra.
+  rewrite Hzero; unfold Rdiv; ring.
+Qed.
+
+(** [gib_singular_single_future_variance_zero] (theorem).
+ Mathematical meaning: A single future score is completely determined in the lower singular full covariance endpoint.
+ Exact checked proposition: forall n c:R, 1<=n -> sequential_d (n+1) c=0 -> equicorr_schur_diagonal n c=0.
+ Premises and side conditions: Count n represents at least one observed
+ score and k denotes at least one future score where specified.
+ Signed correlations require the complete common/contrast eigenvalue
+ feasibility conditions before a probabilistic interpretation.
+ Proof/definition method: Eliminate the otherwise redundant observed
+ invertibility hypothesis through the checked equicorrelation update
+ identity, or reuse previously proved exact Schur spectral and residual
+ covariance formulas and Stdlib order algebra.
+ Library reuse: SequentialReport, EquicorrelationSpectral,
+ GaussianCovarianceDomain and Rocq Stdlib Reals/Lra/Psatz/Field.
+ Boundary: Exact deterministic covariance or regression arithmetic;
+ no new Gaussian probability space, random variable or conditional
+ expectation independence claim is introduced.
+*)
+Theorem gib_singular_single_future_variance_zero : forall n c:R, 1<=n -> sequential_d (n+1) c=0 -> equicorr_schur_diagonal n c=0.
+Proof.
+  intros n c Hn Hzero.
+  assert (Hdn:0<sequential_d n c).
+  { apply (gib_observed_denominator_positive_given_full_psd n 1 c); lra. }
+  apply gcd_single_future_lower_singularity; lra.
+Qed.
+
+(** [gib_perfect_correlation_predictor_observed_mean] (theorem).
+ Mathematical meaning: At perfect correlation, the canonical next-score candidate predictor equals the mean of an observed battery.
+ Exact checked proposition: forall n s:R, 0<n -> hp n 1 s=s/n.
+ Premises and side conditions: Count n represents at least one observed
+ score and k denotes at least one future score where specified.
+ Signed correlations require the complete common/contrast eigenvalue
+ feasibility conditions before a probabilistic interpretation.
+ Proof/definition method: Eliminate the otherwise redundant observed
+ invertibility hypothesis through the checked equicorrelation update
+ identity, or reuse previously proved exact Schur spectral and residual
+ covariance formulas and Stdlib order algebra.
+ Library reuse: SequentialReport, EquicorrelationSpectral,
+ GaussianCovarianceDomain and Rocq Stdlib Reals/Lra/Psatz/Field.
+ Boundary: Exact deterministic covariance or regression arithmetic;
+ no new Gaussian probability space, random variable or conditional
+ expectation independence claim is introduced.
+*)
+Theorem gib_perfect_correlation_predictor_observed_mean : forall n s:R, 0<n -> hp n 1 s=s/n.
+Proof.
+  intros n s Hn.
+  unfold hp; rewrite sequential_denominator_at_unit_correlation.
+  field; lra.
+Qed.
+
+(** [gib_perfect_correlation_equal_observation_predictor] (theorem).
+ Mathematical meaning: A perfectly correlated history with all scores a predicts precisely a rather than an attenuated value.
+ Exact checked proposition: forall n a:R, 0<n -> hp n 1 (n*a)=a.
+ Premises and side conditions: Count n represents at least one observed
+ score and k denotes at least one future score where specified.
+ Signed correlations require the complete common/contrast eigenvalue
+ feasibility conditions before a probabilistic interpretation.
+ Proof/definition method: Eliminate the otherwise redundant observed
+ invertibility hypothesis through the checked equicorrelation update
+ identity, or reuse previously proved exact Schur spectral and residual
+ covariance formulas and Stdlib order algebra.
+ Library reuse: SequentialReport, EquicorrelationSpectral,
+ GaussianCovarianceDomain and Rocq Stdlib Reals/Lra/Psatz/Field.
+ Boundary: Exact deterministic covariance or regression arithmetic;
+ no new Gaussian probability space, random variable or conditional
+ expectation independence claim is introduced.
+*)
+Theorem gib_perfect_correlation_equal_observation_predictor : forall n a:R, 0<n -> hp n 1 (n*a)=a.
+Proof.
+  intros n a Hn.
+  rewrite gib_perfect_correlation_predictor_observed_mean by lra.
+  field; lra.
+Qed.
+
