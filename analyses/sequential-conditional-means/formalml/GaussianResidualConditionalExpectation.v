@@ -29,7 +29,7 @@ From Stdlib Require Import Reals Lra.
 From FormalML.ProbTheory Require Import
   ConditionalExpectation Independence RealRandomVariable RandomVariable
   Expectation SigmaAlgebras.
-From FormalML Require Import Utils.
+From FormalML.utils Require Import Utils.
 
 Open Scope R_scope.
 
