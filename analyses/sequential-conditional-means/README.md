@@ -46,6 +46,44 @@ covariance and unnormalized Gaussian density algebra, **not** a kernel
 proof of the actual measure-theoretic conditional expectation, Gaussian
 independence, or empirical IQ distributions.
 
+## D058–D060 measure-theoretic Gaussian continuation (verification in progress)
+
+The current [Rocq-only continuation branch](https://github.com/AndersH3/composite_iq_checked_claims/tree/proofs/gaussian-measure-ce-d058-20261117) reuses two maintained probability
+libraries rather than introducing a custom Gaussian expectation or a new
+probability-space axiom:
+
+- [IBM FormalML's conditional-expectation and product-measure API](formalml/GaussianProductConditionalExpectation.v) is used for two **candidate**
+  results in an explicit product probability space with observed-history
+  measurable predictor and independent centered second-coordinate residual.
+  Independence is **proved by the library product-space theorem**, not assumed
+  in the new result. This construction has not yet been shown to realize the
+  equicorrelated multivariate Gaussian law; moreover, the pinned FormalML
+  build must still kernel-compile its dependency closure.
+- [MathComp-Analysis's normalized Gaussian conjugacy theorem](mathcomp/GaussianPosteriorMeasure.v)
+  is used for a **candidate** genuine posterior-measure identity for a
+  *single observed sample-mean statistic*. The first two parameter reductions
+  have reached `Qed` during its workflow; the normalized-measure application
+  still requires successful kernel verification.
+- [The pinned MathComp-QBS normal-mean integration theorem](qbs/GaussianPosteriorExpectation.v)
+  provides a **candidate** exact Lebesgue first moment for the normalized
+  posterior; this is not a replacement for a full conditional-expectation
+  theorem on the original score-vector probability space.
+
+All three integrations are separately tested with pinned GitHub Actions.
+**None is counted as a new verified Gaussian probability theorem until its
+exact-revision CI succeeds.** No `Admitted`, new `Axiom`, or silently assumed
+joint-Gaussian independence is allowed. The prior count of **292 checked
+D050–D056 Gaussian-specific statements** remains the verified baseline.
+
+**Essential open bridge:** prove in Rocq that affine transformations of an
+arbitrary jointly Gaussian vector are jointly Gaussian, that zero
+cross-covariance of Gaussian blocks gives independence of their
+sigma-algebras, and that the conditional expectation of the original future
+score on `sigma(X_1,...,X_n)` equals its predictor for the entire admissible
+signed-correlation domain (including the degenerate `c=1` endpoint).
+Construction of a product residual model or pointwise Gaussian posterior
+without this distributional equivalence is **not** that theorem.
+
 ## Arbitrary-`n` exact calculation
 
 ```python
