@@ -751,7 +751,7 @@ Proof.
  intros n k c s Hd Hsize.
  unfold hm.
  rewrite gbb_total_ratio by assumption.
- field; assumption.
+ field; nra.
 Qed.
 
 (** [gbb_inclusive_mean_nonnegative_full_psd] (theorem).
