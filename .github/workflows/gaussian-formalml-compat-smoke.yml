@@ -1,0 +1,41 @@
+name: FormalML Rocq 9.2 compatibility smoke
+
+on:
+  push:
+    paths:
+      - 'scripts/patch_formalml_9_2.sh'
+      - '.github/workflows/gaussian-formalml-compat-smoke.yml'
+  pull_request:
+    paths:
+      - 'scripts/patch_formalml_9_2.sh'
+      - '.github/workflows/gaussian-formalml-compat-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  rocq-list-proof-compat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out pinned patch source
+        uses: actions/checkout@v4
+      - name: Check exact upstream list lemmas without full probability dependency build
+        shell: bash
+        run: |
+          docker run --rm -v "$PWD:/workspace:ro" rocq/rocq-prover:9.2.0 sh -euc '
+            git clone --filter=blob:none --no-checkout https://github.com/IBM/FormalML.git /tmp/FormalML
+            cd /tmp/FormalML
+            git fetch --depth 1 origin 8ee433dc802fca35f6bceb6dacb69d3c1315e886
+            git checkout --detach 8ee433dc802fca35f6bceb6dacb69d3c1315e886
+            sh /workspace/scripts/patch_formalml_9_2.sh
+            cd rocq/lib_utils
+            rocq compile LibUtilsCoqLibAdd.v
+            rocq compile LibUtilsLift.v
+            rocq compile LibUtilsListAdd.v
+          '
