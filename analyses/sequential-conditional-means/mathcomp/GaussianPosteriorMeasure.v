@@ -41,7 +41,7 @@ Local Open Scope ring_scope.
 
 Section EquicorrelatedGaussianPosterior.
 Context {R : realType}.
-Implicit Types (c n total sigma0 sigma : R) (V : set R).
+Implicit Types (c n total sigma : R) (V : set R).
 
 (** [gmc_sufficient_statistic_posterior_center] (theorem).
  Mathematical meaning: The MathComp-Analysis normal-normal conjugacy
