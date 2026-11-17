@@ -28,7 +28,7 @@ jobs:
         run: python verification/check_contract_coverage.py
       - name: Check Python static lint with its negative control
         run: python verification/check_static_lint.py
-      - name: Isolate problematic Hoeflin thresholds postcondition
+      - name: Locate interacting Deal contracts in Hoeflin module
         if: failure()
         run: |
           python - <<'PY'
@@ -39,34 +39,32 @@ jobs:
           import sys
           import tempfile
 
-          source = ast.parse(Path("analyses/hoeflin-ferguson/scripts/verify_calculations.py")
-                             .read_text(encoding="utf-8"))
-          original = next(node for node in ast.walk(source)
-                          if isinstance(node, ast.FunctionDef) and node.name == "thresholds")
-          for mode in ("one", "without"):
-              for index in range(len(original.decorator_list)):
-                  clone = copy.deepcopy(source)
-                  for fn in ast.walk(clone):
-                      if not isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
+          original = ast.parse(Path("analyses/hoeflin-ferguson/scripts/verify_calculations.py")
+                               .read_text(encoding="utf-8"))
+          functions = [(node.name, node.lineno) for node in ast.walk(original)
+                       if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))]
+          for mode in ("without", "only"):
+              for selected in functions:
+                  clone = copy.deepcopy(original)
+                  for node in ast.walk(clone):
+                      if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                           continue
-                      if fn.name != "thresholds":
-                          fn.decorator_list = []
-                      elif mode == "one":
-                          fn.decorator_list = [fn.decorator_list[index]]
-                      else:
-                          fn.decorator_list.pop(index)
-                  with tempfile.TemporaryDirectory(prefix="deal-predicate-") as folder:
+                      current = (node.name, node.lineno)
+                      if (mode == "without" and current == selected) or (
+                          mode == "only" and current != selected
+                      ):
+                          node.decorator_list = []
+                  with tempfile.TemporaryDirectory(prefix="deal-interaction-") as folder:
                       temp = Path(folder, "probe.py")
                       temp.write_text(ast.unparse(clone) + "\n", encoding="utf-8")
                       proc = subprocess.run(
                           [sys.executable, "-m", "deal", "lint", "--json", str(temp)],
                           capture_output=True, text=True, timeout=15,
                       )
-                      state = "CRASH" if proc.stderr else (
+                      outcome = "CRASH" if proc.stderr else (
                           "DIAGNOSTIC" if proc.stdout else "CLEAN"
                       )
-                      clause = ast.unparse(original.decorator_list[index])
-                      print("DEAL_PREDICATE", mode, index, state, clause,
+                      print("DEAL_FUNCTION", mode, selected, outcome,
                             proc.stderr.strip().splitlines()[-1] if proc.stderr else "",
                             flush=True)
           PY
