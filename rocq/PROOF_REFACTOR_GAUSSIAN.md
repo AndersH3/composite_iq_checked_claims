@@ -4,9 +4,9 @@
 
 > **AI disclosure:** AI assisted the mathematical specifications, candidate proof scripts, code integration and documentation. Only a successful pinned Rocq 9.2 kernel build on an exact source revision establishes any theorem status.
 
-This register tracks 37 exact source-order proofs about Gaussian prior-plus-likelihood *pointwise densities*: quadratic completion, model precision and variance, dependence on arbitrary unequal observed scores, evidence cancellation and posterior symmetry. Its scope deliberately excludes the stronger measurable conditional-expectation assertion unless a separate formally verified probability library supplies integral normalization, integrability and disintegration.
+This register tracks 42 exact source-order proofs about Gaussian prior-plus-likelihood *pointwise densities*: quadratic completion, model precision and variance, dependence on arbitrary unequal observed scores, evidence cancellation and posterior symmetry. Its scope deliberately excludes the stronger measurable conditional-expectation assertion unless a separate formally verified probability library supplies integral normalization, integrability and disintegration.
 
-## GaussianConditionalKernel.v — 25 proof scripts
+## GaussianConditionalKernel.v — 30 proof scripts
 
 | Proof script (kind) | Mathematical scope | Library reuse | Boundaries |
 |---|---|---|---|
@@ -35,6 +35,12 @@ This register tracks 37 exact source-order proofs about Gaussian prior-plus-like
 | `gk_posterior_kernel_variance` (theorem) | forall xs c theta, 0<c -> c<1 -> gk_posterior_kernel xs c theta = exp (- (theta-gk_center xs c)*(theta-gk_center xs c)/(2*gk_variance xs c)) | Stdlib Reals/Field/Ring, FiniteSum, EquicorrelationVectors, SequentialReport | Exact unnormalized density identity; not a constructed Gaussian conditional probability or expectation |
 | `gk_kernel_ratio` (theorem) | forall xs c theta, c<>0 -> 1-c<>0 -> gk_d xs c<>0 -> gk_joint_kernel xs c theta/gk_evidence_kernel xs c = gk_posterior_kernel xs c theta | Stdlib Reals/Field/Ring, FiniteSum, EquicorrelationVectors, SequentialReport | Exact unnormalized density identity; not a constructed Gaussian conditional probability or expectation |
 | `gk_posterior_at_mean` (theorem) | forall xs c, gk_posterior_quadratic xs c (gk_center xs c)=0 | Stdlib Reals/Field/Ring, FiniteSum, EquicorrelationVectors, SequentialReport | Exact unnormalized density identity; not a constructed Gaussian conditional probability or expectation |
+
+| `gk_latent_variance_matches_future_cross_covariance` (theorem) | forall xs c, gk_d xs c <> 0 -> gk_variance xs c = equicorr_schur_cross (gk_mass xs) c | SequentialReport Schur variance/covariance identities, GaussianConditionalKernel, Stdlib Reals | Gaussian predictive-variance parameter bridge; conditional expectation remains unformalized |
+| `gk_future_variance_matches_schur_diagonal` (theorem) | forall xs c, gk_d xs c <> 0 -> (1-c)+gk_variance xs c = equicorr_schur_diagonal (gk_mass xs) c | SequentialReport Schur variance/covariance identities, GaussianConditionalKernel, Stdlib Reals | Gaussian predictive-variance parameter bridge; conditional expectation remains unformalized |
+| `gk_future_variance_closed_form` (theorem) | forall xs c, gk_d xs c <> 0 -> (1-c)+gk_variance xs c = (1-c)*(1+gk_mass xs*c)/gk_d xs c | SequentialReport Schur variance/covariance identities, GaussianConditionalKernel, Stdlib Reals | Gaussian predictive-variance parameter bridge; conditional expectation remains unformalized |
+| `gk_future_variance_strictly_positive` (theorem) | forall xs c, 0<c -> c<1 -> 0 < (1-c)+gk_variance xs c | SequentialReport Schur variance/covariance identities, GaussianConditionalKernel, Stdlib Reals | Gaussian predictive-variance parameter bridge; conditional expectation remains unformalized |
+| `gk_future_variance_at_most_marginal` (theorem) | forall xs c, 0<c -> c<1 -> (1-c)+gk_variance xs c <= 1 | SequentialReport Schur variance/covariance identities, GaussianConditionalKernel, Stdlib Reals | Gaussian predictive-variance parameter bridge; conditional expectation remains unformalized |
 
 ## GaussianCovarianceDomain.v — 12 proof scripts
 
