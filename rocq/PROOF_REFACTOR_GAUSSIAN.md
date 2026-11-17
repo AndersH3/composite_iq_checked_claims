@@ -4,7 +4,23 @@
 
 > **AI disclosure:** AI assisted the mathematical specifications, candidate proof scripts, code integration and documentation. Only a successful pinned Rocq 9.2 kernel build on an exact source revision establishes any theorem status.
 
-This register tracks D050's 56, D051's 101, and D052's 30 source-ordered Rocq proofs about Gaussian prior-plus-likelihood *pointwise densities*: quadratic completion, model precision and variance, dependence on arbitrary unequal observed scores, evidence cancellation and posterior symmetry. Its scope deliberately excludes the stronger measurable conditional-expectation assertion unless a separate formally verified probability library supplies integral normalization, integrability and disintegration.
+This register tracks D050's 56, D051's 101, D052's 30, and D053–D056's 105 source-ordered Rocq proofs about Gaussian prior-plus-likelihood *pointwise densities*: quadratic completion, model precision and variance, dependence on arbitrary unequal observed scores, evidence cancellation and posterior symmetry. Its scope deliberately excludes the stronger measurable conditional-expectation assertion unless a separate formally verified probability library supplies integral normalization, integrability and disintegration.
+
+**Verified D053–D056 checkpoint (November 17, 2026).** The
+[Rocq 9.2 kernel workflow for D056](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44153123270)
+passed at commit `a4cb5346b25566687539556bf2de2fb57d5798f9`, following
+[successful D053](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44148837279),
+[D054](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44150279356)
+and [D055](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44151481763)
+checks. This continuation adds **105 substantive named Rocq declarations**:
+23 in `GaussianInnovationBounds.v`, 20 additional full-domain results in
+that module, 30 in `GaussianBatchBalance.v`, and 32 in
+`GaussianFiniteHistoryPosterior.v`. Together with the **187** previously
+verified D050–D052 declarations, this gives **292 Gaussian-specific
+kernel-checked declarations**. This is a count of exact theorem
+statements—not 292 independent Gaussian-distribution laws. It does not
+complete the measure-theoretic Gaussian conditional expectation or a
+regular conditional law.
 
 **Verified checkpoint:** The [pinned Rocq 9.2 workflow](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43997860735)
 accepted all **56** exact D050 Stdlib theorem scripts in

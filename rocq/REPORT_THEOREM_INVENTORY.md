@@ -2,6 +2,26 @@
 
 # Theorems and mathematical claims actually used in the reports
 
+> **D053–D056 kernel-verified continuation (November 17, 2026):**
+> The [pinned Rocq 9.2 run](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44153123270)
+> accepted **105 additional** report-relevant theorems in three
+> canonical source modules: [GaussianInnovationBounds.v](../analyses/sequential-conditional-means/rocq/GaussianInnovationBounds.v)
+> (43), [GaussianBatchBalance.v](../analyses/sequential-conditional-means/rocq/GaussianBatchBalance.v)
+> (30), and [GaussianFiniteHistoryPosterior.v](../analyses/sequential-conditional-means/rocq/GaussianFiniteHistoryPosterior.v)
+> (32). They map to the sequential conditional-means book's general
+> initial-`n` predictor formula, exact inclusive averaging, signed
+> covariance-domain feasibility, conditional Schur variance, arbitrary
+> finite-history sufficiency, and Gaussian posterior precision/variance
+> update formulas. The existing source-ordered
+> [Gaussian proof register](PROOF_REFACTOR_GAUSSIAN.md) records
+> every new declaration and its exact owner. The D050–D056
+> Gaussian-specific total is **292** kernel-checked declarations.
+> Crucially, this does **not** prove Gaussian residual independence,
+> the multivariate normal measure, or the actual measure-theoretic
+> conditional expectation. This inventory and its mappings were AI-assisted.
+>
+
+
 > **D046x verified continuation (November 16, 2026).**
 > The [159 new Rocq 9.2 kernel-checked statements](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43847174190) in
 > [`ListPoolingAlgebra.v`](../library/rocq/ListPoolingAlgebra.v)
