@@ -882,7 +882,7 @@ Qed.
 Theorem gib_feasible_energy_nonnegative_full_psd : forall n k c energy total:R, 1<=n -> 0<k -> c<=1 -> 0<=sequential_d (n+k) c -> 0<=energy-total*total/k -> 0<=equicorr_schur_energy n c energy total.
 Proof.
   intros n k c energy total Hn Hk Hc Hfull Hfeasible.
-  apply gcd_schur_psd_arbitrary_sign; try assumption.
+  apply (gcd_schur_psd_arbitrary_sign n k c energy total); try assumption.
   apply (gib_observed_denominator_positive_given_full_psd n k c); assumption.
 Qed.
 
@@ -906,7 +906,7 @@ Qed.
 Theorem gib_feasible_energy_positive_full_pd : forall n k c energy total:R, 1<=n -> 0<k -> c<1 -> 0<sequential_d (n+k) c -> 0<energy -> 0<=energy-total*total/k -> 0<equicorr_schur_energy n c energy total.
 Proof.
   intros n k c energy total Hn Hk Hc Hfull Henergy Hfeasible.
-  apply gcd_schur_pd_arbitrary_sign; try assumption.
+  apply (gcd_schur_pd_arbitrary_sign n k c energy total); try assumption.
   apply (gib_observed_denominator_positive_given_full_psd n k c Hn Hk); lra.
 Qed.
 
