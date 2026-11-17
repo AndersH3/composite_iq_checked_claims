@@ -2333,7 +2333,12 @@ Qed.
 *)
 Theorem d052_diagonal_strict_reduction : forall n c:R, 0<n -> c<>0 -> 0<sequential_d n c -> equicorr_schur_diagonal n c<1.
 Proof.
-  intros n c Hn Hc Hd; unfold equicorr_schur_diagonal; assert (H : 0<n*c*c/sequential_d n c) by (unfold Rdiv; apply Rmult_lt_0_compat; [nra|apply Rinv_0_lt_compat; nra]); lra.
+  intros n c Hn Hc Hd; unfold equicorr_schur_diagonal; assert (Hnum : 0 < n*c*c).
+  { replace (n*c*c) with (n*(c*c)) by ring.
+    apply Rmult_lt_0_compat; [exact Hn | nra]. }
+  assert (H : 0<n*c*c/sequential_d n c).
+  { unfold Rdiv; apply Rmult_lt_0_compat; [exact Hnum | apply Rinv_0_lt_compat; exact Hd]. }
+  lra.
 Qed.
 
 (** [d052_contrast_nonnegative] (theorem).
@@ -2497,7 +2502,12 @@ Qed.
 *)
 Theorem d052_cross_strict_below_prior : forall n c:R, 0<n -> c<>0 -> 0<sequential_d n c -> equicorr_schur_cross n c<c.
 Proof.
-  intros n c Hn Hc Hd; unfold equicorr_schur_cross; assert (H:0<n*c*c/sequential_d n c) by (unfold Rdiv; apply Rmult_lt_0_compat; [nra|apply Rinv_0_lt_compat; nra]); lra.
+  intros n c Hn Hc Hd; unfold equicorr_schur_cross; assert (Hnum : 0 < n*c*c).
+  { replace (n*c*c) with (n*(c*c)) by ring.
+    apply Rmult_lt_0_compat; [exact Hn | nra]. }
+  assert (H : 0<n*c*c/sequential_d n c).
+  { unfold Rdiv; apply Rmult_lt_0_compat; [exact Hnum | apply Rinv_0_lt_compat; exact Hd]. }
+  lra.
 Qed.
 
 (** [d052_mean_positive_gain] (theorem).
