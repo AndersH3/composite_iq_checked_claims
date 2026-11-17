@@ -24,8 +24,11 @@ NEGATIVE_CONTROL = "tests/fixtures/contract_negative_control.py"
 # Use the independently contracted and tested AST normalization helper
 # for Deal 4.24.6. All 24+ source files still go through the full real linter;
 # only bad synthetic AST source ranges are normalized prior to compilation.
-LINT_BOOTSTRAP = """\
+# Resolve the repository-owned helper even when a regression test runs
+# the real Deal linter in a disposable, out-of-tree temporary directory.
+LINT_BOOTSTRAP = f"""\
 import sys
+sys.path.insert(0, {str(ROOT)!r})
 from deal._cached_property import cached_property
 from deal.linter._contract import Contract
 from verification.deal_lint_compat import compile_fixed_locations
