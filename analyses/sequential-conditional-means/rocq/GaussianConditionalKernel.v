@@ -422,7 +422,14 @@ Qed.
 *)
 Theorem gk_precision_variance : forall xs c, 0<c -> c<1 -> gk_precision xs c*gk_variance xs c=1.
 Proof.
- intros xs c Hc Hc1; unfold gk_precision, gk_variance, gk_d, sequential_d, gk_mass; field; nra.
+ intros xs c Hc Hc1.
+ rewrite gk_precision_formula by lra.
+ unfold gk_variance.
+ assert (Hd : gk_d xs c <> 0).
+ { assert (Hpositive : 0 < gk_d xs c)
+   by (apply gk_d_positive; try lra; apply gk_mass_nonnegative).
+   lra. }
+ field; nra.
 Qed.
 
 (** [gk_variance_below_prior] (theorem).
