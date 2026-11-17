@@ -1,11 +1,26 @@
 # Rocq formalization of checked claims
 
-## D050 — Gaussian likelihood and signed-correlation covariance domain (verification pending)
+## D050 — 51 kernel-verified Gaussian kernel and covariance-domain results
 
 **AI disclosure:** These candidate formal proofs, probability model analysis and
 documentation were AI-assisted. Kernel acceptance, not source-counting,
 establishes any proved statement. The full regular conditional-expectation
 theorem remains an explicit open Rocq obligation.
+
+The [Rocq 9.2 kernel and source-order audit](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43996625035)
+accepted **51 new D050 theorems** (35 Gaussian density/predictive and
+finite-score sufficiency lemmas; 16 signed-correlation covariance and
+concrete future-vector PSD/PD lemmas). The overall Stdlib corpus
+contains **3,429 proof scripts across 41 Rocq modules** with 3,750
+documented declarations, at D050 source revision
+`360b20d08c3dfab1fbb27284af1f1aab7d9cdd38`.
+
+The separate MathComp-Analysis 1.18.0
+[normalized posterior-measure bridge](../analyses/sequential-conditional-means/mathcomp/GaussianPosteriorMeasure.v)
+contains three candidate proofs. These are **not** counted among the 51
+until the dedicated MathComp workflow succeeds. Even a successful
+normalized posterior proof for a sample-mean observation is not yet a
+kernel-checked full-vector conditional-expectation theorem.
 
 The new `GaussianConditionalKernel.v` specifies the latent common-factor
 Gaussian prior and arbitrary unequal-history likelihood for `0<c<1`,

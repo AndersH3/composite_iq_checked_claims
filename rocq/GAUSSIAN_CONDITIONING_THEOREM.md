@@ -133,6 +133,47 @@ The independent-common-factor construction is not a representation of
 negative pairwise correlation. Negative `c` must be treated through
 the general jointly Gaussian covariance PSD/PD criterion above.
 
+## D050 verification and full-history likelihood sufficiency
+
+**AI disclosure:** The following kernel-level analysis and this
+summary were AI-assisted. The mathematical proof of conditional
+expectation discussed above remains distinct from a completed
+formal measure-theoretic theorem.
+
+The Rocq 9.2 corpus now contains [51 checked D050 theorems](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43996625035),
+including exact finite-list density factorization
+
+```
+sum_i (x_i-theta)^2 =
+  sum_i (x_i-mean(x))^2 + n*(theta-mean(x))^2,
+```
+
+and its multiplicative exponential likelihood factorization.
+Two histories with equal lengths and sums have identical
+latent-parameter posterior kernels after their data-only
+evidence factors are divided out. This is a genuine
+**pointwise sufficient-statistic** result for arbitrarily
+unequal observed score lists; no empirical distribution
+assumption is deduced from it.
+
+The separate MathComp-Analysis 1.18.0 source
+`analyses/sequential-conditional-means/mathcomp/GaussianPosteriorMeasure.v`
+specializes `normal_prob_conjugate` to the observed sample mean
+and proposes a **normalized posterior probability measure**,
+with parameter identities `c*S_n/d_n(c)` and
+`c*(1-c)/d_n(c)`. Its CI must be green before those
+three new theorems are counted as kernel verified.
+
+To complete the formal Gaussian **conditional expectation**
+for the full score history, the sample-mean likelihood
+sufficiency factorization and this normalized measure theorem
+must be connected in a common formal real/probability
+representation. An independent proof of normal first moments,
+the observed-score sigma-algebra conditional-expectation
+universal property, and a jointly Gaussian model for all
+admissible negative c are still required. Issue #50 records
+those obligations.
+
 ## Singular covariance endpoints
 
 At `c=1`, all standardized scores are equal almost surely, the observed

@@ -6,6 +6,13 @@
 
 This register tracks 51 exact source-order proofs about Gaussian prior-plus-likelihood *pointwise densities*: quadratic completion, model precision and variance, dependence on arbitrary unequal observed scores, evidence cancellation and posterior symmetry. Its scope deliberately excludes the stronger measurable conditional-expectation assertion unless a separate formally verified probability library supplies integral normalization, integrability and disintegration.
 
+**Verified checkpoint:** The [pinned Rocq 9.2 workflow](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43996625035)
+accepted all **51** exact D050 Stdlib theorem scripts in
+`GaussianConditionalKernel.v` and `GaussianCovarianceDomain.v`
+at revision `360b20d08c3dfab1fbb27284af1f1aab7d9cdd38`.
+No new formal Gaussian conditional-expectation theorem is
+asserted by this source-order audit.
+
 ## GaussianConditionalKernel.v — 35 proof scripts
 
 | Proof script (kind) | Mathematical scope | Library reuse | Boundaries |

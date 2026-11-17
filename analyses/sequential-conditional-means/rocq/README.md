@@ -1,11 +1,25 @@
 # Sequential conditional-means — Rocq formalization
 
-## D050 — Gaussian likelihood and signed-correlation covariance domain (verification pending)
+## D050 — 51 checked Gaussian density and signed covariance-domain proofs
 
 **AI disclosure:** These candidate formal proofs, probability model analysis and
 documentation were AI-assisted. Kernel acceptance, not source-counting,
 establishes any proved statement. The full regular conditional-expectation
 theorem remains an explicit open Rocq obligation.
+
+At the exact D050 revision `360b20d08c3dfab1fbb27284af1f1aab7d9cdd38`,
+the [pinned Rocq 9.2 kernel](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43996625035)
+accepted **35 Gaussian kernel/sufficiency proofs and 16 concrete
+Schur-covariance proofs**. Five of the kernel proofs factor an arbitrary
+unequal-score Gaussian likelihood through its sample mean; four
+covariance proofs establish full PSD/PD necessity and sufficiency for
+concrete future-score lists of length at least two.
+
+A separate [MathComp normalized posterior measure module](../mathcomp/GaussianPosteriorMeasure.v)
+uses the maintained Gaussian conjugacy theorem but remains outside the
+Stdlib 9.2 kernel count until its dedicated workflow passes. Neither
+step alone proves the full observed-sigma-algebra conditional
+expectation of a future Gaussian score.
 
 The new `GaussianConditionalKernel.v` specifies the latent common-factor
 Gaussian prior and arbitrary unequal-history likelihood for `0<c<1`,
