@@ -4,7 +4,7 @@
 
 > **AI disclosure:** AI assisted the mathematical specifications, candidate proof scripts, code integration and documentation. Only a successful pinned Rocq 9.2 kernel build on an exact source revision establishes any theorem status.
 
-This register tracks exact source-order proofs about Gaussian prior-plus-likelihood *pointwise densities*: quadratic completion, model precision and variance, dependence on arbitrary unequal observed scores, evidence cancellation and posterior symmetry. Its scope deliberately excludes the stronger measurable conditional-expectation assertion unless a separate formally verified probability library supplies integral normalization, integrability and disintegration.
+This register tracks 35 exact source-order proofs about Gaussian prior-plus-likelihood *pointwise densities*: quadratic completion, model precision and variance, dependence on arbitrary unequal observed scores, evidence cancellation and posterior symmetry. Its scope deliberately excludes the stronger measurable conditional-expectation assertion unless a separate formally verified probability library supplies integral normalization, integrability and disintegration.
 
 ## GaussianConditionalKernel.v — 25 proof scripts
 
@@ -35,6 +35,21 @@ This register tracks exact source-order proofs about Gaussian prior-plus-likelih
 | `gk_posterior_kernel_variance` (theorem) | forall xs c theta, 0<c -> c<1 -> gk_posterior_kernel xs c theta = exp (- (theta-gk_center xs c)*(theta-gk_center xs c)/(2*gk_variance xs c)) | Stdlib Reals/Field/Ring, FiniteSum, EquicorrelationVectors, SequentialReport | Exact unnormalized density identity; not a constructed Gaussian conditional probability or expectation |
 | `gk_kernel_ratio` (theorem) | forall xs c theta, c<>0 -> 1-c<>0 -> gk_d xs c<>0 -> gk_joint_kernel xs c theta/gk_evidence_kernel xs c = gk_posterior_kernel xs c theta | Stdlib Reals/Field/Ring, FiniteSum, EquicorrelationVectors, SequentialReport | Exact unnormalized density identity; not a constructed Gaussian conditional probability or expectation |
 | `gk_posterior_at_mean` (theorem) | forall xs c, gk_posterior_quadratic xs c (gk_center xs c)=0 | Stdlib Reals/Field/Ring, FiniteSum, EquicorrelationVectors, SequentialReport | Exact unnormalized density identity; not a constructed Gaussian conditional probability or expectation |
+
+## GaussianCovarianceDomain.v — 10 proof scripts
+
+| Proof script (kind) | Mathematical scope | Library reuse | Boundaries |
+|---|---|---|---|
+| `gcd_common_mode_eigenvalue` (theorem) | forall r k c, sequential_d r c<>0 -> (1-c)+k*c*(1-c)/sequential_d r c = (1-c)*sequential_d (r+k) c/sequential_d r c | EquicorrelationSpectral, EquicorrelationVectors, Stdlib Field/Lra/Psatz | Signed-correlation conditional covariance feasibility; no probability measure |
+| `gcd_common_mode_sign` (theorem) | forall r k c, c<=1 -> 0<sequential_d r c -> 0<=sequential_d (r+k) c -> 0<=(1-c)*sequential_d (r+k) c/sequential_d r c | EquicorrelationSpectral, EquicorrelationVectors, Stdlib Field/Lra/Psatz | Signed-correlation conditional covariance feasibility; no probability measure |
+| `gcd_common_mode_strict` (theorem) | forall r k c, c<1 -> 0<sequential_d r c -> 0<sequential_d (r+k) c -> 0<(1-c)*sequential_d (r+k) c/sequential_d r c | EquicorrelationSpectral, EquicorrelationVectors, Stdlib Field/Lra/Psatz | Signed-correlation conditional covariance feasibility; no probability measure |
+| `gcd_schur_decomposition` (theorem) | forall r k c energy total, 0<k -> sequential_d r c<>0 -> equicorr_schur_energy r c energy total = (1-c)*(energy-total*total/k) + ((1-c)*sequential_d (r+k) c/sequential_d r c)*(total*total/k) | EquicorrelationSpectral, EquicorrelationVectors, Stdlib Field/Lra/Psatz | Signed-correlation conditional covariance feasibility; no probability measure |
+| `gcd_schur_psd_arbitrary_sign` (theorem) | forall r k c energy total, 0<k -> c<=1 -> 0<sequential_d r c -> 0<=sequential_d (r+k) c -> 0<=energy-total*total/k -> 0<=equicorr_schur_energy r c energy total | EquicorrelationSpectral, EquicorrelationVectors, Stdlib Field/Lra/Psatz | Signed-correlation conditional covariance feasibility; no probability measure |
+| `gcd_schur_pd_arbitrary_sign` (theorem) | forall r k c energy total, 0<k -> c<1 -> 0<sequential_d r c -> 0<sequential_d (r+k) c -> 0<energy -> 0<=energy-total*total/k -> 0<equicorr_schur_energy r c energy total | EquicorrelationSpectral, EquicorrelationVectors, Stdlib Field/Lra/Psatz | Signed-correlation conditional covariance feasibility; no probability measure |
+| `gcd_schur_psd_list` (theorem) | forall r c (xs:list R), xs<>nil -> c<=1 -> 0<sequential_d r c -> 0<=sequential_d (r+INR(length xs)) c -> 0<=vector_schur_form r c xs | EquicorrelationSpectral, EquicorrelationVectors, Stdlib Field/Lra/Psatz | Signed-correlation conditional covariance feasibility; no probability measure |
+| `gcd_schur_pd_list` (theorem) | forall r c (xs:list R), xs<>nil -> c<1 -> 0<sequential_d r c -> 0<sequential_d (r+INR(length xs)) c -> 0<vector_square_energy xs -> 0<vector_schur_form r c xs | EquicorrelationSpectral, EquicorrelationVectors, Stdlib Field/Lra/Psatz | Signed-correlation conditional covariance feasibility; no probability measure |
+| `gcd_schur_singular_common_boundary` (theorem) | forall r k c x, sequential_d r c<>0 -> sequential_d (r+k) c=0 -> equicorr_schur_energy r c (k*x*x) (k*x)=0 | EquicorrelationSpectral, EquicorrelationVectors, Stdlib Field/Lra/Psatz | Signed-correlation conditional covariance feasibility; no probability measure |
+| `gcd_total_domain_from_negative_endpoint` (theorem) | forall r k c, 0<r -> 0<k -> c<1 -> 0<sequential_d r c -> 0<=sequential_d (r+k) c -> 0<r+k | EquicorrelationSpectral, EquicorrelationVectors, Stdlib Field/Lra/Psatz | Signed-correlation conditional covariance feasibility; no probability measure |
 
 ## Full AI disclosure
 
