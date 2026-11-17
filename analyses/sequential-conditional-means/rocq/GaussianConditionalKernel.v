@@ -22,8 +22,8 @@
  only kernel-accepted propositions may be called checked.
 *)
 From Stdlib Require Import Reals Rpower Lra Psatz Ring Field List.
-Require Import FiniteSum SequentialReport EquicorrelationVectors
-  UnequalHistoryLinearPrediction.
+Require Import FiniteSum SequentialReport EquicorrelationSpectral
+  EquicorrelationVectors UnequalHistoryLinearPrediction.
 Import ListNotations.
 Open Scope R_scope.
 
@@ -758,4 +758,144 @@ Qed.
 Theorem gk_posterior_at_mean : forall xs c, gk_posterior_quadratic xs c (gk_center xs c)=0.
 Proof.
  intros; unfold gk_posterior_quadratic; ring.
+Qed.
+
+(** [gk_latent_variance_matches_future_cross_covariance] (theorem).
+ Mathematical meaning: The posterior variance of the shared latent Gaussian factor equals the conditional covariance of any two distinct future scores after the arbitrary observed history.
+ Exact checked proposition: forall xs c, gk_d xs c <> 0 -> gk_variance xs c = equicorr_schur_cross (gk_mass xs) c.
+ Premises and side conditions: A nondegenerate Gaussian common-factor
+ probabilistic interpretation requires 0<c<1 and independent residual
+ variance 1-c; denominator inverses state their nonzero hypotheses.
+ The mathematical identity is about exact real parameters, not estimated
+ population frequencies or an asserted conditional expectation measure.
+ Proof/definition method: Reuse the canonical Schur diagonal/cross
+ covariance identities and previously checked posterior variance bounds.
+ Library reuse: EquicorrelationSpectral and SequentialReport, including
+ sequential_residual_variance_identity and
+ sequential_residual_covariance_identity; Stdlib real arithmetic.
+ Boundary: A rigorously matched posterior predictive *parameter* and
+ Schur covariance component, not a constructed multivariate Gaussian
+ probability space or disintegration/conditional-moment theorem.
+*)
+Theorem gk_latent_variance_matches_future_cross_covariance :
+ forall xs c, gk_d xs c <> 0 ->
+ gk_variance xs c =
+ equicorr_schur_cross (gk_mass xs) c.
+Proof.
+ intros xs c Hd.
+ unfold gk_variance, gk_d, equicorr_schur_cross.
+ symmetry.
+ apply sequential_residual_covariance_identity.
+ unfold gk_d in Hd; exact Hd.
+Qed.
+
+(** [gk_future_variance_matches_schur_diagonal] (theorem).
+ Mathematical meaning: Posterior uncertainty in the common signal plus independent future measurement noise equals exactly the sequential report's conditional single-score variance.
+ Exact checked proposition: forall xs c, gk_d xs c <> 0 -> (1-c)+gk_variance xs c = equicorr_schur_diagonal (gk_mass xs) c.
+ Premises and side conditions: A nondegenerate Gaussian common-factor
+ probabilistic interpretation requires 0<c<1 and independent residual
+ variance 1-c; denominator inverses state their nonzero hypotheses.
+ The mathematical identity is about exact real parameters, not estimated
+ population frequencies or an asserted conditional expectation measure.
+ Proof/definition method: Reuse the canonical Schur diagonal/cross
+ covariance identities and previously checked posterior variance bounds.
+ Library reuse: EquicorrelationSpectral and SequentialReport, including
+ sequential_residual_variance_identity and
+ sequential_residual_covariance_identity; Stdlib real arithmetic.
+ Boundary: A rigorously matched posterior predictive *parameter* and
+ Schur covariance component, not a constructed multivariate Gaussian
+ probability space or disintegration/conditional-moment theorem.
+*)
+Theorem gk_future_variance_matches_schur_diagonal :
+ forall xs c, gk_d xs c <> 0 ->
+ (1-c)+gk_variance xs c =
+ equicorr_schur_diagonal (gk_mass xs) c.
+Proof.
+ intros xs c Hd.
+ unfold equicorr_schur_diagonal.
+ rewrite sequential_residual_variance_identity.
+ - unfold gk_variance, gk_d, sequential_d, Rdiv.
+   field.
+   unfold gk_d, sequential_d in Hd; nra.
+ - unfold gk_d in Hd; exact Hd.
+Qed.
+
+(** [gk_future_variance_closed_form] (theorem).
+ Mathematical meaning: The proper posterior-predictive variance, including irreducible future score noise, equals the exact conditional Gaussian variance formula (1-c)(1+n c)/d_n(c).
+ Exact checked proposition: forall xs c, gk_d xs c <> 0 -> (1-c)+gk_variance xs c = (1-c)*(1+gk_mass xs*c)/gk_d xs c.
+ Premises and side conditions: A nondegenerate Gaussian common-factor
+ probabilistic interpretation requires 0<c<1 and independent residual
+ variance 1-c; denominator inverses state their nonzero hypotheses.
+ The mathematical identity is about exact real parameters, not estimated
+ population frequencies or an asserted conditional expectation measure.
+ Proof/definition method: Reuse the canonical Schur diagonal/cross
+ covariance identities and previously checked posterior variance bounds.
+ Library reuse: EquicorrelationSpectral and SequentialReport, including
+ sequential_residual_variance_identity and
+ sequential_residual_covariance_identity; Stdlib real arithmetic.
+ Boundary: A rigorously matched posterior predictive *parameter* and
+ Schur covariance component, not a constructed multivariate Gaussian
+ probability space or disintegration/conditional-moment theorem.
+*)
+Theorem gk_future_variance_closed_form :
+ forall xs c, gk_d xs c <> 0 ->
+ (1-c)+gk_variance xs c =
+ (1-c)*(1+gk_mass xs*c)/gk_d xs c.
+Proof.
+ intros xs c Hd.
+ unfold gk_variance, gk_d, sequential_d, Rdiv.
+ field.
+ unfold gk_d, sequential_d in Hd; nra.
+Qed.
+
+(** [gk_future_variance_strictly_positive] (theorem).
+ Mathematical meaning: For a nondegenerate common-factor Gaussian model, the future score retains positive conditional variance because fresh independent noise is present.
+ Exact checked proposition: forall xs c, 0<c -> c<1 -> 0 < (1-c)+gk_variance xs c.
+ Premises and side conditions: A nondegenerate Gaussian common-factor
+ probabilistic interpretation requires 0<c<1 and independent residual
+ variance 1-c; denominator inverses state their nonzero hypotheses.
+ The mathematical identity is about exact real parameters, not estimated
+ population frequencies or an asserted conditional expectation measure.
+ Proof/definition method: Reuse the canonical Schur diagonal/cross
+ covariance identities and previously checked posterior variance bounds.
+ Library reuse: EquicorrelationSpectral and SequentialReport, including
+ sequential_residual_variance_identity and
+ sequential_residual_covariance_identity; Stdlib real arithmetic.
+ Boundary: A rigorously matched posterior predictive *parameter* and
+ Schur covariance component, not a constructed multivariate Gaussian
+ probability space or disintegration/conditional-moment theorem.
+*)
+Theorem gk_future_variance_strictly_positive :
+ forall xs c, 0<c -> c<1 ->
+ 0 < (1-c)+gk_variance xs c.
+Proof.
+ intros xs c Hc Hc1.
+ pose proof (gk_variance_positive xs c Hc Hc1).
+ lra.
+Qed.
+
+(** [gk_future_variance_at_most_marginal] (theorem).
+ Mathematical meaning: Conditioning on observed Gaussian tests cannot increase the future-score predictive variance above its unit marginal variance.
+ Exact checked proposition: forall xs c, 0<c -> c<1 -> (1-c)+gk_variance xs c <= 1.
+ Premises and side conditions: A nondegenerate Gaussian common-factor
+ probabilistic interpretation requires 0<c<1 and independent residual
+ variance 1-c; denominator inverses state their nonzero hypotheses.
+ The mathematical identity is about exact real parameters, not estimated
+ population frequencies or an asserted conditional expectation measure.
+ Proof/definition method: Reuse the canonical Schur diagonal/cross
+ covariance identities and previously checked posterior variance bounds.
+ Library reuse: EquicorrelationSpectral and SequentialReport, including
+ sequential_residual_variance_identity and
+ sequential_residual_covariance_identity; Stdlib real arithmetic.
+ Boundary: A rigorously matched posterior predictive *parameter* and
+ Schur covariance component, not a constructed multivariate Gaussian
+ probability space or disintegration/conditional-moment theorem.
+*)
+Theorem gk_future_variance_at_most_marginal :
+ forall xs c, 0<c -> c<1 ->
+ (1-c)+gk_variance xs c <= 1.
+Proof.
+ intros xs c Hc Hc1.
+ pose proof (gk_variance_below_prior xs c Hc Hc1).
+ lra.
 Qed.
