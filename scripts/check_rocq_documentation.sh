@@ -60,6 +60,7 @@ paths_by_module = {
     "UnequalHistoryLinearPrediction": Path("analyses/sequential-conditional-means/rocq/UnequalHistoryLinearPrediction.v"),
     "GaussianConditionalKernel": Path("analyses/sequential-conditional-means/rocq/GaussianConditionalKernel.v"),
     "GaussianCovarianceDomain": Path("analyses/sequential-conditional-means/rocq/GaussianCovarianceDomain.v"),
+    "GaussianInnovationBounds": Path("analyses/sequential-conditional-means/rocq/GaussianInnovationBounds.v"),
     "ReportRounding": Path("analyses/sequential-conditional-means/rocq/ReportRounding.v"),
     "ReportCounterexample": Path("analyses/sequential-conditional-means/rocq/ReportCounterexample.v"),
 }
@@ -158,7 +159,7 @@ for module in modules:
             continue
         expected.append(preceding[-1].group(1))
 
-    selected_register = (gaussian_register if module in {"GaussianConditionalKernel", "GaussianCovarianceDomain"}
+    selected_register = (gaussian_register if module in {"GaussianConditionalKernel", "GaussianCovarianceDomain", "GaussianInnovationBounds"}
                          else unequal_history_register if module == "UnequalHistoryLinearPrediction"
                          else sample_cauchy_register if module == "SampleContrastCauchy"
                          else list_pooling_register if module in

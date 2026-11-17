@@ -43,6 +43,7 @@ rocq compile EquicorrelationInverseVectors.v
 rocq compile UnequalHistoryLinearPrediction.v
 rocq compile GaussianConditionalKernel.v
 rocq compile GaussianCovarianceDomain.v
+rocq compile GaussianInnovationBounds.v
 rocq compile FiniteTwoCellProjection.v
 rocq compile FiniteNestedProjection.v
 rocq compile FiniteConditionalCovariance.v
