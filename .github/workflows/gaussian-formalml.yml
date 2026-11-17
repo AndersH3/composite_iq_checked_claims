@@ -32,7 +32,7 @@ jobs:
             exit 1
           fi
           test "$(grep -c '^Theorem ' analyses/sequential-conditional-means/formalml/GaussianResidualConditionalExpectation.v)" -eq 2
-          test "$(grep -c '^Theorem ' analyses/sequential-conditional-means/formalml/GaussianProductConditionalExpectation.v)" -eq 0
+          test "$(grep -Ec "^[[:space:]]*Theorem " analyses/sequential-conditional-means/formalml/GaussianProductConditionalExpectation.v)" -eq 1
 
       - name: Verify FormalML measure-theoretic Gaussian CE proof with Rocq 9.2
         shell: bash
@@ -78,6 +78,18 @@ jobs:
             # obtaining list reflexivity from the registered Stdlib instance.
             test "$(grep -Fc -- "- repeat red; subst; intuition." rocq/lib_utils/LibUtilsListAdd.v)" -eq 1
             sed -i "s/- repeat red; subst; intuition\./- subst; split; apply Forall2_refl; typeclasses eauto./" rocq/lib_utils/LibUtilsListAdd.v
+            # Rocq 9.2 exposes an incomplete upstream boolean pair-order
+            # proof; replace just its proof script, not its proposition.
+            # Use the already established nonreflexive append lemma and
+            # the standard forallb_app/andb_true_iff identities.
+            ordline=$(grep -n "^    Lemma forallb_ordpairs_refl_app_cons " rocq/lib_utils/LibUtilsListAdd.v | cut -d: -f1)
+            test -n "$ordline"
+            proofline=$((ordline + 5))
+            qedline=$((ordline + 11))
+            test "$(sed -n "${proofline}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Proof."
+            test "$(sed -n "${qedline}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Qed."
+            sed -i "${proofline},${qedline}c\\    Proof.\\n      intros Hlist Hxx Hall.\\n      rewrite forallb_ordpairs_refl_conj in Hlist.\\n      apply andb_true_iff in Hlist as [Hord Hdiag].\\n      rewrite forallb_ordpairs_refl_conj.\\n      apply andb_true_iff; split.\\n      - apply forallb_ordpairs_app_cons; assumption.\\n      - rewrite forallb_app; simpl.\\n        rewrite Hdiag, Hxx; reflexivity.\\n    Qed." \
+              rocq/lib_utils/LibUtilsListAdd.v
             opam exec -- make -j 2
             mkdir -p /tmp/formalml-gaussian
             cp /workspace/analyses/sequential-conditional-means/formalml/GaussianResidualConditionalExpectation.v /tmp/formalml-gaussian/
