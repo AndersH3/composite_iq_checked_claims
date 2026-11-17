@@ -1686,7 +1686,7 @@ Qed.
 *)
 Theorem d051_cov_future_sum_contrast : forall n k c:R, k*equicorr_schur_diagonal n c+k*(k-1)*equicorr_schur_cross n c=k*(1-c)+k*k*equicorr_schur_cross n c.
 Proof.
-  intros; ring.
+  intros; unfold equicorr_schur_diagonal, equicorr_schur_cross; ring.
 Qed.
 
 (** [d051_cov_future_sum_closed] (theorem).
