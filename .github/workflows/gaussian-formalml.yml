@@ -37,7 +37,19 @@ jobs:
             opam update -y
             git clone --depth 1 https://github.com/IBM/FormalML.git /tmp/FormalML
             cd /tmp/FormalML
+            git fetch --depth 1 origin 8ee433dc802fca35f6bceb6dacb69d3c1315e886
+            git checkout --detach 8ee433dc802fca35f6bceb6dacb69d3c1315e886
             opam install -y -j 2 --deps-only .
+            # Upstream 2026-09-29 FormalML breaks here under Rocq 9.2:
+            # the former "intuition; f_equal; auto" leaves an open goal.
+            # Patch only this proof, retaining its original exact statement.
+            # No new axiom, admitted lemma or foundational rewrite is added.
+            test "$(sed -n 614p rocq/lib_utils/LibUtilsListAdd.v)" = \
+              "        induction l1; destruct l2; simpl; intuition."
+            test "$(sed -n 615p rocq/lib_utils/LibUtilsListAdd.v)" = \
+              "        f_equal; auto."
+            sed -i '614,615c\\        induction l1 as [|a l1 IH]; intros [|b l2] Hlen; simpl in *; try discriminate; try reflexivity.\n        inversion Hlen; subst; rewrite IH by assumption; reflexivity.' \
+              rocq/lib_utils/LibUtilsListAdd.v
             opam exec -- make -j 2
             mkdir -p /tmp/formalml-gaussian
             cp /workspace/analyses/sequential-conditional-means/formalml/GaussianResidualConditionalExpectation.v /tmp/formalml-gaussian/
