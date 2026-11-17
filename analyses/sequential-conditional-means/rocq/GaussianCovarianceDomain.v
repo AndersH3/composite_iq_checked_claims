@@ -20,7 +20,8 @@
  only exact kernel-accepted propositions count as checked.
 *)
 From Stdlib Require Import Reals Lra Psatz Ring Field List.
-Require Import SequentialReport EquicorrelationSpectral EquicorrelationVectors.
+Require Import SequentialReport EquicorrelationSpectral EquicorrelationVectors
+  UnequalHistoryLinearPrediction.
 Open Scope R_scope.
 
 (** [gcd_common_mode_eigenvalue] (theorem).
@@ -796,4 +797,464 @@ Proof.
  rewrite gcd_single_future_variance_eigenvalue.
  - unfold Rdiv; ring.
  - unfold sequential_d; nra.
+Qed.
+
+
+(** D051: additional deterministic consequences for signed Gaussian covariance and posterior updates.
+ Every theorem is an exact algebraic implication of the canonical equicorrelation definitions; it is not a formal construction of a Gaussian probability space or of conditional expectation.
+ Each result below is documented and will count as verified only if pinned Rocq CI accepts the exact commit. *)
+
+(** [d051_denominator_split] (theorem).
+ Mathematical meaning: Equicorrelation common-mode denominator decomposes into contrast and shared-factor energy.
+ Exact checked proposition: forall n c:R, sequential_d n c = (1-c)+n*c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_denominator_split : forall n c:R, sequential_d n c = (1-c)+n*c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_denominator_two_blocks] (theorem).
+ Mathematical meaning: Adding a block of k observations increments common-mode energy by k times the correlation.
+ Exact checked proposition: forall n k c:R, sequential_d (n+k) c = sequential_d n c + k*c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_denominator_two_blocks : forall n k c:R, sequential_d (n+k) c = sequential_d n c + k*c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_denominator_three_blocks] (theorem).
+ Mathematical meaning: Three-block common-mode energy has an exact total-increment decomposition.
+ Exact checked proposition: forall n k l c:R, sequential_d (n+k+l) c = sequential_d n c+(k+l)*c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_denominator_three_blocks : forall n k l c:R, sequential_d (n+k+l) c = sequential_d n c+(k+l)*c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_denominator_three_stage] (theorem).
+ Mathematical meaning: Three staged history lengths yield the same common-mode denominator as pooled history.
+ Exact checked proposition: forall n k l c:R, sequential_d (n+k+l) c = sequential_d n c+k*c+l*c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_denominator_three_stage : forall n k l c:R, sequential_d (n+k+l) c = sequential_d n c+k*c+l*c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_denominator_four_stage] (theorem).
+ Mathematical meaning: Four staged history increments can be pooled before computing covariance feasibility.
+ Exact checked proposition: forall n k l m c:R, sequential_d (n+k+l+m) c = sequential_d n c+(k+l+m)*c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_denominator_four_stage : forall n k l m c:R, sequential_d (n+k+l+m) c = sequential_d n c+(k+l+m)*c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_denominator_difference] (theorem).
+ Mathematical meaning: The change in the common eigenvalue identifies the sign of correlation.
+ Exact checked proposition: forall n k c:R, sequential_d (n+k) c-sequential_d n c=k*c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_denominator_difference : forall n k c:R, sequential_d (n+k) c-sequential_d n c=k*c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_denominator_reference_shift] (theorem).
+ Mathematical meaning: Two future-batch lengths change the common eigenvalue by their size contrast.
+ Exact checked proposition: forall n k l c:R, sequential_d (n+k) c-sequential_d (n+l) c=(k-l)*c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_denominator_reference_shift : forall n k l c:R, sequential_d (n+k) c-sequential_d (n+l) c=(k-l)*c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_denominator_two_stage_difference] (theorem).
+ Mathematical meaning: Common-eigenvalue changes can be computed after an existing conditioning step.
+ Exact checked proposition: forall n k l c:R, sequential_d (n+k+l) c-sequential_d (n+k) c=l*c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_denominator_two_stage_difference : forall n k l c:R, sequential_d (n+k+l) c-sequential_d (n+k) c=l*c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_denominator_three_stage_difference] (theorem).
+ Mathematical meaning: Common-eigenvalue increases telescope over two newly observed batches.
+ Exact checked proposition: forall n k l c:R, sequential_d (n+k+l) c-sequential_d n c=(k+l)*c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_denominator_three_stage_difference : forall n k l c:R, sequential_d (n+k+l) c-sequential_d n c=(k+l)*c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_denominator_reflection] (theorem).
+ Mathematical meaning: Symmetric history-size perturbations preserve the midpoint of the covariance eigenvalue.
+ Exact checked proposition: forall n k c:R, sequential_d (n+k) c+sequential_d (n-k) c=2*sequential_d n c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_denominator_reflection : forall n k c:R, sequential_d (n+k) c+sequential_d (n-k) c=2*sequential_d n c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_denominator_double] (theorem).
+ Mathematical meaning: Doubling test count gives a closed common-eigenvalue identity.
+ Exact checked proposition: forall n c:R, sequential_d (2*n) c=2*sequential_d n c-(1-c).
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_denominator_double : forall n c:R, sequential_d (2*n) c=2*sequential_d n c-(1-c).
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_denominator_pool] (theorem).
+ Mathematical meaning: Two separately computed common-mode denominators combine with one contrast correction.
+ Exact checked proposition: forall n k c:R, sequential_d (n+k) c=sequential_d n c+sequential_d k c-(1-c).
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_denominator_pool : forall n k c:R, sequential_d (n+k) c=sequential_d n c+sequential_d k c-(1-c).
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_denominator_pool_three] (theorem).
+ Mathematical meaning: Three independently evaluated battery denominators combine without double-counting contrast modes.
+ Exact checked proposition: forall n k l c:R, sequential_d (n+k+l) c=sequential_d n c+sequential_d k c+sequential_d l c-2*(1-c).
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_denominator_pool_three : forall n k l c:R, sequential_d (n+k+l) c=sequential_d n c+sequential_d k c+sequential_d l c-2*(1-c).
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_denominator_contrast] (theorem).
+ Mathematical meaning: The common eigenvalue is the dimension minus contrast-mode adjustment.
+ Exact checked proposition: forall n c:R, sequential_d n c=n-(n-1)*(1-c).
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_denominator_contrast : forall n c:R, sequential_d n c=n-(n-1)*(1-c).
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_schur_cross_closed] (theorem).
+ Mathematical meaning: Observed conditioning converts cross-covariance into a rational Gaussian residual covariance.
+ Exact checked proposition: forall n c:R, sequential_d n c<>0 -> equicorr_schur_cross n c=c*(1-c)/sequential_d n c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_schur_cross_closed : forall n c:R, sequential_d n c<>0 -> equicorr_schur_cross n c=c*(1-c)/sequential_d n c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_schur_diagonal_closed] (theorem).
+ Mathematical meaning: The exact future-score conditional variance is the residual contrast plus posterior common energy.
+ Exact checked proposition: forall n c:R, sequential_d n c<>0 -> equicorr_schur_diagonal n c=(1-c)*(1+n*c)/sequential_d n c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_schur_diagonal_closed : forall n c:R, sequential_d n c<>0 -> equicorr_schur_diagonal n c=(1-c)*(1+n*c)/sequential_d n c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_schur_contrast_gap] (theorem).
+ Mathematical meaning: Conditioning leaves future-score contrast variance unchanged.
+ Exact checked proposition: forall n c:R, sequential_d n c<>0 -> equicorr_schur_diagonal n c-equicorr_schur_cross n c=1-c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_schur_contrast_gap : forall n c:R, sequential_d n c<>0 -> equicorr_schur_diagonal n c-equicorr_schur_cross n c=1-c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_schur_diagonal_decomposition] (theorem).
+ Mathematical meaning: The diagonal of conditional covariance splits into idiosyncratic and common components.
+ Exact checked proposition: forall n c:R, sequential_d n c<>0 -> equicorr_schur_diagonal n c=(1-c)+equicorr_schur_cross n c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_schur_diagonal_decomposition : forall n c:R, sequential_d n c<>0 -> equicorr_schur_diagonal n c=(1-c)+equicorr_schur_cross n c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_schur_common_mode] (theorem).
+ Mathematical meaning: The k-future-score common eigenvalue is the full-to-observed covariance ratio.
+ Exact checked proposition: forall n k c:R, sequential_d n c<>0 -> equicorr_schur_diagonal n c+(k-1)*equicorr_schur_cross n c=(1-c)*sequential_d (n+k) c/sequential_d n c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_schur_common_mode : forall n k c:R, sequential_d n c<>0 -> equicorr_schur_diagonal n c+(k-1)*equicorr_schur_cross n c=(1-c)*sequential_d (n+k) c/sequential_d n c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_schur_future_sum_variance] (theorem).
+ Mathematical meaning: Predictive variance for the sum of k future scores is the common-mode eigenvalue times k.
+ Exact checked proposition: forall n k c:R, sequential_d n c<>0 -> k*equicorr_schur_diagonal n c+k*(k-1)*equicorr_schur_cross n c=k*(1-c)*sequential_d (n+k) c/sequential_d n c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_schur_future_sum_variance : forall n k c:R, sequential_d n c<>0 -> k*equicorr_schur_diagonal n c+k*(k-1)*equicorr_schur_cross n c=k*(1-c)*sequential_d (n+k) c/sequential_d n c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_schur_future_mean_variance] (theorem).
+ Mathematical meaning: Variance of the future-batch average scales as the common-mode eigenvalue divided by k.
+ Exact checked proposition: forall n k c:R, k<>0 -> sequential_d n c<>0 -> (k*equicorr_schur_diagonal n c+k*(k-1)*equicorr_schur_cross n c)/(k*k)=(1-c)*sequential_d (n+k) c/(k*sequential_d n c).
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_schur_future_mean_variance : forall n k c:R, k<>0 -> sequential_d n c<>0 -> (k*equicorr_schur_diagonal n c+k*(k-1)*equicorr_schur_cross n c)/(k*k)=(1-c)*sequential_d (n+k) c/(k*sequential_d n c).
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_schur_first_diagonal] (theorem).
+ Mathematical meaning: One observed score produces the usual two-dimensional Gaussian regression residual variance.
+ Exact checked proposition: forall c:R, equicorr_schur_diagonal 1 c=1-c*c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_schur_first_diagonal : forall c:R, equicorr_schur_diagonal 1 c=1-c*c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_schur_first_cross] (theorem).
+ Mathematical meaning: One observed score produces the exact future-pair cross-covariance.
+ Exact checked proposition: forall c:R, equicorr_schur_cross 1 c=c*(1-c).
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_schur_first_cross : forall c:R, equicorr_schur_cross 1 c=c*(1-c).
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_schur_second_diagonal] (theorem).
+ Mathematical meaning: Two observed scores give an explicit future residual variance including negative correlation.
+ Exact checked proposition: forall c:R, 1+c<>0 -> equicorr_schur_diagonal 2 c=(1-c)*(1+2*c)/(1+c).
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_schur_second_diagonal : forall c:R, 1+c<>0 -> equicorr_schur_diagonal 2 c=(1-c)*(1+2*c)/(1+c).
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_schur_second_cross] (theorem).
+ Mathematical meaning: Two observed scores yield an explicit signed cross-covariance.
+ Exact checked proposition: forall c:R, 1+c<>0 -> equicorr_schur_cross 2 c=c*(1-c)/(1+c).
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_schur_second_cross : forall c:R, 1+c<>0 -> equicorr_schur_cross 2 c=c*(1-c)/(1+c).
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_mean_update] (theorem).
+ Mathematical meaning: The posterior mean after a new data batch is an exact weighted update of the previous mean.
+ Exact checked proposition: forall n k c s t:R, sequential_d n c<>0 -> sequential_d (n+k) c<>0 -> hp (n+k) c (s+t)=(sequential_d n c*hp n c s+c*t)/sequential_d (n+k) c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_mean_update : forall n k c s t:R, sequential_d n c<>0 -> sequential_d (n+k) c<>0 -> hp (n+k) c (s+t)=(sequential_d n c*hp n c s+c*t)/sequential_d (n+k) c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_mean_update_delta] (theorem).
+ Mathematical meaning: The posterior-mean innovation is the new batch sum minus its previous conditional forecast.
+ Exact checked proposition: forall n k c s t:R, sequential_d n c<>0 -> sequential_d (n+k) c<>0 -> hp (n+k) c (s+t)-hp n c s=c*(sequential_d n c*t-k*c*s)/(sequential_d n c*sequential_d (n+k) c).
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_mean_update_delta : forall n k c s t:R, sequential_d n c<>0 -> sequential_d (n+k) c<>0 -> hp (n+k) c (s+t)-hp n c s=c*(sequential_d n c*t-k*c*s)/(sequential_d n c*sequential_d (n+k) c).
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_mean_same_sum_update] (theorem).
+ Mathematical meaning: Appending zero-sum observations shrinks the same observed score sum toward zero when c is positive.
+ Exact checked proposition: forall n k c s:R, sequential_d n c<>0 -> sequential_d (n+k) c<>0 -> hp (n+k) c s=hp n c s-k*c*c*s/(sequential_d n c*sequential_d (n+k) c).
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_mean_same_sum_update : forall n k c s:R, sequential_d n c<>0 -> sequential_d (n+k) c<>0 -> hp (n+k) c s=hp n c s-k*c*c*s/(sequential_d n c*sequential_d (n+k) c).
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_mean_telescope] (theorem).
+ Mathematical meaning: Pooling two added batches agrees with the direct Gaussian posterior mean from the initial history.
+ Exact checked proposition: forall n k l c s t u:R, sequential_d n c<>0 -> sequential_d (n+k+l) c<>0 -> hp (n+k+l) c (s+t+u)=(sequential_d n c*hp n c s+c*(t+u))/sequential_d (n+k+l) c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_mean_telescope : forall n k l c s t u:R, sequential_d n c<>0 -> sequential_d (n+k+l) c<>0 -> hp (n+k+l) c (s+t+u)=(sequential_d n c*hp n c s+c*(t+u))/sequential_d (n+k+l) c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_mean_update_gain] (theorem).
+ Mathematical meaning: The normalized Gaussian update has exact old-predictor and new-observation coefficients.
+ Exact checked proposition: forall n k c s t:R, sequential_d n c<>0 -> sequential_d (n+k) c<>0 -> hp (n+k) c (s+t)=sequential_d n c/sequential_d (n+k) c*hp n c s+c*t/sequential_d (n+k) c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_mean_update_gain : forall n k c s t:R, sequential_d n c<>0 -> sequential_d (n+k) c<>0 -> hp (n+k) c (s+t)=sequential_d n c/sequential_d (n+k) c*hp n c s+c*t/sequential_d (n+k) c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_mean_increment_zero] (theorem).
+ Mathematical meaning: A new batch equal to its predicted total is an exact posterior fixed point.
+ Exact checked proposition: forall n k c s:R, sequential_d n c<>0 -> sequential_d (n+k) c<>0 -> hp (n+k) c (s+k*hp n c s)=hp n c s.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_mean_increment_zero : forall n k c s:R, sequential_d n c<>0 -> sequential_d (n+k) c<>0 -> hp (n+k) c (s+k*hp n c s)=hp n c s.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_mean_one_score_update] (theorem).
+ Mathematical meaning: A single new score updates the Gaussian posterior mean with a one-step gain.
+ Exact checked proposition: forall n c s x:R, sequential_d n c<>0 -> sequential_d (n+1) c<>0 -> hp (n+1) c (s+x)=(sequential_d n c*hp n c s+c*x)/sequential_d (n+1) c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_mean_one_score_update : forall n c s x:R, sequential_d n c<>0 -> sequential_d (n+1) c<>0 -> hp (n+1) c (s+x)=(sequential_d n c*hp n c s+c*x)/sequential_d (n+1) c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_mean_one_score_innovation] (theorem).
+ Mathematical meaning: The single-observation posterior correction is proportional to its prediction innovation.
+ Exact checked proposition: forall n c s x:R, sequential_d n c<>0 -> sequential_d (n+1) c<>0 -> hp (n+1) c (s+x)-hp n c s=c*(x-hp n c s)/sequential_d (n+1) c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_mean_one_score_innovation : forall n c s x:R, sequential_d n c<>0 -> sequential_d (n+1) c<>0 -> hp (n+1) c (s+x)-hp n c s=c*(x-hp n c s)/sequential_d (n+1) c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_mean_two_score_update] (theorem).
+ Mathematical meaning: Two new scores can be assimilated by a single pooled posterior update.
+ Exact checked proposition: forall n c s x y:R, sequential_d n c<>0 -> sequential_d (n+2) c<>0 -> hp (n+2) c (s+x+y)=(sequential_d n c*hp n c s+c*(x+y))/sequential_d (n+2) c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_mean_two_score_update : forall n c s x y:R, sequential_d n c<>0 -> sequential_d (n+2) c<>0 -> hp (n+2) c (s+x+y)=(sequential_d n c*hp n c s+c*(x+y))/sequential_d (n+2) c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
+Qed.
+
+(** [d051_mean_two_score_innovation] (theorem).
+ Mathematical meaning: The two-score update depends only on the aggregate deviation from the previous predictor.
+ Exact checked proposition: forall n c s x y:R, sequential_d n c<>0 -> sequential_d (n+2) c<>0 -> hp (n+2) c (s+x+y)-hp n c s=c*(x+y-2*hp n c s)/sequential_d (n+2) c.
+ Premises and side conditions: Scores and observation counts are ideal real-valued symbolic parameters. Every inverse requires its explicitly stated nonzero denominator. The algebraic conclusions are valid for signed correlations wherever the assumptions hold; probabilistic feasibility requires the full PSD covariance domain separately.
+ Proof/definition method: Reduce to the canonical rational covariance and sufficient-history formulas, then use Stdlib field and polynomial normalization. No bespoke sums, matrices, or distributions.
+ Library reuse: SequentialReport.sequential_d, EquicorrelationSpectral Schur entries, UnequalHistoryLinearPrediction.hp; Stdlib Reals, Field and Psatz.
+ Boundary: Deterministic necessary consequences of the Gaussian model; neither the existence of Gaussian random variables nor the measure-theoretic conditional-expectation identity is asserted here.
+*)
+Theorem d051_mean_two_score_innovation : forall n c s x y:R, sequential_d n c<>0 -> sequential_d (n+2) c<>0 -> hp (n+2) c (s+x+y)-hp n c s=c*(x+y-2*hp n c s)/sequential_d (n+2) c.
+Proof.
+  intros; cbv [hp sequential_d equicorr_schur_diagonal equicorr_schur_cross] in *; field; nra.
 Qed.
