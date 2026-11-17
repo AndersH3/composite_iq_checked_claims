@@ -90,6 +90,17 @@ jobs:
             test "$(sed -n "${qedline}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Qed."
             sed -i "${proofline},${qedline}c\\    Proof.\\n      intros Hlist Hxx Hall.\\n      rewrite forallb_ordpairs_refl_conj in Hlist.\\n      apply andb_true_iff in Hlist as [Hord Hdiag].\\n      rewrite forallb_ordpairs_refl_conj.\\n      apply andb_true_iff; split.\\n      - apply forallb_ordpairs_app_cons; assumption.\\n      - rewrite forallb_app; simpl.\\n        rewrite Hdiag, Hxx; intuition.\\n    Qed." \
               rocq/lib_utils/LibUtilsListAdd.v
+            # Upstream remove_in_neq depended on intuition to discharge an
+            # induction case; make the two membership directions explicit.
+            # The statement and use of Stdlib List.remove remain unchanged.
+            remove_line=$(grep -n "^    Lemma remove_in_neq$" rocq/lib_utils/LibUtilsListAdd.v | cut -d: -f1)
+            test -n "$remove_line"
+            pstart=$((remove_line + 3))
+            pend=$((remove_line + 9))
+            test "$(sed -n "${pstart}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Proof."
+            test "$(sed -n "${pend}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Qed."
+            sed -i "${pstart},${pend}c\\    Proof.\\n      intros Hxy.\\n      induction l as [|a l IH]; simpl.\\n      - tauto.\\n      - destruct (eqdec y a) as [Hya | Hya]; subst.\\n        + split.\\n          * intros [Hxa | Hin]; [congruence | exact (proj1 IH Hin)].\\n          * intros Hin; right; exact (proj2 IH Hin).\\n        + simpl; split.\\n          * intros [Hxa | Hin].\\n            -- left; exact Hxa.\\n            -- right; exact (proj1 IH Hin).\\n          * intros [Hxa | Hin].\\n            -- left; exact Hxa.\\n            -- right; exact (proj2 IH Hin).\\n    Qed." \
+              rocq/lib_utils/LibUtilsListAdd.v
             # fixed_point.v upstream relied on intuition to discharge
             # an elementary successor-order side condition. Under 9.2 that
             # goal remains open and the next existential tactic runs on it.
