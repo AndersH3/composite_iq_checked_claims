@@ -356,7 +356,9 @@ Proof.
        by (field; lra).
      apply Rmult_le_pos; lra. }
    destruct (Rlt_le_dec c 1) as [Hstrict|Heq].
-   + nra.
+   + apply (Rmult_le_reg_l (k*(1-c))); [nra|].
+     replace (k*(1-c)*0) with 0 by ring.
+     exact Hnumerator.
    + assert (Hequal : c=1) by lra.
      subst c; unfold sequential_d; nra.
  - intros [Hc Hfull] energy total Hfeasible.
@@ -415,7 +417,9 @@ Proof.
               sequential_d r c)*sequential_d r c)
        by (field; lra).
      apply Rmult_lt_0_compat; assumption. }
-   nra.
+   apply (Rmult_lt_reg_l (k*(1-c))); [nra|].
+   replace (k*(1-c)*0) with 0 by ring.
+   exact Hnumerator.
  - intros [Hc Hfull] energy total Hpositive Hfeasible.
    apply (gcd_schur_pd_arbitrary_sign r k c energy total);
      assumption.
