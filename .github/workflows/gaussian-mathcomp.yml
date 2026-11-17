@@ -34,7 +34,8 @@ jobs:
         shell: bash
         run: |
           docker run --rm -v "$PWD:/workspace:ro" rocq/rocq-prover:9.2.0 sh -euc '
-            opam repo add rocq-released https://rocq-prover.org/opam/released -y || :
+            opam repository set-url rocq-released https://rocq-prover.org/opam/released -y
+            opam update -y
             opam install -y -j 3 rocq-core.9.2.0 rocq-mathcomp-analysis.1.18.0
             mkdir -p /tmp/gaussian-mathcomp
             cp /workspace/analyses/sequential-conditional-means/mathcomp/GaussianPosteriorMeasure.v /tmp/gaussian-mathcomp/
