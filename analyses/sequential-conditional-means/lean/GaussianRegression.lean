@@ -209,4 +209,101 @@ theorem gaussian_equicorrelated_history_condExp
   rw [hDecomposition] at hCE
   exact hCE
 
+/--
+**Gaussian affine-regression closure under linear transformations.**
+
+Starting only from a jointly Gaussian pair (future score, observed-score
+vector), a continuous linear projection L of the observed vector
+produces a jointly Gaussian pair (future score minus L(observed),
+observed). This is the exact closure property needed to avoid assuming
+separately that the regression residual is jointly Gaussian.
+
+The construction reuses the standard continuous-linear projections from
+a product, their composition, subtraction and pair construction, and
+mathlib's HasGaussianLaw.map_fun. It does not reimplement Gaussian
+characteristic functions or define a new probability measure.
+-/
+theorem gaussian_joint_linear_residual
+    {future : Ω → ℝ} {observed : Ω → E}
+    (L : E →L[ℝ] ℝ)
+    (hJoint : HasGaussianLaw (fun ω => (future ω, observed ω)) μ) :
+    HasGaussianLaw (fun ω => (future ω - L (observed ω), observed ω)) μ := by
+  let first : (ℝ × E) →L[ℝ] ℝ :=
+    ContinuousLinearMap.fst ℝ ℝ E
+  let second : (ℝ × E) →L[ℝ] E :=
+    ContinuousLinearMap.snd ℝ ℝ E
+  let regressionTransform : (ℝ × E) →L[ℝ] (ℝ × E) :=
+    (first - L.comp second).prod second
+  have hTransformed := hJoint.map_fun regressionTransform
+  simpa [regressionTransform, first, second] using hTransformed
+
+/--
+**Measure-theoretic Gaussian linear-regression conditional expectation
+with the joint normality hypothesis on the ORIGINAL observations.**
+
+Suppose (Y,Z) is jointly Gaussian, L is a continuous linear predictor,
+Y and Z are measurable, the residual Y-L(Z) is centered, and its
+covariance with every continuous linear functional of Z is zero.
+By the previously kernel-checked linear closure theorem, (Y-L(Z),Z)
+is jointly Gaussian. Mathlib then proves the residual independent of
+the entire observed sigma algebra, and the conditional-expectation
+universal property identifies E[Y | sigma(Z)] = L(Z) a.e.
+
+In contrast to the first Gaussian CE theorem, this statement DOES NOT
+assume the transformed residual has a Gaussian joint law: it derives
+that fact from original joint Gaussianity using mathlib's maintained
+closure theorem. The remaining equicorrelation-specific task is
+discharging the explicit covariance orthogonality premise from the
+known full-battery covariance matrix, already established algebraically
+in Rocq but not yet mechanically bridged across provers.
+-/
+theorem gaussian_linear_projection_condExp
+    {future : Ω → ℝ} {observed : Ω → E}
+    (L : E →L[ℝ] ℝ)
+    (hJoint : HasGaussianLaw (fun ω => (future ω, observed ω)) μ)
+    (hCovarianceOrthogonal :
+      ∀ (A : StrongDual ℝ ℝ) (B : StrongDual ℝ E),
+        covariance
+          (A ∘ (fun ω => future ω - L (observed ω)))
+          (B ∘ observed) μ = 0)
+    (hObservedMeasurable : Measurable observed)
+    (hFutureMeasurable : Measurable future)
+    (hCenteredResidual :
+      (∫ ω, future ω - L (observed ω) ∂μ) = 0) :
+    μ[future | MeasurableSpace.comap observed inferInstance] =ᵐ[μ]
+      (fun ω => L (observed ω)) := by
+  have hGaussianResidual :
+      HasGaussianLaw
+        (fun ω => (future ω - L (observed ω), observed ω)) μ :=
+    gaussian_joint_linear_residual L hJoint
+  have hResidualMeasurable :
+      Measurable (fun ω => future ω - L (observed ω)) :=
+    hFutureMeasurable.sub (L.continuous.measurable.comp hObservedMeasurable)
+  have hObsComap :
+      Measurable[MeasurableSpace.comap observed inferInstance] observed :=
+    measurable_iff_comap_le.mpr le_rfl
+  have hPredictorStrong :
+      StronglyMeasurable[MeasurableSpace.comap observed inferInstance]
+        (fun ω => L (observed ω)) :=
+    (L.continuous.measurable.comp hObsComap).stronglyMeasurable
+  have hPredictorIntegrable :
+      Integrable (fun ω => L (observed ω)) μ :=
+    (hJoint.snd.map_fun L).integrable
+  have hCE :=
+    gaussian_regression_condExp
+      (observed := observed)
+      (innovation := fun ω => future ω - L (observed ω))
+      (predictor := fun ω => L (observed ω))
+      hGaussianResidual hCovarianceOrthogonal
+      hObservedMeasurable hResidualMeasurable
+      hPredictorStrong hPredictorIntegrable hCenteredResidual
+  have hPointwise :
+      (fun ω => L (observed ω)) +
+        (fun ω => future ω - L (observed ω)) = future := by
+    funext ω
+    simp only [Pi.add_apply]
+    ring
+  rw [hPointwise] at hCE
+  exact hCE
+
 end CompositeIQ.GaussianRegression
