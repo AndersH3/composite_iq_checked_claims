@@ -92,3 +92,16 @@ test "$(sed -n 1147p rocq/CertRL/LM/fixed_point.v)" = "apply Hev."
 test "$(sed -n 1148p rocq/CertRL/LM/fixed_point.v)" = "intuition."
 sed -i "1148c\\apply Nat.le_add_r." rocq/CertRL/LM/fixed_point.v
 
+
+# `replace_all_remove_neq` previously relies on a short intuition
+# script that does not close the list-cons elimination cases in Rocq 9.2.
+# Keep the lemma's original statement and prove by case splitting on
+# equality of the head with each of the two replacement targets.
+replace_line=$(grep -n "^    Lemma replace_all_remove_neq " rocq/lib_utils/LibUtilsListAdd.v | cut -d: -f1)
+test -n "$replace_line"
+proofline=$((replace_line + 7))
+qedline=$((replace_line + 17))
+test "$(sed -n "${proofline}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Proof."
+test "$(sed -n "${qedline}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Qed."
+sed -i "${proofline},${qedline}c\\    Proof.\\n      intros Hv Hn.\\n      induction l as [|a l IH]; simpl; [reflexivity |].\\n      destruct (eqdec a v) as [Heq | Hneq].\\n      - subst a; simpl.\\n        destruct (eqdec v0 n) as [Hbad | _]; [congruence |].\\n        destruct (eqdec v0 v) as [Hbad | _]; [congruence |].\\n        simpl; rewrite IH; reflexivity.\\n      - destruct (eqdec v0 a) as [Heq | Hneq0].\\n        + subst a; simpl.\\n          destruct (eqdec v0 v) as [Hbad | _]; [congruence |].\\n          exact IH.\\n        + simpl.\\n          destruct (eqdec a v) as [Hbad | _]; [congruence |].\\n          destruct (eqdec v0 a) as [Hbad | _]; [congruence |].\\n          now rewrite IH.\\n    Qed." \
+  rocq/lib_utils/LibUtilsListAdd.v
