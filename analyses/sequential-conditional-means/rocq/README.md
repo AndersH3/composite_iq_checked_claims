@@ -1,5 +1,20 @@
 # Sequential conditional-means — Rocq formalization
 
+## D051 — 101 additional Rocq-verified Gaussian update and covariance propositions
+
+**AI disclosure:** These statements, proof scripts, and documentation were AI-assisted under researcher/requester Anders Hellström. Proof status is based solely on the Rocq 9.2 kernel, not theorem counts or an informal argument.
+
+The [exact pinned Rocq workflow](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44140614519) accepted **101 additional proofs** at commit [`27306fe4`](https://github.com/AndersH3/composite_iq_checked_claims/commit/27306fe455f97ad257183fff4a18f3f03f4a68d1). These additions raise the D050/D051 Gaussian and covariance collection from **56 to 157 kernel-checked theorem declarations**:
+
+- **29** equicorrelation common-eigenvalue and sequential-history denominator identities, sensitivities, and block operations.
+- **34** signed Schur conditional-variance, cross-covariance, future-batch variance, and contrast/common-mode results.
+- **30** exact one-step/multistep Gaussian sufficient-statistic posterior-mean innovations, batch residuals, and update identities.
+- **8** links between the list-valued Gaussian posterior variance, Schur covariance, and posterior precision, including no-history and independent-score cases.
+
+A portion are basic arithmetic specializations and consistency checks; the numerical count must not be described as 101 independent major probability theorems. All identities assume precisely the denominators stated. Negative-correlation feasibility needs the **full** covariance PSD condition. Neither these 101 results nor the earlier 56 constructs a multivariate Gaussian measure or proves the observed-sigma-algebra conditional expectation; the FormalML/MathComp bridge is independently tracked and must pass its own CI.
+
+**Full AI disclosure:** OpenAI ChatGPT generated the candidate theorems, proofs, source edits, and CI-backed documentation; Anders Hellström directed the research questions and verification requirements. A green kernel check establishes only the exact propositions compiled, not empirical IQ validity, a proof of Gaussianity, or peer-reviewed scientific conclusions.
+
 ## D050 — 56 checked Gaussian density and signed covariance-domain proofs
 
 **AI disclosure:** These candidate formal proofs, probability model analysis and
