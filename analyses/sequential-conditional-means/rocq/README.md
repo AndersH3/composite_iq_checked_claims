@@ -1,5 +1,23 @@
 # Sequential conditional-means — Rocq formalization
 
+## D052 — 30 additional verified signed-covariance and monotonicity theorems
+
+**AI disclosure:** OpenAI ChatGPT generated the candidate statements, Rocq proofs and documentation under the direction of researcher/requester Anders Hellström. Formal verification means acceptance by the pinned Rocq 9.2 kernel at the cited exact commit, not merely written proof scripts.
+
+[Successful Rocq 9.2 CI run #44143829182](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44143829182) verifies **30 additional D052 results** at [`03c03077`](https://github.com/AndersH3/composite_iq_checked_claims/commit/03c030770f16db590bc3b077981fafcde8c05f46). Together with D051's 101 new proofs and D050's 56, this is **187 source-ordered, kernel-checked theorem declarations**, **131 of them new in D051–D052**.
+
+The D052 additions include:
+
+- **10** signed common-mode eigenvalue inequalities and battery-length monotonicity results.
+- **10** conditional cross-covariance and diagonal/contrast variance bounds, including strict variance reduction for nonzero correlation.
+- **4** PSD/PD common-mode and future-score-total variance inequalities.
+- **4** monotonicity and prior-comparison results for prediction variance and residual covariance, reusing the already checked Schur variance-reduction identity and unchanged contrast mode.
+- **2** sign-preservation properties of the sufficient-history predictor.
+
+All formulas are symbolic. They require the explicit nonzero denominators and covariance-domain assumptions stated in their respective theorems; PSD admissibility for negatively correlated jointly Gaussian scores is a separate full-battery constraint. The signed Gaussian joint probability measure, independence of uncorrelated Gaussian blocks, and the observed-sigma-algebra conditional expectation remain unproved in Rocq. Separate MathComp-Analysis and FormalML workflows must pass before their probability theorems can be counted.
+
+**Full AI disclosure:** OpenAI generated statements, proof strategies, source code, documentation, CI fixes, and theorem counts; Anders Hellström specified the research problems and proof-assistant requirements. Automated kernel acceptance certifies the exact compiled propositions only, not empirical IQ validity, simulation methodology, or independent human peer review.
+
 ## D051 — 101 additional Rocq-verified Gaussian update and covariance propositions
 
 **AI disclosure:** These statements, proof scripts, and documentation were AI-assisted under researcher/requester Anders Hellström. Proof status is based solely on the Rocq 9.2 kernel, not theorem counts or an informal argument.
