@@ -21,11 +21,12 @@ except ModuleNotFoundError:
 
 NEGATIVE_CONTROL = "tests/fixtures/contract_negative_control.py"
 
-# Deal 4.24.6 synthesizes AST nodes with invalid source ranges when it
-# expands interprocedural contracts on Python 3.12/3.13. Reparse the generated
-# AST before compilation: source semantics and the full real Deal linter
-# remain unchanged, while the generated location metadata is regenerated.
-# Keep the upstream linter and all diagnostics; do not skip source files.
+# Deal 4.24.6 synthesizes bytecode AST nodes with source end offsets
+# earlier than their start offsets on both Python 3.12 and Python 3.13.
+# Correct *only the invalid location metadata* before compilation: do not
+# rewrite the source/annotations or intercept or discard lint diagnostics.
+# This launcher is executed solely by the lint subprocess and retains all
+# of the upstream Deal static analysis and the exact negative control.
 LINT_BOOTSTRAP = """\
 import ast
 import sys
@@ -33,13 +34,25 @@ from deal._cached_property import cached_property
 from deal.linter._contract import Contract
 from deal._cli._main import main
 
-Contract.bytecode = cached_property(
-    lambda contract: compile(
-        ast.parse(ast.unparse(ast.fix_missing_locations(contract.module))),
-        filename="<ast>",
-        mode="exec",
-    )
-)
+def _compile_fixed_locations(contract):
+    """Rebuild only invalid synthetic AST source offsets before Deal compile."""
+    module = ast.fix_missing_locations(contract.module)
+    for node in ast.walk(module):
+        start_line = getattr(node, "lineno", None)
+        end_line = getattr(node, "end_lineno", None)
+        if start_line is None or end_line is None:
+            continue
+        if end_line < start_line:
+            node.end_lineno = start_line
+            end_line = start_line
+        start_col = getattr(node, "col_offset", None)
+        end_col = getattr(node, "end_col_offset", None)
+        if (start_line == end_line and start_col is not None
+                and end_col is not None and end_col < start_col):
+            node.end_col_offset = start_col
+    return compile(module, filename="<ast>", mode="exec")
+
+Contract.bytecode = cached_property(_compile_fixed_locations)
 raise SystemExit(main(sys.argv[1:]))
 """
 
