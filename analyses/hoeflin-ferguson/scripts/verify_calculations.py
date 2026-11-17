@@ -168,10 +168,10 @@ def thresholds() -> list[tuple[str, float, float]]:
         rows.append((str(n), z, 100 + 16 * z))
     z_limit = Q * math.sqrt(RHO)
     rows.append(("infinity", z_limit, 100 + 16 * z_limit))
-    # The Deal partial executor models the loop as empty; enforce the
-    # non-vacuous table schema inside the runtime implementation as well.
-    if not _valid_rows(rows):
-        raise ValueError("Computed threshold table violates the row schema")
+    # Assert nonempty construction independently of the postcondition.
+    # The remaining row-schema guarantees apply to the nonempty result.
+    if not rows:
+        raise ValueError("Computed threshold table is unexpectedly empty")
     return rows
 
 
