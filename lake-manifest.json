@@ -108,7 +108,7 @@
       "manifestFile": "lake-manifest.json",
       "inputRev": "6d97e8ad9c32c778e7000ffda543a29488155467",
       "inherited": false,
-      "configFile": "lakefile.toml"
+      "configFile": "lakefile.lean"
     }
   ],
   "name": "composite_iq_gaussian",
