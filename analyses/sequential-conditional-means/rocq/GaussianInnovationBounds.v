@@ -319,7 +319,14 @@ Qed.
 *)
 Theorem gib_nested_diagonal_strict_variance_reduction : forall n k c:R, 0<k -> c<>0 -> c<1 -> 0<sequential_d n c -> 0<sequential_d (n+k) c -> equicorr_schur_diagonal (n+k) c<equicorr_schur_diagonal n c.
 Proof.
-  intros n k c Hk Hc Hu Hn Hnk; pose proof (d051_cov_diagonal_variance_drop n k c (Rgt_not_eq _ _ Hn) (Rgt_not_eq _ _ Hnk)) as Hdiff; assert (Hnum:0<k*c*c*(1-c)) by nra; assert (Hden:0<sequential_d n c*sequential_d (n+k) c) by nra; assert (Hratio:0<k*c*c*(1-c)/(sequential_d n c*sequential_d (n+k) c)) by (unfold Rdiv; apply Rmult_lt_0_compat; [exact Hnum|apply Rinv_0_lt_compat; exact Hden]); lra.
+  intros n k c Hk Hc Hu Hn Hnk; pose proof (d051_cov_diagonal_variance_drop n k c (Rgt_not_eq _ _ Hn) (Rgt_not_eq _ _ Hnk)) as Hdiff; assert (Hsq:0<c*c) by nra;
+  assert (Hnum:0<k*c*c*(1-c)).
+  { replace (k*c*c*(1-c)) with ((k*(c*c))*(1-c)) by ring.
+    apply Rmult_lt_0_compat.
+    - apply Rmult_lt_0_compat; assumption.
+    - lra. }
+  assert (Hden:0<sequential_d n c*sequential_d (n+k) c)
+    by (apply Rmult_lt_0_compat; assumption); assert (Hratio:0<k*c*c*(1-c)/(sequential_d n c*sequential_d (n+k) c)) by (unfold Rdiv; apply Rmult_lt_0_compat; [exact Hnum|apply Rinv_0_lt_compat; exact Hden]); lra.
 Qed.
 
 (** [gib_nested_cross_strict_covariance_reduction] (theorem).
@@ -339,7 +346,7 @@ Qed.
 *)
 Theorem gib_nested_cross_strict_covariance_reduction : forall n k c:R, 0<k -> c<>0 -> c<1 -> 0<sequential_d n c -> 0<sequential_d (n+k) c -> equicorr_schur_cross (n+k) c<equicorr_schur_cross n c.
 Proof.
-  intros n k c Hk Hc Hu Hn Hnk; pose proof (nested_diagonal_strict_variance_reduction n k c Hk Hc Hu Hn Hnk) as Hvar; pose proof (equicorr_schur_diagonal_contrast_gap n c) as H1; pose proof (equicorr_schur_diagonal_contrast_gap (n+k) c) as H2; lra.
+  intros n k c Hk Hc Hu Hn Hnk; pose proof (gib_nested_diagonal_strict_variance_reduction n k c Hk Hc Hu Hn Hnk) as Hvar; pose proof (equicorr_schur_diagonal_contrast_gap n c) as H1; pose proof (equicorr_schur_diagonal_contrast_gap (n+k) c) as H2; lra.
 Qed.
 
 (** [gib_nested_diagonal_cross_drop_equal] (theorem).
