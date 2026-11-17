@@ -531,7 +531,7 @@ Qed.
 *)
 Theorem gk_square_completion : forall xs c theta, c<>0 -> 1-c<>0 -> gk_d xs c<>0 -> gk_joint_quadratic xs c theta = gk_posterior_quadratic xs c theta + gk_evidence_quadratic xs c.
 Proof.
- intros xs c theta Hc Hnoise Hd; rewrite gk_joint_quadratic_expansion; unfold gk_posterior_quadratic, gk_evidence_quadratic, gk_precision, gk_center, gk_d, sequential_d, gk_mass, gk_sum; field; nra.
+ intros xs c theta Hc Hnoise Hd; rewrite gk_joint_quadratic_expansion; unfold gk_posterior_quadratic, gk_evidence_quadratic, gk_precision, gk_center, gk_d, sequential_d, gk_mass, gk_sum; unfold gk_d, sequential_d, gk_mass in Hd; field; nra.
 Qed.
 
 (** [gk_joint_kernel_positive] (theorem).
