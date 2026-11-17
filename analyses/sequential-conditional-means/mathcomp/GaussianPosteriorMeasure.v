@@ -41,6 +41,8 @@ Local Open Scope ring_scope.
 
 Section EquicorrelatedGaussianPosterior.
 Context {R : realType}.
+(* Supply MathComp's Borel measurable sets on the real order topology. *)
+Import MeasurableR.
 Implicit Types (c n total sigma : R) (V : set R).
 
 (** [gmc_sufficient_statistic_posterior_center] (theorem).
