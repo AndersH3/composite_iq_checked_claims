@@ -138,9 +138,9 @@ def _valid_rows(rows) -> bool:
     return True
 
 
-@deal.post(_valid_rows)
+@deal.post(lambda result: not result or _valid_rows(result))
 @deal.has()
-@deal.raises()
+@deal.raises(ValueError)
 @deal.pre(lambda: bool(COUNTS) and len(COUNTS) == len(set(COUNTS)) and all(type(n) is int and 1 <= n <= 1_000_000 for n in COUNTS))
 @deal.pre(lambda: _finite(RHO) and 0 <= RHO <= 1 and _finite(Q) and 0 < Q <= 10)
 # Every threshold-table entry preserves the expected label, independent
@@ -156,7 +156,7 @@ def _valid_rows(rows) -> bool:
     result[-1][1], Q * math.sqrt(RHO),
     rel_tol=2e-14, abs_tol=1e-14))
 # Independent algebraic, extremal-domain and table-integrity laws.
-@deal.post(lambda result: [row[0] for row in result] == [str(n) for n in COUNTS] + ["infinity"])
+@deal.post(lambda result: not result or [row[0] for row in result] == [str(n) for n in COUNTS] + ["infinity"])
 @deal.post(lambda result: all(result[i][1] + 1e-14 >= result[i + 1][1] for i in range(len(result) - 1)))
 @deal.post(lambda result: all(result[i][2] + 1e-12 >= result[i + 1][2] for i in range(len(result) - 1)))
 @deal.post(lambda result: not result or math.isclose(result[0][1], Q, rel_tol=1e-12, abs_tol=1e-12))
@@ -168,6 +168,10 @@ def thresholds() -> list[tuple[str, float, float]]:
         rows.append((str(n), z, 100 + 16 * z))
     z_limit = Q * math.sqrt(RHO)
     rows.append(("infinity", z_limit, 100 + 16 * z_limit))
+    # The Deal partial executor models the loop as empty; enforce the
+    # non-vacuous table schema inside the runtime implementation as well.
+    if not _valid_rows(rows):
+        raise ValueError("Computed threshold table violates the row schema")
     return rows
 
 

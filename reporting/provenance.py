@@ -28,13 +28,18 @@ import deal
 @deal.raises(OSError, ValueError)
 @deal.has("network", "read")
 @deal.post(lambda result: isinstance(result, str))
-@deal.post(lambda result: len(result) == 64)
+@deal.post(lambda result: not result or len(result) == 64)
 @deal.post(lambda result: result.isascii())
 @deal.post(lambda result: result == result.lower())
 @deal.post(lambda result: all(character in "0123456789abcdef" for character in result))
 def digest(path: Path) -> str:
     """SHA-256 of exactly the file bytes; no source-version claim is inferred."""
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    checksum = hashlib.sha256(path.read_bytes()).hexdigest()
+    # Runtime remains strict even when the Deal linter substitutes an
+    # abstract empty string for an external hashlib call.
+    if len(checksum) != 64:
+        raise ValueError("SHA-256 digest is not 64 hexadecimal characters")
+    return checksum
 
 
 @deal.pre(lambda path, value: isinstance(path, Path))
