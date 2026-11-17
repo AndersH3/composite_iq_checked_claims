@@ -137,10 +137,14 @@ Theorem gcd_schur_psd_arbitrary_sign : forall r k c energy total, 0<k -> c<=1 ->
  0<=energy-total*total/k -> 0<=equicorr_schur_energy r c energy total.
 Proof.
  intros r k c energy total Hk Hc Hr Ht Hfeasible.
- rewrite gcd_schur_decomposition by lra.
- assert (Hsquare:0<=total*total/k) by (unfold Rdiv; apply Rmult_le_pos; [nra|left; apply Rinv_0_lt_compat; nra]).
+ assert (Hnz : sequential_d r c <> 0) by lra.
+ rewrite (gcd_schur_decomposition r k c energy total Hk Hnz).
+ assert (Hsquare:0<=total*total/k).
+ { unfold Rdiv; apply Rmult_le_pos.
+   - apply Rle_0_sqr.
+   - left; apply Rinv_0_lt_compat; lra. }
  assert (Hfactor:0<=(1-c)*sequential_d (r+k) c/sequential_d r c)
- by (apply gcd_common_mode_sign; assumption).
+ by (apply (gcd_common_mode_sign r k c); assumption).
  apply Rplus_le_le_0_compat; apply Rmult_le_pos; nra.
 Qed.
 
@@ -166,10 +170,14 @@ Theorem gcd_schur_pd_arbitrary_sign : forall r k c energy total, 0<k -> c<1 ->
  0<equicorr_schur_energy r c energy total.
 Proof.
  intros r k c energy total Hk Hc Hr Ht He Hfeasible.
- rewrite gcd_schur_decomposition by lra.
- assert (Hsquare:0<=total*total/k) by (unfold Rdiv; apply Rmult_le_pos; [nra|left; apply Rinv_0_lt_compat; nra]).
+ assert (Hnz : sequential_d r c <> 0) by lra.
+ rewrite (gcd_schur_decomposition r k c energy total Hk Hnz).
+ assert (Hsquare:0<=total*total/k).
+ { unfold Rdiv; apply Rmult_le_pos.
+   - apply Rle_0_sqr.
+   - left; apply Rinv_0_lt_compat; lra. }
  assert (Hfactor:0<(1-c)*sequential_d (r+k) c/sequential_d r c)
- by (apply gcd_common_mode_strict; assumption).
+ by (apply (gcd_common_mode_strict r k c); assumption).
  nra.
 Qed.
 
