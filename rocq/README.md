@@ -1,5 +1,11 @@
 # Rocq formalization of checked claims
 
+## Mandatory Rocq-only verification
+
+Researcher/requester: Anders Hellström. **All formal theorems and proof obligations must be proved in Rocq and accepted by its kernel.** Lean is not an accepted alternative, even if a Lean proof happens to compile. The D050 Lean prototype and its Lake/CI configuration were deleted; the canonical Rocq workflow invokes `scripts/check_rocq_only_proofs.sh` to prevent reintroducing such files. Rocq-compatible libraries, including the Rocq Stdlib, MathComp-Analysis and FormalML, may be reused rather than recreating probability theory. An uncompiled candidate `.v` file is **not** a completed proof, and a conventional mathematical derivation is not equivalent to a Rocq proof.
+
+**AI disclosure:** The proof-language guard, documentation and formalization work were AI-assisted; verification claims apply only to the exact statements accepted by Rocq.
+
 ## D050 — 56 kernel-verified Gaussian kernel and covariance-domain results
 
 **AI disclosure:** These candidate formal proofs, probability model analysis and
@@ -17,7 +23,7 @@ documented declarations, at D050 source revision
 
 The separate MathComp-Analysis 1.18.0
 [normalized posterior-measure bridge](../analyses/sequential-conditional-means/mathcomp/GaussianPosteriorMeasure.v)
-contains three candidate proofs. These are **not** counted among the 51
+contains three candidate proofs. These are **not** counted among the 56
 until the dedicated MathComp workflow succeeds. Even a successful
 normalized posterior proof for a sample-mean observation is not yet a
 kernel-checked full-vector conditional-expectation theorem.
