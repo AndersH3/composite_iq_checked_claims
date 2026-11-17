@@ -114,3 +114,18 @@ jobs:
       - name: Enforce at least 15 distinct Deal contracts per function
         if: always()
         run: python verification/check_contract_coverage.py
+
+  # Independent full-program static lint on the previous Python interpreter.
+  # This diagnoses Deal's Python 3.13 AST bytecode compilation error without
+  # waiving any source file, contract, or deliberate negative control.
+  static-lint-python312:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements-dev.txt
+      - name: Full Deal lint on all 24 sources and negative control using Python 3.12
+        run: python verification/check_static_lint.py
