@@ -50,6 +50,15 @@ jobs:
               "        f_equal; auto."
             sed -i "614,615c\\        induction l1 as [|a l1 IH]; intros [|b l2] Hlen; simpl in *; try discriminate; try reflexivity.\n        inversion Hlen; subst; rewrite IH by assumption; reflexivity." \
               rocq/lib_utils/LibUtilsListAdd.v
+            # The next upstream forallb2/forallb equivalence also relies on
+            # fragile firstorder search; replace its proof with an explicit
+            # shape split and IH, preserving its statement and all assumptions.
+            test "$(sed -n 624p rocq/lib_utils/LibUtilsListAdd.v)" = \
+              "        induction l1; destruct l2; simpl; intuition;"
+            test "$(sed -n 625p rocq/lib_utils/LibUtilsListAdd.v)" = \
+              "          repeat rewrite andb_true_iff in *; firstorder."
+            sed -i "624,625c\\        induction l1 as [|a l1 IH]; intros [|b l2]; simpl.\n        - split; intros; intuition.\n        - split; intros H; [destruct H as [Hlen _]; discriminate | discriminate].\n        - split; intros H; [destruct H as [Hlen _]; discriminate | discriminate].\n        - split.\n          + intros [Hlen H].\n            injection Hlen as Hlen.\n            apply andb_true_iff in H as [Ha Htail].\n            apply andb_true_iff; split; [exact Ha |].\n            apply (proj1 (IH l2)); split; assumption.\n          + intros H.\n            apply andb_true_iff in H as [Ha Htail].\n            apply (proj2 (IH l2)) in Htail.\n            destruct Htail as [Hlen Htail].\n            split; [simpl; f_equal; exact Hlen |].\n            apply andb_true_iff; split; assumption." \
+              rocq/lib_utils/LibUtilsListAdd.v
             opam exec -- make -j 2
             mkdir -p /tmp/formalml-gaussian
             cp /workspace/analyses/sequential-conditional-means/formalml/GaussianResidualConditionalExpectation.v /tmp/formalml-gaussian/
