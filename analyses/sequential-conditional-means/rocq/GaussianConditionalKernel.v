@@ -675,7 +675,11 @@ Proof.
  assert (Hle : - (gk_precision xs c *
                     (theta - gk_center xs c) *
                     (theta - gk_center xs c))/2 <= 0).
- { unfold Rdiv; nra. }
+ { assert (Hsq : 0 <= (theta-gk_center xs c)*
+                           (theta-gk_center xs c)) by nra.
+   assert (Hinv : 0 <= /2).
+   { left; apply Rinv_0_lt_compat; lra. }
+   unfold Rdiv; nra. }
  destruct (Rle_lt_or_eq_dec _ _ Hle) as [Hlt|Heq].
  - left; apply exp_increasing; exact Hlt.
  - right; rewrite Heq; reflexivity.
