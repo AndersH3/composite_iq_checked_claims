@@ -1,5 +1,32 @@
 # Sequential conditional-means — Rocq formalization
 
+## D050 — Gaussian likelihood and signed-correlation covariance domain (verification pending)
+
+**AI disclosure:** These candidate formal proofs, probability model analysis and
+documentation were AI-assisted. Kernel acceptance, not source-counting,
+establishes any proved statement. The full regular conditional-expectation
+theorem remains an explicit open Rocq obligation.
+
+The new `GaussianConditionalKernel.v` specifies the latent common-factor
+Gaussian prior and arbitrary unequal-history likelihood for `0<c<1`,
+and uses finite-score sums to complete the posterior normal quadratic.
+It identifies the candidate posterior center `c*S_n/d_n(c)`, posterior
+variance `c*(1-c)/d_n(c)`, and factors the *unnormalized* joint
+density into evidence and posterior-shape kernels.
+
+`GaussianCovarianceDomain.v` extends Schur-complement PSD and PD conditions
+to **negative** admissible correlations using the exact eigenvalue
+`(1-c)*d_(n+k)(c)/d_n(c)` of the conditional common-score direction.
+It deliberately reuses canonical finite-list Cauchy-Schwarz and
+equicorrelation spectral lemmas.
+
+The separate [Gaussian conditioning mathematical derivation](../../../rocq/GAUSSIAN_CONDITIONING_THEOREM.md)
+distinguishes those kernels from the additional multivariate normal
+independence/disintegration and conditional-expectation theorems needed
+for complete formalization. Existing Gaussian normal-probability results
+in MathComp-Analysis should be reused, rather than made into axioms.
+
+
 **Researcher:** Anders Hellström.
 
 > **AI disclosure:** OpenAI ChatGPT/Codex materially assisted theorem selection, Rocq proof scripts and commentary. Mathematical proof status depends exclusively on Rocq 9.2 kernel validation of the exact source revision.
