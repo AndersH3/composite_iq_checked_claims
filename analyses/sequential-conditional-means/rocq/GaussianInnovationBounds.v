@@ -19,7 +19,7 @@
 *)
 From Stdlib Require Import Reals Lra Psatz.
 Require Import SequentialReport UnequalHistoryLinearPrediction
-  EquicorrelationVectors GaussianCovarianceDomain.
+  EquicorrelationSpectral EquicorrelationVectors GaussianCovarianceDomain.
 Open Scope R_scope.
 
 (** [gib_signed_negative_predictor_positive_history] (theorem).
