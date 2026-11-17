@@ -96,7 +96,7 @@ def mean_threshold(n: int, rho: float, quantile: float) -> float:
 @deal.ensure(lambda numerator, denominator, result: math.isclose(abs(result) * denominator, abs(numerator), rel_tol=1e-12, abs_tol=1e-15))
 @deal.ensure(lambda numerator, denominator, result: result == 0 or math.copysign(1, result) == math.copysign(1, numerator))
 @deal.ensure(lambda numerator, denominator, result: math.isclose(result, numerator / denominator, rel_tol=0, abs_tol=0))
-@deal.ensure(lambda numerator, denominator, result: denominator >= 1 or abs(result) <= abs(numerator) + 1e-12)
+@deal.ensure(lambda numerator, denominator, result: denominator <= 1 or abs(result) <= abs(numerator) + 1e-12)
 def _positive_ratio(numerator: float, denominator: float) -> float:
     """A finite scalar quotient on the documented numerical working range."""
     return numerator / denominator
