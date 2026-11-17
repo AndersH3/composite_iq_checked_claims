@@ -5,10 +5,12 @@ on:
     paths:
       - 'analyses/sequential-conditional-means/formalml/**'
       - '.github/workflows/gaussian-formalml.yml'
+      - 'scripts/patch_formalml_9_2.sh'
   pull_request:
     paths:
       - 'analyses/sequential-conditional-means/formalml/**'
       - '.github/workflows/gaussian-formalml.yml'
+      - 'scripts/patch_formalml_9_2.sh'
   workflow_dispatch:
 
 concurrency:
