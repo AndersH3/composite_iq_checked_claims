@@ -304,3 +304,119 @@ Theorem gcd_total_domain_from_negative_endpoint : forall r k c, 0<r -> 0<k -> c<
 Proof.
  intros; lra.
 Qed.
+
+(** [gcd_schur_psd_iff_full_battery] (theorem).
+ Mathematical meaning: A full-battery common eigenvalue condition and the contrast eigenvalue condition are jointly necessary and sufficient for PSD of every feasible conditional quadratic summary. This conversely rules out correlations that fail the full covariance domain.
+ Exact checked proposition: forall r k c, 0<r -> 0<k -> 0<sequential_d r c -> ((forall energy total, 0<=energy-total*total/k -> 0<=equicorr_schur_energy r c energy total) <-> (c<=1 /\ 0<=sequential_d (r+k) c)).
+ Premises and side conditions: The already-conditioned block has r>0 and
+ d_r(c)>0. The future count k>0 and the universal quantified energy
+ summaries satisfy the abstract Cauchy feasibility inequality. These
+ algebraic summaries include a contrast witness even when k=1; hence this
+ criterion is expressly NOT claimed as a 1D concrete-vector iff.
+ Proof/definition method: Use orthogonal contrast/common-mode witnesses
+ for necessity, the exact Schur common-mode formula, positive denominator
+ cancellation and the previously proved signed-correlation sufficiency.
+ Library reuse: EquicorrelationSpectral Schur factorization,
+ GaussianCovarianceDomain sufficiency, Stdlib Reals/Field/Ring/Lra/Psatz.
+ Boundary: Complete iff for the stated feasible real-energy summaries,
+ not a Gaussian probability-space construction, conditional independence,
+ or a regular conditional expectation theorem.
+*)
+Theorem gcd_schur_psd_iff_full_battery :
+  forall r k c, 0<r -> 0<k -> 0<sequential_d r c ->
+  ((forall energy total, 0<=energy-total*total/k ->
+    0<=equicorr_schur_energy r c energy total) <->
+   (c<=1 /\ 0<=sequential_d (r+k) c)).
+Proof.
+ intros r k c Hr Hk Hd; split.
+ - intro Hform.
+   assert (Hcontrast : 0 <= equicorr_schur_energy r c 1 0).
+   { apply Hform.
+     replace (1 - 0*0/k) with 1 by (field; lra).
+     lra. }
+   rewrite equicorr_schur_contrast_formula in Hcontrast by lra.
+   assert (Hc : c <= 1) by lra.
+   split; first exact Hc.
+   assert (Hcommon : 0 <=
+       equicorr_schur_energy r c (k*1*1) (k*1)).
+   { apply Hform.
+     replace (k*1*1 - (k*1)*(k*1)/k) with 0
+       by (field; lra).
+     lra. }
+   rewrite (equicorr_schur_common_mode_formula r k c 1)
+     in Hcommon by lra.
+   replace (k*(1-c)*sequential_d (r+k) c/
+            sequential_d r c*1*1)
+     with (k*(1-c)*sequential_d (r+k) c/
+           sequential_d r c) in Hcommon by ring.
+   assert (Hnumerator : 0 <= k*(1-c)*sequential_d (r+k) c).
+   { replace (k*(1-c)*sequential_d (r+k) c)
+       with ((k*(1-c)*sequential_d (r+k) c /
+              sequential_d r c)*sequential_d r c)
+       by (field; lra).
+     apply Rmult_le_pos; lra. }
+   destruct (Rlt_le_dec c 1) as [Hstrict|Heq].
+   + nra.
+   + assert (Hequal : c=1) by lra.
+     subst c; unfold sequential_d; nra.
+ - intros [Hc Hfull] energy total Hfeasible.
+   apply (gcd_schur_psd_arbitrary_sign r k c energy total);
+     assumption.
+Qed.
+
+(** [gcd_schur_pd_iff_full_battery] (theorem).
+ Mathematical meaning: A strictly positive full-battery common eigenvalue and contrast eigenvalue are jointly necessary and sufficient for positive conditional covariance on every nonzero feasible future-score summary.
+ Exact checked proposition: forall r k c, 0<r -> 0<k -> 0<sequential_d r c -> ((forall energy total, 0<energy -> 0<=energy-total*total/k -> 0<equicorr_schur_energy r c energy total) <-> (c<1 /\ 0<sequential_d (r+k) c)).
+ Premises and side conditions: The already-conditioned block has r>0 and
+ d_r(c)>0. The future count k>0 and the universal quantified energy
+ summaries satisfy the abstract Cauchy feasibility inequality. These
+ algebraic summaries include a contrast witness even when k=1; hence this
+ criterion is expressly NOT claimed as a 1D concrete-vector iff.
+ Proof/definition method: Use orthogonal contrast/common-mode witnesses
+ for necessity, the exact Schur common-mode formula, positive denominator
+ cancellation and the previously proved signed-correlation sufficiency.
+ Library reuse: EquicorrelationSpectral Schur factorization,
+ GaussianCovarianceDomain sufficiency, Stdlib Reals/Field/Ring/Lra/Psatz.
+ Boundary: Complete iff for the stated feasible real-energy summaries,
+ not a Gaussian probability-space construction, conditional independence,
+ or a regular conditional expectation theorem.
+*)
+Theorem gcd_schur_pd_iff_full_battery :
+  forall r k c, 0<r -> 0<k -> 0<sequential_d r c ->
+  ((forall energy total, 0<energy ->
+    0<=energy-total*total/k ->
+    0<equicorr_schur_energy r c energy total) <->
+   (c<1 /\ 0<sequential_d (r+k) c)).
+Proof.
+ intros r k c Hr Hk Hd; split.
+ - intro Hform.
+   assert (Hcontrast : 0 < equicorr_schur_energy r c 1 0).
+   { apply Hform; [lra|].
+     replace (1 - 0*0/k) with 1 by (field; lra).
+     lra. }
+   rewrite equicorr_schur_contrast_formula in Hcontrast by lra.
+   assert (Hc : c < 1) by lra.
+   split; first exact Hc.
+   assert (Hcommon : 0 <
+       equicorr_schur_energy r c (k*1*1) (k*1)).
+   { apply Hform; [nra|].
+     replace (k*1*1 - (k*1)*(k*1)/k) with 0
+       by (field; lra).
+     lra. }
+   rewrite (equicorr_schur_common_mode_formula r k c 1)
+     in Hcommon by lra.
+   replace (k*(1-c)*sequential_d (r+k) c/
+            sequential_d r c*1*1)
+     with (k*(1-c)*sequential_d (r+k) c/
+           sequential_d r c) in Hcommon by ring.
+   assert (Hnumerator : 0 < k*(1-c)*sequential_d (r+k) c).
+   { replace (k*(1-c)*sequential_d (r+k) c)
+       with ((k*(1-c)*sequential_d (r+k) c /
+              sequential_d r c)*sequential_d r c)
+       by (field; lra).
+     apply Rmult_lt_0_compat; assumption. }
+   nra.
+ - intros [Hc Hfull] energy total Hpositive Hfeasible.
+   apply (gcd_schur_pd_arbitrary_sign r k c energy total);
+     assumption.
+Qed.
