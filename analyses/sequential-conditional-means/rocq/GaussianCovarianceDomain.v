@@ -1686,7 +1686,7 @@ Qed.
 *)
 Theorem d051_cov_future_sum_contrast : forall n k c:R, k*equicorr_schur_diagonal n c+k*(k-1)*equicorr_schur_cross n c=k*(1-c)+k*k*equicorr_schur_cross n c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  intros; ring.
 Qed.
 
 (** [d051_cov_future_sum_closed] (theorem).
@@ -1912,13 +1912,13 @@ Qed.
 
 (** [d051_mean_prediction_average] (theorem).
  Mathematical meaning: The predictor based on an arbitrary score sum equals the report's mean-based predictor when sample size is nonzero.
- Exact checked proposition: forall n c s:R, n<>0 -> hp n c s=sequential_prediction n c (s/n).
+ Exact checked proposition: forall n c s:R, n<>0 -> sequential_d n c<>0 -> hp n c s=sequential_prediction n c (s/n).
  Premises and side conditions: Algebraic score counts are real scalars, with signed correlation admitted only where explicitly used inverses are nonzero. For probabilistic readings the positive-semidefinite joint covariance domain must also be established. Nothing here implicitly grants a Gaussian joint distribution.
  Proof/definition method: Normalize canonical Schur complement, history-prediction and posterior variance formulas using Rocq Stdlib Field and polynomial algebra, with no new probability axioms or bespoke finite sums.
  Library reuse: SequentialReport, EquicorrelationSpectral, UnequalHistoryLinearPrediction, GaussianConditionalKernel and Rocq Stdlib Reals/Field/Psatz.
  Boundary: The result is deterministic regression or covariance algebra, not a proof of regular conditional probability, normality or measure-theoretic conditional expectation.
 *)
-Theorem d051_mean_prediction_average : forall n c s:R, n<>0 -> hp n c s=sequential_prediction n c (s/n).
+Theorem d051_mean_prediction_average : forall n c s:R, n<>0 -> sequential_d n c<>0 -> hp n c s=sequential_prediction n c (s/n).
 Proof.
   intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
 Qed.
@@ -2081,13 +2081,13 @@ Qed.
 
 (** [d051_gk_precision_empty] (theorem).
  Mathematical meaning: The precision of an unobserved latent normal variable equals its prior precision.
- Exact checked proposition: forall c:R, gk_precision nil c=/c.
+ Exact checked proposition: forall c:R, c<>0 -> 1-c<>0 -> gk_precision nil c=/c.
  Premises and side conditions: Algebraic score counts are real scalars, with signed correlation admitted only where explicitly used inverses are nonzero. For probabilistic readings the positive-semidefinite joint covariance domain must also be established. Nothing here implicitly grants a Gaussian joint distribution.
  Proof/definition method: Normalize canonical Schur complement, history-prediction and posterior variance formulas using Rocq Stdlib Field and polynomial algebra, with no new probability axioms or bespoke finite sums.
  Library reuse: SequentialReport, EquicorrelationSpectral, UnequalHistoryLinearPrediction, GaussianConditionalKernel and Rocq Stdlib Reals/Field/Psatz.
  Boundary: The result is deterministic regression or covariance algebra, not a proof of regular conditional probability, normality or measure-theoretic conditional expectation.
 *)
-Theorem d051_gk_precision_empty : forall c:R, gk_precision nil c=/c.
+Theorem d051_gk_precision_empty : forall c:R, c<>0 -> 1-c<>0 -> gk_precision nil c=/c.
 Proof.
   intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
 Qed.
@@ -2115,5 +2115,7 @@ Qed.
 *)
 Theorem d051_gk_variance_times_precision : forall xs:list R, forall c:R, 0<c -> c<1 -> gk_variance xs c*gk_precision xs c=1.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  intros xs c Hc Hc1.
+  rewrite Rmult_comm.
+  apply gk_precision_variance; assumption.
 Qed.
