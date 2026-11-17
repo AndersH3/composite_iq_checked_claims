@@ -2126,3 +2126,394 @@ Proof.
   rewrite Rmult_comm.
   apply gk_precision_variance; assumption.
 Qed.
+
+
+(** [d052_d_positive_strict] (theorem).
+ Mathematical meaning: The covariance common eigenvalue stays strictly positive in the common-factor Gaussian regime with any nonnegative observation count.
+ Exact checked proposition: forall n c:R, 0<=n -> 0<c -> c<1 -> 0<sequential_d n c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_d_positive_strict : forall n c:R, 0<=n -> 0<c -> c<1 -> 0<sequential_d n c.
+Proof.
+  intros; unfold sequential_d; nra.
+Qed.
+
+(** [d052_d_positive_closed] (theorem).
+ Mathematical meaning: The common eigenvalue is positive even at the independent-score endpoint.
+ Exact checked proposition: forall n c:R, 0<=n -> 0<=c -> c<1 -> 0<sequential_d n c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_d_positive_closed : forall n c:R, 0<=n -> 0<=c -> c<1 -> 0<sequential_d n c.
+Proof.
+  intros; unfold sequential_d; nra.
+Qed.
+
+(** [d052_d_increases_with_history] (theorem).
+ Mathematical meaning: Adding observed scores strictly raises the common-mode eigenvalue for positive correlation.
+ Exact checked proposition: forall n k c:R, 0<k -> 0<c -> sequential_d n c<sequential_d (n+k) c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_d_increases_with_history : forall n k c:R, 0<k -> 0<c -> sequential_d n c<sequential_d (n+k) c.
+Proof.
+  intros; unfold sequential_d; nra.
+Qed.
+
+(** [d052_d_decreases_signed] (theorem).
+ Mathematical meaning: Under negative correlation, longer batteries have smaller common-mode eigenvalues, possibly reaching the singular boundary.
+ Exact checked proposition: forall n k c:R, 0<k -> c<0 -> sequential_d (n+k) c<sequential_d n c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_d_decreases_signed : forall n k c:R, 0<k -> c<0 -> sequential_d (n+k) c<sequential_d n c.
+Proof.
+  intros; unfold sequential_d; nra.
+Qed.
+
+(** [d052_d_at_least_one] (theorem).
+ Mathematical meaning: For nonnegative correlation, common covariance never drops below the unit marginal eigenvalue when a score is present.
+ Exact checked proposition: forall n c:R, 1<=n -> 0<=c -> 1<=sequential_d n c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_d_at_least_one : forall n c:R, 1<=n -> 0<=c -> 1<=sequential_d n c.
+Proof.
+  intros; unfold sequential_d; nra.
+Qed.
+
+(** [d052_d_at_most_one_signed] (theorem).
+ Mathematical meaning: For nonpositive correlation, common covariance does not exceed the marginal unit eigenvalue.
+ Exact checked proposition: forall n c:R, 1<=n -> c<=0 -> sequential_d n c<=1.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_d_at_most_one_signed : forall n c:R, 1<=n -> c<=0 -> sequential_d n c<=1.
+Proof.
+  intros; unfold sequential_d; nra.
+Qed.
+
+(** [d052_d_above_contrast] (theorem).
+ Mathematical meaning: For common-factor dependence, the common covariance eigenvalue dominates the contrast eigenvalue.
+ Exact checked proposition: forall n c:R, 0<=n -> 0<=c -> 1-c<=sequential_d n c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_d_above_contrast : forall n c:R, 0<=n -> 0<=c -> 1-c<=sequential_d n c.
+Proof.
+  intros; unfold sequential_d; nra.
+Qed.
+
+(** [d052_d_below_contrast_signed] (theorem).
+ Mathematical meaning: With negative correlation, the common covariance eigenvalue lies below the contrast eigenvalue.
+ Exact checked proposition: forall n c:R, 0<=n -> c<=0 -> sequential_d n c<=1-c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_d_below_contrast_signed : forall n c:R, 0<=n -> c<=0 -> sequential_d n c<=1-c.
+Proof.
+  intros; unfold sequential_d; nra.
+Qed.
+
+(** [d052_d_weak_increase] (theorem).
+ Mathematical meaning: Nonnegative-correlation covariance feasibility persists monotonically under increased battery count in the direction of the common eigenvalue.
+ Exact checked proposition: forall n k c:R, 0<=k -> 0<=c -> sequential_d n c<=sequential_d (n+k) c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_d_weak_increase : forall n k c:R, 0<=k -> 0<=c -> sequential_d n c<=sequential_d (n+k) c.
+Proof.
+  intros; unfold sequential_d; nra.
+Qed.
+
+(** [d052_d_weak_decrease_signed] (theorem).
+ Mathematical meaning: Signed-correlation battery extension can only decrease the common eigenvalue when correlation is negative.
+ Exact checked proposition: forall n k c:R, 0<=k -> c<=0 -> sequential_d (n+k) c<=sequential_d n c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_d_weak_decrease_signed : forall n k c:R, 0<=k -> c<=0 -> sequential_d (n+k) c<=sequential_d n c.
+Proof.
+  intros; unfold sequential_d; nra.
+Qed.
+
+(** [d052_cross_positive] (theorem).
+ Mathematical meaning: In the common-factor regime the conditional covariance of distinct future scores is strictly positive.
+ Exact checked proposition: forall n c:R, 0<c -> c<1 -> 0<sequential_d n c -> 0<equicorr_schur_cross n c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_cross_positive : forall n c:R, 0<c -> c<1 -> 0<sequential_d n c -> 0<equicorr_schur_cross n c.
+Proof.
+  intros n c Hc Hc1 Hd; rewrite d051_schur_cross_closed by lra; apply Rdiv_lt_0_compat; nra.
+Qed.
+
+(** [d052_cross_nonnegative] (theorem).
+ Mathematical meaning: The future off-diagonal covariance is nonnegative for any feasible nonnegative common correlation.
+ Exact checked proposition: forall n c:R, 0<=c -> c<=1 -> 0<sequential_d n c -> 0<=equicorr_schur_cross n c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_cross_nonnegative : forall n c:R, 0<=c -> c<=1 -> 0<sequential_d n c -> 0<=equicorr_schur_cross n c.
+Proof.
+  intros n c Hc Hc1 Hd; rewrite d051_schur_cross_closed by lra; apply Rdiv_le_0_compat; nra.
+Qed.
+
+(** [d052_diagonal_nonnegative] (theorem).
+ Mathematical meaning: Full covariance feasibility for one additional score implies nonnegative Schur conditional variance.
+ Exact checked proposition: forall n c:R, c<=1 -> 0<sequential_d n c -> 0<=sequential_d (n+1) c -> 0<=equicorr_schur_diagonal n c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_diagonal_nonnegative : forall n c:R, c<=1 -> 0<sequential_d n c -> 0<=sequential_d (n+1) c -> 0<=equicorr_schur_diagonal n c.
+Proof.
+  intros n c Hc Hd Hfull; rewrite (gcd_single_future_variance_eigenvalue n c) by lra; apply Rdiv_le_0_compat; nra.
+Qed.
+
+(** [d052_diagonal_strict] (theorem).
+ Mathematical meaning: Strict full covariance positivity gives positive conditional variance for one future score.
+ Exact checked proposition: forall n c:R, c<1 -> 0<sequential_d n c -> 0<sequential_d (n+1) c -> 0<equicorr_schur_diagonal n c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_diagonal_strict : forall n c:R, c<1 -> 0<sequential_d n c -> 0<sequential_d (n+1) c -> 0<equicorr_schur_diagonal n c.
+Proof.
+  intros n c Hc Hd Hfull; rewrite (gcd_single_future_variance_eigenvalue n c) by lra; apply Rdiv_lt_0_compat; nra.
+Qed.
+
+(** [d052_diagonal_upper_marginal] (theorem).
+ Mathematical meaning: Conditioning cannot increase a marginal standardized score variance when the observed covariance block is positive.
+ Exact checked proposition: forall n c:R, 0<=n -> 0<sequential_d n c -> equicorr_schur_diagonal n c<=1.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_diagonal_upper_marginal : forall n c:R, 0<=n -> 0<sequential_d n c -> equicorr_schur_diagonal n c<=1.
+Proof.
+  intros n c Hn Hd; unfold equicorr_schur_diagonal; assert (H : 0<=n*c*c/sequential_d n c) by (apply Rdiv_le_0_compat; nra); lra.
+Qed.
+
+(** [d052_diagonal_strict_reduction] (theorem).
+ Mathematical meaning: With nonzero correlation and a positive observed count, the conditional marginal variance strictly decreases.
+ Exact checked proposition: forall n c:R, 0<n -> c<>0 -> 0<sequential_d n c -> equicorr_schur_diagonal n c<1.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_diagonal_strict_reduction : forall n c:R, 0<n -> c<>0 -> 0<sequential_d n c -> equicorr_schur_diagonal n c<1.
+Proof.
+  intros n c Hn Hc Hd; unfold equicorr_schur_diagonal; assert (H : 0<n*c*c/sequential_d n c) by (apply Rdiv_lt_0_compat; nra); lra.
+Qed.
+
+(** [d052_contrast_nonnegative] (theorem).
+ Mathematical meaning: All future-score contrast directions have nonnegative variance at correlations at most one.
+ Exact checked proposition: forall n c:R, c<=1 -> 0<=equicorr_schur_diagonal n c-equicorr_schur_cross n c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_contrast_nonnegative : forall n c:R, c<=1 -> 0<=equicorr_schur_diagonal n c-equicorr_schur_cross n c.
+Proof.
+  intros n c Hc; rewrite equicorr_schur_diagonal_contrast_gap; lra.
+Qed.
+
+(** [d052_contrast_strict] (theorem).
+ Mathematical meaning: Under strict upper correlation bound, nonzero contrast directions have positive variance.
+ Exact checked proposition: forall n c:R, c<1 -> 0<equicorr_schur_diagonal n c-equicorr_schur_cross n c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_contrast_strict : forall n c:R, c<1 -> 0<equicorr_schur_diagonal n c-equicorr_schur_cross n c.
+Proof.
+  intros n c Hc; rewrite equicorr_schur_diagonal_contrast_gap; lra.
+Qed.
+
+(** [d052_cross_le_diagonal] (theorem).
+ Mathematical meaning: Residual off-diagonal covariance cannot exceed its corresponding conditional diagonal whenever c<=1.
+ Exact checked proposition: forall n c:R, c<=1 -> equicorr_schur_cross n c<=equicorr_schur_diagonal n c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_cross_le_diagonal : forall n c:R, c<=1 -> equicorr_schur_cross n c<=equicorr_schur_diagonal n c.
+Proof.
+  intros n c Hc; pose proof (equicorr_schur_diagonal_contrast_gap n c); lra.
+Qed.
+
+(** [d052_cross_lt_diagonal] (theorem).
+ Mathematical meaning: Strictly admissible contrast modes force every off-diagonal future covariance below the conditional variance.
+ Exact checked proposition: forall n c:R, c<1 -> equicorr_schur_cross n c<equicorr_schur_diagonal n c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_cross_lt_diagonal : forall n c:R, c<1 -> equicorr_schur_cross n c<equicorr_schur_diagonal n c.
+Proof.
+  intros n c Hc; pose proof (equicorr_schur_diagonal_contrast_gap n c); lra.
+Qed.
+
+(** [d052_common_mode_nonnegative] (theorem).
+ Mathematical meaning: The common-mode direction of k future Gaussian residuals is PSD throughout the full signed covariance domain.
+ Exact checked proposition: forall n k c:R, c<=1 -> 0<sequential_d n c -> 0<=sequential_d (n+k) c -> 0<=equicorr_schur_diagonal n c+(k-1)*equicorr_schur_cross n c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_common_mode_nonnegative : forall n k c:R, c<=1 -> 0<sequential_d n c -> 0<=sequential_d (n+k) c -> 0<=equicorr_schur_diagonal n c+(k-1)*equicorr_schur_cross n c.
+Proof.
+  intros n k c Hc Hd Hfull; rewrite d051_schur_common_mode by lra; apply gcd_common_mode_sign; assumption.
+Qed.
+
+(** [d052_common_mode_strict] (theorem).
+ Mathematical meaning: Strict full covariance feasibility makes the future common-mode eigenvalue strictly positive.
+ Exact checked proposition: forall n k c:R, c<1 -> 0<sequential_d n c -> 0<sequential_d (n+k) c -> 0<equicorr_schur_diagonal n c+(k-1)*equicorr_schur_cross n c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_common_mode_strict : forall n k c:R, c<1 -> 0<sequential_d n c -> 0<sequential_d (n+k) c -> 0<equicorr_schur_diagonal n c+(k-1)*equicorr_schur_cross n c.
+Proof.
+  intros n k c Hc Hd Hfull; rewrite d051_schur_common_mode by lra; apply gcd_common_mode_strict; assumption.
+Qed.
+
+(** [d052_future_sum_nonnegative] (theorem).
+ Mathematical meaning: A future-batch total has nonnegative conditional variance in the signed full-covariance domain.
+ Exact checked proposition: forall n k c:R, 0<=k -> c<=1 -> 0<sequential_d n c -> 0<=sequential_d (n+k) c -> 0<=k*equicorr_schur_diagonal n c+k*(k-1)*equicorr_schur_cross n c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_future_sum_nonnegative : forall n k c:R, 0<=k -> c<=1 -> 0<sequential_d n c -> 0<=sequential_d (n+k) c -> 0<=k*equicorr_schur_diagonal n c+k*(k-1)*equicorr_schur_cross n c.
+Proof.
+  intros n k c Hk Hc Hd Hfull; rewrite d051_schur_future_sum_variance by lra; apply Rmult_le_pos; [assumption|apply gcd_common_mode_sign; assumption].
+Qed.
+
+(** [d052_future_sum_strict] (theorem).
+ Mathematical meaning: A positive-length future-batch sum has positive conditional variance in the strict signed covariance domain.
+ Exact checked proposition: forall n k c:R, 0<k -> c<1 -> 0<sequential_d n c -> 0<sequential_d (n+k) c -> 0<k*equicorr_schur_diagonal n c+k*(k-1)*equicorr_schur_cross n c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_future_sum_strict : forall n k c:R, 0<k -> c<1 -> 0<sequential_d n c -> 0<sequential_d (n+k) c -> 0<k*equicorr_schur_diagonal n c+k*(k-1)*equicorr_schur_cross n c.
+Proof.
+  intros n k c Hk Hc Hd Hfull; rewrite d051_schur_future_sum_variance by lra; apply Rmult_lt_0_compat; [assumption|apply gcd_common_mode_strict; assumption].
+Qed.
+
+(** [d052_variance_monotone] (theorem).
+ Mathematical meaning: Adding an admissible observation block does not increase predictive marginal variance.
+ Exact checked proposition: forall n k c:R, 0<=k -> c<=1 -> 0<sequential_d n c -> 0<sequential_d (n+k) c -> equicorr_schur_diagonal (n+k) c<=equicorr_schur_diagonal n c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_variance_monotone : forall n k c:R, 0<=k -> c<=1 -> 0<sequential_d n c -> 0<sequential_d (n+k) c -> equicorr_schur_diagonal (n+k) c<=equicorr_schur_diagonal n c.
+Proof.
+  intros n k c Hk Hc Hd Hd2; pose proof (d051_cov_diagonal_variance_drop n k c (Rgt_not_eq _ _ Hd) (Rgt_not_eq _ _ Hd2)) as Hdiff; assert (Hq:0<=k*c*c*(1-c)/(sequential_d n c*sequential_d (n+k) c)) by (apply Rdiv_le_0_compat; nra); lra.
+Qed.
+
+(** [d052_cross_covariance_monotone] (theorem).
+ Mathematical meaning: Adding observations reduces the shared residual cross-covariance even when the common correlation is negative.
+ Exact checked proposition: forall n k c:R, 0<=k -> c<=1 -> 0<sequential_d n c -> 0<sequential_d (n+k) c -> equicorr_schur_cross (n+k) c<=equicorr_schur_cross n c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_cross_covariance_monotone : forall n k c:R, 0<=k -> c<=1 -> 0<sequential_d n c -> 0<sequential_d (n+k) c -> equicorr_schur_cross (n+k) c<=equicorr_schur_cross n c.
+Proof.
+  intros n k c Hk Hc Hd Hd2; pose proof (d051_cov_cross_variance_drop n k c (Rgt_not_eq _ _ Hd) (Rgt_not_eq _ _ Hd2)) as Hdiff; assert (Hq:0<=k*c*c*(1-c)/(sequential_d n c*sequential_d (n+k) c)) by (apply Rdiv_le_0_compat; nra); lra.
+Qed.
+
+(** [d052_cross_below_prior] (theorem).
+ Mathematical meaning: The conditional common covariance cannot exceed its prior value after observing a nonnegative number of scores.
+ Exact checked proposition: forall n c:R, 0<=n -> 0<sequential_d n c -> equicorr_schur_cross n c<=c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_cross_below_prior : forall n c:R, 0<=n -> 0<sequential_d n c -> equicorr_schur_cross n c<=c.
+Proof.
+  intros n c Hn Hd; unfold equicorr_schur_cross; assert (H:0<=n*c*c/sequential_d n c) by (apply Rdiv_le_0_compat; nra); lra.
+Qed.
+
+(** [d052_cross_strict_below_prior] (theorem).
+ Mathematical meaning: Conditioning on a positively sized battery with nonzero correlation strictly reduces shared covariance.
+ Exact checked proposition: forall n c:R, 0<n -> c<>0 -> 0<sequential_d n c -> equicorr_schur_cross n c<c.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_cross_strict_below_prior : forall n c:R, 0<n -> c<>0 -> 0<sequential_d n c -> equicorr_schur_cross n c<c.
+Proof.
+  intros n c Hn Hc Hd; unfold equicorr_schur_cross; assert (H:0<n*c*c/sequential_d n c) by (apply Rdiv_lt_0_compat; nra); lra.
+Qed.
+
+(** [d052_mean_positive_gain] (theorem).
+ Mathematical meaning: A strictly positive observed-score sum yields a positive Gaussian predictor under positive common correlation.
+ Exact checked proposition: forall n c s:R, 0<c -> 0<sequential_d n c -> 0<s -> 0<hp n c s.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_mean_positive_gain : forall n c s:R, 0<c -> 0<sequential_d n c -> 0<s -> 0<hp n c s.
+Proof.
+  intros n c s Hc Hd Hs; unfold hp; apply Rdiv_lt_0_compat; nra.
+Qed.
+
+(** [d052_mean_nonnegative_gain] (theorem).
+ Mathematical meaning: The Gaussian sufficient-history predictor preserves nonnegative score sums when the regression gain is nonnegative.
+ Exact checked proposition: forall n c s:R, 0<=c -> 0<sequential_d n c -> 0<=s -> 0<=hp n c s.
+ Premises and side conditions: The sign, covariance-domain, and invertibility requirements are explicit in each statement; real-valued counts are symbolic and a valid physical test count additionally requires integer nonnegativity. Signed correlations are allowed only with the full covariance block PSD when given a Gaussian interpretation.
+ Proof/definition method: Reuse existing exact determinant/Schur identities, decompose conditional covariance and establish sign using Rocq Stdlib order algebra and monotonic division lemmas; no new Gaussian probability axioms.
+ Library reuse: SequentialReport, EquicorrelationSpectral, GaussianCovarianceDomain D050/D051 identities, and Stdlib Reals, Lra, Psatz.
+ Boundary: Theorems formalize deterministic covariance-domain consequences. Independence of a jointly Gaussian residual and its observed sigma-algebra remains an explicit unproved probability bridge.
+*)
+Theorem d052_mean_nonnegative_gain : forall n c s:R, 0<=c -> 0<sequential_d n c -> 0<=s -> 0<=hp n c s.
+Proof.
+  intros n c s Hc Hd Hs; unfold hp; apply Rdiv_le_0_compat; nra.
+Qed.
