@@ -4,7 +4,7 @@
 
 > **AI disclosure:** AI assisted the mathematical specifications, candidate proof scripts, code integration and documentation. Only a successful pinned Rocq 9.2 kernel build on an exact source revision establishes any theorem status.
 
-This register tracks 56 exact source-order proofs about Gaussian prior-plus-likelihood *pointwise densities*: quadratic completion, model precision and variance, dependence on arbitrary unequal observed scores, evidence cancellation and posterior symmetry. Its scope deliberately excludes the stronger measurable conditional-expectation assertion unless a separate formally verified probability library supplies integral normalization, integrability and disintegration.
+This register tracks the D050 baseline 56 plus D051 101 additional exact source-order proofs about Gaussian prior-plus-likelihood *pointwise densities*: quadratic completion, model precision and variance, dependence on arbitrary unequal observed scores, evidence cancellation and posterior symmetry. Its scope deliberately excludes the stronger measurable conditional-expectation assertion unless a separate formally verified probability library supplies integral normalization, integrability and disintegration.
 
 **Verified checkpoint:** The [pinned Rocq 9.2 workflow](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43997860735)
 accepted all **56** exact D050 Stdlib theorem scripts in
@@ -12,6 +12,10 @@ accepted all **56** exact D050 Stdlib theorem scripts in
 at revision `20801d4a693adb0582133876d1a8d41c2ba48bcf`.
 No new formal Gaussian conditional-expectation theorem is
 asserted by this source-order audit.
+
+## D051 verified checkpoint
+
+The [Rocq 9.2 kernel run](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44140614519) accepted **101 additional theorem scripts** at exact commit `27306fe455f97ad257183fff4a18f3f03f4a68d1`, extending the Gaussian/covariance module total from 56 to **157**. The signed correlation, posterior-mean, list-valued variance/precision, and observation-count identities are source-ordered below. Their difficulty and independence vary; do not conflate declaration count with 101 independent major probability laws. The measure-theoretic conditional-expectation obligation remains unproved.
 
 ## GaussianConditionalKernel.v — 35 proof scripts
 
