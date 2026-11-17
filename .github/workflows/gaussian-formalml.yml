@@ -96,7 +96,7 @@ jobs:
             # Replace only the induction/order side-condition tactic.
             test "$(sed -n 1147p rocq/CertRL/LM/fixed_point.v)" = "apply Hev."
             test "$(sed -n 1148p rocq/CertRL/LM/fixed_point.v)" = "intuition."
-            sed -i "1148c\\apply le_S, le_n." rocq/CertRL/LM/fixed_point.v
+            sed -i "1148c\\apply Nat.le_add_r." rocq/CertRL/LM/fixed_point.v
             # Compile only the probability modules required by this
             # result, not the unrelated FormalML RL/model-checking corpus.
             # The generated Rocq makefile tracks their full dependencies.
