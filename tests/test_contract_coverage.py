@@ -45,7 +45,7 @@ def unchecked(value):
 @deal.ensure(lambda coverage_checker, tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "stdout", "stderr", "import")
-def test_coverage_accepts_a_real_deal_import_alias(coverage_checker, tmp_path):
+def test_import_alias_is_recognized_but_five_decorators_are_insufficient(coverage_checker, tmp_path):
     path = tmp_path / "aliased.py"
     path.write_text("import deal as contracts\n\n@contracts.post(lambda result: isinstance(result, int))\n"
                     "@contracts.post(lambda result: result > 0)\n"
@@ -56,7 +56,8 @@ def test_coverage_accepts_a_real_deal_import_alias(coverage_checker, tmp_path):
     assert report["imports_deal"] is True
     assert report["function_count"] == 1 and report["contract_count"] == 5
     assert report["missing"] == []
-    assert report["insufficient"] == []
+    assert len(report["insufficient"]) == 1
+    assert report["insufficient"][0]["distinct_contract_count"] == 5
     assert report["insufficient_file"] is True
     assert report["file_distinct_contract_count"] == 5
     # Check the exact AST classification boundaries, not just aggregated
@@ -136,21 +137,23 @@ def test_every_repository_python_function_has_a_real_contract(coverage_checker):
         assert not report["insufficient_file"], (path, report["file_distinct_contract_count"])
         assert report["file_distinct_contract_count"] >= 15, path
         assert report["minimum_file_contracts"] == 15
+        assert report["minimum_contracts"] == 15
+        assert all(count >= 15 for count in counts.values())
         assert report["contract_count"] > 0, path
         target_names = targeted.get(path.relative_to(ROOT).as_posix(), set())
         counts = {entry["name"]: entry["distinct_contract_count"]
                   for entry in report["function_contracts"]}
         assert target_names <= counts.keys(), path
-        assert all(counts[name] >= 10 for name in target_names), (path, counts)
+        assert all(counts[name] >= 15 for name in target_names), (path, counts)
 
 
-@pytest.mark.parametrize("count", range(9))
+@pytest.mark.parametrize("count", (0, 1, 5, 10, 14, 15, 16, 17))
 @deal.pre(lambda coverage_checker, tmp_path, count: protected_history_intact())
 @deal.ensure(lambda coverage_checker, tmp_path, count, *, result: protected_history_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "import")
 @deal.ensure(lambda coverage_checker, tmp_path, count, *, result: reference_inputs_intact())
-def test_contract_floor_accepts_five_or_more_distinct_decorators(coverage_checker, tmp_path, count):
+def test_contract_floor_accepts_fifteen_or_more_distinct_decorators(coverage_checker, tmp_path, count):
     path = tmp_path / "floor.py"
     declarations = ["@deal.has()", "@deal.raises()",
                     "@deal.pre(lambda value: type(value) is int)",
@@ -159,10 +162,14 @@ def test_contract_floor_accepts_five_or_more_distinct_decorators(coverage_checke
                     "@deal.post(lambda result: type(result) is int)",
                     "@deal.post(lambda result: 1 <= result <= 5)",
                     "@deal.ensure(lambda value, result: result > value)"]
+    declarations.extend(f"@deal.ensure(lambda value, result, bound={i}: result >= bound)"
+                        for i in range(10))
     path.write_text("import deal\n" + "\n".join(declarations[:count])
                     + "\ndef checked(value):\n    return value + 1\n")
     report = coverage_checker.audit_file(path)
-    assert bool(report["insufficient"]) is (count < 5)
+    assert bool(report["insufficient"]) is (count < 15)
+    assert report["minimum_contracts"] == 15
+    assert report["insufficient_file"] is (count < 15)
     assert report["contract_count"] == count
     assert report["function_contracts"][0]["distinct_contract_count"] == count
 
@@ -172,9 +179,9 @@ def test_contract_floor_accepts_five_or_more_distinct_decorators(coverage_checke
 @deal.ensure(lambda coverage_checker, tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "import")
-def test_file_floor_distinguishes_fourteen_from_fifteen_contracts(
+def test_aggregate_contracts_never_mask_below_minimum_functions(
         coverage_checker, tmp_path):
-    """Every callable can pass its own floor while its source file fails."""
+    """A 15-contract aggregate cannot mask two below-15 callables."""
     path = tmp_path / "aggregate.py"
     decorators = [
         "@deal.raises()", "@deal.has()",
@@ -193,7 +200,7 @@ def test_file_floor_distinguishes_fourteen_from_fifteen_contracts(
         path.write_text("\n".join(parts), encoding="utf-8")
         report = coverage_checker.audit_file(path)
         assert report["function_count"] == 2
-        assert not report["insufficient"]
+        assert len(report["insufficient"]) == 2
         assert not report["duplicated"]
         assert report["file_distinct_contract_count"] == 7 + last
         assert report["insufficient_file"] is (last == 7)
