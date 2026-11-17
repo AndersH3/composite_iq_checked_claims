@@ -21,6 +21,28 @@ except ModuleNotFoundError:
 
 NEGATIVE_CONTROL = "tests/fixtures/contract_negative_control.py"
 
+# Deal 4.24.6 synthesizes AST nodes with invalid source ranges when it
+# expands interprocedural contracts on Python 3.12/3.13. Reparse the generated
+# AST before compilation: source semantics and the full real Deal linter
+# remain unchanged, while the generated location metadata is regenerated.
+# Keep the upstream linter and all diagnostics; do not skip source files.
+LINT_BOOTSTRAP = """\
+import ast
+import sys
+from deal._cached_property import cached_property
+from deal.linter._contract import Contract
+from deal._cli._main import main
+
+Contract.bytecode = cached_property(
+    lambda contract: compile(
+        ast.parse(ast.unparse(ast.fix_missing_locations(contract.module))),
+        filename="<ast>",
+        mode="exec",
+    )
+)
+raise SystemExit(main(sys.argv[1:]))
+"""
+
 
 @deal.pre(lambda root, paths: isinstance(root, Path))
 @deal.pre(lambda root, paths: root.is_dir() and isinstance(paths, list) and bool(paths) and all((isinstance(path, Path) and path.is_file() and path.is_relative_to(root) and (path.suffix == '.py') for path in paths)))
@@ -32,7 +54,7 @@ NEGATIVE_CONTROL = "tests/fixtures/contract_negative_control.py"
 @deal.ensure(lambda root, paths, result:
              result["paths"] == [str(path.relative_to(root)) for path in paths])
 @deal.ensure(lambda root, paths, result:
-             result["argv"] == [sys.executable, "-m", "deal", "lint", "--json",
+             result["argv"] == [sys.executable, "-c", LINT_BOOTSTRAP, "lint", "--json",
                                 *result["paths"]])
 @deal.ensure(lambda root, paths, result:
              all(isinstance(item, dict) for item in result["diagnostics"]))
@@ -41,10 +63,10 @@ NEGATIVE_CONTROL = "tests/fixtures/contract_negative_control.py"
 @deal.pre(lambda root, paths: len(paths) == len(set(paths)))
 @deal.ensure(lambda root, paths, result: result["returncode"] >= 0)
 @deal.ensure(lambda root, paths, result: result["argv"][0] == sys.executable)
-@deal.ensure(lambda root, paths, result: result["argv"][1:5] == ["-m", "deal", "lint", "--json"])
+@deal.ensure(lambda root, paths, result: result["argv"][1:5] == ["-c", LINT_BOOTSTRAP, "lint", "--json"])
 @deal.ensure(lambda root, paths, result: len(result["argv"]) == 5 + len(paths))
 def lint_paths(root: Path, paths: list) -> dict:
-    """Run Deal lint on precisely the supplied files and decode JSON diagnostics.
+    """Run the complete Deal linter with normalized synthetic AST locations.
 
     Invariants: each path is constrained by preconditions to remain under
     the requested root, and input order is retained in both the command line
@@ -54,7 +76,7 @@ def lint_paths(root: Path, paths: list) -> dict:
     The runner does not silently exempt the deliberate negative fixture.
     """
     relative = [str(path.relative_to(root)) for path in paths]
-    command = [sys.executable, "-m", "deal", "lint", "--json", *relative]
+    command = [sys.executable, "-c", LINT_BOOTSTRAP, "lint", "--json", *relative]
     try:
         process = subprocess.run(command, cwd=root, capture_output=True, text=True,
                                  check=True, timeout=120)
