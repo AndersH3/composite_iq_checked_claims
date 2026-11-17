@@ -65,7 +65,7 @@ Qed.
 Theorem gcd_common_mode_sign : forall r k c, c<=1 -> 0<sequential_d r c -> 0<=sequential_d (r+k) c ->
  0<=(1-c)*sequential_d (r+k) c/sequential_d r c.
 Proof.
- intros r k c Hc Hr Ht; apply Rdiv_le_0_compat; nra.
+ intros r k c Hc Hr Ht; unfold Rdiv; apply Rmult_le_pos; [nra|left; apply Rinv_0_lt_compat; nra].
 Qed.
 
 (** [gcd_common_mode_strict] (theorem).
@@ -87,7 +87,7 @@ Qed.
 Theorem gcd_common_mode_strict : forall r k c, c<1 -> 0<sequential_d r c -> 0<sequential_d (r+k) c ->
  0<(1-c)*sequential_d (r+k) c/sequential_d r c.
 Proof.
- intros r k c Hc Hr Ht; apply Rdiv_lt_0_compat; nra.
+ intros r k c Hc Hr Ht; unfold Rdiv; apply Rmult_lt_0_compat; [nra|apply Rinv_0_lt_compat; nra].
 Qed.
 
 (** [gcd_schur_decomposition] (theorem).
@@ -138,7 +138,7 @@ Theorem gcd_schur_psd_arbitrary_sign : forall r k c energy total, 0<k -> c<=1 ->
 Proof.
  intros r k c energy total Hk Hc Hr Ht Hfeasible.
  rewrite gcd_schur_decomposition by lra.
- assert (Hsquare:0<=total*total/k) by (apply Rdiv_le_0_compat; nra).
+ assert (Hsquare:0<=total*total/k) by (unfold Rdiv; apply Rmult_le_pos; [nra|left; apply Rinv_0_lt_compat; nra]).
  assert (Hfactor:0<=(1-c)*sequential_d (r+k) c/sequential_d r c)
  by (apply gcd_common_mode_sign; assumption).
  apply Rplus_le_le_0_compat; apply Rmult_le_pos; nra.
@@ -167,7 +167,7 @@ Theorem gcd_schur_pd_arbitrary_sign : forall r k c energy total, 0<k -> c<1 ->
 Proof.
  intros r k c energy total Hk Hc Hr Ht He Hfeasible.
  rewrite gcd_schur_decomposition by lra.
- assert (Hsquare:0<=total*total/k) by (apply Rdiv_le_0_compat; nra).
+ assert (Hsquare:0<=total*total/k) by (unfold Rdiv; apply Rmult_le_pos; [nra|left; apply Rinv_0_lt_compat; nra]).
  assert (Hfactor:0<(1-c)*sequential_d (r+k) c/sequential_d r c)
  by (apply gcd_common_mode_strict; assumption).
  nra.
