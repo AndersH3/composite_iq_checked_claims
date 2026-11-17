@@ -101,6 +101,17 @@ jobs:
             test "$(sed -n "${pend}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Qed."
             sed -i "${pstart},${pend}c\\    Proof.\\n      intros Hxy.\\n      induction l as [|a l IH]; simpl.\\n      - tauto.\\n      - destruct (eqdec y a) as [Hya | Hya]; subst.\\n        + split.\\n          * intros [Hxa | Hin]; [congruence | exact (proj1 IH Hin)].\\n          * intros Hin; right; exact (proj2 IH Hin).\\n        + simpl; split.\\n          * intros [Hxa | Hin].\\n            -- left; exact Hxa.\\n            -- right; exact (proj1 IH Hin).\\n          * intros [Hxa | Hin].\\n            -- left; exact Hxa.\\n            -- right; exact (proj2 IH Hin).\\n    Qed." \
               rocq/lib_utils/LibUtilsListAdd.v
+            # The upstream fold/filter induction relies on a fragile
+            # intuition pass that leaves the membership contradiction open.
+            # Use Stdlib filter_In with explicit nonmembership reasoning.
+            foldline=$(grep -n "^    Lemma fold_left_remove_all_In " rocq/lib_utils/LibUtilsListAdd.v | cut -d: -f1)
+            test -n "$foldline"
+            proofline=$((foldline + 4))
+            qedline=$((foldline + 14))
+            test "$(sed -n "${proofline}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Proof."
+            test "$(sed -n "${qedline}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Qed."
+            sed -i "${proofline},${qedline}c\\    Proof.\\n      revert init a.\\n      induction l as [|b l IH]; intros init a Hin; simpl in *.\\n      - split; [exact Hin | tauto].\\n      - specialize (IH (filter (nequiv_decb b) init) a Hin).\\n        destruct IH as [HinFiltered HnotTail].\\n        apply filter_In in HinFiltered.\\n        destruct HinFiltered as [HinInit HneqBool].\\n        split; [exact HinInit |].\\n        intros [Hab | Htail].\\n        + subst b.\\n          unfold nequiv_decb, equiv_decb, negb in HneqBool.\\n          destruct (equiv_dec a a) as [_ | Hcontra];\\n            [discriminate | congruence].\\n        + apply HnotTail; exact Htail.\\n    Qed." \
+              rocq/lib_utils/LibUtilsListAdd.v
             # fixed_point.v upstream relied on intuition to discharge
             # an elementary successor-order side condition. Under 9.2 that
             # goal remains open and the next existential tactic runs on it.
