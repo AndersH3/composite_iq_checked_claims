@@ -221,6 +221,20 @@ def test_towers_reference_csvs(towers):
                row["grid_joint"] - row["published_joint"] for row in grid)
     assert all(row["grid_conditional"] ==
                row["grid_joint"] / row["grid_marginal"] for row in grid)
+    # Negative controls: the admissions validator must reject individually
+    # corrupted correlations, feasible-mass bounds and derived probabilities.
+    assert towers._valid_admissions(admissions)
+    for field, bad_value in (
+        ("rho", 0.6),
+        ("joint", admissions[0]["p_a"] + 0.001),
+        ("union", admissions[0]["union"] + 0.001),
+        ("conditional_b_given_a", admissions[0]["conditional_b_given_a"] + 0.1),
+        ("conditional_a_given_b", admissions[0]["conditional_a_given_b"] + 0.1),
+        ("joint", "not-a-number"),
+    ):
+        invalid = [dict(row) for row in admissions]
+        invalid[0][field] = bad_value
+        assert not towers._valid_admissions(invalid), field
     towers.verify_csv(towers.ROOT / "data/admission_probabilities.csv", towers.ADMISSION_FIELDS, admissions)
     towers.verify_csv(towers.ROOT / "data/followup_grid.csv", towers.GRID_FIELDS, grid)
     towers.verify_known_results(admissions, grid)
