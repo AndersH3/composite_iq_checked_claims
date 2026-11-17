@@ -28,6 +28,45 @@ jobs:
         run: python verification/check_contract_coverage.py
       - name: Check Python static lint with its negative control
         run: python verification/check_static_lint.py
+      - name: Diagnose crashing Deal decorators without exempting source
+        if: failure()
+        run: |
+          python - <<'PY'
+          import ast
+          import copy
+          from pathlib import Path
+          import subprocess
+          import sys
+          import tempfile
+
+          path = Path("analyses/hoeflin-ferguson/scripts/verify_calculations.py")
+          tree = ast.parse(path.read_text(encoding="utf-8"))
+          functions = [(n.name, n.lineno) for n in ast.walk(tree)
+                       if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]
+          for mode in ("full", "without", "only"):
+              selection = [(None, None)] if mode == "full" else functions
+              for selected in selection:
+                  modified = copy.deepcopy(tree)
+                  for fn in ast.walk(modified):
+                      if not isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                          continue
+                      current = (fn.name, fn.lineno)
+                      if mode == "without" and current == selected:
+                          fn.decorator_list = []
+                      elif mode == "only" and current != selected:
+                          fn.decorator_list = []
+                  with tempfile.TemporaryDirectory(prefix="deal-crash-") as folder:
+                      tmp = Path(folder, "sample.py")
+                      tmp.write_text(ast.unparse(modified) + "\n", encoding="utf-8")
+                      cmd = [sys.executable, "-m", "deal", "lint", "--json", str(tmp)]
+                      proc = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
+                      state = "CRASH" if proc.stderr else (
+                          "DIAGNOSTIC" if proc.stdout else "CLEAN"
+                      )
+                      print("DEAL_PROBE", mode, selected, state, proc.returncode,
+                            proc.stderr.strip().splitlines()[-1] if proc.stderr else "",
+                            flush=True)
+          PY
       - name: Validate scaled 40-million-sample Dask task budget without execution
         if: always()
         run: python -m reporting.simulate --plan --trials 5000000 --chunk 500000 --replicates 8
