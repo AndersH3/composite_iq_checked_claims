@@ -2268,7 +2268,7 @@ Qed.
 *)
 Theorem d052_cross_positive : forall n c:R, 0<c -> c<1 -> 0<sequential_d n c -> 0<equicorr_schur_cross n c.
 Proof.
-  intros n c Hc Hc1 Hd; rewrite d051_schur_cross_closed by lra; apply Rdiv_lt_0_compat; nra.
+  intros n c Hc Hc1 Hd; rewrite d051_schur_cross_closed by lra; unfold Rdiv; apply Rmult_lt_0_compat; [nra|apply Rinv_0_lt_compat; nra].
 Qed.
 
 (** [d052_cross_nonnegative] (theorem).
@@ -2281,7 +2281,7 @@ Qed.
 *)
 Theorem d052_cross_nonnegative : forall n c:R, 0<=c -> c<=1 -> 0<sequential_d n c -> 0<=equicorr_schur_cross n c.
 Proof.
-  intros n c Hc Hc1 Hd; rewrite d051_schur_cross_closed by lra; apply Rdiv_le_0_compat; nra.
+  intros n c Hc Hc1 Hd; rewrite d051_schur_cross_closed by lra; unfold Rdiv; apply Rmult_le_pos; [nra|left; apply Rinv_0_lt_compat; nra].
 Qed.
 
 (** [d052_diagonal_nonnegative] (theorem).
@@ -2294,7 +2294,7 @@ Qed.
 *)
 Theorem d052_diagonal_nonnegative : forall n c:R, c<=1 -> 0<sequential_d n c -> 0<=sequential_d (n+1) c -> 0<=equicorr_schur_diagonal n c.
 Proof.
-  intros n c Hc Hd Hfull; rewrite (gcd_single_future_variance_eigenvalue n c) by lra; apply Rdiv_le_0_compat; nra.
+  intros n c Hc Hd Hfull; rewrite (gcd_single_future_variance_eigenvalue n c) by lra; unfold Rdiv; apply Rmult_le_pos; [nra|left; apply Rinv_0_lt_compat; nra].
 Qed.
 
 (** [d052_diagonal_strict] (theorem).
@@ -2307,7 +2307,7 @@ Qed.
 *)
 Theorem d052_diagonal_strict : forall n c:R, c<1 -> 0<sequential_d n c -> 0<sequential_d (n+1) c -> 0<equicorr_schur_diagonal n c.
 Proof.
-  intros n c Hc Hd Hfull; rewrite (gcd_single_future_variance_eigenvalue n c) by lra; apply Rdiv_lt_0_compat; nra.
+  intros n c Hc Hd Hfull; rewrite (gcd_single_future_variance_eigenvalue n c) by lra; unfold Rdiv; apply Rmult_lt_0_compat; [nra|apply Rinv_0_lt_compat; nra].
 Qed.
 
 (** [d052_diagonal_upper_marginal] (theorem).
@@ -2320,7 +2320,7 @@ Qed.
 *)
 Theorem d052_diagonal_upper_marginal : forall n c:R, 0<=n -> 0<sequential_d n c -> equicorr_schur_diagonal n c<=1.
 Proof.
-  intros n c Hn Hd; unfold equicorr_schur_diagonal; assert (H : 0<=n*c*c/sequential_d n c) by (apply Rdiv_le_0_compat; nra); lra.
+  intros n c Hn Hd; unfold equicorr_schur_diagonal; assert (H : 0<=n*c*c/sequential_d n c) by (unfold Rdiv; apply Rmult_le_pos; [nra|left; apply Rinv_0_lt_compat; nra]); lra.
 Qed.
 
 (** [d052_diagonal_strict_reduction] (theorem).
@@ -2333,7 +2333,7 @@ Qed.
 *)
 Theorem d052_diagonal_strict_reduction : forall n c:R, 0<n -> c<>0 -> 0<sequential_d n c -> equicorr_schur_diagonal n c<1.
 Proof.
-  intros n c Hn Hc Hd; unfold equicorr_schur_diagonal; assert (H : 0<n*c*c/sequential_d n c) by (apply Rdiv_lt_0_compat; nra); lra.
+  intros n c Hn Hc Hd; unfold equicorr_schur_diagonal; assert (H : 0<n*c*c/sequential_d n c) by (unfold Rdiv; apply Rmult_lt_0_compat; [nra|apply Rinv_0_lt_compat; nra]); lra.
 Qed.
 
 (** [d052_contrast_nonnegative] (theorem).
@@ -2458,7 +2458,7 @@ Qed.
 *)
 Theorem d052_variance_monotone : forall n k c:R, 0<=k -> c<=1 -> 0<sequential_d n c -> 0<sequential_d (n+k) c -> equicorr_schur_diagonal (n+k) c<=equicorr_schur_diagonal n c.
 Proof.
-  intros n k c Hk Hc Hd Hd2; pose proof (d051_cov_diagonal_variance_drop n k c (Rgt_not_eq _ _ Hd) (Rgt_not_eq _ _ Hd2)) as Hdiff; assert (Hq:0<=k*c*c*(1-c)/(sequential_d n c*sequential_d (n+k) c)) by (apply Rdiv_le_0_compat; nra); lra.
+  intros n k c Hk Hc Hd Hd2; pose proof (d051_cov_diagonal_variance_drop n k c (Rgt_not_eq _ _ Hd) (Rgt_not_eq _ _ Hd2)) as Hdiff; assert (Hq:0<=k*c*c*(1-c)/(sequential_d n c*sequential_d (n+k) c)) by (unfold Rdiv; apply Rmult_le_pos; [nra|left; apply Rinv_0_lt_compat; nra]); lra.
 Qed.
 
 (** [d052_cross_covariance_monotone] (theorem).
@@ -2471,7 +2471,7 @@ Qed.
 *)
 Theorem d052_cross_covariance_monotone : forall n k c:R, 0<=k -> c<=1 -> 0<sequential_d n c -> 0<sequential_d (n+k) c -> equicorr_schur_cross (n+k) c<=equicorr_schur_cross n c.
 Proof.
-  intros n k c Hk Hc Hd Hd2; pose proof (d051_cov_cross_variance_drop n k c (Rgt_not_eq _ _ Hd) (Rgt_not_eq _ _ Hd2)) as Hdiff; assert (Hq:0<=k*c*c*(1-c)/(sequential_d n c*sequential_d (n+k) c)) by (apply Rdiv_le_0_compat; nra); lra.
+  intros n k c Hk Hc Hd Hd2; pose proof (d051_cov_cross_variance_drop n k c (Rgt_not_eq _ _ Hd) (Rgt_not_eq _ _ Hd2)) as Hdiff; assert (Hq:0<=k*c*c*(1-c)/(sequential_d n c*sequential_d (n+k) c)) by (unfold Rdiv; apply Rmult_le_pos; [nra|left; apply Rinv_0_lt_compat; nra]); lra.
 Qed.
 
 (** [d052_cross_below_prior] (theorem).
@@ -2484,7 +2484,7 @@ Qed.
 *)
 Theorem d052_cross_below_prior : forall n c:R, 0<=n -> 0<sequential_d n c -> equicorr_schur_cross n c<=c.
 Proof.
-  intros n c Hn Hd; unfold equicorr_schur_cross; assert (H:0<=n*c*c/sequential_d n c) by (apply Rdiv_le_0_compat; nra); lra.
+  intros n c Hn Hd; unfold equicorr_schur_cross; assert (H:0<=n*c*c/sequential_d n c) by (unfold Rdiv; apply Rmult_le_pos; [nra|left; apply Rinv_0_lt_compat; nra]); lra.
 Qed.
 
 (** [d052_cross_strict_below_prior] (theorem).
@@ -2497,7 +2497,7 @@ Qed.
 *)
 Theorem d052_cross_strict_below_prior : forall n c:R, 0<n -> c<>0 -> 0<sequential_d n c -> equicorr_schur_cross n c<c.
 Proof.
-  intros n c Hn Hc Hd; unfold equicorr_schur_cross; assert (H:0<n*c*c/sequential_d n c) by (apply Rdiv_lt_0_compat; nra); lra.
+  intros n c Hn Hc Hd; unfold equicorr_schur_cross; assert (H:0<n*c*c/sequential_d n c) by (unfold Rdiv; apply Rmult_lt_0_compat; [nra|apply Rinv_0_lt_compat; nra]); lra.
 Qed.
 
 (** [d052_mean_positive_gain] (theorem).
@@ -2510,7 +2510,7 @@ Qed.
 *)
 Theorem d052_mean_positive_gain : forall n c s:R, 0<c -> 0<sequential_d n c -> 0<s -> 0<hp n c s.
 Proof.
-  intros n c s Hc Hd Hs; unfold hp; apply Rdiv_lt_0_compat; nra.
+  intros n c s Hc Hd Hs; unfold hp; unfold Rdiv; apply Rmult_lt_0_compat; [nra|apply Rinv_0_lt_compat; nra].
 Qed.
 
 (** [d052_mean_nonnegative_gain] (theorem).
@@ -2523,5 +2523,5 @@ Qed.
 *)
 Theorem d052_mean_nonnegative_gain : forall n c s:R, 0<=c -> 0<sequential_d n c -> 0<=s -> 0<=hp n c s.
 Proof.
-  intros n c s Hc Hd Hs; unfold hp; apply Rdiv_le_0_compat; nra.
+  intros n c s Hc Hd Hs; unfold hp; unfold Rdiv; apply Rmult_le_pos; [nra|left; apply Rinv_0_lt_compat; nra].
 Qed.
