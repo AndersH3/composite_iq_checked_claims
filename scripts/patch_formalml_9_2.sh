@@ -167,3 +167,14 @@ test "$(sed -n "${nodup_start}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Proof
 test "$(sed -n "${nodup_end}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Qed."
 sed -i "${nodup_start},${nodup_end}c\\    Proof.\\n      unfold disjoint; intros Hdup x Ha Hb.\\n      destruct (in_split x a Ha) as [a1 [a2 Heq]]; subst a.\\n      rewrite <- app_assoc in Hdup.\\n      apply NoDup_app_inv2 in Hdup.\\n      inversion Hdup as [|y ys Hnot Htail]; subst.\\n      apply Hnot; apply in_or_app; right; exact Hb.\\n    Qed." \
   rocq/lib_utils/LibUtilsListAdd.v
+
+# Reuse Stdlib List.in_seq rather than the upstream fragile intuition
+# induction whose hypothesis numbering changed under Rocq 9.2.
+seq_line=$(grep -n "^    Lemma seq_ge " rocq/lib_utils/LibUtilsListAdd.v | cut -d: -f1)
+test -n "$seq_line"
+seq_start=$((seq_line + 2))
+seq_end=$((seq_line + 7))
+test "$(sed -n "${seq_start}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Proof."
+test "$(sed -n "${seq_end}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Qed."
+sed -i "${seq_start},${seq_end}c\\    Proof.\\n      intros x Hx.\\n      apply in_seq in Hx.\\n      lia.\\n    Qed." \
+  rocq/lib_utils/LibUtilsListAdd.v
