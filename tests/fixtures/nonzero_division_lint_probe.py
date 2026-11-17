@@ -1,5 +1,6 @@
 """Positive control: contracted division retains the exact original operation."""
 import deal
+import math
 
 
 @deal.pre(lambda numerator, denominator: isinstance(numerator, float)
