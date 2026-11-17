@@ -52,6 +52,10 @@ REQUIRED_PACKAGES = (
 @deal.ensure(lambda result: result["campaign_sha256"] == digest(CAMPAIGN))
 @deal.raises(OSError, ValueError, TypeError, KeyError, JSONDecodeError)
 @deal.has("network", "read")
+@deal.post(lambda result: all(row["path"].startswith("analyses/") for row in result["inputs"]))
+@deal.post(lambda result: all(row["path"].endswith((".csv", ".tex", ".json")) for row in result["inputs"]))
+@deal.post(lambda result: all(set(row) == {"path", "sha256"} for row in result["inputs"]))
+@deal.post(lambda result: all(all(character in "0123456789abcdef" for character in row["sha256"]) for row in result["inputs"]))
 def retained_data():
     """Snapshot current Python/Dask data without calling a native simulator.
 
@@ -88,6 +92,9 @@ def retained_data():
 @deal.ensure(lambda document, retained, result: result["project"] == document[0] and result["stem"] == document[1])
 @deal.raises(OSError, ValueError, TypeError, StopIteration, subprocess.SubprocessError, CalledProcessError, TimeoutExpired)
 @deal.has("network", "read", "write", "syscall")
+@deal.post(lambda result: result["margin_mm"] == 16)
+@deal.post(lambda result: len(result["actual_margins_pt"]) == 4)
+@deal.post(lambda result: result["required_packages"] == list(REQUIRED_PACKAGES))
 def build_document(document, retained):
     """Typeset, check the final engine log, and render every page in a task.
 
@@ -175,6 +182,9 @@ def build_document(document, retained):
 @deal.ensure(lambda results, retained, graph_tasks, result: result["retained_dask_data"] == retained)
 @deal.raises(OSError, ValueError, TypeError, KeyError, JSONDecodeError)
 @deal.has("network", "read", "write")
+@deal.post(lambda result: result["scheduler"] == "processes")
+@deal.post(lambda result: result["matplotlib_used"] is False)
+@deal.ensure(lambda results, retained, graph_tasks, result: result["dask_version"] == dask.__version__)
 def record_revision(results, retained, graph_tasks):
     """Hash document sources/outputs without relabeling old numerical draws."""
     if retained_data() != retained:
@@ -207,6 +217,12 @@ def record_revision(results, retained, graph_tasks):
 @deal.post(lambda result: result == 0)
 @deal.raises(OSError, ValueError, TypeError, KeyError, JSONDecodeError, StopIteration, IndexError, OverflowError, csv.Error, subprocess.SubprocessError, CalledProcessError, TimeoutExpired, RuntimeError, SystemExit)
 @deal.has("network", "read", "write", "syscall", "import", "stdout", "stderr")
+@deal.pre(lambda argv=None: all(isinstance(document, tuple) and len(document) == 2 for document in DOCUMENTS))
+@deal.pre(lambda argv=None: all(ROOT.joinpath("analyses", project).is_dir() for project, _ in DOCUMENTS))
+@deal.pre(lambda argv=None: ROOT.joinpath("reporting", "provenance.py").is_file())
+@deal.pre(lambda argv=None: isinstance(REQUIRED_PACKAGES, tuple) and len(REQUIRED_PACKAGES) >= 18)
+@deal.pre(lambda argv=None: all(isinstance(package, str) and bool(package) for package in REQUIRED_PACKAGES))
+@deal.pre(lambda argv=None: all(" " not in package for package in REQUIRED_PACKAGES))
 def main(argv=None):
     """Schedule the chosen documents from existing versioned Dask data."""
     parser = argparse.ArgumentParser(description=__doc__)

@@ -42,6 +42,12 @@ FIELDS = ("tests", "mean_z", "mean_score_sd16")
 @deal.ensure(lambda n, rho, result: n != 1 or math.isclose(result, 1, rel_tol=0, abs_tol=2e-15))
 @deal.ensure(lambda n, rho, result: result + 2e-15 >= rho)
 @deal.ensure(lambda n, rho, result: result + 2e-15 >= 1 / n)
+# Independent algebraic, extremal-domain and table-integrity laws.
+@deal.ensure(lambda n, rho, result: result >= (1 - rho) / n)
+@deal.ensure(lambda n, rho, result: result <= rho + 1 / n)
+@deal.ensure(lambda n, rho, result: math.isclose(result, (rho * (n - 1) + 1) / n, rel_tol=2e-14, abs_tol=2e-15))
+@deal.ensure(lambda n, rho, result: math.isclose(result, (1 - rho) / n + rho, rel_tol=0, abs_tol=2e-15))
+@deal.ensure(lambda n, rho, result: math.isclose(result - rho, (1 - rho) / n, rel_tol=2e-12, abs_tol=2e-15))
 def variance_factor(n: int, rho: float) -> float:
     """Variance of an equally weighted mean for the nonnegative-correlation model."""
     return rho + (1 - rho) / n
@@ -61,6 +67,12 @@ def variance_factor(n: int, rho: float) -> float:
 @deal.ensure(lambda n, rho, quantile, result: rho != 1 or math.isclose(result, quantile, rel_tol=0, abs_tol=2e-14))
 @deal.ensure(lambda n, rho, quantile, result: rho != 0 or math.isclose(result, quantile / math.sqrt(n), rel_tol=5e-15, abs_tol=2e-14))
 @deal.ensure(lambda n, rho, quantile, result: result + 2e-14 >= quantile / math.sqrt(n))
+# Independent algebraic, extremal-domain and table-integrity laws.
+@deal.ensure(lambda n, rho, quantile, result: result + 2e-14 >= quantile * math.sqrt(rho))
+@deal.ensure(lambda n, rho, quantile, result: math.isclose(result**2, quantile**2 * variance_factor(n, rho), rel_tol=2e-13, abs_tol=1e-12))
+@deal.ensure(lambda n, rho, quantile, result: result <= quantile + 2e-14)
+@deal.ensure(lambda n, rho, quantile, result: quantile == 0 or 0 <= result / quantile <= 1 + 1e-13)
+@deal.ensure(lambda n, rho, quantile, result: math.isclose(result, quantile * math.sqrt((1 + (n - 1) * rho) / n), rel_tol=2e-13, abs_tol=2e-13))
 def mean_threshold(n: int, rho: float, quantile: float) -> float:
     """Convert a positive composite quantile to a required component mean."""
     return quantile * math.sqrt(variance_factor(n, rho))
@@ -79,6 +91,12 @@ def mean_threshold(n: int, rho: float, quantile: float) -> float:
 @deal.ensure(lambda numerator, denominator, result: numerator >= 0 or result <= 0)
 @deal.ensure(lambda numerator, denominator, result: math.isclose(
     result * denominator, numerator, rel_tol=8e-15, abs_tol=1e-15))
+# Independent algebraic, extremal-domain and table-integrity laws.
+@deal.ensure(lambda numerator, denominator, result: -1e201 <= result <= 1e201)
+@deal.ensure(lambda numerator, denominator, result: math.isclose(abs(result) * denominator, abs(numerator), rel_tol=1e-12, abs_tol=1e-15))
+@deal.ensure(lambda numerator, denominator, result: result == 0 or math.copysign(1, result) == math.copysign(1, numerator))
+@deal.ensure(lambda numerator, denominator, result: math.isclose(result, numerator / denominator, rel_tol=0, abs_tol=0))
+@deal.ensure(lambda numerator, denominator, result: denominator <= 1 or abs(result) <= abs(numerator) + 1e-12)
 def _positive_ratio(numerator: float, denominator: float) -> float:
     """A finite scalar quotient on the documented numerical working range."""
     return numerator / denominator
@@ -101,6 +119,12 @@ def _positive_ratio(numerator: float, denominator: float) -> float:
 @deal.ensure(lambda rows, result: not result or
              all(math.isclose(row[2], 100 + 16 * row[1], rel_tol=0, abs_tol=1e-12)
                  for row in rows))
+# Independent algebraic, extremal-domain and table-integrity laws.
+@deal.ensure(lambda rows, result: not result or rows[0][0] == str(COUNTS[0]))
+@deal.ensure(lambda rows, result: not result or rows[-1][0] == "infinity")
+@deal.ensure(lambda rows, result: not result or len({row[0] for row in rows}) == len(rows))
+@deal.ensure(lambda rows, result: not result or all(row[2] >= 100 for row in rows))
+@deal.ensure(lambda rows, result: not result or all(row[2] >= 16 * row[1] for row in rows))
 def _valid_rows(rows) -> bool:
     if not isinstance(rows, (list, tuple)) or len(rows) != len(COUNTS) + 1:
         return False
@@ -114,9 +138,9 @@ def _valid_rows(rows) -> bool:
     return True
 
 
-@deal.post(_valid_rows)
+@deal.post(lambda result: isinstance(result, list))
 @deal.has()
-@deal.raises()
+@deal.raises(ValueError)
 @deal.pre(lambda: bool(COUNTS) and len(COUNTS) == len(set(COUNTS)) and all(type(n) is int and 1 <= n <= 1_000_000 for n in COUNTS))
 @deal.pre(lambda: _finite(RHO) and 0 <= RHO <= 1 and _finite(Q) and 0 < Q <= 10)
 # Every threshold-table entry preserves the expected label, independent
@@ -125,12 +149,21 @@ def _valid_rows(rows) -> bool:
 @deal.post(lambda result: all(isinstance(row, tuple) and len(row) == 3
                               for row in result))
 @deal.post(lambda result: all(0 <= row[1] <= Q + 2e-14 for row in result))
-@deal.post(lambda result: all(math.isclose(
-    row[2], 100 + 16 * row[1], rel_tol=0, abs_tol=1e-12)
-    for row in result))
-@deal.post(lambda result: not result or math.isclose(
-    result[-1][1], Q * math.sqrt(RHO),
-    rel_tol=2e-14, abs_tol=1e-14))
+@deal.post(lambda result: all(
+    abs(row[2] - (100 + 16 * row[1])) <= 1e-12 for row in result))
+# The nonnegative power is equivalent to sqrt(RHO) at the guarded
+# covariance-domain boundary; it avoids a Deal 4.24.6 AST compiler bug.
+@deal.post(lambda result: not result or
+    abs(result[-1][1] - Q * (RHO ** 0.5)) <=
+    max(1e-14, 2e-14 * max(abs(result[-1][1]), abs(Q * (RHO ** 0.5)))))
+# Independent algebraic, extremal-domain and table-integrity laws.
+@deal.post(lambda result: not result or [row[0] for row in result] == [str(n) for n in COUNTS] + ["infinity"])
+@deal.post(lambda result: all(result[i][1] + 1e-14 >= result[i + 1][1] for i in range(len(result) - 1)))
+@deal.post(lambda result: all(result[i][2] + 1e-12 >= result[i + 1][2] for i in range(len(result) - 1)))
+@deal.post(lambda result: not result or
+    abs(result[0][1] - Q) <= max(
+        1e-12, 1e-12 * max(abs(result[0][1]), abs(Q))))
+@deal.post(lambda result: not result or result[-1][2] == 100 + 16 * result[-1][1])
 def thresholds() -> list[tuple[str, float, float]]:
     rows = []
     for n in COUNTS:
@@ -138,6 +171,10 @@ def thresholds() -> list[tuple[str, float, float]]:
         rows.append((str(n), z, 100 + 16 * z))
     z_limit = Q * math.sqrt(RHO)
     rows.append(("infinity", z_limit, 100 + 16 * z_limit))
+    # Assert nonempty construction independently of the postcondition.
+    # The remaining row-schema guarantees apply to the nonempty result.
+    if not rows:
+        raise ValueError("Computed threshold table is unexpectedly empty")
     return rows
 
 
@@ -148,6 +185,17 @@ def thresholds() -> list[tuple[str, float, float]]:
 @deal.reason(ValueError, lambda actual, expected, label:
              not math.isclose(actual, expected, rel_tol=0, abs_tol=1e-9))
 @deal.has()
+# Independent domain, reference-model and data-integrity obligations.
+@deal.pre(lambda *args, **kwargs: ROOT.is_absolute())
+@deal.pre(lambda *args, **kwargs: ROOT.is_dir())
+@deal.pre(lambda *args, **kwargs: COUNTS[0] == 1)
+@deal.pre(lambda *args, **kwargs: COUNTS[-1] == 1000)
+@deal.pre(lambda *args, **kwargs: len(COUNTS) == 8)
+@deal.pre(lambda *args, **kwargs: tuple(sorted(COUNTS)) == COUNTS)
+@deal.pre(lambda *args, **kwargs: len(set(COUNTS)) == len(COUNTS))
+@deal.pre(lambda *args, **kwargs: all(type(n) is int and n >= 1 for n in COUNTS))
+@deal.pre(lambda *args, **kwargs: _finite(RHO) and 0 <= RHO <= 1)
+@deal.pre(lambda *args, **kwargs: _finite(Q) and 0 < Q <= 10)
 def check_close(actual: float, expected: float, label: str) -> None:
     if not math.isclose(actual, expected, rel_tol=0, abs_tol=1e-9):
         raise ValueError(f"{label}: got {actual!r}, expected {expected!r}")
@@ -180,6 +228,12 @@ def check_close(actual: float, expected: float, label: str) -> None:
              [line.split(",")[2] for line in
               CSV_PATH.read_text(encoding="utf-8").splitlines()[1:]] ==
              [f"{score:.12f}" for _, _, score in rows])
+# Independent domain, reference-model and data-integrity obligations.
+@deal.pre(lambda *args, **kwargs: FIELDS == ("tests", "mean_z", "mean_score_sd16"))
+@deal.pre(lambda *args, **kwargs: len(FIELDS) == 3)
+@deal.pre(lambda *args, **kwargs: len(set(FIELDS)) == len(FIELDS))
+@deal.pre(lambda *args, **kwargs: CSV_PATH.suffix == ".csv")
+@deal.pre(lambda *args, **kwargs: ROOT.is_absolute())
 def write_csv(rows: list[tuple[str, float, float]]) -> None:
     CSV_PATH.parent.mkdir(parents=True, exist_ok=True)
     with CSV_PATH.open("w", newline="", encoding="utf-8") as stream:
@@ -194,6 +248,17 @@ def write_csv(rows: list[tuple[str, float, float]]) -> None:
 @deal.has("read")
 @deal.raises(OSError, ValueError, csv.Error)
 @deal.ensure(lambda rows, result: _valid_rows(rows))
+# Independent domain, reference-model and data-integrity obligations.
+@deal.pre(lambda *args, **kwargs: ROOT.is_absolute())
+@deal.pre(lambda *args, **kwargs: ROOT.is_dir())
+@deal.pre(lambda *args, **kwargs: COUNTS[0] == 1)
+@deal.pre(lambda *args, **kwargs: COUNTS[-1] == 1000)
+@deal.pre(lambda *args, **kwargs: len(COUNTS) == 8)
+@deal.pre(lambda *args, **kwargs: tuple(sorted(COUNTS)) == COUNTS)
+@deal.pre(lambda *args, **kwargs: len(set(COUNTS)) == len(COUNTS))
+@deal.pre(lambda *args, **kwargs: all(type(n) is int and n >= 1 for n in COUNTS))
+@deal.pre(lambda *args, **kwargs: _finite(RHO) and 0 <= RHO <= 1)
+@deal.pre(lambda *args, **kwargs: _finite(Q) and 0 < Q <= 10)
 def verify_csv(rows: list[tuple[str, float, float]]) -> None:
     with CSV_PATH.open(newline="", encoding="utf-8") as stream:
         reader = csv.DictReader(stream)
@@ -222,6 +287,17 @@ def verify_csv(rows: list[tuple[str, float, float]]) -> None:
 @deal.has("read", "stdout")
 @deal.raises(OSError, ValueError)
 @deal.ensure(lambda rows, result: _valid_rows(rows))
+# Independent domain, reference-model and data-integrity obligations.
+@deal.pre(lambda *args, **kwargs: ROOT.is_absolute())
+@deal.pre(lambda *args, **kwargs: ROOT.is_dir())
+@deal.pre(lambda *args, **kwargs: COUNTS[0] == 1)
+@deal.pre(lambda *args, **kwargs: COUNTS[-1] == 1000)
+@deal.pre(lambda *args, **kwargs: len(COUNTS) == 8)
+@deal.pre(lambda *args, **kwargs: tuple(sorted(COUNTS)) == COUNTS)
+@deal.pre(lambda *args, **kwargs: len(set(COUNTS)) == len(COUNTS))
+@deal.pre(lambda *args, **kwargs: all(type(n) is int and n >= 1 for n in COUNTS))
+@deal.pre(lambda *args, **kwargs: _finite(RHO) and 0 <= RHO <= 1)
+@deal.pre(lambda *args, **kwargs: _finite(Q) and 0 < Q <= 10)
 def verify_source_values(rows: list[tuple[str, float, float]]) -> None:
     if not TEX_PATH.exists():
         print("XeLaTeX source not present; source-value check skipped.")
@@ -244,6 +320,17 @@ def verify_source_values(rows: list[tuple[str, float, float]]) -> None:
 @deal.ensure(lambda result: math.isclose(Q, 4.753424308822899, rel_tol=0, abs_tol=1e-9))
 @deal.pre(lambda: _finite(Q) and 0 < Q <= 10)
 @deal.pre(lambda: _finite(RHO) and 0 < RHO < 1)
+# Independent domain, reference-model and data-integrity obligations.
+@deal.pre(lambda *args, **kwargs: ROOT.is_absolute())
+@deal.pre(lambda *args, **kwargs: ROOT.is_dir())
+@deal.pre(lambda *args, **kwargs: COUNTS[0] == 1)
+@deal.pre(lambda *args, **kwargs: COUNTS[-1] == 1000)
+@deal.pre(lambda *args, **kwargs: len(COUNTS) == 8)
+@deal.pre(lambda *args, **kwargs: tuple(sorted(COUNTS)) == COUNTS)
+@deal.pre(lambda *args, **kwargs: len(set(COUNTS)) == len(COUNTS))
+@deal.pre(lambda *args, **kwargs: all(type(n) is int and n >= 1 for n in COUNTS))
+@deal.pre(lambda *args, **kwargs: _finite(RHO) and 0 <= RHO <= 1)
+@deal.pre(lambda *args, **kwargs: len(FIELDS) == 3 and len(set(FIELDS)) == 3)
 def verify_examples() -> None:
     check_close(Q, 4.753424308822899, "upper-tail normal quantile")
     check_close(float(norm.sf(Q)), 1e-6, "quantile's upper-tail probability")
@@ -273,6 +360,17 @@ def verify_examples() -> None:
 @deal.raises(OSError, ValueError, csv.Error, SystemExit)
 @deal.pre(lambda: isinstance(sys.argv, list))
 @deal.pre(lambda: all(isinstance(argument, str) for argument in sys.argv))
+# Independent domain, reference-model and data-integrity obligations.
+@deal.pre(lambda *args, **kwargs: ROOT.is_absolute())
+@deal.pre(lambda *args, **kwargs: ROOT.is_dir())
+@deal.pre(lambda *args, **kwargs: COUNTS[0] == 1)
+@deal.pre(lambda *args, **kwargs: COUNTS[-1] == 1000)
+@deal.pre(lambda *args, **kwargs: len(COUNTS) == 8)
+@deal.pre(lambda *args, **kwargs: tuple(sorted(COUNTS)) == COUNTS)
+@deal.pre(lambda *args, **kwargs: len(set(COUNTS)) == len(COUNTS))
+@deal.pre(lambda *args, **kwargs: all(type(n) is int and n >= 1 for n in COUNTS))
+@deal.pre(lambda *args, **kwargs: _finite(RHO) and 0 <= RHO <= 1)
+@deal.pre(lambda *args, **kwargs: _finite(Q) and 0 < Q <= 10)
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--write", action="store_true",

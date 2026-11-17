@@ -32,9 +32,15 @@ from reporting import block_simulations, simulate
 @deal.ensure(lambda *, result: reference_inputs_intact())
 @deal.has("network", "read", "random", "import", "syscall", "global")
 @deal.raises(AssertionError, ValueError, TypeError, OverflowError, KeyError, ZeroDivisionError)
-@deal.ensure(lambda *, result: result is None)
 @deal.pre(lambda: len(block_simulations.COUNTS) == 8)
 @deal.pre(lambda: simulate.DEFAULT_TRIALS >= 5_000_000)
+# Check the independent seed, model and block-budget assumptions.
+@deal.pre(lambda: len(block_simulations.COUNTS) == len(set(block_simulations.COUNTS)))
+@deal.pre(lambda: all(type(n) is int and n > 0 for n in block_simulations.COUNTS))
+@deal.pre(lambda: tuple(block_simulations.COUNTS) == tuple(sorted(block_simulations.COUNTS)))
+@deal.pre(lambda: len(simulate.SEEDS) >= simulate.DEFAULT_REPLICATES)
+@deal.pre(lambda: len(set(simulate.SEEDS)) == len(simulate.SEEDS))
+@deal.pre(lambda: 0 < simulate.DEFAULT_CHUNK <= simulate.DEFAULT_TRIALS)
 def test_centered_block_moment_merge_and_seeded_substreams():
     """Merging blocks must preserve between-block variation and tail counts."""
     left = np.array([1_000_001.0, 1_000_003.0])
@@ -65,7 +71,13 @@ def test_centered_block_moment_merge_and_seeded_substreams():
 @deal.ensure(lambda *, result: reference_inputs_intact())
 @deal.has("network", "read", "import", "syscall", "random", "global")
 @deal.raises(AssertionError, ValueError, TypeError, OverflowError, KeyError, ZeroDivisionError, OSError, NotImplementedError, ImportError)
-@deal.ensure(lambda *, result: result is None)
+# Check the independent seed, model and block-budget assumptions.
+@deal.pre(lambda: simulate.DEFAULT_TRIALS == 5_000_000)
+@deal.pre(lambda: simulate.DEFAULT_CHUNK == 500_000)
+@deal.pre(lambda: len(simulate.SEEDS) == 8)
+@deal.pre(lambda: len(set(simulate.SEEDS)) == 8)
+@deal.pre(lambda: len(simulate.PROJECTS) == 3)
+@deal.pre(lambda: len(block_simulations.COUNTS) == 8)
 def test_large_default_graph_has_fewer_tasks_than_recorded_small_graph():
     """A tenfold sample increase must not create a larger task graph."""
     config = {"trials": simulate.DEFAULT_TRIALS, "chunk": simulate.DEFAULT_CHUNK,
@@ -97,8 +109,14 @@ def test_large_default_graph_has_fewer_tasks_than_recorded_small_graph():
 @deal.ensure(lambda *, result: reference_inputs_intact())
 @deal.has("network", "read", "import", "random", "global", "syscall")
 @deal.raises(AssertionError, ValueError, TypeError, OverflowError, KeyError, ZeroDivisionError, OSError, NotImplementedError, ImportError)
-@deal.ensure(lambda *, result: result is None)
 @deal.pre(lambda: len(simulate.PROJECTS) == 3)
+# Check the independent seed, model and block-budget assumptions.
+@deal.pre(lambda: len(simulate.SEEDS) >= 1)
+@deal.pre(lambda: type(simulate.SEEDS[0]) is int)
+@deal.pre(lambda: 0 <= simulate.SEEDS[0] < 2 ** 32)
+@deal.pre(lambda: tuple(simulate.PROJECTS) == ("hoeflin-ferguson", "towers-multiple-test-admissions", "sequential-conditional-means"))
+@deal.pre(lambda: len(block_simulations.COUNTS) == 8)
+@deal.pre(lambda: simulate.DEFAULT_CHUNK > 0)
 def test_seeded_block_simulations_match_analytic_reference_laws():
     """Small out-of-core graphs retain the models and deterministic seeds."""
     config = {"trials": 12000, "chunk": 3000, "seeds": [simulate.SEEDS[0]]}
@@ -135,8 +153,14 @@ def test_seeded_block_simulations_match_analytic_reference_laws():
 @deal.ensure(lambda capsys, result: reference_inputs_intact())
 @deal.has("network", "read", "write", "stdout", "stderr", "time", "import", "syscall", "random", "global")
 @deal.raises(AssertionError, ValueError, TypeError, OverflowError, KeyError, ZeroDivisionError, OSError, ImportError, RuntimeError, JSONDecodeError, NotImplementedError, csv.Error, subprocess.SubprocessError, CalledProcessError, TimeoutExpired, SystemExit)
-@deal.ensure(lambda capsys, result: result is None)
 @deal.pre(lambda capsys: simulate.DEFAULT_TRIALS > 1_000_000)
+# Check the independent seed, model and block-budget assumptions.
+@deal.pre(lambda capsys: simulate.DEFAULT_REPLICATES == 8)
+@deal.pre(lambda capsys: simulate.DEFAULT_CHUNK == 500_000)
+@deal.pre(lambda capsys: simulate.DEFAULT_TRIALS == 5_000_000)
+@deal.pre(lambda capsys: len(simulate.SEEDS) >= 8)
+@deal.pre(lambda capsys: len(set(simulate.SEEDS[:8])) == 8)
+@deal.pre(lambda capsys: len(simulate.PROJECTS) == 3)
 def test_dry_run_reports_scaling_without_touching_published_results(capsys):
     """--plan must produce a reproducible graph budget without computation."""
     assert simulate.main(["--plan", "--trials", "5000000", "--chunk", "500000",

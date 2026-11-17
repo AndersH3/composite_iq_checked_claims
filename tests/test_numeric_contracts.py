@@ -1,5 +1,5 @@
 """Check domain rejection and independent mathematical properties."""
-from conftest import protected_history_intact, reference_inputs_intact
+from conftest import ROOT, protected_history_intact, reference_inputs_intact
 import math
 import csv
 
@@ -21,6 +21,17 @@ UNIT = st.floats(min_value=0, max_value=1, allow_nan=False, allow_infinity=False
 @deal.ensure(lambda hoeflin, n, rho, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', "read")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","data","thresholds.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","admission_probabilities.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","followup_grid.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
+@deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_variance_rejects_invalid_domain(hoeflin, n, rho):
     with pytest.raises(deal.PreContractError):
         hoeflin.variance_factor(n, rho)
@@ -32,6 +43,17 @@ def test_variance_rejects_invalid_domain(hoeflin, n, rho):
 @deal.ensure(lambda hoeflin, quantile, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', "read")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","data","thresholds.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","admission_probabilities.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","followup_grid.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
+@deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_threshold_rejects_invalid_quantile(hoeflin, quantile):
     with pytest.raises(deal.PreContractError):
         hoeflin.mean_threshold(3, .6, quantile)
@@ -44,6 +66,17 @@ def test_threshold_rejects_invalid_quantile(hoeflin, quantile):
 @deal.ensure(lambda hoeflin, n, rho, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', "read")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","data","thresholds.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","admission_probabilities.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","followup_grid.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
+@deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_variance_between_independent_and_identical_limits(hoeflin, n, rho):
     factor = hoeflin.variance_factor(n, rho)
     assert 1/n - 2e-15 <= factor <= 1 + 2e-15
@@ -59,6 +92,17 @@ def test_variance_between_independent_and_identical_limits(hoeflin, n, rho):
 @deal.ensure(lambda hoeflin, n, extra, rho, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', "read")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","data","thresholds.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","admission_probabilities.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","followup_grid.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
+@deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_more_tests_reduce_required_mean_at_fixed_correlation(hoeflin, n, extra, rho):
     assert hoeflin.mean_threshold(n + extra, rho, 4.753424308822899) <= (
         hoeflin.mean_threshold(n, rho, 4.753424308822899) + 2e-14
@@ -72,6 +116,17 @@ def test_more_tests_reduce_required_mean_at_fixed_correlation(hoeflin, n, extra,
 @deal.ensure(lambda hoeflin, rho, quantile, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', "read")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","data","thresholds.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","admission_probabilities.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","followup_grid.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
+@deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_one_test_is_unaffected_by_intertest_correlation(hoeflin, rho, quantile):
     assert hoeflin.variance_factor(1, rho) == pytest.approx(1.0, abs=2e-15)
     assert hoeflin.mean_threshold(1, rho, quantile) == pytest.approx(quantile, abs=2e-14)
@@ -82,6 +137,17 @@ def test_one_test_is_unaffected_by_intertest_correlation(hoeflin, rho, quantile)
 @deal.ensure(lambda hoeflin, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', 'read')
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","data","thresholds.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","admission_probabilities.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","followup_grid.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
+@deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_corrected_hundred_test_threshold_and_stored_table(hoeflin):
     z = hoeflin.mean_threshold(100, .6, float(norm.isf(1e-6)))
     assert z == pytest.approx(3.69423953831691, abs=2e-13)
@@ -101,6 +167,17 @@ def test_corrected_hundred_test_threshold_and_stored_table(hoeflin):
 @deal.ensure(lambda towers, p_a, p_b, joint, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', "read")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","data","thresholds.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","admission_probabilities.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","followup_grid.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
+@deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_union_rejects_impossible_probabilities(towers, p_a, p_b, joint):
     with pytest.raises(deal.PreContractError):
         towers.probability_union(p_a, p_b, joint)
@@ -114,6 +191,17 @@ def test_union_rejects_impossible_probabilities(towers, p_a, p_b, joint):
 @deal.ensure(lambda towers, joint, marginal, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', "read")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","data","thresholds.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","admission_probabilities.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","followup_grid.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
+@deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_conditional_rejects_invalid_domain(towers, joint, marginal):
     with pytest.raises(deal.PreContractError):
         towers.conditional_probability(joint, marginal)
@@ -126,6 +214,17 @@ def test_conditional_rejects_invalid_domain(towers, joint, marginal):
 @deal.ensure(lambda towers, a, b, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', "read")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","data","thresholds.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","admission_probabilities.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","followup_grid.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
+@deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_union_matches_independent_finite_set_counting(towers, a, b):
     # Dyadic probabilities avoid ambiguity at floating Frechet boundaries.
     value = towers.probability_union(len(a)/16, len(b)/16, len(a & b)/16)
@@ -145,6 +244,17 @@ def test_union_matches_independent_finite_set_counting(towers, a, b):
 @deal.ensure(lambda towers, a, b, rho, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', "read")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","data","thresholds.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","admission_probabilities.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","followup_grid.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
+@deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_joint_tail_rejects_invalid_domain(towers, a, b, rho):
     with pytest.raises(deal.PreContractError):
         towers.joint_tail(a, b, rho)
@@ -158,6 +268,17 @@ def test_joint_tail_rejects_invalid_domain(towers, a, b, rho):
 @deal.ensure(lambda towers, a, b, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', "read")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","data","thresholds.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","admission_probabilities.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","followup_grid.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
+@deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_independent_gaussian_tail_factorizes(towers, a, b):
     assert towers.joint_tail(a, b, 0.0) == pytest.approx(norm.sf(a)*norm.sf(b), abs=1e-14)
 
@@ -171,6 +292,17 @@ def test_independent_gaussian_tail_factorizes(towers, a, b):
 @deal.ensure(lambda towers, a, b, rho, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', "read")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","data","thresholds.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","admission_probabilities.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","followup_grid.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
+@deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_joint_tail_is_symmetric_and_bounded(towers, a, b, rho):
     result = towers.joint_tail(a, b, rho)
     assert result == pytest.approx(towers.joint_tail(b, a, rho), abs=1e-14)
@@ -186,6 +318,17 @@ def test_joint_tail_is_symmetric_and_bounded(towers, a, b, rho):
 @deal.ensure(lambda towers, p_a, p_b, expected, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', "read")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","data","thresholds.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","admission_probabilities.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","followup_grid.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
+@deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_admission_reference_overlaps(towers, p_a, p_b, expected):
     result = towers.joint_tail(float(norm.isf(p_a)), float(norm.isf(p_b)), .7)
     assert result == pytest.approx(expected, abs=1e-14)
@@ -196,6 +339,17 @@ def test_admission_reference_overlaps(towers, p_a, p_b, expected):
 @deal.ensure(lambda towers, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', "read")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","data","thresholds.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","admission_probabilities.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","followup_grid.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
+@deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_higher_correlation_increases_mixed_overlap(towers):
     a, b = float(norm.isf(.02)), float(norm.isf(.001))
     results = [towers.joint_tail(a, b, r) for r in (.3, .5, .7, .9)]
@@ -207,6 +361,17 @@ def test_higher_correlation_increases_mixed_overlap(towers):
 @deal.ensure(lambda towers, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', 'read')
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","data","thresholds.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","admission_probabilities.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","followup_grid.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
+@deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_towers_reference_csvs(towers):
     admissions, grid = towers.admission_rows(), towers.basic_grid()
     # Independent table-level provenance and arithmetic laws: these
@@ -221,6 +386,20 @@ def test_towers_reference_csvs(towers):
                row["grid_joint"] - row["published_joint"] for row in grid)
     assert all(row["grid_conditional"] ==
                row["grid_joint"] / row["grid_marginal"] for row in grid)
+    # Negative controls: the admissions validator must reject individually
+    # corrupted correlations, feasible-mass bounds and derived probabilities.
+    assert towers._valid_admissions(admissions)
+    for field, bad_value in (
+        ("rho", 0.6),
+        ("joint", admissions[0]["p_a"] + 0.001),
+        ("union", admissions[0]["union"] + 0.001),
+        ("conditional_b_given_a", admissions[0]["conditional_b_given_a"] + 0.1),
+        ("conditional_a_given_b", admissions[0]["conditional_a_given_b"] + 0.1),
+        ("joint", "not-a-number"),
+    ):
+        invalid = [dict(row) for row in admissions]
+        invalid[0][field] = bad_value
+        assert not towers._valid_admissions(invalid), field
     towers.verify_csv(towers.ROOT / "data/admission_probabilities.csv", towers.ADMISSION_FIELDS, admissions)
     towers.verify_csv(towers.ROOT / "data/followup_grid.csv", towers.GRID_FIELDS, grid)
     towers.verify_known_results(admissions, grid)
@@ -232,6 +411,17 @@ def test_towers_reference_csvs(towers):
 @deal.ensure(lambda hoeflin, towers, kernel, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', 'read', 'write', 'import', 'global', 'random', 'time')
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","data","thresholds.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","admission_probabilities.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","followup_grid.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
+@deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_deal_generated_contract_cases(hoeflin, towers, kernel):
     # Exercise deal's own generator/introspection as well as direct Hypothesis.
     if kernel == "variance":
@@ -258,6 +448,17 @@ def test_deal_generated_contract_cases(hoeflin, towers, kernel):
 @deal.ensure(lambda hoeflin, towers, value, expected, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","data","thresholds.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","admission_probabilities.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","followup_grid.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
+@deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_legacy_finite_number_guards_reject_invalid_types(hoeflin, towers, value, expected):
     """Both original model scripts must reject non-finite input categories."""
     assert hoeflin._finite(value) is expected
@@ -271,6 +472,20 @@ def test_legacy_finite_number_guards_reject_invalid_types(hoeflin, towers, value
              reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "global", "import")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","data","thresholds.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","admission_probabilities.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","followup_grid.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
+@deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","README.md").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","composite_iq_analysis.tex").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","data").is_dir())
 def test_legacy_hoeflin_csv_writer_retains_exact_twelve_digit_rows(
         hoeflin, tmp_path, monkeypatch):
     """Write only into a temporary path and independently parse every field."""
@@ -291,6 +506,17 @@ def test_legacy_hoeflin_csv_writer_retains_exact_twelve_digit_rows(
 @deal.ensure(lambda towers, tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "import")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","scripts","verify_calculations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","hoeflin-ferguson","data","thresholds.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","admission_probabilities.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("analyses","towers-multiple-test-admissions","data","followup_grid.csv").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
+@deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_legacy_towers_csv_writer_preserves_quoted_rows_and_field_order(
         towers, tmp_path):
     """Exercise csv.DictWriter with a real embedded delimiter/newline."""

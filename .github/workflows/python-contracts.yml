@@ -21,24 +21,33 @@ jobs:
       - run: python -m pip install -r requirements-dev.txt
       - name: Check Python/Rocq source ownership and excluded compiler sources
         run: bash scripts/check_library_layout.sh
-      - name: Check Deal contract coverage
+      # During the legacy migration, retain full test and lint diagnostics.
+      # The final gate below still fails the job for every shortfall or duplicate.
+      - name: Audit Deal contract coverage (diagnostic)
+        continue-on-error: true
         run: python verification/check_contract_coverage.py
       - name: Check Python static lint with its negative control
         run: python verification/check_static_lint.py
       - name: Validate scaled 40-million-sample Dask task budget without execution
+        if: always()
         run: python -m reporting.simulate --plan --trials 5000000 --chunk 500000 --replicates 8
       - name: Python/Dask numerical and property tests
+        if: always()
         run: python -m pytest -q tests
       # These executions write only into the disposable Actions checkout.
       # They validate Dask worker serialization and output dependencies,
       # NOT the unexecuted future default 40M-sample production experiment.
       - name: Diagnostic end-to-end block run with unmasked tracebacks
+        if: always()
         run: python -m reporting.simulate --trials 10000 --chunk 2500 --replicates 1 --scheduler single-threaded
       - name: Small end-to-end block run using local processes
+        if: always()
         run: python -m reporting.simulate --trials 10000 --chunk 2500 --replicates 1 --workers 2 --scheduler processes
       - name: Small end-to-end block run using distributed LocalCluster
+        if: always()
         run: python -m reporting.simulate --trials 10000 --chunk 2500 --replicates 1 --workers 2 --scheduler distributed --memory-limit 1GiB
       - name: Verify regenerated report assets match actual simulation, not stale files
+        if: always()
         run: |
           python - <<'PY'
           import csv
@@ -61,3 +70,21 @@ jobs:
           assert len(manifest["results"]) == 3
           assert all(result["project"] for result in manifest["results"])
           PY
+
+      - name: Enforce at least 15 distinct Deal contracts per function
+        if: always()
+        run: python verification/check_contract_coverage.py
+
+  # Independent, cross-version full-source Deal lint; all files and the
+  # exact DEL012 negative control must pass under Python 3.12 as well.
+  static-lint-python312:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements-dev.txt
+      - name: Full repository Deal lint and deliberate negative control (Python 3.12)
+        run: python verification/check_static_lint.py

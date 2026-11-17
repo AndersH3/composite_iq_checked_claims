@@ -118,6 +118,8 @@ def merge_moments(parts):
 @deal.ensure(lambda seed, block_index, size, rare_threshold, result: len(result) == 8)
 @deal.raises(ValueError, TypeError, OverflowError, ZeroDivisionError)
 @deal.has("network", "random", "import")
+@deal.ensure(lambda seed, block_index, size, rare_threshold, result: all(len(row["counts"]) == 3 for row in result.values()))
+@deal.ensure(lambda seed, block_index, size, rare_threshold, result: all(math.isfinite(row["mse_sum"]) for row in result.values()))
 def hoeflin_block(seed, block_index, size, rare_threshold):
     """Compute all eight composite-score cases from one common pair of draws.
 
@@ -151,6 +153,8 @@ def hoeflin_block(seed, block_index, size, rare_threshold):
 @deal.ensure(lambda seed, block_index, size, reference, result: len(result) == len(reference["cases"]))
 @deal.raises(ValueError, TypeError, OverflowError, KeyError)
 @deal.has("network", "random", "import")
+@deal.pre(lambda seed, block_index, size, reference: all(math.isfinite(float(case["cutoff_a"])) for case in reference["cases"]))
+@deal.pre(lambda seed, block_index, size, reference: all(math.isfinite(float(case["cutoff_b"])) for case in reference["cases"]))
 def towers_block(seed, block_index, size, reference):
     """Classify each paired observation once per admission rule, in one task.
 
@@ -185,6 +189,8 @@ def towers_block(seed, block_index, size, reference):
 @deal.ensure(lambda seed, block_index, size, r, result: (0, "population") in result and (0, "conditional") in result)
 @deal.raises(ValueError, TypeError, OverflowError, ZeroDivisionError)
 @deal.has("network", "random", "import")
+@deal.ensure(lambda seed, block_index, size, r, result: all(set(row) == {"n", "mean", "m2", "mse_sum", "counts"} for row in result.values()))
+@deal.ensure(lambda seed, block_index, size, r, result: all(math.isfinite(row["m2"]) for row in result.values()))
 def sequential_block(seed, block_index, size, r):
     """Compute all eight conditional/population cases for one starting count.
 
@@ -229,6 +235,7 @@ def sequential_block(seed, block_index, size, r):
 @deal.ensure(lambda meta, parts, key, result: all(result[field] == meta[field] for field in ("replicate", "seed", "project")))
 @deal.raises(ValueError, TypeError, OverflowError, KeyError, ZeroDivisionError)
 @deal.has("network")
+@deal.ensure(lambda meta, parts, key, result: result["mean_error_se"] >= 0)
 def finish_moment(meta, parts, key):
     """Return the same statistics schema as the canonical array engine."""
     summary = merge_moments([block[key] for block in parts])
@@ -250,6 +257,7 @@ def finish_moment(meta, parts, key):
 @deal.ensure(lambda meta, parts, index, reference, result: 0 <= result["joint"] <= result["union"] <= 1)
 @deal.raises(ValueError, TypeError, OverflowError, KeyError)
 @deal.has("network")
+@deal.ensure(lambda meta, parts, index, reference, result: 0 <= result["joint_low"] <= result["joint"] <= result["joint_high"] <= 1)
 def finish_event(meta, parts, index, reference):
     """Reduce per-block disjoint cell counts with exact integer addition."""
     case = reference["cases"][index - 1]

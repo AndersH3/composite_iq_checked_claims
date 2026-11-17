@@ -1,4 +1,4 @@
-"""Intentionally wrong fixture, excluded from production contract checks."""
+"""Deliberate negative Deal-lint control, still subject to >=15-contract coverage."""
 import deal
 
 
@@ -15,6 +15,12 @@ import deal
 @deal.ensure(lambda value, result: (value == 0) == (result == 0))
 @deal.ensure(lambda value, result: (value == 1) == (result == 1))
 @deal.ensure(lambda value, result: (value < 0.5) == (result < 0.5))
+# Deliberate control semantics and numerical boundary properties.
+@deal.ensure(lambda value, result: result >= 0)
+@deal.ensure(lambda value, result: result <= 1)
+@deal.ensure(lambda value, result: result == result)
+@deal.ensure(lambda value, result: result - value == 0)
+@deal.ensure(lambda value, result: (value <= 0.5) == (result <= 0.5))
 def probability_identity(value: float) -> float:
     return value
 
@@ -24,5 +30,16 @@ def probability_identity(value: float) -> float:
 @deal.post(lambda result: result <= 1)
 @deal.has()
 @deal.raises()
+# Deliberate control semantics and numerical boundary properties.
+@deal.post(lambda result: result == -1)
+@deal.post(lambda result: result < 0)
+@deal.post(lambda result: result != 0)
+@deal.post(lambda result: result <= -1)
+@deal.post(lambda result: result >= -1)
+@deal.post(lambda result: result + 1 == 0)
+@deal.post(lambda result: -result == 1)
+@deal.post(lambda result: result in (-1,))
+@deal.post(lambda result: abs(result) == 1)
+@deal.post(lambda result: result % 2 == 1)
 def negative_probability() -> int:
     return -1

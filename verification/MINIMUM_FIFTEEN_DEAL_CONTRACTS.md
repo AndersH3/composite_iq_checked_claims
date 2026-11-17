@@ -1,14 +1,14 @@
-# Deal contracts — fifteen per executable Python source
+# Deal contracts — minimum fifteen per named Python function
 
 **Researcher/requester:** Anders Hellström.
 
 > **AI disclosure:** OpenAI ChatGPT/Codex contributed to contract design, runtime testing and documentation. A count of contracts is not a proof of program correctness.
 
-The supported computational stack is **Python, Dask, NumPy/SciPy and Deal**. [The canonical contract checker](check_contract_coverage.py) examines actual Python AST decorators rather than trusting comments or repeated decorator strings. Every tracked Python file containing a named function must declare at least **fifteen distinct Deal contracts** in aggregate. Each named function also retains its independent **five-contract minimum**; fifteen per function is the nonmandatory, semantics-driven design target. Import-only Python modules are exempt solely because no function exists to contract.
+The supported computational stack is **Python, Dask, NumPy/SciPy and Deal**. [The canonical contract checker](check_contract_coverage.py) examines actual Python AST decorators rather than trusting comments or repeated decorator strings. Every tracked Python or Python/Dask named function, including test functions, fixtures and helper functions, must declare **at least fifteen (>=15) distinct Deal contracts**. This is a minimum, **not an exact count**, and there is no upper limit. A file-wide total of fifteen cannot substitute for fifteen per individual function. Import-only modules have no functions to contract.
 
-The checker counts decorators from the parsed AST, canonicalizes aliases and ignores syntactic duplicates on the same function. **Static counts cannot establish meaningfulness:** reviewers must ensure that each predicate expresses a real input boundary, numerical invariant, return guarantee, declared exception, or effect boundary. No contracts should be added solely to inflate a count.
+The checker counts decorators from the parsed AST, canonicalizes aliases and rejects syntactic duplicates on the same function. **Static counts cannot establish meaningfulness:** reviewers must ensure that each predicate expresses a real input boundary, numerical invariant, return guarantee, declared exception, or effect boundary. No contracts should be added solely to inflate a count.
 
-The 15-contract file floor includes both positive and deliberately failing test fixtures. The negative fixture must still produce exactly one specified lint diagnostic; contracts are added only to its correct helper. The finite-real validator now documents accepted representable integers, rejected overlarge integers, and unsupported numeric/input categories.
+The per-function 15-contract minimum includes both positive and deliberately failing test fixtures. The negative fixture must still produce exactly one specified lint diagnostic; contracts are added only to its correct helper. The finite-real validator now documents accepted representable integers, rejected overlarge integers, and unsupported numeric/input categories.
 
 Run these source checks:
 
@@ -27,11 +27,12 @@ The discontinued alternate simulation and compiler code is not maintained in the
 ## CI acceptance criteria
 
 `python verification/check_contract_coverage.py` exits nonzero if an executable
-Python source has fewer than fifteen distinct decorators across its named
-functions, a function has fewer than five, a decorator is duplicated, or a
-named function omits the Deal import. `tests/test_contract_coverage.py`
-exercises the 14-versus-15 boundary and ensures functions that separately
-meet the five-contract minimum cannot evade the file minimum.
+Python function has fewer than fifteen distinct decorators, a decorator is
+duplicated, or a named function omits the Deal import. The file-wide minimum
+remains an additional (redundant) guard, never a substitute for the per-function
+floor. `tests/test_contract_coverage.py` exercises the 14-versus-15-versus-16
+boundary and ensures that a 15-contract file total cannot conceal functions
+with fewer than fifteen contracts.
 
 ## Full AI disclosure
 

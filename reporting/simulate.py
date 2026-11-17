@@ -62,6 +62,9 @@ DEFAULT_REPLICATES = 8
 @deal.post(lambda result: len({row["case_index"] for row in result["cases"]}) == len(result["cases"]))
 @deal.raises(OSError, ValueError, TypeError, ImportError)
 @deal.has("network", "read", "import")
+@deal.post(lambda result: all(0 < case["p_a"] < 1 and 0 < case["p_b"] < 1 for case in result["cases"]))
+@deal.post(lambda result: all(type(case["case_index"]) is int and 1 <= case["case_index"] <= 5 for case in result["cases"]))
+@deal.post(lambda result: all(source["path"].endswith(".py") for source in result["sources"]))
 def reference_data(project):
     """Compute numerical reference cases without importing a retired simulator.
 
@@ -95,6 +98,13 @@ def reference_data(project):
 @deal.ensure(lambda config, result: len(result) == len(config["seeds"]) * len(COUNTS))
 @deal.has("network", "read", "import", "random")
 @deal.raises(ValueError, TypeError, OverflowError, NotImplementedError)
+@deal.pre(lambda config: all(type(seed) is int and 0 <= seed < 2 ** 32 for seed in config["seeds"]))
+@deal.pre(lambda config: 1 <= len(config["seeds"]) <= len(SEEDS))
+@deal.ensure(lambda config, result: all(isinstance(row.key, str) and bool(row.key) for row in result))
+@deal.ensure(lambda config, result: len({row.key for row in result}) == len(result))
+@deal.ensure(lambda config, result: all(bool(row.dask) for row in result))
+@deal.ensure(lambda config, result: len(result) % len(COUNTS) == 0)
+@deal.ensure(lambda config, result: len(result) >= len(COUNTS))
 def graph_hoeflin(config):
     """Construct the exact Gaussian aggregate law with common random numbers.
 
@@ -132,6 +142,12 @@ def graph_hoeflin(config):
 @deal.ensure(lambda config, reference, result: len(result) == 5 * len(config["seeds"]))
 @deal.raises(ValueError, TypeError, OverflowError, NotImplementedError)
 @deal.has("network", "read", "import", "random")
+@deal.pre(lambda config, reference: all(type(seed) is int and 0 <= seed < 2 ** 32 for seed in config["seeds"]))
+@deal.pre(lambda config, reference: 1 <= len(config["seeds"]) <= len(SEEDS))
+@deal.ensure(lambda config, reference, result: all(isinstance(row.key, str) and bool(row.key) for row in result))
+@deal.ensure(lambda config, reference, result: len({row.key for row in result}) == len(result))
+@deal.ensure(lambda config, reference, result: len(result) % 5 == 0)
+@deal.ensure(lambda config, reference, result: bool(result))
 def graph_towers(config, reference):
     """Count disjoint event cells on shared correlated Dask random arrays."""
     rows = []
@@ -165,6 +181,13 @@ def graph_towers(config, reference):
 @deal.ensure(lambda config, result: len(result) == 24 * len(config["seeds"]))
 @deal.raises(ValueError, TypeError, OverflowError, NotImplementedError)
 @deal.has("network", "read", "import", "random")
+@deal.pre(lambda config: all(type(seed) is int and 0 <= seed < 2 ** 32 for seed in config["seeds"]))
+@deal.pre(lambda config: 1 <= len(config["seeds"]) <= len(SEEDS))
+@deal.ensure(lambda config, result: all(isinstance(row.key, str) and bool(row.key) for row in result))
+@deal.ensure(lambda config, result: len({row.key for row in result}) == len(result))
+@deal.ensure(lambda config, result: len(result) % 24 == 0)
+@deal.ensure(lambda config, result: bool(result))
+@deal.ensure(lambda config, result: len(result) >= 24)
 def graph_sequential(config):
     """Generate full finite test/future vectors, plus limiting latent laws.
 
@@ -218,6 +241,8 @@ def graph_sequential(config):
 @deal.ensure(lambda trials, chunk, result: all(value <= trials for value in result))
 @deal.raises()
 @deal.has("network")
+@deal.ensure(lambda trials, chunk, result: 1 <= len(result) <= 1024)
+@deal.ensure(lambda trials, chunk, result: 1 <= result[-1] <= min(trials, chunk))
 def block_sizes(trials, chunk):
     """Partition a single replicate into bounded-size, ordered sample blocks.
 
@@ -239,6 +264,9 @@ def block_sizes(trials, chunk):
 @deal.ensure(lambda config, result: all(row.key for row in result))
 @deal.raises(ValueError, TypeError, OverflowError, ZeroDivisionError, KeyError, NotImplementedError)
 @deal.has("network", "import")
+@deal.ensure(lambda config, result: len(result) >= len(COUNTS))
+@deal.ensure(lambda config, result: all(isinstance(row.key, str) for row in result))
+@deal.ensure(lambda config, result: len(result) % len(COUNTS) == 0)
 def graph_hoeflin_blocks(config):
     """Create one Dask worker task per common-random-number block and replicate.
 
@@ -274,6 +302,9 @@ def graph_hoeflin_blocks(config):
 @deal.ensure(lambda config, reference, result: all(row.key for row in result))
 @deal.raises(ValueError, TypeError, OverflowError, KeyError, NotImplementedError)
 @deal.has("network", "import")
+@deal.pre(lambda config, reference: all(type(seed) is int and 0 <= seed < 2**32 for seed in config["seeds"]))
+@deal.ensure(lambda config, reference, result: all(isinstance(row.key, str) for row in result))
+@deal.ensure(lambda config, reference, result: len(result) % 5 == 0)
 def graph_towers_blocks(config, reference):
     """Share one lazy cutoff reference and one Gaussian pair across five rules."""
     rows = []
@@ -300,6 +331,9 @@ def graph_towers_blocks(config, reference):
 @deal.ensure(lambda config, result: all(row.key for row in result))
 @deal.raises(ValueError, TypeError, OverflowError, ZeroDivisionError, KeyError, NotImplementedError)
 @deal.has("network", "import")
+@deal.ensure(lambda config, result: len(result) >= 24)
+@deal.ensure(lambda config, result: all(isinstance(row.key, str) for row in result))
+@deal.ensure(lambda config, result: len(result) % 24 == 0)
 def graph_sequential_blocks(config):
     """Generate finite score vectors within each worker, never across workers.
 
@@ -380,6 +414,14 @@ def execution_plan(config, task_count):
 @deal.post(lambda result: isinstance(result, dict) and bool(result["files"]))
 @deal.raises(OSError, ValueError, TypeError, KeyError, OverflowError, csv.Error)
 @deal.has("network", "read", "write")
+@deal.pre(lambda project, rows, reference, config: isinstance(config, dict) and {"trials", "chunk", "seeds"} <= config.keys())
+@deal.pre(lambda project, rows, reference, config: all(isinstance(row, dict) and row["project"] == project for row in rows))
+@deal.pre(lambda project, rows, reference, config: bool(config["seeds"]) and len(set(config["seeds"])) == len(config["seeds"]))
+@deal.ensure(lambda project, rows, reference, config, result: result["n_rows"] > 0)
+@deal.ensure(lambda project, rows, reference, config, result: result["n_replicates"] == len(rows))
+@deal.ensure(lambda project, rows, reference, config, result: len(result["files"]) >= 3)
+@deal.ensure(lambda project, rows, reference, config, result: all(Path(path).is_file() for path in result["files"]))
+@deal.ensure(lambda project, rows, reference, config, result: Path(result["directory"]).name == "simulation-data")
 def analyze_and_write(project, rows, reference, config):
     """Pool equal-design replicates and serialize assets as a terminal task."""
     pooled = pool_rows(project, rows)
@@ -409,6 +451,15 @@ def analyze_and_write(project, rows, reference, config):
 @deal.post(lambda result: result["xelatex"] is True)
 @deal.raises(OSError, ValueError, subprocess.SubprocessError, CalledProcessError, TimeoutExpired)
 @deal.has("network", "read", "write", "syscall")
+@deal.post(lambda result: result["project"] in PROJECTS)
+@deal.post(lambda result: result["pdf"].endswith(".pdf"))
+@deal.post(lambda result: result["pdf"].startswith("analyses/"))
+@deal.post(lambda result: result["pdf_sha256"].isascii())
+@deal.post(lambda result: all(character in "0123456789abcdef" for character in result["pdf_sha256"]))
+@deal.post(lambda result: type(result["pdf_pages"]) is int)
+@deal.post(lambda result: Path(ROOT.joinpath(result["pdf"])).is_file())
+@deal.post(lambda result: set(result) == {"project", "xelatex", "pdf_pages", "pdf_sha256", "pdf"})
+@deal.post(lambda result: result["pdf_pages"] < 200)
 def build_report(result):
     """Run XeLaTeX/BibTeX and Poppler only after Dask has written the assets."""
     project = result["project"]
@@ -435,6 +486,12 @@ def build_report(result):
 @deal.post(lambda result: all(len(entry["sha256"]) == 64 for entry in result["sources"] + result["outputs"]))
 @deal.raises(OSError, ValueError, TypeError)
 @deal.has("network", "read", "write")
+@deal.post(lambda result: result["matplotlib_used"] is False)
+@deal.post(lambda result: len(result["sources"]) > 0)
+@deal.post(lambda result: len(result["outputs"]) > 0)
+@deal.post(lambda result: all(entry["path"] and not entry["path"].startswith("/") for entry in result["sources"] + result["outputs"]))
+@deal.post(lambda result: result["graph_tasks"] > 0)
+@deal.post(lambda result: all(set(entry) == {"path", "sha256"} for entry in result["sources"] + result["outputs"]))
 def finalize_run(results, config, task_count):
     """Hash the actual source/data/PDF artifacts in the final Dask task.
 
@@ -476,6 +533,10 @@ def finalize_run(results, config, task_count):
 # Do not apply @deal.has to the *outer* Dask scheduler entrypoint: its
 # socket monkeypatch breaks ssl.SSLSocket when Dask imports distributed.
 # Contracted inner data/report operations retain their own effect scopes.
+@deal.pre(lambda argv=None: isinstance(PROJECTS, tuple) and len(PROJECTS) == 3)
+@deal.pre(lambda argv=None: len(set(PROJECTS)) == len(PROJECTS))
+@deal.pre(lambda argv=None: ROOT.is_absolute())
+@deal.pre(lambda argv=None: all(ROOT.joinpath("analyses", project).is_dir() for project in PROJECTS))
 def main(argv=None):
     """Execute one shared graph for all three sub-projects, not a case loop of compute calls."""
     parser = argparse.ArgumentParser(description=__doc__)

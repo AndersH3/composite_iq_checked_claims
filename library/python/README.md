@@ -4,7 +4,7 @@
 
 > **AI disclosure:** The consolidation and this documentation were AI-assisted.
 
-`numeric.finite_real` is the **single production implementation** of the finite real guard formerly duplicated in the Hoeflin/Ferguson and Towers calculation validators. The Sequential CSV validator imports the same guard. It has ten distinct Deal decorators documenting rejection of NaN, infinities, booleans, nonnumbers and large integer overflow; no string coercion is permitted.
+`numeric.finite_real` is the **single production implementation** of the finite real guard formerly duplicated in the Hoeflin/Ferguson and Towers calculation validators. The Sequential CSV validator imports the same guard. It has fifteen distinct Deal decorators documenting rejection of NaN, infinities, booleans, nonnumbers and large integer overflow; no string coercion is permitted.
 
 `statistics.py` is the original pure, shared Dask-report statistical aggregation implementation. It is **moved**, not duplicated. Its three functions provide the cross-report moment, event and replicate-pooling calculations, reusing SciPy maintained statistics. `reporting/statistics.py` remains an import-only compatibility interface and `reporting/simulate.py` consumes the canonical library directly.
 

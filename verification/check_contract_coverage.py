@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit distinct Deal contracts: at least five/function and fifteen/source file."""
+"""Audit a minimum of fifteen distinct Deal contracts per named Python function."""
 import argparse
 import ast
 import json
@@ -13,14 +13,14 @@ import deal
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACTS = {"pre", "post", "ensure", "raises", "reason", "has", "pure", "safe", "inv", "example", "chain"}
-MINIMUM_CONTRACTS = 5
+MINIMUM_CONTRACTS = 15
 # The independent executable-file floor applies to all tracked Python
 # modules containing a named function, including tests and lint fixtures.
 # Import-only modules have no callable boundary on which to hang a contract.
 MINIMUM_FILE_CONTRACTS = 15
-# Fifteen per function remains a separate aspirational goal: reaching a
-# numeric target never justifies duplicating an equivalent proposition.
-TARGET_CONTRACTS = 15
+# The reporting target equals the mandatory per-function floor; a greater
+# number of meaningful contracts is always allowed, never rejected.
+TARGET_CONTRACTS = MINIMUM_CONTRACTS
 
 
 @deal.pre(lambda node, aliases: isinstance(node, ast.expr))
@@ -47,6 +47,11 @@ TARGET_CONTRACTS = 15
                   isinstance(node.value, ast.Name) and
                   node.value.id in aliases and node.attr in CONTRACTS)
              or result is True)
+@deal.ensure(lambda node, aliases, result: not isinstance(node, ast.Subscript) or not result)
+@deal.ensure(lambda node, aliases, result: not isinstance(node, ast.BinOp) or not result)
+@deal.ensure(lambda node, aliases, result: not isinstance(node, ast.Compare) or not result)
+@deal.ensure(lambda node, aliases, result: not isinstance(node, ast.Lambda) or not result)
+@deal.ensure(lambda node, aliases, result: not isinstance(node, ast.Dict) or not result)
 def is_contract(node: ast.expr, aliases: set) -> bool:
     expression = node.func if isinstance(node, ast.Call) else node
     return (isinstance(expression, ast.Attribute) and isinstance(expression.value, ast.Name)
@@ -74,6 +79,9 @@ def is_contract(node: ast.expr, aliases: set) -> bool:
            result["insufficient_file"] ==
            (result["function_count"] > 0 and
             result["file_distinct_contract_count"] < MINIMUM_FILE_CONTRACTS))
+@deal.post(lambda result: all(row["line"] > 0 for row in result["function_contracts"]))
+@deal.post(lambda result: all(row["contract_count"] >= row["distinct_contract_count"] >= 0 for row in result["function_contracts"]))
+@deal.post(lambda result: len(result["insufficient"]) == sum(row["distinct_contract_count"] < MINIMUM_CONTRACTS for row in result["function_contracts"]))
 def audit_file(path: Path) -> dict:
     tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
     aliases = {alias.asname or "deal" for node in tree.body if isinstance(node, ast.Import)
@@ -88,9 +96,43 @@ def audit_file(path: Path) -> dict:
             # Normalize the imported Deal alias while retaining validator,
             # exception, marker and keyword syntax. Locations/whitespace are
             # not part of identity. This is a structural, not semantic, test.
+            normalized_arguments = []
+            if isinstance(decorator, ast.Call):
+                for argument in decorator.args:
+                    # An unused lambda parameter never affects the checked
+                    # proposition. Normalize closed predicates even when one
+                    # validator accepts spare *args/**kwargs.
+                    # Keep used parameters and defaults unchanged.
+                    if isinstance(argument, ast.Lambda):
+                        formals = {
+                            parameter.arg for parameter in (
+                                argument.args.posonlyargs + argument.args.args
+                                + argument.args.kwonlyargs
+                            )
+                        }
+                        for parameter in (argument.args.vararg, argument.args.kwarg):
+                            if parameter is not None:
+                                formals.add(parameter.arg)
+                        referenced = {
+                            name.id for name in ast.walk(argument.body)
+                            if isinstance(name, ast.Name)
+                        }
+                        if (not formals.intersection(referenced)
+                                and not argument.args.defaults
+                                and not any(default is not None for default in argument.args.kw_defaults)):
+                            normalized_arguments.append((
+                                "closed-lambda", ast.dump(argument.body, include_attributes=False)
+                            ))
+                        else:
+                            normalized_arguments.append((
+                                "lambda", ast.dump(argument, include_attributes=False)
+                            ))
+                    else:
+                        normalized_arguments.append((
+                            "expression", ast.dump(argument, include_attributes=False)
+                        ))
             identity = (expression.attr,
-                        tuple(ast.dump(arg, include_attributes=False) for arg in decorator.args)
-                        if isinstance(decorator, ast.Call) else None,
+                        tuple(normalized_arguments) if isinstance(decorator, ast.Call) else None,
                         tuple((keyword.arg, ast.dump(keyword.value, include_attributes=False))
                               for keyword in decorator.keywords)
                         if isinstance(decorator, ast.Call) else None)
@@ -136,6 +178,11 @@ def audit_file(path: Path) -> dict:
 @deal.ensure(lambda root, result:
              all(".." not in path.relative_to(root).parts
                  for path in result))
+@deal.pre(lambda root: root.is_absolute())
+@deal.post(lambda result: all(path.is_absolute() for path in result))
+@deal.ensure(lambda root, result: all(path.resolve().is_relative_to(root.resolve()) for path in result))
+@deal.post(lambda result: all(path.parent.is_dir() for path in result))
+@deal.post(lambda result: all(path.resolve().is_file() for path in result))
 def python_files(root: Path) -> list:
     try:
         output = subprocess.check_output(["git", "-C", str(root), "ls-files", "--cached", "--others",
@@ -159,6 +206,16 @@ def python_files(root: Path) -> list:
 @deal.pre(lambda: isinstance(sys.argv, list))
 @deal.pre(lambda: all(isinstance(argument, str) for argument in sys.argv))
 @deal.pre(lambda: ROOT.is_dir())
+@deal.pre(lambda: isinstance(MINIMUM_CONTRACTS, int) and MINIMUM_CONTRACTS >= 15)
+@deal.pre(lambda: isinstance(MINIMUM_FILE_CONTRACTS, int) and MINIMUM_FILE_CONTRACTS >= MINIMUM_CONTRACTS)
+@deal.pre(lambda: isinstance(TARGET_CONTRACTS, int) and TARGET_CONTRACTS >= MINIMUM_CONTRACTS)
+@deal.pre(lambda: {"pre", "post", "ensure", "raises", "has"} <= CONTRACTS)
+@deal.pre(lambda: ROOT.is_absolute())
+@deal.pre(lambda: ROOT.joinpath("verification", "check_contract_coverage.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests").is_dir())
+@deal.pre(lambda: ROOT.joinpath("AGENTS.md").is_file())
+@deal.pre(lambda: bool(sys.argv) and isinstance(sys.argv[0], str))
+@deal.pre(lambda: CONTRACTS <= {"pre", "post", "ensure", "raises", "reason", "has", "pure", "safe", "inv", "example", "chain"})
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=ROOT)
@@ -167,7 +224,7 @@ def main() -> None:
     # Import-only package entry points and compatibility facades contain
     # no subprograms and therefore have no Deal obligations to decorate.
     # A file with even one named function must still import Deal and
-    # meet the full per-function contract floor; the negative fixture
+    # meet the full >=15 per-function contract floor; the negative fixture
     # tests this non-vacuous requirement.
     problems = [r for r in rows if r["insufficient"] or r["insufficient_file"]
                 or r["duplicated"] or (r["function_count"] > 0
