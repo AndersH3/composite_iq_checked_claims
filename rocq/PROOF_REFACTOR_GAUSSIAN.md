@@ -4,9 +4,9 @@
 
 > **AI disclosure:** AI assisted the mathematical specifications, candidate proof scripts, code integration and documentation. Only a successful pinned Rocq 9.2 kernel build on an exact source revision establishes any theorem status.
 
-This register tracks 42 exact source-order proofs about Gaussian prior-plus-likelihood *pointwise densities*: quadratic completion, model precision and variance, dependence on arbitrary unequal observed scores, evidence cancellation and posterior symmetry. Its scope deliberately excludes the stronger measurable conditional-expectation assertion unless a separate formally verified probability library supplies integral normalization, integrability and disintegration.
+This register tracks 47 exact source-order proofs about Gaussian prior-plus-likelihood *pointwise densities*: quadratic completion, model precision and variance, dependence on arbitrary unequal observed scores, evidence cancellation and posterior symmetry. Its scope deliberately excludes the stronger measurable conditional-expectation assertion unless a separate formally verified probability library supplies integral normalization, integrability and disintegration.
 
-## GaussianConditionalKernel.v — 30 proof scripts
+## GaussianConditionalKernel.v — 35 proof scripts
 
 | Proof script (kind) | Mathematical scope | Library reuse | Boundaries |
 |---|---|---|---|
@@ -41,6 +41,12 @@ This register tracks 42 exact source-order proofs about Gaussian prior-plus-like
 | `gk_future_variance_closed_form` (theorem) | forall xs c, gk_d xs c <> 0 -> (1-c)+gk_variance xs c = (1-c)*(1+gk_mass xs*c)/gk_d xs c | SequentialReport Schur variance/covariance identities, GaussianConditionalKernel, Stdlib Reals | Gaussian predictive-variance parameter bridge; conditional expectation remains unformalized |
 | `gk_future_variance_strictly_positive` (theorem) | forall xs c, 0<c -> c<1 -> 0 < (1-c)+gk_variance xs c | SequentialReport Schur variance/covariance identities, GaussianConditionalKernel, Stdlib Reals | Gaussian predictive-variance parameter bridge; conditional expectation remains unformalized |
 | `gk_future_variance_at_most_marginal` (theorem) | forall xs c, 0<c -> c<1 -> (1-c)+gk_variance xs c <= 1 | SequentialReport Schur variance/covariance identities, GaussianConditionalKernel, Stdlib Reals | Gaussian predictive-variance parameter bridge; conditional expectation remains unformalized |
+
+| `gk_residual_sum_sufficient_mean` (theorem) | forall xs theta, xs<>nil -> gk_residual_energy xs theta = vector_center_energy xs (gk_sum xs/gk_mass xs) + gk_mass xs*(theta-gk_sum xs/gk_mass xs)* (theta-gk_sum xs/gk_mass xs) | EquicorrelationVectors centered-energy mean, GaussianConditionalKernel ratio and Stdlib Ring/Field | Exact pointwise finite-vector likelihood sufficiency, not a normalized Gaussian conditional expectation |
+| `gk_joint_quadratic_sufficient_mean` (theorem) | forall xs c theta, xs<>nil -> gk_joint_quadratic xs c theta = (theta*theta/c + gk_mass xs*(theta-gk_sum xs/gk_mass xs)* (theta-gk_sum xs/gk_mass xs)/(1-c)) + vector_center_energy xs (gk_sum xs/gk_mass xs)/(1-c) | EquicorrelationVectors centered-energy mean, GaussianConditionalKernel ratio and Stdlib Ring/Field | Exact pointwise finite-vector likelihood sufficiency, not a normalized Gaussian conditional expectation |
+| `gk_joint_kernel_sufficient_mean` (theorem) | forall xs c theta, xs<>nil -> gk_joint_kernel xs c theta = exp (- (theta*theta/c + gk_mass xs*(theta-gk_sum xs/gk_mass xs)* (theta-gk_sum xs/gk_mass xs)/(1-c))/2) * exp (- (vector_center_energy xs (gk_sum xs/gk_mass xs)/ (1-c))/2) | EquicorrelationVectors centered-energy mean, GaussianConditionalKernel ratio and Stdlib Ring/Field | Exact pointwise finite-vector likelihood sufficiency, not a normalized Gaussian conditional expectation |
+| `gk_posterior_shape_sufficient_statistic` (theorem) | forall xs ys c theta, length xs=length ys -> gk_sum xs=gk_sum ys -> gk_posterior_kernel xs c theta=gk_posterior_kernel ys c theta | EquicorrelationVectors centered-energy mean, GaussianConditionalKernel ratio and Stdlib Ring/Field | Exact pointwise finite-vector likelihood sufficiency, not a normalized Gaussian conditional expectation |
+| `gk_history_likelihood_ratio_sufficient_statistic` (theorem) | forall xs ys c theta, length xs=length ys -> gk_sum xs=gk_sum ys -> c<>0 -> 1-c<>0 -> gk_d xs c<>0 -> gk_joint_kernel xs c theta/gk_evidence_kernel xs c = gk_joint_kernel ys c theta/gk_evidence_kernel ys c | EquicorrelationVectors centered-energy mean, GaussianConditionalKernel ratio and Stdlib Ring/Field | Exact pointwise finite-vector likelihood sufficiency, not a normalized Gaussian conditional expectation |
 
 ## GaussianCovarianceDomain.v — 12 proof scripts
 
