@@ -306,4 +306,72 @@ theorem gaussian_linear_projection_condExp
   rw [hPointwise] at hCE
   exact hCE
 
+/--
+Continuous linear form implementing the exact equicorrelated predictor
+from a finite observed vector. Reuse Mathlib's coordinate projections
+and finite sums; no custom finite sum, matrix inverse or normed-space
+construction is introduced.
+-/
+noncomputable def equicorrelationPredictorCLM (n : ℕ) (c : ℝ) :
+    (Fin n → ℝ) →L[ℝ] ℝ :=
+  (c / (1 + ((n : ℝ) - 1) * c)) •
+    (∑ i : Fin n,
+      (ContinuousLinearMap.proj i : (Fin n → ℝ) →L[ℝ] ℝ))
+
+/--
+The continuous linear form above evaluates to the previously checked
+finite-score predictor c*S_n/d_n(c), retaining exactly the same scalar
+common-mode denominator and using only library-backed finite sums.
+-/
+theorem equicorrelationPredictorCLM_apply (n : ℕ) (c : ℝ)
+    (scores : Fin n → ℝ) :
+    equicorrelationPredictorCLM n c scores =
+      equicorrelationPredictor n c scores := by
+  simp [equicorrelationPredictorCLM, equicorrelationPredictor,
+    Finset.sum_apply, smul_eq_mul]
+
+/--
+**Joint-Gaussian equicorrelation conditional expectation for an
+arbitrary finite observed-score vector.**
+
+The model now assumes joint Gaussianity only for the original future
+score and the observed vector, not for the innovation. The precise
+equicorrelation prediction formula is realized as a continuous linear
+map built out of the canonical coordinate projections and finite sums.
+
+The residual zero-cross-covariance certificate remains explicit. In the
+project's Rocq library the exchangeable inverse/Schur algebra proving
+that certificate is kernel checked, but its correspondence to this
+Mathlib covariance statement is a separate cross-prover obligation.
+Given the certificate, Mathlib proves that the original Gaussian law
+implies residual joint normality, residual independence, and the
+measure-theoretic conditional-expectation equality a.s. It is valid
+for negative as well as positive covariance parameters whenever the
+full joint Gaussian model and nonzero determinant domain hold.
+-/
+theorem gaussian_equicorrelated_original_joint_condExp
+    {n : ℕ} (c : ℝ) (future : Ω → ℝ)
+    (observed : Ω → Fin n → ℝ)
+    (hD : 1 + ((n : ℝ) - 1) * c ≠ 0)
+    (hJoint :
+      HasGaussianLaw (fun ω => (future ω, observed ω)) μ)
+    (hCovarianceOrthogonal :
+      ∀ (A : StrongDual ℝ ℝ) (B : StrongDual ℝ (Fin n → ℝ)),
+        covariance
+          (A ∘ (fun ω =>
+            future ω - equicorrelationPredictorCLM n c (observed ω)))
+          (B ∘ observed) μ = 0)
+    (hObservedMeasurable : Measurable observed)
+    (hFutureMeasurable : Measurable future)
+    (hCenteredResidual :
+      (∫ ω, future ω - equicorrelationPredictorCLM n c (observed ω) ∂μ) = 0) :
+    μ[future | MeasurableSpace.comap observed inferInstance] =ᵐ[μ]
+      (fun ω => equicorrelationPredictor n c (observed ω)) := by
+  have hCE :=
+    gaussian_linear_projection_condExp
+      (L := equicorrelationPredictorCLM n c)
+      hJoint hCovarianceOrthogonal hObservedMeasurable
+      hFutureMeasurable hCenteredResidual
+  simpa only [equicorrelationPredictorCLM_apply] using hCE
+
 end CompositeIQ.GaussianRegression
