@@ -448,7 +448,14 @@ Qed.
 *)
 Theorem gk_variance_below_prior : forall xs c, 0<c -> c<1 -> gk_variance xs c<=c.
 Proof.
- intros xs c Hc Hc1; unfold gk_variance, gk_d, sequential_d; assert(Hn:0<=gk_mass xs) by apply gk_mass_nonnegative; assert(Hd:0<(1-c)+gk_mass xs*c) by nra; apply Rmult_le_reg_r with (r:=((1-c)+gk_mass xs*c)); [assumption|]; rewrite Rdiv_def; rewrite Rmult_assoc; rewrite Rinv_l by lra; rewrite Rmult_1_r; nra.
+ intros xs c Hc Hc1.
+ assert (Hn : 0 <= gk_mass xs) by apply gk_mass_nonnegative.
+ assert (Hd : 0 < gk_d xs c) by (apply gk_d_positive; assumption).
+ unfold gk_variance.
+ apply (Rmult_le_reg_r (gk_d xs c)); [exact Hd|].
+ replace (c*(1-c)/gk_d xs c*gk_d xs c) with (c*(1-c))
+   by (field; lra).
+ unfold gk_d, sequential_d; nra.
 Qed.
 
 (** [gk_center_zero_history] (theorem).
