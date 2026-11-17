@@ -28,7 +28,7 @@ jobs:
           if grep -nE '^[[:space:]]*(Admitted|Axiom|Axioms|Parameter|Parameters|Conjecture|Abort)[[:space:].:]' analyses/sequential-conditional-means/qbs/*.v; then
             exit 1
           fi
-          test "$(grep -c '^Theorem ' analyses/sequential-conditional-means/qbs/GaussianPosteriorExpectation.v)" -eq 1
+          test "$(grep -c '^Theorem ' analyses/sequential-conditional-means/qbs/GaussianPosteriorExpectation.v)" -eq 2
       - name: Compile QBS normal first moment then Gaussian posterior specialization
         shell: bash
         run: |
@@ -42,7 +42,9 @@ jobs:
             git checkout --detach 76bc6fd9eaf48f3e181af803aae84151acbba521
             opam exec -- rocq compile -Q theories QBS theories/normal_centred.v
             mkdir -p /tmp/gaussian-qbs
+            cp /workspace/analyses/sequential-conditional-means/mathcomp/GaussianPosteriorMeasure.v /tmp/gaussian-qbs/
             cp /workspace/analyses/sequential-conditional-means/qbs/GaussianPosteriorExpectation.v /tmp/gaussian-qbs/
             cd /tmp/gaussian-qbs
+            opam exec -- rocq compile -Q /tmp/qbs/theories QBS GaussianPosteriorMeasure.v
             opam exec -- rocq compile -Q /tmp/qbs/theories QBS GaussianPosteriorExpectation.v
           '
