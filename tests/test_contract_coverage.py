@@ -12,6 +12,20 @@ from conftest import ROOT
 @deal.ensure(lambda coverage_checker, tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "stdout", "stderr", "import")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda: ROOT.joinpath("verification","check_contract_coverage.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("verification","check_static_lint.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","fixtures","contract_negative_control.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","fixtures","nonzero_division_lint_probe.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","test_contract_coverage.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda: ROOT.joinpath(".github","workflows","python-contracts.yml").is_file())
+@deal.pre(lambda: ROOT.joinpath("AGENTS.md").is_file())
+@deal.pre(lambda: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("library","python","statistics.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("reporting","provenance.py").is_file())
 def test_coverage_finds_a_missing_function_contract(coverage_checker, tmp_path):
     path = tmp_path / "missing.py"
     path.write_text("import deal\n\ndef unchecked(value):\n    return value\n")
@@ -26,6 +40,20 @@ def test_coverage_finds_a_missing_function_contract(coverage_checker, tmp_path):
 @deal.ensure(lambda coverage_checker, tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "stdout", "stderr", "import")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda: ROOT.joinpath("verification","check_contract_coverage.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("verification","check_static_lint.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","fixtures","contract_negative_control.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","fixtures","nonzero_division_lint_probe.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","test_contract_coverage.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda: ROOT.joinpath(".github","workflows","python-contracts.yml").is_file())
+@deal.pre(lambda: ROOT.joinpath("AGENTS.md").is_file())
+@deal.pre(lambda: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("library","python","statistics.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("reporting","provenance.py").is_file())
 def test_comments_and_strings_are_not_counted_as_contracts(coverage_checker, tmp_path):
     path = tmp_path / "mentions.py"
     path.write_text('''"""import deal
@@ -45,6 +73,20 @@ def unchecked(value):
 @deal.ensure(lambda coverage_checker, tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "stdout", "stderr", "import")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda: ROOT.joinpath("verification","check_contract_coverage.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("verification","check_static_lint.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","fixtures","contract_negative_control.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","fixtures","nonzero_division_lint_probe.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","test_contract_coverage.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda: ROOT.joinpath(".github","workflows","python-contracts.yml").is_file())
+@deal.pre(lambda: ROOT.joinpath("AGENTS.md").is_file())
+@deal.pre(lambda: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("library","python","statistics.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("reporting","provenance.py").is_file())
 def test_import_alias_is_recognized_but_five_decorators_are_insufficient(coverage_checker, tmp_path):
     path = tmp_path / "aliased.py"
     path.write_text("import deal as contracts\n\n@contracts.post(lambda result: isinstance(result, int))\n"
@@ -80,6 +122,20 @@ def test_import_alias_is_recognized_but_five_decorators_are_insufficient(coverag
 @deal.ensure(lambda coverage_checker, tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "stdout", "stderr", "import")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda: ROOT.joinpath("verification","check_contract_coverage.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("verification","check_static_lint.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","fixtures","contract_negative_control.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","fixtures","nonzero_division_lint_probe.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","test_contract_coverage.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda: ROOT.joinpath(".github","workflows","python-contracts.yml").is_file())
+@deal.pre(lambda: ROOT.joinpath("AGENTS.md").is_file())
+@deal.pre(lambda: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("library","python","statistics.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("reporting","provenance.py").is_file())
 def test_coverage_checks_nested_functions(coverage_checker, tmp_path):
     path = tmp_path / "nested.py"
     path.write_text("import deal\n\n@deal.post(lambda result: callable(result))\n"
@@ -98,6 +154,20 @@ def test_coverage_checks_nested_functions(coverage_checker, tmp_path):
 @deal.ensure(lambda coverage_checker, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "syscall", "time", "stdout", "stderr", "import")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda: ROOT.joinpath("verification","check_contract_coverage.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("verification","check_static_lint.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","fixtures","contract_negative_control.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","fixtures","nonzero_division_lint_probe.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","test_contract_coverage.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda: ROOT.joinpath(".github","workflows","python-contracts.yml").is_file())
+@deal.pre(lambda: ROOT.joinpath("AGENTS.md").is_file())
+@deal.pre(lambda: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("library","python","statistics.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("reporting","provenance.py").is_file())
 def test_every_repository_python_function_has_a_real_contract(coverage_checker):
     files = coverage_checker.python_files(ROOT)
     assert files
@@ -153,6 +223,20 @@ def test_every_repository_python_function_has_a_real_contract(coverage_checker):
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "import")
 @deal.ensure(lambda coverage_checker, tmp_path, count, *, result: reference_inputs_intact())
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda: ROOT.joinpath("verification","check_contract_coverage.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("verification","check_static_lint.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","fixtures","contract_negative_control.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","fixtures","nonzero_division_lint_probe.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","test_contract_coverage.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda: ROOT.joinpath(".github","workflows","python-contracts.yml").is_file())
+@deal.pre(lambda: ROOT.joinpath("AGENTS.md").is_file())
+@deal.pre(lambda: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("library","python","statistics.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("reporting","provenance.py").is_file())
 def test_contract_floor_accepts_fifteen_or_more_distinct_decorators(coverage_checker, tmp_path, count):
     path = tmp_path / "floor.py"
     declarations = ["@deal.has()", "@deal.raises()",
@@ -179,6 +263,20 @@ def test_contract_floor_accepts_fifteen_or_more_distinct_decorators(coverage_che
 @deal.ensure(lambda coverage_checker, tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "import")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda: ROOT.joinpath("verification","check_contract_coverage.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("verification","check_static_lint.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","fixtures","contract_negative_control.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","fixtures","nonzero_division_lint_probe.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","test_contract_coverage.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda: ROOT.joinpath(".github","workflows","python-contracts.yml").is_file())
+@deal.pre(lambda: ROOT.joinpath("AGENTS.md").is_file())
+@deal.pre(lambda: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("library","python","statistics.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("reporting","provenance.py").is_file())
 def test_aggregate_contracts_never_mask_below_minimum_functions(
         coverage_checker, tmp_path):
     """A 15-contract aggregate cannot mask two below-15 callables."""
@@ -211,6 +309,20 @@ def test_aggregate_contracts_never_mask_below_minimum_functions(
 @deal.ensure(lambda coverage_checker, tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "import")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda: ROOT.joinpath("verification","check_contract_coverage.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("verification","check_static_lint.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","fixtures","contract_negative_control.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","fixtures","nonzero_division_lint_probe.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","test_contract_coverage.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda: ROOT.joinpath(".github","workflows","python-contracts.yml").is_file())
+@deal.pre(lambda: ROOT.joinpath("AGENTS.md").is_file())
+@deal.pre(lambda: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("library","python","statistics.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("reporting","provenance.py").is_file())
 def test_duplicate_aliases_and_whitespace_do_not_meet_the_floor(coverage_checker, tmp_path):
     path = tmp_path / "duplicates.py"
     path.write_text("import deal\nimport deal as contracts\n"
@@ -234,6 +346,20 @@ def test_duplicate_aliases_and_whitespace_do_not_meet_the_floor(coverage_checker
 @deal.ensure(lambda coverage_checker, tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "syscall", "time", "stdout", "stderr", "import")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda: ROOT.joinpath("verification","check_contract_coverage.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("verification","check_static_lint.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","fixtures","contract_negative_control.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","fixtures","nonzero_division_lint_probe.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","test_contract_coverage.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda: ROOT.joinpath(".github","workflows","python-contracts.yml").is_file())
+@deal.pre(lambda: ROOT.joinpath("AGENTS.md").is_file())
+@deal.pre(lambda: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("library","python","statistics.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("reporting","provenance.py").is_file())
 def test_empty_python_inventory_cannot_establish_coverage(coverage_checker, tmp_path):
     with pytest.raises(ValueError):
         coverage_checker.python_files(tmp_path)
@@ -246,6 +372,20 @@ def test_empty_python_inventory_cannot_establish_coverage(coverage_checker, tmp_
              reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "syscall")
+# Independently guard source ownership, input integrity and required test infrastructure.
+@deal.pre(lambda: ROOT.joinpath("verification","check_contract_coverage.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("verification","check_static_lint.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","fixtures","contract_negative_control.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","fixtures","nonzero_division_lint_probe.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","test_contract_coverage.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests","conftest.py").is_file())
+@deal.pre(lambda: ROOT.joinpath(".github","workflows","python-contracts.yml").is_file())
+@deal.pre(lambda: ROOT.joinpath("AGENTS.md").is_file())
+@deal.pre(lambda: ROOT.joinpath("requirements-dev.txt").is_file())
+@deal.pre(lambda: ROOT.joinpath("library","python","numeric.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("library","python","statistics.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("reporting","provenance.py").is_file())
 def test_python_source_enumeration_rejects_ignored_and_outside_files(
         coverage_checker, tmp_path):
     """A local fallback scan retains only deterministic regular Python sources."""
