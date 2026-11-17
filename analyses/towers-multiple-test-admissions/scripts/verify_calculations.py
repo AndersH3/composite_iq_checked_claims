@@ -198,11 +198,30 @@ def _valid_fields_rows(fields, rows) -> bool:
                  for row in rows))
 @deal.ensure(lambda rows, result: not result or
              len({row["case"] for row in rows}) == len(CASES))
+# A valid admissions record must obey the probability identities, not
+# merely carry finite numbers within superficially plausible ranges.
+@deal.ensure(lambda rows, result: not result or all(row["rho"] == RHO for row in rows))
+@deal.ensure(lambda rows, result: not result or all(row["joint"] >= max(0, row["p_a"] + row["p_b"] - 1) - 5e-14 for row in rows))
+@deal.ensure(lambda rows, result: not result or all(row["joint"] <= min(row["p_a"], row["p_b"]) + 5e-14 for row in rows))
+@deal.ensure(lambda rows, result: not result or all(math.isclose(row["union"], row["p_a"] + row["p_b"] - row["joint"], rel_tol=0, abs_tol=5e-14) for row in rows))
+@deal.ensure(lambda rows, result: not result or all(math.isclose(row["conditional_b_given_a"] * row["p_a"], row["joint"], rel_tol=1e-12, abs_tol=1e-14) for row in rows))
+@deal.ensure(lambda rows, result: not result or all(math.isclose(row["conditional_a_given_b"] * row["p_b"], row["joint"], rel_tol=1e-12, abs_tol=1e-14) for row in rows))
 def _valid_admissions(rows) -> bool:
     if not _valid_fields_rows(ADMISSION_FIELDS, rows) or len(rows) != len(CASES):
         return False
     for row, (label, p_a, p_b) in zip(rows, CASES):
         if row["case"] != label or row["p_a"] != p_a or row["p_b"] != p_b:
+            return False
+        if row["rho"] != RHO:
+            return False
+        joint = row["joint"]
+        if not max(0, p_a + p_b - 1) - 5e-14 <= joint <= min(p_a, p_b) + 5e-14:
+            return False
+        if not math.isclose(row["union"], p_a + p_b - joint, rel_tol=0, abs_tol=5e-14):
+            return False
+        if not math.isclose(row["conditional_b_given_a"] * p_a, joint, rel_tol=1e-12, abs_tol=1e-14):
+            return False
+        if not math.isclose(row["conditional_a_given_b"] * p_b, joint, rel_tol=1e-12, abs_tol=1e-14):
             return False
         for field in ("joint", "union", "conditional_b_given_a", "conditional_a_given_b"):
             if not _finite(row[field]) or not 0 <= row[field] <= 1 + 5e-14:
