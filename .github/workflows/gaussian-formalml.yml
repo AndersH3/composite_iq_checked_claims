@@ -32,6 +32,7 @@ jobs:
             exit 1
           fi
           test "$(grep -c '^Theorem ' analyses/sequential-conditional-means/formalml/GaussianResidualConditionalExpectation.v)" -eq 2
+          test "$(grep -c '^Theorem ' analyses/sequential-conditional-means/formalml/GaussianProductConditionalExpectation.v)" -eq 0
 
       - name: Verify FormalML measure-theoretic Gaussian CE proof with Rocq 9.2
         shell: bash
@@ -80,6 +81,8 @@ jobs:
             opam exec -- make -j 2
             mkdir -p /tmp/formalml-gaussian
             cp /workspace/analyses/sequential-conditional-means/formalml/GaussianResidualConditionalExpectation.v /tmp/formalml-gaussian/
+            cp /workspace/analyses/sequential-conditional-means/formalml/GaussianProductConditionalExpectation.v /tmp/formalml-gaussian/
             cd /tmp/formalml-gaussian
             opam exec -- rocq compile -R /tmp/FormalML/rocq FormalML GaussianResidualConditionalExpectation.v
+            opam exec -- rocq compile -R /tmp/FormalML/rocq FormalML GaussianProductConditionalExpectation.v
           '
