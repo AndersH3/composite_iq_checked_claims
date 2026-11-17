@@ -4,7 +4,7 @@
 
 > **AI disclosure:** AI assisted the mathematical specifications, candidate proof scripts, code integration and documentation. Only a successful pinned Rocq 9.2 kernel build on an exact source revision establishes any theorem status.
 
-This register tracks 35 exact source-order proofs about Gaussian prior-plus-likelihood *pointwise densities*: quadratic completion, model precision and variance, dependence on arbitrary unequal observed scores, evidence cancellation and posterior symmetry. Its scope deliberately excludes the stronger measurable conditional-expectation assertion unless a separate formally verified probability library supplies integral normalization, integrability and disintegration.
+This register tracks 37 exact source-order proofs about Gaussian prior-plus-likelihood *pointwise densities*: quadratic completion, model precision and variance, dependence on arbitrary unequal observed scores, evidence cancellation and posterior symmetry. Its scope deliberately excludes the stronger measurable conditional-expectation assertion unless a separate formally verified probability library supplies integral normalization, integrability and disintegration.
 
 ## GaussianConditionalKernel.v — 25 proof scripts
 
@@ -36,7 +36,7 @@ This register tracks 35 exact source-order proofs about Gaussian prior-plus-like
 | `gk_kernel_ratio` (theorem) | forall xs c theta, c<>0 -> 1-c<>0 -> gk_d xs c<>0 -> gk_joint_kernel xs c theta/gk_evidence_kernel xs c = gk_posterior_kernel xs c theta | Stdlib Reals/Field/Ring, FiniteSum, EquicorrelationVectors, SequentialReport | Exact unnormalized density identity; not a constructed Gaussian conditional probability or expectation |
 | `gk_posterior_at_mean` (theorem) | forall xs c, gk_posterior_quadratic xs c (gk_center xs c)=0 | Stdlib Reals/Field/Ring, FiniteSum, EquicorrelationVectors, SequentialReport | Exact unnormalized density identity; not a constructed Gaussian conditional probability or expectation |
 
-## GaussianCovarianceDomain.v — 10 proof scripts
+## GaussianCovarianceDomain.v — 12 proof scripts
 
 | Proof script (kind) | Mathematical scope | Library reuse | Boundaries |
 |---|---|---|---|
@@ -50,6 +50,9 @@ This register tracks 35 exact source-order proofs about Gaussian prior-plus-like
 | `gcd_schur_pd_list` (theorem) | forall r c (xs:list R), xs<>nil -> c<1 -> 0<sequential_d r c -> 0<sequential_d (r+INR(length xs)) c -> 0<vector_square_energy xs -> 0<vector_schur_form r c xs | EquicorrelationSpectral, EquicorrelationVectors, Stdlib Field/Lra/Psatz | Signed-correlation conditional covariance feasibility; no probability measure |
 | `gcd_schur_singular_common_boundary` (theorem) | forall r k c x, sequential_d r c<>0 -> sequential_d (r+k) c=0 -> equicorr_schur_energy r c (k*x*x) (k*x)=0 | EquicorrelationSpectral, EquicorrelationVectors, Stdlib Field/Lra/Psatz | Signed-correlation conditional covariance feasibility; no probability measure |
 | `gcd_total_domain_from_negative_endpoint` (theorem) | forall r k c, 0<r -> 0<k -> c<1 -> 0<sequential_d r c -> 0<=sequential_d (r+k) c -> 0<r+k | EquicorrelationSpectral, EquicorrelationVectors, Stdlib Field/Lra/Psatz | Signed-correlation conditional covariance feasibility; no probability measure |
+
+| `gcd_schur_psd_iff_full_battery` (theorem) | forall r k c, 0<r -> 0<k -> 0<sequential_d r c -> ((forall energy total, 0<=energy-total*total/k -> 0<=equicorr_schur_energy r c energy total) <-> (c<=1 /\ 0<=sequential_d (r+k) c)) | Existing Schur covariance decomposition, common/contrast witnesses, Stdlib Field/Lra/Psatz | Universal feasible-energy iff; not concrete single-coordinate necessity or Gaussian expectation |
+| `gcd_schur_pd_iff_full_battery` (theorem) | forall r k c, 0<r -> 0<k -> 0<sequential_d r c -> ((forall energy total, 0<energy -> 0<=energy-total*total/k -> 0<equicorr_schur_energy r c energy total) <-> (c<1 /\ 0<sequential_d (r+k) c)) | Existing Schur covariance decomposition, common/contrast witnesses, Stdlib Field/Lra/Psatz | Universal feasible-energy iff; not concrete single-coordinate necessity or Gaussian expectation |
 
 ## Full AI disclosure
 
