@@ -147,8 +147,12 @@ Proof.
 move=> Hn Hprior_nz Hnoise_nz Hprior Hnoise Haux Hd mV.
 have Hmean : post_mean 0 sigma0 (total/n) sigma =
              c*total/(1+(n-1)*c).
-  exact: (gmc_sufficient_statistic_posterior_center Hn Hprior Hnoise
-             Haux Hd).
+  apply: gmc_sufficient_statistic_posterior_center.
+  - exact: Hn.
+  - exact: Hprior.
+  - exact: Hnoise.
+  - exact: Haux.
+  - exact: Hd.
 rewrite -Hmean.
 exact: (normal_prob_conjugate Hprior_nz Hnoise_nz mV).
 Qed.
