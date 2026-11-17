@@ -178,7 +178,23 @@ Proof.
    - left; apply Rinv_0_lt_compat; lra. }
  assert (Hfactor:0<(1-c)*sequential_d (r+k) c/sequential_d r c)
  by (apply (gcd_common_mode_strict r k c); assumption).
- nra.
+ (* The nonzero vector has either strictly positive contrast energy or
+    strictly positive common-mode energy.  Treat these cases explicitly
+    rather than asking nonlinear automation to invent this disjunction. *)
+ destruct (Rle_lt_or_eq_dec _ _ Hfeasible) as [Hgap|Hz].
+ - apply Rplus_lt_le_0_compat.
+   + apply Rmult_lt_0_compat; lra.
+   + apply Rmult_le_pos; lra.
+ - assert (Hspos : 0 < total*total/k) by lra.
+   replace ((1-c)*(energy-total*total/k) +
+           ((1-c)*sequential_d (r+k) c/sequential_d r c)*
+             (total*total/k))
+     with (((1-c)*sequential_d (r+k) c/sequential_d r c)*
+             (total*total/k) +
+           (1-c)*(energy-total*total/k)) by ring.
+   apply Rplus_lt_le_0_compat.
+   + apply Rmult_lt_0_compat; lra.
+   + apply Rmult_le_pos; lra.
 Qed.
 
 (** [gcd_schur_psd_list] (theorem).
