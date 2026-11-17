@@ -39,7 +39,11 @@ Open Scope R_scope.
 *)
 Theorem gib_signed_negative_predictor_positive_history : forall n c s:R, c<0 -> 0<sequential_d n c -> 0<s -> hp n c s<0.
 Proof.
-  intros n c s Hc Hd Hs; unfold hp, Rdiv; assert (Hi:0< /sequential_d n c) by (apply Rinv_0_lt_compat; exact Hd); nra.
+  intros n c s Hc Hd Hs; unfold hp, Rdiv;
+  assert (Hi:0< /sequential_d n c) by (apply Rinv_0_lt_compat; exact Hd);
+  assert (Hprod:c*s<0) by nra;
+  replace 0 with (0 * /sequential_d n c) by ring;
+  apply Rmult_lt_compat_r; assumption.
 Qed.
 
 (** [gib_signed_negative_predictor_negative_history] (theorem).
@@ -59,7 +63,9 @@ Qed.
 *)
 Theorem gib_signed_negative_predictor_negative_history : forall n c s:R, c<0 -> 0<sequential_d n c -> s<0 -> 0<hp n c s.
 Proof.
-  intros n c s Hc Hd Hs; unfold hp, Rdiv; assert (Hi:0< /sequential_d n c) by (apply Rinv_0_lt_compat; exact Hd); nra.
+  intros n c s Hc Hd Hs; unfold hp, Rdiv;
+  assert (Hi:0< /sequential_d n c) by (apply Rinv_0_lt_compat; exact Hd);
+  apply Rmult_lt_0_compat; [nra|exact Hi].
 Qed.
 
 (** [gib_signed_positive_predictor_negative_history] (theorem).
@@ -79,7 +85,11 @@ Qed.
 *)
 Theorem gib_signed_positive_predictor_negative_history : forall n c s:R, 0<c -> 0<sequential_d n c -> s<0 -> hp n c s<0.
 Proof.
-  intros n c s Hc Hd Hs; unfold hp, Rdiv; assert (Hi:0< /sequential_d n c) by (apply Rinv_0_lt_compat; exact Hd); nra.
+  intros n c s Hc Hd Hs; unfold hp, Rdiv;
+  assert (Hi:0< /sequential_d n c) by (apply Rinv_0_lt_compat; exact Hd);
+  assert (Hprod:c*s<0) by nra;
+  replace 0 with (0 * /sequential_d n c) by ring;
+  apply Rmult_lt_compat_r; assumption.
 Qed.
 
 (** [gib_signed_positive_predictor_positive_product] (theorem).
@@ -99,7 +109,8 @@ Qed.
 *)
 Theorem gib_signed_positive_predictor_positive_product : forall n c s:R, 0<c*s -> 0<sequential_d n c -> 0<hp n c s.
 Proof.
-  intros n c s Hprod Hd; unfold hp, Rdiv; apply Rmult_lt_0_compat; [exact Hprod|apply Rinv_0_lt_compat; exact Hd].
+  intros n c s Hprod Hd; unfold hp, Rdiv;
+  apply Rmult_lt_0_compat; [exact Hprod|apply Rinv_0_lt_compat; exact Hd].
 Qed.
 
 (** [gib_signed_negative_predictor_negative_product] (theorem).
@@ -119,7 +130,10 @@ Qed.
 *)
 Theorem gib_signed_negative_predictor_negative_product : forall n c s:R, c*s<0 -> 0<sequential_d n c -> hp n c s<0.
 Proof.
-  intros n c s Hprod Hd; unfold hp, Rdiv; assert (Hi:0< /sequential_d n c) by (apply Rinv_0_lt_compat; exact Hd); nra.
+  intros n c s Hprod Hd; unfold hp, Rdiv;
+  assert (Hi:0< /sequential_d n c) by (apply Rinv_0_lt_compat; exact Hd);
+  replace 0 with (0 * /sequential_d n c) by ring;
+  apply Rmult_lt_compat_r; assumption.
 Qed.
 
 (** [gib_positive_correlation_history_weak_order] (theorem).
@@ -219,7 +233,11 @@ Qed.
 *)
 Theorem gib_negative_schur_cross_covariance : forall n c:R, c<0 -> c<1 -> 0<sequential_d n c -> equicorr_schur_cross n c<0.
 Proof.
-  intros n c Hc Hupper Hd; rewrite d051_schur_cross_closed by lra; unfold Rdiv; assert (Hi:0< /sequential_d n c) by (apply Rinv_0_lt_compat; exact Hd); nra.
+  intros n c Hc Hupper Hd; rewrite d051_schur_cross_closed by lra; unfold Rdiv;
+  assert (Hi:0< /sequential_d n c) by (apply Rinv_0_lt_compat; exact Hd);
+  assert (Hprod:c*(1-c)<0) by nra;
+  replace 0 with (0 * /sequential_d n c) by ring;
+  apply Rmult_lt_compat_r; assumption.
 Qed.
 
 (** [gib_positive_schur_cross_covariance] (theorem).
@@ -239,7 +257,9 @@ Qed.
 *)
 Theorem gib_positive_schur_cross_covariance : forall n c:R, 0<c -> c<1 -> 0<sequential_d n c -> 0<equicorr_schur_cross n c.
 Proof.
-  intros n c Hc Hupper Hd; rewrite d051_schur_cross_closed by lra; unfold Rdiv; assert (Hi:0< /sequential_d n c) by (apply Rinv_0_lt_compat; exact Hd); nra.
+  intros n c Hc Hupper Hd; rewrite d051_schur_cross_closed by lra; unfold Rdiv;
+  assert (Hi:0< /sequential_d n c) by (apply Rinv_0_lt_compat; exact Hd);
+  apply Rmult_lt_0_compat; [nra|exact Hi].
 Qed.
 
 (** [gib_perfect_correlation_zero_future_cross] (theorem).
@@ -359,7 +379,11 @@ Qed.
 *)
 Theorem gib_innovation_positive_correlation_positive_update : forall n k c s t:R, 0<c -> 0<sequential_d n c -> 0<sequential_d (n+k) c -> 0<t-k*hp n c s -> hp n c s<hp (n+k) c (s+t).
 Proof.
-  intros n k c s t Hc Hn Hnk Hi; rewrite d051_mean_batch_innovation by lra; unfold Rdiv; assert (Hinv:0< /sequential_d (n+k) c) by (apply Rinv_0_lt_compat; exact Hnk); nra.
+  intros n k c s t Hc Hn Hnk Hinnov; rewrite d051_mean_batch_innovation by lra; unfold Rdiv;
+  assert (Hi:0< /sequential_d (n+k) c) by (apply Rinv_0_lt_compat; exact Hnk);
+  assert (Hprod:0<c*(t-k*hp n c s)) by nra;
+  assert (Hq:0<(c*(t-k*hp n c s))* /sequential_d (n+k) c) by (apply Rmult_lt_0_compat; assumption);
+  lra.
 Qed.
 
 (** [gib_innovation_positive_correlation_negative_update] (theorem).
@@ -379,7 +403,13 @@ Qed.
 *)
 Theorem gib_innovation_positive_correlation_negative_update : forall n k c s t:R, 0<c -> 0<sequential_d n c -> 0<sequential_d (n+k) c -> t-k*hp n c s<0 -> hp (n+k) c (s+t)<hp n c s.
 Proof.
-  intros n k c s t Hc Hn Hnk Hi; rewrite d051_mean_batch_innovation by lra; unfold Rdiv; assert (Hinv:0< /sequential_d (n+k) c) by (apply Rinv_0_lt_compat; exact Hnk); nra.
+  intros n k c s t Hc Hn Hnk Hinnov; rewrite d051_mean_batch_innovation by lra; unfold Rdiv;
+  assert (Hi:0< /sequential_d (n+k) c) by (apply Rinv_0_lt_compat; exact Hnk);
+  assert (Hprod:c*(t-k*hp n c s)<0) by nra;
+  assert (Hq:(c*(t-k*hp n c s))* /sequential_d (n+k) c<0).
+  { replace 0 with (0 * /sequential_d (n+k) c) by ring;
+    apply Rmult_lt_compat_r; assumption. }
+  lra.
 Qed.
 
 (** [gib_innovation_negative_correlation_positive_update] (theorem).
@@ -399,7 +429,13 @@ Qed.
 *)
 Theorem gib_innovation_negative_correlation_positive_update : forall n k c s t:R, c<0 -> 0<sequential_d n c -> 0<sequential_d (n+k) c -> 0<t-k*hp n c s -> hp (n+k) c (s+t)<hp n c s.
 Proof.
-  intros n k c s t Hc Hn Hnk Hi; rewrite d051_mean_batch_innovation by lra; unfold Rdiv; assert (Hinv:0< /sequential_d (n+k) c) by (apply Rinv_0_lt_compat; exact Hnk); nra.
+  intros n k c s t Hc Hn Hnk Hinnov; rewrite d051_mean_batch_innovation by lra; unfold Rdiv;
+  assert (Hi:0< /sequential_d (n+k) c) by (apply Rinv_0_lt_compat; exact Hnk);
+  assert (Hprod:c*(t-k*hp n c s)<0) by nra;
+  assert (Hq:(c*(t-k*hp n c s))* /sequential_d (n+k) c<0).
+  { replace 0 with (0 * /sequential_d (n+k) c) by ring;
+    apply Rmult_lt_compat_r; assumption. }
+  lra.
 Qed.
 
 (** [gib_innovation_negative_correlation_negative_update] (theorem).
@@ -419,7 +455,11 @@ Qed.
 *)
 Theorem gib_innovation_negative_correlation_negative_update : forall n k c s t:R, c<0 -> 0<sequential_d n c -> 0<sequential_d (n+k) c -> t-k*hp n c s<0 -> hp n c s<hp (n+k) c (s+t).
 Proof.
-  intros n k c s t Hc Hn Hnk Hi; rewrite d051_mean_batch_innovation by lra; unfold Rdiv; assert (Hinv:0< /sequential_d (n+k) c) by (apply Rinv_0_lt_compat; exact Hnk); nra.
+  intros n k c s t Hc Hn Hnk Hinnov; rewrite d051_mean_batch_innovation by lra; unfold Rdiv;
+  assert (Hi:0< /sequential_d (n+k) c) by (apply Rinv_0_lt_compat; exact Hnk);
+  assert (Hprod:0<c*(t-k*hp n c s)) by nra;
+  assert (Hq:0<(c*(t-k*hp n c s))* /sequential_d (n+k) c) by (apply Rmult_lt_0_compat; assumption);
+  lra.
 Qed.
 
 (** [gib_innovation_zero_exact_stability] (theorem).
