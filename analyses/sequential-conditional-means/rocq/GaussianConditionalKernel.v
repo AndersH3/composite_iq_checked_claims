@@ -707,7 +707,19 @@ Qed.
 *)
 Theorem gk_posterior_kernel_variance : forall xs c theta, 0<c -> c<1 -> gk_posterior_kernel xs c theta = exp (- (theta-gk_center xs c)*(theta-gk_center xs c)/(2*gk_variance xs c)).
 Proof.
- intros xs c theta Hc Hc1; unfold gk_posterior_kernel, gk_posterior_quadratic; f_equal; pose proof (gk_precision_variance xs c Hc Hc1) as Hpv; pose proof (gk_variance_positive xs c Hc Hc1) as Hv; field; nra.
+ intros xs c theta Hc Hc1.
+ unfold gk_posterior_kernel, gk_posterior_quadratic.
+ f_equal.
+ pose proof (gk_precision_variance xs c Hc Hc1) as Hpv.
+ pose proof (gk_variance_positive xs c Hc Hc1) as Hv.
+ assert (Hprec : gk_precision xs c = / gk_variance xs c).
+ { replace (gk_precision xs c)
+     with (gk_precision xs c *
+           (gk_variance xs c * / gk_variance xs c))
+     by (rewrite Rinv_r by lra; ring).
+   rewrite <- Rmult_assoc.
+   rewrite Hpv; ring. }
+ rewrite Hprec; field; lra.
 Qed.
 
 (** [gk_kernel_ratio] (theorem).
