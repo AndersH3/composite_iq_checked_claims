@@ -32,7 +32,7 @@ jobs:
             exit 1
           fi
           test "$(grep -c '^Theorem ' analyses/sequential-conditional-means/formalml/GaussianResidualConditionalExpectation.v)" -eq 2
-          test "$(grep -Ec "^[[:space:]]*Theorem " analyses/sequential-conditional-means/formalml/GaussianProductConditionalExpectation.v)" -eq 1
+          test "$(grep -Ec "^[[:space:]]*Theorem " analyses/sequential-conditional-means/formalml/GaussianProductConditionalExpectation.v)" -eq 2
 
       - name: Verify FormalML measure-theoretic Gaussian CE proof with Rocq 9.2
         shell: bash
