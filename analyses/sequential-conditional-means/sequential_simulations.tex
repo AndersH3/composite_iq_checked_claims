@@ -2,7 +2,7 @@
 % Standalone simulation report.  Mathematical exposition is handwritten;
 % Python/Dask produces the numerical tables and PGFPlots coordinates.
 % The existing Dask run is documented by its source and data manifest.
-\input{../../reporting/simulation_style}
+\input{../../library/latex/simulation_style}
 \hypersetup{pdftitle={Sequential Conditional Means: Simulation Methods and Results},
   pdfsubject={Python/Dask experiments with population and conditional actual-score means}}
 \title{Sequential Conditional Means:\\Simulation Methods and Results}
@@ -10,11 +10,16 @@
 \author{\ProjectAuthor}
 \date{16 November 2026}
 
+% Edition-specific findings displayed on the shared reference-style title page.
+\renewcommand{\ProjectReportHighlights}{The recorded Python/Dask experiment samples \(1\), \(2\) or \(3\)
+initial IQ-150 results and \(1\), \(2\) or \(10\) later outcomes. The
+underlying conditional-Gaussian theory permits arbitrary positive
+initial counts. Results are synthetic and conditional on the model.}
+
 \begin{document}
 \frontmatter
 \input{simulation-data/macros.tex}
-\maketitle
-\thispagestyle{plain.scrheadings}
+\ProjectReportTitlePage
 
 \begin{abstract}
 The companion mathematical model allows any positive integer \(n\) of
@@ -30,10 +35,6 @@ results, not measurements of real people. Deal runtime contracts and
 Rocq mathematical proofs have distinct scopes and do not prove
 pseudorandom independence or psychometric adequacy.
 \end{abstract}
-
-\noindent\textbf{AI disclosure.} OpenAI Codex and collaborating AI agents
-prepared this report. The full disclosure appears in the final appendix,
-\Cref{sec:ai-disclosure}.
 
 \noindent\textbf{Proof and evidence convention.} The Gaussian assumptions,
 the reporting scale and the experiment design are stated inputs. Every
@@ -576,14 +577,5 @@ cannot establish the model's validity for real test data.
 \bibliography{simulation_references}
 
 \appendix
-\chapter{AI disclosure}
-\label{sec:ai-disclosure}
-This report, its Dask implementation and its review were prepared with
-OpenAI Codex and collaborating AI agents. The requester Anders Hellström specified the
-questions and required separate simulation reports. No new participant
-data were collected. Independent human peer review and empirical
-psychometric validation are not claimed.
-
-\input{../../reporting/ai_disclosure}
-The Python/Dask-focused editorial revision removes the discontinued simulation implementation and its comparisons; it does not assert any newly executed Monte Carlo campaign.
+\ProjectReportAIAppendix
 \end{document}

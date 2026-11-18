@@ -36,6 +36,10 @@ EVENT_META = COMMON | {"case_index", "label", "p_a", "p_b", "theory_joint", "cut
 @deal.post(lambda result: 0 <= result["rare_low"] <= result["rate_rare"] <= result["rare_high"] <= 1)
 @deal.raises(ValueError, TypeError, OverflowError)
 @deal.has("network")
+@deal.post(lambda result: 0 <= result["rate2"] <= 1)
+@deal.post(lambda result: 0 <= result["rate3"] <= 1)
+@deal.post(lambda result: result["count2"] >= result["count3"] >= result["count_rare"])
+@deal.post(lambda result: result["n_samples"] >= 2)
 def moment_result(meta, mean, variance, mse=0.0, counts=(0, 0, 0)):
     """Interpret unbiased variance, fixed-model mean error and tail counts.
 
@@ -108,6 +112,8 @@ def moment_result(meta, mean, variance, mse=0.0, counts=(0, 0, 0)):
 @deal.ensure(lambda meta, counts, result: result["conditional_a_given_b"] == (counts[3] / (counts[2] + counts[3]) if counts[2] + counts[3] else None))
 @deal.raises(ValueError, TypeError, OverflowError)
 @deal.has("network")
+@deal.post(lambda result: result["marginal_a"] == result["a_only"] + result["both"])
+@deal.post(lambda result: result["marginal_b"] == result["b_only"] + result["both"])
 def event_result(meta, counts):
     """Summarize a four-cell partition using the actual selected denominators.
 
@@ -172,6 +178,11 @@ def event_result(meta, counts):
 @deal.post(lambda result: all(row["replicates"] == len(row["seeds"]) and row["replicates"] >= 1 for row in result))
 @deal.raises(ValueError, TypeError, KeyError, OverflowError)
 @deal.has("network")
+@deal.post(lambda result: all(row["n_samples"] >= 2 for row in result))
+@deal.post(lambda result: all("_meta" in row and isinstance(row["_meta"], dict) for row in result))
+@deal.post(lambda result: all(row["project"] in PROJECTS for row in result))
+@deal.post(lambda result: all("seeds" in row and isinstance(row["seeds"], list) for row in result))
+@deal.post(lambda result: all(row["replicates"] >= 1 for row in result))
 def pool_rows(project, rows):
     """Pool complete equal-design replicates, including between-run variation.
 

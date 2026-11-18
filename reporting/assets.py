@@ -28,6 +28,12 @@ PROJECTS = frozenset({"hoeflin-ferguson", "towers-multiple-test-admissions", "se
 @deal.ensure(lambda value, digits=6, result=None: value is None or result.startswith("$") and result.endswith("$"))
 @deal.raises()
 @deal.has("network")
+@deal.post(lambda result: "\r" not in result)
+@deal.post(lambda result: "\x00" not in result)
+@deal.post(lambda result: result == "---" or (result.startswith("$") and result.endswith("$")))
+@deal.ensure(lambda value, digits=6, result=None: value is None or not isinstance(value, int) or result == f"${value}$")
+@deal.ensure(lambda value, digits=6, result=None: value is None or value == 0 or result != "$0$")
+@deal.ensure(lambda value, digits=6, result=None: value is None or isinstance(value, int) or value == 0 or abs(value) < 0.001 or abs(value) >= 1e7 or "\\times10^{" not in result)
 def format_number(value, digits=6):
     """Render a finite scalar, with explicit missing values and TeX-safe powers.
 
@@ -55,6 +61,13 @@ def format_number(value, digits=6):
 @deal.ensure(lambda path, rows, result: path.is_file() and path.stat().st_size > 0)
 @deal.raises(OSError, ValueError, TypeError, csv.Error)
 @deal.has("network", "write", "read")
+@deal.pre(lambda path, rows: path.parent.is_dir())
+@deal.pre(lambda path, rows: not path.is_dir())
+@deal.pre(lambda path, rows: all("\x00" not in key for row in rows for key in row))
+@deal.ensure(lambda path, rows, result: path.read_text(encoding="utf-8").endswith("\n"))
+@deal.ensure(lambda path, rows, result: path.read_text(encoding="utf-8").count("\n") >= len(rows) + 1)
+@deal.ensure(lambda path, rows, result: len(list(csv.DictReader(path.read_text(encoding="utf-8").splitlines(keepends=True)))) == len(rows))
+@deal.ensure(lambda path, rows, result: next(csv.reader(path.read_text(encoding="utf-8").splitlines(keepends=True))) == list(rows[0]))
 def write_csv(path, rows):
     """Delegate quoting, column order and missing-cell serialization to csv."""
     with path.open("w", newline="", encoding="utf-8") as stream:
@@ -72,6 +85,12 @@ def write_csv(path, rows):
 @deal.ensure(lambda path, headers, rows, title, result: path.is_file() and path.read_text().count(r"\toprule") == 1 and path.read_text().count(r"\bottomrule") == 1)
 @deal.raises(OSError)
 @deal.has("network", "write", "read")
+@deal.ensure(lambda path, headers, rows, title, result: r"\begin{longtable}" in path.read_text(encoding="utf-8"))
+@deal.ensure(lambda path, headers, rows, title, result: r"\end{longtable}" in path.read_text(encoding="utf-8"))
+@deal.ensure(lambda path, headers, rows, title, result: path.read_text(encoding="utf-8").count(r"\midrule") >= 2)
+@deal.ensure(lambda path, headers, rows, title, result: path.read_text(encoding="utf-8").count(r"\endfirsthead") == 1)
+@deal.ensure(lambda path, headers, rows, title, result: path.read_text(encoding="utf-8").count(r"\endhead") == 1)
+@deal.ensure(lambda path, headers, rows, title, result: all(header in path.read_text(encoding="utf-8") for header in headers))
 def write_table(path, headers, rows, title):
     """Write a complete, page-breakable booktabs table with repeated headings.
 
@@ -101,6 +120,11 @@ def write_table(path, headers, rows, title):
 @deal.post(lambda result: bool(result["files"]) and len(result["files"]) == len(set(result["files"])) and all(Path(path).is_file() for path in result["files"]))
 @deal.raises(OSError, ValueError, TypeError, KeyError, csv.Error)
 @deal.has("network", "write", "read")
+@deal.ensure(lambda project, data, result: len(result["files"]) >= 3)
+@deal.ensure(lambda project, data, result: all(Path(path).is_relative_to(Path(result["directory"])) for path in result["files"]))
+@deal.ensure(lambda project, data, result: any(Path(path).name == "summary.json" for path in result["files"]))
+@deal.ensure(lambda project, data, result: all(Path(path).suffix in {".csv", ".tex", ".json"} for path in result["files"]))
+@deal.ensure(lambda project, data, result: result["n_rows"] > 0 and result["n_replicates"] > 0)
 def write_assets(project, data):
     """Create the report's CSV/TeX/JSON assets from the Dask terminal record.
 

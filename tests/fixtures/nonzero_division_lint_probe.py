@@ -1,5 +1,6 @@
 """Positive control: contracted division retains the exact original operation."""
 import deal
+import math
 
 
 @deal.pre(lambda numerator, denominator: isinstance(numerator, float)
@@ -21,6 +22,12 @@ import deal
 @deal.ensure(lambda numerator, denominator, result:
              denominator <= 1.0 or numerator <= 0.0 or result < numerator)
 @deal.post(lambda result: result == result)
+# Deliberate control semantics and numerical boundary properties.
+@deal.ensure(lambda numerator, denominator, result: math.isclose(result * denominator, numerator, rel_tol=1e-12, abs_tol=1e-15))
+@deal.ensure(lambda numerator, denominator, result: result >= 0)
+@deal.ensure(lambda numerator, denominator, result: result == numerator / denominator)
+@deal.ensure(lambda numerator, denominator, result: (numerator == denominator) == (result == 1))
+@deal.ensure(lambda numerator, denominator, result: numerator != 1 or result >= 0.5)
 def positive_ratio(numerator: float, denominator: float) -> float:
     return numerator / denominator
 
@@ -30,5 +37,16 @@ def positive_ratio(numerator: float, denominator: float) -> float:
 @deal.post(lambda result: 0.0 < result < 1.0)
 @deal.raises()
 @deal.has()
+# Deliberate control semantics and numerical boundary properties.
+@deal.post(lambda result: result + 0.25 == 0.75)
+@deal.post(lambda result: result > 0)
+@deal.post(lambda result: result < 1)
+@deal.post(lambda result: result * 2 == 1)
+@deal.post(lambda result: 1 / result == 2)
+@deal.post(lambda result: result.as_integer_ratio() == (1, 2))
+@deal.post(lambda result: result.hex() == '0x1.0000000000000p-1')
+@deal.post(lambda result: 0 < result <= 0.5)
+@deal.post(lambda result: float.fromhex(result.hex()) == result)
+@deal.post(lambda result: result == positive_ratio(1.0, 2.0))
 def safe_half() -> float:
     return positive_ratio(1.0, 2.0)

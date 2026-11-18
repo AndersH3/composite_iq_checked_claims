@@ -1,0 +1,147 @@
+% Shared XeLaTeX / KOMA-Script report style for composite_iq_checked_claims.
+% Modeled on iq_test_differences_report.tex supplied by Anders Hellström.
+% Requires XeLaTeX; loaded before \begin{document} from a report's main file.
+% Reports keep their own mathematics, references, assumptions and AI appendix.
+\documentclass[11pt,a4paper,oneside,open=any,parskip=half,headings=normal,
+  numbers=noenddot,listof=totoc,bibliography=totoc]{scrbook}
+\usepackage{iftex}
+\RequireXeTeX
+\usepackage[margin=18mm,top=19mm,bottom=20mm,headheight=16pt,headsep=7mm]{geometry}
+\usepackage{fontspec}
+\setmainfont{lmroman10-regular.otf}[BoldFont=lmroman10-bold.otf,
+  ItalicFont=lmroman10-italic.otf,BoldItalicFont=lmroman10-bolditalic.otf]
+\setsansfont{lmsans10-regular.otf}[BoldFont=lmsans10-bold.otf,
+  ItalicFont=lmsans10-oblique.otf,BoldItalicFont=lmsans10-boldoblique.otf]
+\setmonofont{DejaVu Sans Mono}[Scale=0.79]
+\usepackage{mathtools,amsthm}
+\usepackage{unicode-math}
+\setmathfont{latinmodern-math.otf}
+\usepackage[protrusion=true,expansion=false]{microtype}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{tabularray}
+\UseTblrLibrary{booktabs}
+\usepackage{booktabs,longtable,array}
+\usepackage{graphicx,float,enumitem}
+\usepackage{scrhack,listings}
+\usepackage{needspace,placeins}
+\usepackage[round,authoryear]{natbib}
+\usepackage{xurl}
+\usepackage{scrlayer-scrpage}
+\usepackage{hyperref}
+\usepackage{bookmark}
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+% Centralized palette and link appearance from the reference report.
+\definecolor{ink}{HTML}{183B56}
+\definecolor{teal}{HTML}{007F82}
+\definecolor{rust}{HTML}{B75D36}
+\definecolor{pale}{HTML}{EFF5F7}
+\newcommand{\ProjectAuthor}{Anders Hellström}
+\hypersetup{unicode=true,colorlinks=true,linkcolor=ink,citecolor=teal,
+  urlcolor=teal,pdfauthor={Anders Hellström; AI-assisted research and drafting}}
+\clearpairofpagestyles
+\automark[chapter]{chapter}
+\renewcommand*{\chaptermarkformat}{}
+% Running heads are configured as report metadata, not independently restyled.
+\newcommand{\ProjectReportRunningTitle}{Mathematical and computational report}
+\newcommand{\ProjectReportRunningSubtitle}{\headmark}
+\ihead{\ProjectReportRunningTitle}
+\ohead{\ProjectReportRunningSubtitle}
+\cfoot*{\pagemark}
+\pagestyle{scrheadings}
+\setkomafont{disposition}{\sffamily\bfseries\color{ink}}
+\setkomafont{pageheadfoot}{\normalfont\sffamily\small\color{ink}}
+\RedeclareSectionCommand[beforeskip=0pt,afterskip=14pt]{chapter}
+\setlength{\emergencystretch}{2em}
+\setlength{\parfillskip}{0pt plus 1fil}
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{2}
+\setlist{nosep,leftmargin=*}
+\setlength{\bibsep}{3pt}
+\renewcommand{\bibfont}{\small}
+
+% Preserve names and numbering used by the existing mathematical books.
+\DeclareMathOperator{\E}{E}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\SD}{SD}
+\DeclareMathOperator{\Corr}{Corr}
+\newcommand{\T}{\mathsf{T}}
+\newcommand{\given}{\,\vert\,}
+\newcommand{\one}{\mathbf{1}}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\crefname{chapter}{chapter}{chapters}
+\Crefname{chapter}{Chapter}{Chapters}
+\crefname{proposition}{proposition}{propositions}
+\Crefname{proposition}{Proposition}{Propositions}
+\crefname{corollary}{corollary}{corollaries}
+\Crefname{corollary}{Corollary}{Corollaries}
+\counterwithout{equation}{chapter}
+
+% Boxes, code and front matter share the reference report's design.
+\newtcolorbox{resultbox}[1][]{colback=pale,colframe=ink,boxrule=.7pt,
+  arc=1mm,left=3mm,right=3mm,top=2mm,bottom=2mm,breakable,#1}
+\newtcolorbox{disclosurebox}[1][]{colback=rust!7,colframe=rust,boxrule=1.1pt,
+  arc=0mm,left=3mm,right=3mm,top=3mm,bottom=3mm,breakable,#1}
+\lstset{basicstyle=\ttfamily\footnotesize,breaklines=true,columns=fullflexible,
+  keepspaces=true,showstringspaces=false,numbers=left,numberstyle=\tiny\color{gray},
+  numbersep=6pt,xleftmargin=15pt,frame=single,rulecolor=\color{ink!25},
+  framerule=.3pt,framesep=5pt,backgroundcolor=\color{pale!45},
+  keywordstyle=\color{ink}\bfseries,commentstyle=\color{teal},
+  stringstyle=\color{rust},tabsize=2,upquote=true}
+\newenvironment{abstract}{\addchap{Overview}}{}
+
+% Report-specific summaries are supplied in each book's preamble.
+\newcommand{\ProjectReportType}{MATHEMATICAL AND COMPUTATIONAL REPORT}
+\newcommand{\ProjectReportHighlights}{\textbf{Scope:} mathematical deductions,
+  numerical approximations and empirical claims are distinguished.}
+\makeatletter
+\newcommand*{\ProjectReportTitlePage}{%
+  \begin{titlepage}
+    \thispagestyle{empty}
+    \vspace*{6mm}
+    {\sffamily\color{teal}\large \ProjectReportType\par}
+    \vspace{10mm}
+    {\sffamily\bfseries\color{ink}\fontsize{27}{32}\selectfont\@title\par}
+    \vspace{6mm}
+    {\Large\@subtitle\par}
+    \vspace{8mm}
+    \begin{disclosurebox}[title={\sffamily\bfseries AI-GENERATED REPORT: READ THIS FIRST}]
+      This document and substantial supporting mathematical exposition, programs,
+      verification and typesetting were prepared with AI assistance at the request
+      of Anders Hellström. The reported numerical results are conditional on
+      explicit models and evidence; automated checks are not independent human
+      peer review or empirical psychometric validation. Full AI-use details
+      appear in the final appendix.
+    \end{disclosurebox}
+    \vspace{5mm}
+    \begin{resultbox}[title={\sffamily\bfseries Key findings and interpretation}]
+      \ProjectReportHighlights
+    \end{resultbox}
+    \vspace{3mm}
+    \begin{resultbox}[title={\sffamily\bfseries Project repository and reproducibility}]
+      \textbf{Repository:}\quad
+      \url{https://github.com/AndersH3/composite_iq_checked_claims}
+
+      Source, proof and simulation files are organized in the repository;
+      this report specifies its own assumptions, references and verification scope.
+    \end{resultbox}
+    \vfill
+    Prepared at the request of \textbf{\ProjectAuthor}\\
+    Report date: \textbf{\@date}\\
+    Format: XeLaTeX, KOMA-Script \texttt{scrbook}; A4, narrow margins
+  \end{titlepage}%
+}
+\makeatother
+
+% Canonical complete appendix. Keep after \appendix and all other chapters.
+% The first-page notice is intentionally short; no second initial notice.
+\newcommand{\ProjectReportAIAppendix}{%
+  \clearpage
+  \chapter{AI disclosure and provenance}\label{sec:ai-disclosure}
+  \input{../../library/latex/ai_disclosure}%
+}

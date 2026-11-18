@@ -1,21 +1,24 @@
 % !TeX program = xelatex
-\input{../../reporting/book_style}
+\input{../../library/latex/report_style}
 \hypersetup{
   pdftitle={Sequential Conditional Means of Equicorrelated Scores},
   pdfsubject={Arbitrary n equal initial observations and k later predictions: conditional Gaussian means and variances}}
-\ihead{Sequential conditional means}
-\ohead{Derivation and assumptions}
-\cfoot*{\pagemark}
-\pagestyle{scrheadings}
+\renewcommand{\ProjectReportRunningTitle}{Sequential conditional means}
+\renewcommand{\ProjectReportRunningSubtitle}{Derivation and assumptions}
 \title{Sequential Conditional Means of Equicorrelated Scores}
 \subtitle{The general case of \(n\) initial results equal to \(a\), followed by \(k\) predictions}
 \author{\ProjectAuthor}
 \date{16 November 2026}
 
+% Edition-specific findings displayed on the shared reference-style title page.
+\renewcommand{\ProjectReportHighlights}{With \(n\) equal initial observations \(a\), each subsequent
+Gaussian conditional-mean prediction is \(nca/[1+(n-1)c]\) where the
+conditioning covariance is nonsingular. The recursively filled average
+is deterministic; averages of actual outcomes have nonzero uncertainty.}
+
 \begin{document}
 \frontmatter
-\maketitle
-\thispagestyle{plain.scrheadings}
+\ProjectReportTitlePage
 \begin{abstract}
 Each test has population mean \(0\) and standard deviation \(1\). Fix the
 first observed score at \(a\). For jointly Gaussian tests with equal
@@ -45,10 +48,6 @@ We also derive the infinite-count limits, explain the population and conditional
 SDs as different sampling experiments, and provide Python/Dask
 simulations with Deal contracts and separate numerical cross-checks.
 \end{abstract}
-
-\noindent\textbf{AI disclosure.} OpenAI Codex and collaborating AI agents
-prepared this report. The full disclosure appears in the final appendix,
-\Cref{sec:ai-disclosure}.
 
 \noindent\textbf{Proof standard.} Model assumptions and reporting-scale
 definitions are stated explicitly. The mathematical conclusions are proved
@@ -1281,15 +1280,5 @@ The repository license and third-party rights apply.
 \bibliography{references}
 
 \appendix
-\chapter{AI disclosure}
-\label{sec:ai-disclosure}
-This analysis, its mathematical exposition, supporting repository
-documentation and typesetting were prepared with OpenAI Codex and
-collaborating AI agents. The requester Anders Hellström specified the problem, clarified
-the indexing and requested this analysis. Mathematical review and build
-checks were performed within the same AI-assisted workflow; no independent
-human peer review or new empirical psychometric validation is claimed.
-
-\input{../../reporting/ai_disclosure}
-
+\ProjectReportAIAppendix
 \end{document}
