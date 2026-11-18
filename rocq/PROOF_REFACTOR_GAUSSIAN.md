@@ -265,11 +265,12 @@ The [Rocq 9.2 kernel run](https://github.com/AndersH3/composite_iq_checked_claim
 | `gcd_psd_covariance_cauchy_schwarz` (theorem) | Universal quadratic-form nonnegativity for a 2×2 covariance block implies the sharp cross-covariance bound b² ≤ ac even when a=0. | Stdlib Field, Psatz and order splitting | Algebraic Cauchy–Schwarz; not a Gaussian distributional independence proof |
 | `gcd_psd_covariance_characterization` (theorem) | With nonnegative diagonal variances, b² ≤ ac is necessary and sufficient for the entire 2×2 quadratic form to be nonnegative. | `gcd_psd_covariance_cauchy_schwarz`, Stdlib Ring and Psatz | Singular-safe PSD characterization, not a measure-theoretic conditional expectation |
 
+| `gcd_gaussian_uncorrelated_laplace_kernel_factor` (theorem) | A bivariate Gaussian Laplace quadratic with zero cross-covariance factors exactly into the two marginal exponential kernels for all real transform arguments. | Stdlib Reals, Ring, `exp_plus`; no custom Gaussian transform | Algebraic factorization only: does not establish transform uniqueness, sigma-algebra independence, or universal Gaussian conditional expectation |
+
 ## Full AI disclosure
 
 The research scope was directed by Anders Hellström. OpenAI ChatGPT authored candidate propositions, attempted kernel proofs, and documented their dependencies and limitations. The Rocq kernel is the authoritative checker; these statements do not verify actual Gaussian random variables, regular conditional expectations, IQ-score populations or confidence intervals.
 
-| `gcd_gaussian_uncorrelated_laplace_kernel_factor` (theorem) | A bivariate Gaussian Laplace quadratic with zero cross-covariance factors exactly into the two marginal exponential kernels for all real transform arguments. | Stdlib Reals, Ring, `exp_plus`; no custom Gaussian transform | Algebraic factorization only: does not establish transform uniqueness, sigma-algebra independence, or universal Gaussian conditional expectation |
 
 ## GaussianInnovationBounds.v — 43 proof scripts
 
