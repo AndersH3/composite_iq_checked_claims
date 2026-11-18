@@ -790,7 +790,7 @@ sed -i '2001,2003c\
 # Guard and edit the resulting physical source line, not the original index.
 elim_inv_line=$((2089 - 2))
 test "$(sed -n "${elim_inv_line}p" rocq/utils/ELim_Seq.v)" = "      rewrite Rinv_l in H; [| destruct eps; simpl; lra]."
-sed -i "${elim_inv_line}c\\      rewrite Rinv_l in H; [| apply Rgt_not_eq; exact (cond_pos eps)]." rocq/utils/ELim_Seq.v
+sed -i "${elim_inv_line}c\\      rewrite Rinv_l in H." rocq/utils/ELim_Seq.v
 
 # D143: The follow-up Hilbert positivity branch is for the numeric
 # sum 1+1, not the norm of a vector.  The old norm_ge_0 tactic
@@ -798,3 +798,11 @@ sed -i "${elim_inv_line}c\\      rewrite Rinv_l in H; [| apply Rgt_not_eq; exact
 hilbert_inner_line=$((hrx_line + 12))
 test "$(sed -n "${hilbert_inner_line}p" rocq/CertRL/LM/hilbert.v)" = "apply norm_ge_0."
 sed -i "${hilbert_inner_line}c\left; lra." rocq/CertRL/LM/hilbert.v
+
+# D144: The remaining Hilbert quadratic-factor proof needs
+# nonnegativity of d*d, not the four-variable monotonicity theorem.
+# Reuse Stdlib Rmult_le_pos and the two existing norm_ge_0 lines;
+# D143 already discharged the separate constant-one-plus-one branch.
+hilbert_square_line=$((hrx_line + 13))
+test "$(sed -n "${hilbert_square_line}p" rocq/CertRL/LM/hilbert.v)" = "apply Rmult_le_compat; trivial."
+sed -i "${hilbert_square_line}c\apply Rmult_le_pos." rocq/CertRL/LM/hilbert.v
