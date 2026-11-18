@@ -290,6 +290,18 @@ must be distinguished:
       \texttt{is\_conditional\_expectation} API and almost-sure
       uniqueness rather than a new conditional-expectation definition.
 \end{enumerate}
+The Moore--Penrose pseudoinverse is a canonical choice for the
+displayed affine version, not an implementation requirement for the
+covariance step. It suffices to construct a row vector
+\(\beta\) satisfying \(\beta B=C\) once the positive-semidefinite
+null-direction argument establishes that \(C\) belongs to the row
+space of \(B\). MathComp's maintained partial-matrix inverse
+\texttt{pinvmx} and row-space lemma \texttt{mulmxKpV} provide
+appropriate algebraic tools. The partial inverse is
+\emph{not} itself the Moore--Penrose pseudoinverse: a proof using
+it must establish the linear equation and almost-sure equivalence
+of the resulting predictor, rather than silently replacing
+\(B^+\) by an unrelated generalized inverse.
 The Rocq module \texttt{GaussianResidualConditionalExpectation.v}
 provides the final implication \emph{conditional on} residual
 independence. The separate
