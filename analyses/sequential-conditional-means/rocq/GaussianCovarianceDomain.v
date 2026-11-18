@@ -2555,3 +2555,79 @@ Theorem d052_mean_nonnegative_gain : forall n c s:R, 0<=c -> 0<sequential_d n c 
 Proof.
   intros n c s Hc Hd Hs; unfold hp; unfold Rdiv; apply Rmult_le_pos; [nra|left; apply Rinv_0_lt_compat; nra].
 Qed.
+
+(** [gcd_psd_quadratic_zero_cross] (theorem).
+ Mathematical meaning: A nonnegative quadratic polynomial whose
+ constant term is zero cannot have a nonzero linear coefficient.
+ This is the scalar null-direction principle for a positive-semidefinite
+ covariance form: a zero-variance direction is uncorrelated with
+ every other square-integrable linear contrast.
+ Exact proposition: if a*t*t + 2*b*t is nonnegative for every real t,
+ then b=0, without assuming a strictly positive eigenvalue.
+ Premises: Nonnegativity for all t, not simply for one value of t.
+ Proof: The values t=1 and t=-1 establish a>=0. Evaluate at
+ t=-b/(a+1), multiply by the positive square of the denominator,
+ and conclude that (a+2)*b*b=0 using field arithmetic and order.
+ Library reuse: Rocq Stdlib Rmult_le_pos, Rmult_integral, Field,
+ Lra and Psatz; no hand-built covariance, pseudoinverse or measure API.
+ Boundary: An exact PSD-nullspace lemma. It does not itself prove
+ Gaussian independence or any conditional-expectation identity.
+*)
+Theorem gcd_psd_quadratic_zero_cross :
+  forall a b : R,
+    (forall t : R, 0 <= a*t*t + 2*b*t) ->
+    b = 0.
+Proof.
+  intros a b Hquad.
+  assert (Ha : 0 <= a).
+  { pose proof (Hquad 1) as Hplus.
+    pose proof (Hquad (-1)) as Hminus.
+    nra. }
+  assert (Hd : a+1 <> 0) by lra.
+  assert (Hd2 : 0 <= (a+1)*(a+1)) by nra.
+  pose proof (Hquad (-b/(a+1))) as Hmin.
+  assert (Hidentity :
+    (a*(-b/(a+1))*(-b/(a+1)) + 2*b*(-b/(a+1))) *
+      ((a+1)*(a+1)) = -(a+2)*(b*b)).
+  { field; lra. }
+  assert (Hnonneg :
+    0 <= (a*(-b/(a+1))*(-b/(a+1)) + 2*b*(-b/(a+1))) *
+      ((a+1)*(a+1))).
+  { apply Rmult_le_pos; assumption. }
+  rewrite Hidentity in Hnonneg.
+  assert (Hproduct_nonnegative : 0 <= (a+2)*(b*b)).
+  { apply Rmult_le_pos; nra. }
+  assert (Hproduct_zero : (a+2)*(b*b) = 0) by nra.
+  apply Rmult_integral in Hproduct_zero as [Hcoefficient | Hsquare].
+  - lra.
+  - nra.
+Qed.
+
+(** [gcd_psd_null_covariance] (theorem).
+ Mathematical meaning: If the quadratic form associated with a real
+ symmetric two-by-two covariance block is PSD and the second diagonal
+ variance is zero, then its cross covariance is zero.
+ Exact proposition: universal nonnegativity of a*t*t+2*b*t+c and
+ c=0 together imply b=0; the leading variance need not be positive.
+ Premises: Full PSD polynomial inequality for all real contrasts and
+ an exact zero diagonal element, including singular covariance cases.
+ Proof: Substitute the zero constant and reuse the previous checked
+ scalar null-direction theorem; no independent PSD algorithm is added.
+ Library reuse: [gcd_psd_quadratic_zero_cross] and Rocq Stdlib Psatz.
+ Boundary: This algebraic fact supports the singular Gaussian residual
+ covariance calculation, but cannot substitute for sigma-algebra
+ independence or an event-integral conditional-expectation proof.
+*)
+Theorem gcd_psd_null_covariance :
+  forall a b c : R,
+    (forall t : R, 0 <= a*t*t + 2*b*t + c) ->
+    c = 0 ->
+    b = 0.
+Proof.
+  intros a b c Hquad Hzero.
+  subst c.
+  apply gcd_psd_quadratic_zero_cross.
+  intro t.
+  specialize (Hquad t).
+  nra.
+Qed.
