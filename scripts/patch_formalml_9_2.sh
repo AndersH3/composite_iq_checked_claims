@@ -568,4 +568,4 @@ perm_start=$((perm_line + 3))
 perm_end=$((perm_line + 12))
 test "$(sed -n "${perm_start}p" rocq/utils/ListAdd.v)" = "Proof."
 test "$(sed -n "${perm_end}p" rocq/utils/ListAdd.v)" = "Qed."
-sed -i "${perm_start},${perm_end}c\Proof.\n  induction l as [|b tail IH]; simpl; intros Hin.\n  - contradiction.\n  - match_destr.\n    + red in e; subst; reflexivity.\n    + destruct Hin as [Heq | Htail].\n      * subst b; exfalso; apply n; reflexivity.\n      * rewrite perm_swap; apply perm_skip; apply IH; exact Htail.\nQed." rocq/utils/ListAdd.v
+sed -i "${perm_start},${perm_end}c\Proof.\n  induction l as [|b tail IH]; simpl; intros Hin.\n  - contradiction.\n  - match_destr.\n    + red in e; subst; reflexivity.\n    + destruct Hin as [Heq | Htail].\n      * subst b; try unfold equiv in *; congruence.\n      * rewrite perm_swap; apply perm_skip; apply IH; exact Htail.\nQed." rocq/utils/ListAdd.v
