@@ -786,6 +786,8 @@ sed -i '2001,2003c\
 # denominator is nonzero. The old dependent record destruct combined
 # with lra fails after Rocq 9.2 proof-state simplification; retain
 # the positive-real witness and discharge nonzero directly.
-test "$(sed -n 2089p rocq/utils/ELim_Seq.v)" = "      rewrite Rinv_l in H; [| destruct eps; simpl; lra]."
-sed -i '2089c\
-      rewrite Rinv_l in H; [| pose proof (cond_pos eps); lra].' rocq/utils/ELim_Seq.v
+# D141 has already replaced three lines with one (a net -2 shift).
+# Guard and edit the resulting physical source line, not the original index.
+elim_inv_line=$((2089 - 2))
+test "$(sed -n "${elim_inv_line}p" rocq/utils/ELim_Seq.v)" = "      rewrite Rinv_l in H; [| destruct eps; simpl; lra]."
+sed -i "${elim_inv_line}c\\      rewrite Rinv_l in H; [| pose proof (cond_pos eps); lra]." rocq/utils/ELim_Seq.v
