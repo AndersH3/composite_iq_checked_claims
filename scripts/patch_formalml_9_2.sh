@@ -731,3 +731,25 @@ test "$(sed -n 4299p rocq/utils/RealAdd.v)" = "    destruct (Rle_lt_or_eq_dec 0 
 test "$(sed -n 4301p rocq/utils/RealAdd.v)" = "    destruct (Rle_lt_or_eq_dec 0 1 r); intuition."
 sed -i '4299s/; intuition\./; [reflexivity | lra]./' rocq/utils/RealAdd.v
 sed -i '4301s/; intuition\./; [reflexivity | lra]./' rocq/utils/RealAdd.v
+
+# D136: Finite dimensional Hilbert convex interpolation requires only the
+# ordinary midpoint bound 0 <= 1/2 <= 1.  Avoid the old chain of
+# arithmetic side conditions and use the existing scal_distr_l lemma.
+mid_start=$((half_line - 1))
+mid_end=$((half_line + 12))
+test "$(sed -n "${mid_start}p" rocq/CertRL/LM/hilbert.v)" = "split."
+test "$(sed -n "${mid_end}p" rocq/CertRL/LM/hilbert.v)" = "reflexivity."
+sed -i "${mid_start},${mid_end}c\split; lra.\nrewrite scal_distr_l.\nreflexivity." rocq/CertRL/LM/hilbert.v
+
+# D137: The quotient of a finite list contains no empty bucket.
+# In the empty-head branch, instantiate the library-proved Forall
+# nonemptiness at the head to obtain false = true directly.
+test "$(sed -n 1304p rocq/utils/Quotient.v)" = "        * specialize (nnil []); simpl in nnil; intuition."
+sed -i '1304c\
+        * specialize (nnil [] (or_introl eq_refl)); simpl in nnil; discriminate.' rocq/utils/Quotient.v
+
+# D138: Diagnostic only, identify the exact remaining subgoal in the
+# upstream nonnegative-series shift result; do not accept a partial proof.
+test "$(sed -n 4785p rocq/utils/RealAdd.v)" = "Qed."
+sed -i '4785i\
+  Show.' rocq/utils/RealAdd.v
