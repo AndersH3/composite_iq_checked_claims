@@ -46,4 +46,6 @@ jobs:
             rocq compile LibUtilsAssoc.v
             rocq compile LibUtilsSublist.v
             rocq compile LibUtilsCompat.v
+            # Lookup correctness is a dependency of the Gaussian CE build.
+            rocq compile LibUtilsBindings.v
           '
