@@ -42,6 +42,13 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      # Lint all tracked shell scripts before invoking any repository script.
+      - name: ShellCheck every shell script before execution
+        shell: bash
+        run: |
+          command -v shellcheck
+          git ls-files -z '*.sh' | xargs -0 -r shellcheck --severity=warning
+
       - name: Enforce Rocq-only formal proof language
         shell: bash
         run: sh scripts/check_rocq_only_proofs.sh
