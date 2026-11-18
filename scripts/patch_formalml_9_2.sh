@@ -763,7 +763,7 @@ hrx_line=$(grep -nF 'assert (Hrx : real x <= norm (minus u v' rocq/CertRL/LM/hil
 test -n "$hrx_line"
 hrx_nonneg=$((hrx_line + 6))
 test "$(sed -n "${hrx_nonneg}p" rocq/CertRL/LM/hilbert.v)" = "apply norm_ge_0."
-sed -i "${hrx_nonneg}c\first [lra | (unfold R1; lra) | apply norm_ge_0]." rocq/CertRL/LM/hilbert.v
+sed -i "${hrx_nonneg}c\first [(left; apply Rplus_lt_0_compat; apply Rlt_0_1) | lra | apply norm_ge_0]." rocq/CertRL/LM/hilbert.v
 
 # D140: The zero-count branch in an excluded finite-sum shift
 # contradicts the negative EqDec certificate c : n =/= 0.
@@ -772,9 +772,12 @@ test "$(sed -n 1850p rocq/utils/Sums.v)" = "         + intuition."
 sed -i '1850c\
          + exfalso; apply c; reflexivity.' rocq/utils/Sums.v
 
-# D141 diagnostic: Rocq 9.2 changes the side-goal ordering for
-# ELim_seq_plus. Print the first generated goal in the unchanged
-# library proof before replacing it with the corresponding theorem.
+# D141: Rocq 9.2 exposes the negative-sequence existence
+# obligation first, before the algebraic ELim_seq_opp equalities.
+# Reuse the library's ex_Elim_seq_opp and ELim_seq_opp in whichever
+# order rewrite ELim_seq_plus generates its subgoals.
 test "$(sed -n 2001p rocq/utils/ELim_Seq.v)" = "  - now rewrite ELim_seq_opp."
-sed -i '2001c\
-  - Show. now rewrite ELim_seq_opp.' rocq/utils/ELim_Seq.v
+test "$(sed -n 2002p rocq/utils/ELim_Seq.v)" = "  - now apply ex_Elim_seq_opp in H0."
+test "$(sed -n 2003p rocq/utils/ELim_Seq.v)" = "  - now rewrite ELim_seq_opp."
+sed -i '2001,2003c\
+  all: first [now apply ex_Elim_seq_opp in H0 | now rewrite ELim_seq_opp].' rocq/utils/ELim_Seq.v
