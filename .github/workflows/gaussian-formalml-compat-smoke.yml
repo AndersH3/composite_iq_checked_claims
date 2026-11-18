@@ -38,4 +38,6 @@ jobs:
             rocq compile LibUtilsCoqLibAdd.v
             rocq compile LibUtilsLift.v
             rocq compile LibUtilsListAdd.v
+            rocq compile LibUtilsStringAdd.v
+            rocq compile LibUtilsSortingAdd.v
           '
