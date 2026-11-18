@@ -848,4 +848,14 @@ sed -i "${hilbert_e1_now}i\all: try solve [reflexivity | ring | (unfold opp; sim
 # and makes the real-branch hypothesis H apparently disappear.
 elim_rewrite_now=$((elim_inv_line + 2))
 test "$(sed -n "${elim_rewrite_now}p" rocq/utils/ELim_Seq.v)" = "      rewrite Rinv_l in H."
-sed -i "${elim_rewrite_now}c\      rewrite Rinv_l in H by (apply Rgt_not_eq; apply cond_pos)." rocq/utils/ELim_Seq.v
+sed -i "${elim_rewrite_now}c\      rewrite Rinv_l in H; [| apply Rgt_not_eq; apply cond_pos]." rocq/utils/ELim_Seq.v
+
+# D152: The first plus_opp_r simplification after the Hilbert E1
+# parallelogram rewrite is occasionally already discharged by Rocq 9.2.
+# Keep its original group identity; avoid failing on a normalized term.
+first_opp_r=$(grep -n '^rewrite plus_opp_r\.$' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$first_opp_r"
+first_opp_next=$((first_opp_r + 1))
+test "$(sed -n "${first_opp_next}p" rocq/CertRL/LM/hilbert.v)" = "reflexivity."
+sed -i "${first_opp_r}c\try rewrite plus_opp_r." rocq/CertRL/LM/hilbert.v
+sed -i "${first_opp_next}c\try reflexivity." rocq/CertRL/LM/hilbert.v
