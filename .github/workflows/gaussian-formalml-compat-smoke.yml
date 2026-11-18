@@ -19,13 +19,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  rocq-list-proof-compat:
+  rocq-utility-proof-compat:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
       - name: Check out pinned patch source
         uses: actions/checkout@v4
-      - name: Check exact upstream list lemmas without full probability dependency build
+      - name: Check exact upstream utility modules without full probability dependency build
         shell: bash
         run: |
           docker run --rm -v "$PWD:/workspace:ro" rocq/rocq-prover:9.2.0 sh -euc '
@@ -40,4 +40,5 @@ jobs:
             rocq compile LibUtilsListAdd.v
             rocq compile LibUtilsStringAdd.v
             rocq compile LibUtilsSortingAdd.v
+            rocq compile LibUtilsAssoc.v
           '
