@@ -879,7 +879,7 @@ test -n "$elim_recip_start"
 test -n "$elim_recip_next"
 test "$elim_recip_start" -lt "$elim_recip_next"
 elim_recip_end=$((elim_recip_next - 1))
-sed -i "${elim_recip_start},${elim_recip_end}c\\    + assert (Hrpos : 0 < r) by (eapply Rlt_trans; [apply Rinv_0_lt_compat; apply cond_pos | exact H]).\\n      apply (Rmult_lt_compat_r eps _ _ (cond_pos eps)) in H.\\n      assert (Heps_nonzero : pos eps <> 0) by (apply Rgt_not_eq; apply cond_pos).\\n      rewrite (Rinv_l (pos eps) Heps_nonzero) in H.\\n      rewrite Rabs_right.\\n      * apply (Rmult_lt_reg_l r); [exact Hrpos |].\\n        replace (r * / r) with 1 by (apply Rinv_r; lra).\\n        exact H.\\n      * left; apply Rinv_0_lt_compat; exact Hrpos." rocq/utils/ELim_Seq.v
+sed -i "${elim_recip_start},${elim_recip_end}c\\    + assert (Hrpos : 0 < r) by (eapply Rlt_trans; [apply Rinv_0_lt_compat; apply cond_pos | exact H]).\\n      apply (Rmult_lt_compat_r eps _ _ (cond_pos eps)) in H.\\n      assert (Heps_nonzero : pos eps <> 0) by (apply Rgt_not_eq; apply cond_pos).\\n      rewrite (Rinv_l (pos eps) Heps_nonzero) in H.\\n      rewrite Rabs_right.\\n      * apply (Rmult_lt_reg_l r); [exact Hrpos |].\\n        replace (r * / r) with 1 by (apply Rinv_r; lra).\\n        exact H.\\n      * assert (Hinvpos : 0 < / r) by (apply Rinv_0_lt_compat; exact Hrpos).\\n        lra." rocq/utils/ELim_Seq.v
 
 # D155: In the second Hilbert scalar-negation case, the proof has
 # already advanced from the numerical identity to the final uniqueness
@@ -974,10 +974,13 @@ test -n "$hilbert_convex_line"
 test "$(sed -n "${hilbert_convex_line}p" rocq/CertRL/LM/hilbert.v)" = "exists ((plus (scal t w) (scal (1 - t) v))); intuition."
 sed -i "${hilbert_convex_line}c\exists ((plus (scal t w) (scal (1 - t) v))); split.\n  - apply phi_convex; try assumption; lra.\n  - reflexivity." rocq/CertRL/LM/hilbert.v
 
-# D160: Inspect the remaining Hilbert squared-norm inequality after
-# legacy intuition has altered proof focus. Do not claim success until
-# its exact original theorem body passes the Rocq kernel.
+# D160–D161: The old blanket intuition in the Hilbert squared-norm
+# lower-bound proof leaves three obligations: negation of a nonpositive
+# scalar, 0 <= 2, and positivity of an inner product with itself.
+# Prove the arithmetic obligations explicitly, leaving the original
+# squared_norm/Rle_0_sqr argument to discharge the final positivity.
+# The exact original theorem statement and all library definitions stay.
 hilbert_rchar_line=$(grep -nF 'rewrite Hscal in H1. intuition.' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
 test -n "$hilbert_rchar_line"
 test "$(sed -n "${hilbert_rchar_line}p" rocq/CertRL/LM/hilbert.v)" = "rewrite Hscal in H1. intuition."
-sed -i "${hilbert_rchar_line}a\Show." rocq/CertRL/LM/hilbert.v
+sed -i "${hilbert_rchar_line}c\\rewrite Hscal in H1.\\nall: try (change (0 <= - (2 * inner (minus u v) (minus w v)));\\n          change (2 * inner (minus u v) (minus w v) <= 0) in H1; lra).\\nall: try lra." rocq/CertRL/LM/hilbert.v
