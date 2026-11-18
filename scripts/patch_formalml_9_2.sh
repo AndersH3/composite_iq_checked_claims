@@ -717,7 +717,8 @@ sed -i '165c\
 
 # D134: Rocq has already reduced the Hilbert scalar distribution
 # expression at this point. Attempt the old rewrite only when present.
-scald_line=$(grep -n '^rewrite scal_distr_l\.$' rocq/CertRL/LM/hilbert.v | tail -n 1 | cut -d: -f1)
+scald_line=$((half_line + 11))
+test "$(sed -n "${scald_line}p" rocq/CertRL/LM/hilbert.v)" = "rewrite scal_distr_l."
 test -n "$scald_line"
 scald_next=$((scald_line + 1))
 test "$(sed -n "${scald_next}p" rocq/CertRL/LM/hilbert.v)" = "reflexivity."
