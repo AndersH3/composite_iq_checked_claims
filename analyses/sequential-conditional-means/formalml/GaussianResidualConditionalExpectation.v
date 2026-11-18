@@ -132,4 +132,50 @@ Proof.
   - exact Hregression.
 Qed.
 
+
+(** [gaussian_regression_future_integrable] (local instance).
+ The sum of an observed-history predictor and an independent innovation
+ has a finite first moment whenever each summand has one. Independence
+ is not required for this integrability conclusion.
+ This avoids duplicating the positive/negative-part construction:
+ the instance is obtained directly from FormalML's
+ [IsFiniteExpectation_plus] theorem.
+*)
+Local Instance gaussian_regression_future_integrable :
+  IsFiniteExpectation prob (rvplus predictor innovation).
+Proof.
+  apply IsFiniteExpectation_plus; typeclasses eauto.
+Qed.
+
+(** [gaussian_regression_conditional_mean_almost_sure] (theorem).
+ Mathematical content: The *library-defined* conditional expectation,
+ rather than just a candidate satisfying its event-integral identity,
+ is almost surely equal to the adapted predictor when its residual
+ is centered, integrable, and independent of the observed sigma algebra.
+ The hypotheses assert true sigma-algebra independence, not merely
+ vanishing cross-covariance or Gaussian-sounding terminology.
+ Proof: Combine the event-integral theorem proved above with FormalML's
+ existence theorem [Condexp_cond_exp] and the library's almost-sure
+ uniqueness theorem [is_conditional_expectation_unique].
+ This is a full measure-theoretic identity under an explicit independent
+ residual hypothesis. The separate derivation of this hypothesis for
+ arbitrary jointly Gaussian vectors (including singular covariance
+ matrices) remains open and is not concealed in this declaration.
+*)
+Theorem gaussian_regression_conditional_mean_almost_sure
+  (innovation_independent :
+    independent_sas prob
+      (pullback_rv_sub _ _ _ innovation_rv) obs_sub)
+  (innovation_centered :
+    FiniteExpectation prob innovation = 0) :
+  almostR2 (prob_space_sa_sub prob obs_sub) eq
+    (ConditionalExpectation prob obs_sub
+      (rvplus predictor innovation))
+    (fun w => Finite (predictor w)).
+Proof.
+  eapply is_conditional_expectation_unique.
+  - apply Condexp_cond_exp.
+  - apply gaussian_regression_conditional_expectation_centered; assumption.
+Qed.
+
 End GaussianLinearConditionalExpectation.
