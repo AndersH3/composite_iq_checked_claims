@@ -1,5 +1,5 @@
 % !TeX program = xelatex
-\input{../../reporting/book_style}
+\input{../../library/latex/report_style}
 \hypersetup{
   pdftitle={Sequential Conditional Means of Equicorrelated Scores},
   pdfsubject={Arbitrary n equal initial observations and k later predictions: conditional Gaussian means and variances}}
@@ -12,9 +12,15 @@
 \author{\ProjectAuthor}
 \date{16 November 2026}
 
+% Edition-specific findings displayed on the shared reference-style title page.
+\renewcommand{\ProjectReportHighlights}{With \(n\) equal initial observations \(a\), each subsequent
+Gaussian conditional-mean prediction is \(nca/[1+(n-1)c]\) where the
+conditioning covariance is nonsingular. The recursively filled average
+is deterministic; averages of actual outcomes have nonzero uncertainty.}
+
 \begin{document}
 \frontmatter
-\maketitle
+\ProjectReportTitlePage
 \thispagestyle{plain.scrheadings}
 \begin{abstract}
 Each test has population mean \(0\) and standard deviation \(1\). Fix the

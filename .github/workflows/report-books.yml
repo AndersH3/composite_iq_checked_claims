@@ -5,11 +5,13 @@ on:
     paths:
       - 'analyses/**/*.tex'
       - 'reporting/*.tex'
+      - 'library/latex/**'
       - '.github/workflows/report-books.yml'
   pull_request:
     paths:
       - 'analyses/**/*.tex'
       - 'reporting/*.tex'
+      - 'library/latex/**'
       - '.github/workflows/report-books.yml'
   workflow_dispatch:
 
