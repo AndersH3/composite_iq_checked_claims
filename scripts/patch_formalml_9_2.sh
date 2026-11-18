@@ -818,7 +818,15 @@ sed -i "${hilbert_opp_line}c\try rewrite <- scal_opp_l." rocq/CertRL/LM/hilbert.
 # The old inversion proof refers to H after an upstream tactic that
 # can discharge/rename it. Display its actual Rocq 9.2 context, then
 # replace this diagnostic with a library-based proof of nonzero.
-elim_assert_line=$(grep -nF "rewrite Rmult_0_l in H." rocq/utils/ELim_Seq.v | tail -n 1 | cut -d: -f1)
+elim_assert_line=$(grep -nF "rewrite Rmult_0_l in H." rocq/utils/ELim_Seq.v | head -n 1 | cut -d: -f1)
 test -n "$elim_assert_line"
 test "$(sed -n "${elim_assert_line}p" rocq/utils/ELim_Seq.v)" = "        rewrite Rmult_0_l in H."
 sed -i "${elim_assert_line}i\        Show." rocq/utils/ELim_Seq.v
+
+# D147 diagnostic/proof stabilization: the Hilbert projection proof
+# has already normalized the quadratic factor on a preceding branch.
+# Display the exact goal and attempt E1's substitution only if present.
+hilbert_e1_line=$(grep -n '^rewrite <- E1\.$' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$hilbert_e1_line"
+test "$(sed -n "${hilbert_e1_line}p" rocq/CertRL/LM/hilbert.v)" = "rewrite <- E1."
+sed -i "${hilbert_e1_line}c\Show.\ntry rewrite <- E1." rocq/CertRL/LM/hilbert.v
