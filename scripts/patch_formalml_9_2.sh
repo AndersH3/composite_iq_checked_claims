@@ -215,3 +215,11 @@ test "$(sed -n "${sortin_start}p" rocq/lib_utils/LibUtilsSortingAdd.v)" = "    P
 test "$(sed -n "${sortin_end}p" rocq/lib_utils/LibUtilsSortingAdd.v)" = "    Qed."
 sed -i "${sortin_start},${sortin_end}c\\    Proof.\\n      intro Hin.\\n      eapply insertion_sort_in_strong.\\n      - apply asymmetric_asymmetric_over; exact contr.\\n      - exact Hin.\\n    Qed." \
   rocq/lib_utils/LibUtilsSortingAdd.v
+
+# FormalML's Hilbert parallelogram identity rewrites scalar negation
+# while the negation is still hidden by the [minus] abbreviation.
+# Expose the standard group subtraction before applying maintained
+# module-space distribution/scalar-associativity equalities.
+test "$(sed -n 689p rocq/CertRL/LM/hilbert.v)" = "rewrite scal_distr_l scal_opp_r scal_assoc."
+sed -i "689c\\unfold minus; rewrite scal_distr_l scal_opp_r scal_assoc." \
+  rocq/CertRL/LM/hilbert.v
