@@ -267,6 +267,12 @@ def test_every_repository_python_function_has_a_real_contract(coverage_checker):
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","provenance.py").is_file())
 def test_contract_floor_accepts_fifteen_or_more_distinct_decorators(coverage_checker, tmp_path, count):
+    """Accept fifteen or more distinct decorators without requiring an exact count.
+
+    Construct several small, fully parsed source files around the mandatory
+    boundary and reject counts below fifteen while allowing larger numbers.
+    The rule is a lower bound, never a quota or an upper limit.
+    """
     path = tmp_path / "floor.py"
     declarations = ["@deal.has()", "@deal.raises()",
                     "@deal.pre(lambda value: type(value) is int)",
