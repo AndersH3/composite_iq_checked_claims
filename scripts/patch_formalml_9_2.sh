@@ -859,3 +859,24 @@ first_opp_next=$((first_opp_r + 1))
 test "$(sed -n "${first_opp_next}p" rocq/CertRL/LM/hilbert.v)" = "reflexivity."
 sed -i "${first_opp_r}c\try rewrite plus_opp_r." rocq/CertRL/LM/hilbert.v
 sed -i "${first_opp_next}c\try reflexivity." rocq/CertRL/LM/hilbert.v
+
+# D153: The second Hilbert scalar-negation normalization can be
+# definitionally solved before the maintained scalar-opp rewrite.
+# Preserve the theorem statement and all other projection obligations.
+hilbert_second_scal_opp=$(grep -n '^rewrite <- scal_opp_l\.$' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$hilbert_second_scal_opp"
+hilbert_second_next=$((hilbert_second_scal_opp + 1))
+test "$(sed -n "${hilbert_second_next}p" rocq/CertRL/LM/hilbert.v)" = "reflexivity."
+sed -i "${hilbert_second_scal_opp}c\\try rewrite <- scal_opp_l." rocq/CertRL/LM/hilbert.v
+
+# D154: The remaining finite real sequence subgoal is |1/r| < eps,
+# using H : 1 < r*eps and the positive-real certificate eps > 0.
+# Derive r > 0 and multiply both sides by r, reusing Stdlib lemmas
+# instead of an unstable rbar_prover tactic combination.
+elim_recip_start=$(grep -nF '+ apply (Rmult_lt_compat_r eps _ _ (cond_pos eps)) in H.' rocq/utils/ELim_Seq.v | tail -n 1 | cut -d: -f1)
+elim_recip_next=$(grep -nF '+ rewrite Rabs_R0.' rocq/utils/ELim_Seq.v | tail -n 1 | cut -d: -f1)
+test -n "$elim_recip_start"
+test -n "$elim_recip_next"
+test "$elim_recip_start" -lt "$elim_recip_next"
+elim_recip_end=$((elim_recip_next - 1))
+sed -i "${elim_recip_start},${elim_recip_end}c\\    + assert (Hrpos : 0 < r) by (pose proof (cond_pos eps); nra).\\n      rewrite Rabs_right.\\n      * apply (Rmult_lt_reg_l r); [exact Hrpos |].\\n        replace (r * / r) with 1 by (apply Rinv_r; lra).\\n        exact H.\\n      * left; apply Rinv_0_lt_compat; exact Hrpos." rocq/utils/ELim_Seq.v
