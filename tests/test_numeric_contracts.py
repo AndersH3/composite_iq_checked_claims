@@ -33,6 +33,11 @@ UNIT = st.floats(min_value=0, max_value=1, allow_nan=False, allow_infinity=False
 @deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
 @deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_variance_rejects_invalid_domain(hoeflin, n, rho):
+    """Reject sample-size and correlation values outside the Gaussian variance domain.
+    
+    Parametrized invalid cases must raise Deal's runtime precondition error.
+    No numerical threshold may be produced from an inadmissible covariance.
+    """
     with pytest.raises(deal.PreContractError):
         hoeflin.variance_factor(n, rho)
 
@@ -55,6 +60,11 @@ def test_variance_rejects_invalid_domain(hoeflin, n, rho):
 @deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
 @deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_threshold_rejects_invalid_quantile(hoeflin, quantile):
+    """Reject invalid quantiles before computing the Hoeflin component threshold.
+    
+    The required positive finite upper-tail cutoff is part of the model domain.
+    Assert a genuine Deal precondition failure rather than a late math exception.
+    """
     with pytest.raises(deal.PreContractError):
         hoeflin.mean_threshold(3, .6, quantile)
 
@@ -78,6 +88,11 @@ def test_threshold_rejects_invalid_quantile(hoeflin, quantile):
 @deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
 @deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_variance_between_independent_and_identical_limits(hoeflin, n, rho):
+    """Bound composite variance between independent and completely shared limits.
+    
+    For the maintained nonnegative-correlation model, the factor must be finite and ordered.
+    Check the exact interpolation law over the parametrized sample counts.
+    """
     factor = hoeflin.variance_factor(n, rho)
     assert 1/n - 2e-15 <= factor <= 1 + 2e-15
     assert rho - 2e-15 <= factor
@@ -104,6 +119,11 @@ def test_variance_between_independent_and_identical_limits(hoeflin, n, rho):
 @deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
 @deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_more_tests_reduce_required_mean_at_fixed_correlation(hoeflin, n, extra, rho):
+    """Check monotonic improvement as an equal-weight battery gains more tests.
+    
+    At fixed admissible correlation and tail quantile, the threshold cannot increase.
+    This regression guards the composite variance denominator and square-root direction.
+    """
     assert hoeflin.mean_threshold(n + extra, rho, 4.753424308822899) <= (
         hoeflin.mean_threshold(n, rho, 4.753424308822899) + 2e-14
     )
@@ -128,6 +148,11 @@ def test_more_tests_reduce_required_mean_at_fixed_correlation(hoeflin, n, extra,
 @deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
 @deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_one_test_is_unaffected_by_intertest_correlation(hoeflin, rho, quantile):
+    """Verify that a single standardized result has unit variance.
+    
+    Intertest correlation is irrelevant when the battery contains one score.
+    Its mean threshold must therefore equal the requested standard-normal quantile.
+    """
     assert hoeflin.variance_factor(1, rho) == pytest.approx(1.0, abs=2e-15)
     assert hoeflin.mean_threshold(1, rho, quantile) == pytest.approx(quantile, abs=2e-14)
 
@@ -149,6 +174,11 @@ def test_one_test_is_unaffected_by_intertest_correlation(hoeflin, rho, quantile)
 @deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
 @deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_corrected_hundred_test_threshold_and_stored_table(hoeflin):
+    """Reproduce the corrected hundred-test Hoeflin threshold and report table.
+    
+    Independently calculate the extreme Gaussian tail and IQ-scale transformation.
+    Reject stale data rows, mistaken independent-sample scaling, or roundoff drift.
+    """
     z = hoeflin.mean_threshold(100, .6, float(norm.isf(1e-6)))
     assert z == pytest.approx(3.69423953831691, abs=2e-13)
     assert not math.isclose(z, 3.71, abs_tol=.001)
@@ -179,6 +209,11 @@ def test_corrected_hundred_test_threshold_and_stored_table(hoeflin):
 @deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
 @deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_union_rejects_impossible_probabilities(towers, p_a, p_b, joint):
+    """Reject impossible marginals and intersections for two selection events.
+    
+    Require a feasible joint mass relative to both component probabilities.
+    Deal preconditions must fail before inclusion-exclusion returns invalid evidence.
+    """
     with pytest.raises(deal.PreContractError):
         towers.probability_union(p_a, p_b, joint)
 
@@ -203,6 +238,11 @@ def test_union_rejects_impossible_probabilities(towers, p_a, p_b, joint):
 @deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
 @deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_conditional_rejects_invalid_domain(towers, joint, marginal):
+    """Reject undefined or impossible conditional admission probabilities.
+    
+    The conditioning marginal must be positive and its joint event feasible.
+    Verify that invalid denominators trigger the established runtime contract.
+    """
     with pytest.raises(deal.PreContractError):
         towers.conditional_probability(joint, marginal)
 
@@ -226,6 +266,11 @@ def test_conditional_rejects_invalid_domain(towers, joint, marginal):
 @deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
 @deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_union_matches_independent_finite_set_counting(towers, a, b):
+    """Verify inclusion-exclusion using explicit finite-set cardinalities.
+    
+    Exact intersections and unions on a finite universe provide an independent oracle.
+    Compare the numerical probability formula against combinatorial counting.
+    """
     # Dyadic probabilities avoid ambiguity at floating Frechet boundaries.
     value = towers.probability_union(len(a)/16, len(b)/16, len(a & b)/16)
     assert value == len(a | b)/16
@@ -256,6 +301,11 @@ def test_union_matches_independent_finite_set_counting(towers, a, b):
 @deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
 @deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_joint_tail_rejects_invalid_domain(towers, a, b, rho):
+    """Reject nonfinite cutoffs and inadmissible Gaussian correlations.
+    
+    Strict covariance positivity is required for the quadrature's denominator.
+    Ensure invalid inputs fail Deal checks instead of generating spurious tails.
+    """
     with pytest.raises(deal.PreContractError):
         towers.joint_tail(a, b, rho)
 
@@ -280,6 +330,11 @@ def test_joint_tail_rejects_invalid_domain(towers, a, b, rho):
 @deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
 @deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_independent_gaussian_tail_factorizes(towers, a, b):
+    """Verify that zero correlation yields a product of two Gaussian upper tails.
+    
+    The SciPy survival functions serve as an independent closed-form comparison.
+    This catches a sign or quadrant error in bivariate integration.
+    """
     assert towers.joint_tail(a, b, 0.0) == pytest.approx(norm.sf(a)*norm.sf(b), abs=1e-14)
 
 
@@ -304,6 +359,11 @@ def test_independent_gaussian_tail_factorizes(towers, a, b):
 @deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
 @deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_joint_tail_is_symmetric_and_bounded(towers, a, b, rho):
+    """Check exchangeability and Fréchet bounds for Gaussian joint exceedance.
+    
+    Swapping the cutoffs must preserve probability at fixed correlation.
+    The joint mass remains between zero and the smaller marginal survival mass.
+    """
     result = towers.joint_tail(a, b, rho)
     assert result == pytest.approx(towers.joint_tail(b, a, rho), abs=1e-14)
     assert 0 <= result <= min(norm.sf(a), norm.sf(b)) + 1e-14
@@ -330,6 +390,11 @@ def test_joint_tail_is_symmetric_and_bounded(towers, a, b, rho):
 @deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
 @deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_admission_reference_overlaps(towers, p_a, p_b, expected):
+    """Compare selected Towers admission overlaps to independent numeric anchors.
+    
+    Translate each marginal probability into its normal survival cutoff.
+    Evaluate the maintained positive-correlation bivariate probability accurately.
+    """
     result = towers.joint_tail(float(norm.isf(p_a)), float(norm.isf(p_b)), .7)
     assert result == pytest.approx(expected, abs=1e-14)
 
@@ -351,6 +416,11 @@ def test_admission_reference_overlaps(towers, p_a, p_b, expected):
 @deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
 @deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_higher_correlation_increases_mixed_overlap(towers):
+    """Test the expected positive dependence of Gaussian exceedance events.
+    
+    Hold both selection thresholds fixed while increasing the correlation.
+    Guard against a reversed Plackett derivative or integration orientation.
+    """
     a, b = float(norm.isf(.02)), float(norm.isf(.001))
     results = [towers.joint_tail(a, b, r) for r in (.3, .5, .7, .9)]
     assert all(left < right for left, right in zip(results, results[1:]))
@@ -373,6 +443,11 @@ def test_higher_correlation_increases_mixed_overlap(towers):
 @deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
 @deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_towers_reference_csvs(towers):
+    """Verify that published Towers admission and grid CSVs match recalculation.
+    
+    The analytic tail and historical BASIC grid are independent reference forms.
+    Reject altered field order, stale rows, and unexplained numeric differences.
+    """
     admissions, grid = towers.admission_rows(), towers.basic_grid()
     # Independent table-level provenance and arithmetic laws: these
     # guards fail even if a stale CSV happens to contain plausible totals.
@@ -423,6 +498,11 @@ def test_towers_reference_csvs(towers):
 @deal.pre(lambda *args, **kwargs: PROPERTY.max_examples == 40)
 @deal.pre(lambda *args, **kwargs: PROPERTY.derandomize is True)
 def test_deal_generated_contract_cases(hoeflin, towers, kernel):
+    """Exercise Deal-generated inputs on both maintained report validators.
+    
+    Check contracted Hoeflin variance and Towers event probability functions.
+    Prevent successful random cases from masking invalid-domain precondition handling.
+    """
     # Exercise deal's own generator/introspection as well as direct Hypothesis.
     if kernel == "variance":
         function = hoeflin.variance_factor
