@@ -36,7 +36,7 @@ jobs:
       - name: Compile pinned FormalML probability library and project CE theorems
         shell: bash
         run: |
-          docker run --rm -v "$PWD:/workspace:ro" rocq/rocq-prover:9.0.0 sh -euc '
+          docker run --rm -v "$PWD:/workspace:ro" rocq/rocq-prover:9.0.1 sh -euc '
             opam repository set-url rocq-released https://rocq-prover.org/opam/released -y
             opam update -y
             git clone --depth 1 https://github.com/IBM/FormalML.git /tmp/FormalML
