@@ -147,6 +147,70 @@ Proof.
   apply IsFiniteExpectation_plus; typeclasses eauto.
 Qed.
 
+
+(** [gaussian_regression_perfect_information_conditional_expectation].
+ Mathematical meaning: When the future score is almost surely equal to an
+ observed-measurable predictor, its event-integral conditional expectation
+ is that predictor, even if the innovation is not assumed independent.
+ Exact checked proposition: is_conditional_expectation on the entire
+ observed sigma-algebra for the future score [predictor + innovation].
+ Premises: a genuine probability space, adapted/integrable predictor,
+ integrable future score (established above from component integrability),
+ and almost-sure equality of the future score and predictor. This is
+ suitable for the perfectly correlated singular boundary only after
+ that almost-sure equality has been derived from the actual Gaussian law.
+ Proof method: [is_conditional_expectation_id] for an adapted predictor,
+ followed by [is_conditional_expectation_proper] under almost-sure equality.
+ Library reuse: FormalML ConditionalExpectation and Almost.
+ Boundary: Does not infer almost-sure equality from a zero covariance
+ or fabricate independence; the joint-Gaussian support theorem is separate.
+*)
+Theorem gaussian_regression_perfect_information_conditional_expectation
+  (future_predictor_ae :
+    almostR2 prob eq (rvplus predictor innovation) predictor) :
+  is_conditional_expectation prob observed
+    (rvplus predictor innovation)
+    (fun w => Finite (predictor w)).
+Proof.
+  apply
+    (is_conditional_expectation_proper
+       prob obs_sub
+       (rvplus predictor innovation) predictor
+       (fun w => Finite (predictor w))
+       (fun w => Finite (predictor w))).
+  - exact future_predictor_ae.
+  - apply all_almost; intro w; reflexivity.
+  - apply (is_conditional_expectation_id prob obs_sub predictor).
+Qed.
+
+(** [gaussian_regression_perfect_information_mean_almost_sure].
+ Mathematical meaning: The library's canonical conditional-expectation
+ random variable equals the predictor almost surely in the perfect
+ observation case, without a residual-independence hypothesis.
+ Exact checked proposition: almostR2 equality on the observed probability
+ subspace between FormalML's ConditionalExpectation and the predictor.
+ Premises: identical measurable/integrable context and almost-sure
+ equality of future score with the observed-history predictor.
+ Proof method: Apply FormalML [Condexp_cond_exp] for existence and
+ [is_conditional_expectation_unique] for uniqueness; reuse the event
+ identity above, rather than rebuilding the integral.
+ Boundary: No claim of a universal jointly Gaussian law, distributional
+ factorization, or covariance-pseudoinverse identification is made here.
+*)
+Theorem gaussian_regression_perfect_information_mean_almost_sure
+  (future_predictor_ae :
+    almostR2 prob eq (rvplus predictor innovation) predictor) :
+  almostR2 (prob_space_sa_sub prob obs_sub) eq
+    (ConditionalExpectation prob obs_sub
+       (rvplus predictor innovation))
+    (fun w => Finite (predictor w)).
+Proof.
+  eapply is_conditional_expectation_unique.
+  - apply Condexp_cond_exp.
+  - apply gaussian_regression_perfect_information_conditional_expectation.
+    exact future_predictor_ae.
+Qed.
+
 (** [gaussian_regression_conditional_mean_almost_sure] (theorem).
  Mathematical content: The *library-defined* conditional expectation,
  rather than just a candidate satisfying its event-integral identity,
