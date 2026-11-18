@@ -321,3 +321,16 @@ test "$(sed -n "${subnodup_start}p" rocq/lib_utils/LibUtilsSublist.v)" = "    Pr
 test "$(sed -n "${subnodup_end}p" rocq/lib_utils/LibUtilsSublist.v)" = "    Qed."
 sed -i "${subnodup_start},${subnodup_end}c\\    Proof.\\n      intros x y Hsub Hnd.\\n      revert Hnd.\\n      induction Hsub as [|a xs ys Hs IH|a xs ys Hs IH]; intro Hnd.\\n      - constructor.\\n      - inversion Hnd as [|v vs Hnot Htail]; subst.\\n        constructor.\\n        + intro Ha; apply Hnot; eapply sublist_In; eauto.\\n        + apply IH; exact Htail.\\n      - inversion Hnd as [|v vs Hnot Htail]; subst.\\n        apply IH; exact Htail.\\n    Qed." \
   rocq/lib_utils/LibUtilsSublist.v
+
+# D091: Prove the antisymmetric sublist PartialOrder obligation in both
+# directions explicitly. The former intuition tactic left a reflexivity
+# goal open, then incorrectly attempted to apply antisymmetry to it.
+# Reuse the already checked PreOrder and sublist_antisymm instances.
+part_line=$(grep -n "^    Global Instance sublist_part : PartialOrder eq sublist." rocq/lib_utils/LibUtilsSublist.v | cut -d: -f1)
+test -n "$part_line"
+part_start=$((part_line + 1))
+part_end=$((part_line + 6))
+test "$(sed -n "${part_start}p" rocq/lib_utils/LibUtilsSublist.v)" = "    Proof."
+test "$(sed -n "${part_end}p" rocq/lib_utils/LibUtilsSublist.v)" = "    Qed."
+sed -i "${part_start},${part_end}c\\    Proof.\\n      unfold PartialOrder, relation_equivalence, relation_conjunction,\\n        predicate_equivalence, predicate_intersection, Basics.flip; simpl.\\n      split.\\n      - intros x y Heq; subst; split; reflexivity.\\n      - intros x y [Hxy Hyx].\\n        apply sublist_antisymm; assumption.\\n    Qed." \
+  rocq/lib_utils/LibUtilsSublist.v
