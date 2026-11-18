@@ -309,3 +309,15 @@ test "$(sed -n "${subpre_start}p" rocq/lib_utils/LibUtilsSublist.v)" = "    Proo
 test "$(sed -n "${subpre_end}p" rocq/lib_utils/LibUtilsSublist.v)" = "    Qed."
 sed -i "${subpre_start},${subpre_end}c\\    Proof.\\n      split.\\n      - intro l; induction l as [|x xs IH].\\n        + apply sublist_nil.\\n        + apply sublist_cons; exact IH.\\n      - intros u v w Huv Hvw.\\n        revert u Huv.\\n        induction Hvw as [|a s t Hst IH|a s t Hst IH]; intros u Hu.\\n        + apply sublist_nil_r in Hu; subst u; apply sublist_nil.\\n        + inversion Hu; subst.\\n          * apply sublist_cons; apply IH; assumption.\\n          * apply sublist_skip; apply IH; assumption.\\n        + apply sublist_skip; apply IH; assumption.\\n    Qed." \
   rocq/lib_utils/LibUtilsSublist.v
+
+# D090: Preserve NoDup under an existing subsequence relation by
+# induction on the sublist witness. This replaces a fragile repeat-red
+# tactic which unfolded an unrelated typeclass instance under Rocq 9.2.
+subnodup_line=$(grep -n "^    Global Instance sublist_NoDup :" rocq/lib_utils/LibUtilsSublist.v | cut -d: -f1)
+test -n "$subnodup_line"
+subnodup_start=$((subnodup_line + 1))
+subnodup_end=$((subnodup_line + 10))
+test "$(sed -n "${subnodup_start}p" rocq/lib_utils/LibUtilsSublist.v)" = "    Proof."
+test "$(sed -n "${subnodup_end}p" rocq/lib_utils/LibUtilsSublist.v)" = "    Qed."
+sed -i "${subnodup_start},${subnodup_end}c\\    Proof.\\n      intros x y Hsub Hnd.\\n      revert Hnd.\\n      induction Hsub as [|a xs ys Hs IH|a xs ys Hs IH]; intro Hnd.\\n      - constructor.\\n      - inversion Hnd as [|v vs Hnot Htail]; subst.\\n        constructor.\\n        + intro Ha; apply Hnot; eapply sublist_In; eauto.\\n        + apply IH; exact Htail.\\n      - inversion Hnd as [|v vs Hnot Htail]; subst.\\n        apply IH; exact Htail.\\n    Qed." \
+  rocq/lib_utils/LibUtilsSublist.v
