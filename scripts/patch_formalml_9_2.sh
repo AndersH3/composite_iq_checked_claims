@@ -253,3 +253,15 @@ test "$(sed -n "${assoc_start}p" rocq/lib_utils/LibUtilsAssoc.v)" = "    Proof."
 test "$(sed -n "${assoc_end}p" rocq/lib_utils/LibUtilsAssoc.v)" = "    Qed."
 sed -i "${assoc_start},${assoc_end}c\\    Proof.\\n      induction l as [|[key value] tail IH]; intros target Hin; simpl in *.\\n      - contradiction.\\n      - destruct (dec target key) as [Heq | Hneq].\\n        + exists value; reflexivity.\\n        + assert (Htail : In target (domain tail)).\\n          { destruct Hin as [Hhead | Hfound].\\n            - exfalso; apply Hneq; symmetry; exact Hhead.\\n            - exact Hfound. }\\n          exact (IH target Htail).\\n    Qed." \
   rocq/lib_utils/LibUtilsAssoc.v
+
+# D084: Upstream NoDup proof used an incomplete decidable-equality
+# automation. Construct the Boolean witness from in_domain_in and the
+# maintained Stdlib existsb_exists lemma; no duplicate representation.
+distinct_line=$(grep -n "^    Lemma bdistinct_domain_NoDup " rocq/lib_utils/LibUtilsAssoc.v | cut -d: -f1)
+test -n "$distinct_line"
+distinct_start=$((distinct_line + 2))
+distinct_end=$((distinct_line + 15))
+test "$(sed -n "${distinct_start}p" rocq/lib_utils/LibUtilsAssoc.v)" = "    Proof."
+test "$(sed -n "${distinct_end}p" rocq/lib_utils/LibUtilsAssoc.v)" = "    Qed."
+sed -i "${distinct_start},${distinct_end}c\\    Proof.\\n      induction l as [|[key value] tail IH]; simpl.\\n      - constructor.\\n      - destruct (existsb (fun z : A*B => key ==b fst z)\\n                    (bdistinct_domain tail)) eqn:Hmember.\\n        + exact IH.\\n        + constructor; [|exact IH].\\n          intros Hin.\\n          destruct (in_domain_in Hin) as [v Hv].\\n          assert (Hexists :\\n            existsb (fun z : A*B => key ==b fst z)\\n              (bdistinct_domain tail) = true).\\n          { apply existsb_exists.\\n            exists (key,v); split; [exact Hv |].\\n            simpl; unfold equiv_decb.\\n            destruct (eqdec key key) as [_ | Hbad].\\n            - reflexivity.\\n            - exfalso; apply Hbad; reflexivity. }\\n          rewrite Hmember in Hexists; discriminate.\\n    Qed." \
+  rocq/lib_utils/LibUtilsAssoc.v
