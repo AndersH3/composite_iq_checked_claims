@@ -1,23 +1,37 @@
-# Common XeLaTeX report template
+# Shared XeLaTeX report templates
 
-**Author/researcher/requester:** Anders Hellström.
+**Researcher/requester:** Anders Hellström.
 
-> **AI disclosure:** This template, documentation, and the report front-matter refactor were developed with AI assistance. XeLaTeX compilation validates document construction, not mathematical correctness, independent human review, or empirical suitability.
+> **AI disclosure:** The common templates and their refactoring have been produced with AI assistance. A successful XeLaTeX build verifies typesetting, not the correctness of the mathematics or any psychometric assumption.
 
-The canonical styles for all **six** maintained report books live here, based on the supplied `iq_test_differences_report.tex` reference:
+## Canonical library files
 
-- `report_style.tex`: KOMA-Script `scrbook`, A4, narrow margins, Latin Modern OpenType fonts, required XeLaTeX packages, reference-report color palette, result/disclosure boxes, theorem definitions, listings, and consistent front matter.
-- `simulation_style.tex`: imports the report style and adds PGFPlots for simulation figures only.
+- `report_style.tex`: canonical XeLaTeX/KOMA-Script `scrbook` format, A4 narrow margins, Latin Modern fonts, colors, navigation, native math environments and listings, a title page with one short AI notice, and the final AI-appendix command.
+- `simulation_style.tex`: the same style plus PGFPlots support for scientific simulation graphics.
+- `ai_disclosure.tex`: the only maintained full AI-use disclosure body. Every book includes it once through the shared `\ProjectReportAIAppendix` macro.
 
-The books in `analyses/{hoeflin-ferguson,towers-multiple-test-admissions,sequential-conditional-means}` **directly import** these library styles. The former `reporting/book_style.tex` and `reporting/simulation_style.tex` names are thin backward-compatible wrappers; they must not duplicate styling.
+The old `reporting/book_style.tex`, `reporting/simulation_style.tex` and `reporting/ai_disclosure.tex` paths remain compatibility aliases with no independent formatting or prose. Do not edit those aliases to change the report presentation.
 
-Each main book retains `\\title`, `\\subtitle`, `\\author` and `\\date` and replaces `\\maketitle` with `\\ProjectReportTitlePage`. Set `\\renewcommand{\\ProjectReportHighlights}{...}` in each book's preamble using its independently supported results. The title page prominently discloses AI assistance; the existing complete, report-specific AI disclosure stays in the **last appendix**. Keep the abstract, table of contents, proofs, labels, citations, simulation manifest, and analytical text in the report-specific files. Do not move mathematical formulas into graphics.
+## Book structure
 
-Run XeLaTeX/latexmk from the individual analysis directory (the relative shared-library paths are resolved from the current working directory), e.g.:
+Each report sets `\title`, `\subtitle`, `\author`, `\date` and its unique `\ProjectReportHighlights`. Mathematical reports set `\ProjectReportRunningTitle` and `\ProjectReportRunningSubtitle` rather than assigning page headers directly. Simulation books inherit shared running heads. Each book follows this order:
+
+1. `\frontmatter` and exactly one `\ProjectReportTitlePage` (the prominent short AI disclosure appears here).
+2. Exactly one `abstract` overview, then the existing proof/evidence convention and table of contents. No second AI disclosure follows the abstract.
+3. `\mainmatter` with all original derivations, data, citations, results and numerical limitations.
+4. `\appendix` with proofs/claim maps, bibliography as appropriate, then exactly one `\ProjectReportAIAppendix` as the final chapter.
+
+The complete AI disclosure is deliberate and distinct from the short title-page notice. It must not be copied into individual book sources, and the layout should not contain a second initial notice. The overview and key-findings box have different purposes and must remain substantively distinct.
+
+## Verification
+
+Run `bash scripts/check_report_template.sh` or `make report-template` for structural checks. The six-book workflow runs the structural audit and then builds all six PDFs, checking unresolved citations and references. The workflow watches changes to `library/latex/**` and the audit script.
+
+Build one book from the individual analysis directory:
 
 ```sh
 cd analyses/hoeflin-ferguson
 latexmk -xelatex -interaction=nonstopmode -halt-on-error -outdir=output/pdf composite_iq_analysis.tex
 ```
 
-GitHub Actions `.github/workflows/report-books.yml` builds all six reports on changes to `library/latex/**`, the analysis TeX sources, or the reporting proof inputs. A small single-file XeLaTeX smoke test verified the common title-page macros; the CI matrix must verify all six full books and citations before merge.
+All documents follow the reference supplied as `iq_test_differences_report.tex`, while retaining mathematical conventions and bibliographic compatibility from the original six books.

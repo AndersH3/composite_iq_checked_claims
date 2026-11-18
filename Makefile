@@ -1,7 +1,7 @@
 PYTHON ?= python3
 
-.PHONY: check contracts lint test simulations library proof-reports report-books simulation-reports
-check: library contracts lint test
+.PHONY: check contracts lint test simulations library report-template proof-reports report-books simulation-reports
+check: library report-template contracts lint test
 
 contracts:
 	$(PYTHON) verification/check_contract_coverage.py
@@ -11,6 +11,9 @@ lint:
 
 test:
 	$(PYTHON) -m pytest -q tests
+
+report-template:
+	bash scripts/check_report_template.sh
 
 library:
 	bash scripts/check_library_layout.sh

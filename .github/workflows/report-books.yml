@@ -6,12 +6,14 @@ on:
       - 'analyses/**/*.tex'
       - 'reporting/*.tex'
       - 'library/latex/**'
+      - 'scripts/check_report_template.sh'
       - '.github/workflows/report-books.yml'
   pull_request:
     paths:
       - 'analyses/**/*.tex'
       - 'reporting/*.tex'
       - 'library/latex/**'
+      - 'scripts/check_report_template.sh'
       - '.github/workflows/report-books.yml'
   workflow_dispatch:
 
@@ -40,6 +42,8 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+      - name: Check shared report layout and AI disclosure structure
+        run: bash scripts/check_report_template.sh
       - name: Build with XeLaTeX, KOMA-Script and latexmk
         uses: xu-cheng/latex-action@v3
         with:
