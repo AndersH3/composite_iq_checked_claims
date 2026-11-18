@@ -265,21 +265,39 @@ now prove the conditional-expectation identity. No conditioning on
 a probability-zero point event is used.
 \end{proof}
 
-\paragraph{Formal verification boundary.}
-The preceding is a mathematical proof in the \LaTeX{} report, not
-a claim that the complete theorem has been checked by the Rocq kernel.
-The dedicated Rocq module
-\texttt{GaussianResidualConditionalExpectation.v} states the genuine
-event-integral conditional-expectation property given residual
-independence, and
-\texttt{GaussianProductConditionalExpectation.v} constructs
-independence for a particular product space. Their compilation depends
-on the separately tracked pinned FormalML library. The additional
-distributional bridge from an \emph{arbitrary} jointly Gaussian vector
-to residual independence, together with the singular pseudoinverse
-case, remains a separate Rocq formalization obligation. Algebraic
-covariance and Schur-complement proofs must not be presented as
-verification of this measure-theoretic bridge.
+\paragraph{Formal verification boundary and reused libraries.}
+The preceding proof is a mathematical argument, not a claim of complete
+Rocq kernel verification. The remaining machine-checkable implications
+must be distinguished:
+\begin{enumerate}[leftmargin=*,nosep]
+\item \emph{Covariance algebra:} derive
+      \(C=CB^+B\) and the residual's vanishing cross-covariance
+      using the verified matrix/domain developments, including
+      the zero-variance directions of singular \(B\).
+\item \emph{Gaussian-to-independence bridge:} construct the joint
+      Gaussian law and use a library-verified characteristic-function
+      or equivalent distributional uniqueness result to prove that
+      \(\sigma(W)\) and \(\sigma(X)\) are independent. Covariance
+      orthogonality alone cannot discharge this obligation.
+\item \emph{Measure-theoretic conditional expectation:} establish
+      integrability and measurability and then prove, for every
+      \(A\in\sigma(X)\), that
+      \(\E[\one_A W]=P(A)\E[W]=0\), using the existing
+      \texttt{is\_conditional\_expectation} API and almost-sure
+      uniqueness rather than a new conditional-expectation definition.
+\end{enumerate}
+The Rocq module \texttt{GaussianResidualConditionalExpectation.v}
+provides the final implication \emph{conditional on} residual
+independence. The separate
+\texttt{GaussianProductConditionalExpectation.v} derives independence
+in an explicitly constructed product model. These modules still
+require successful compilation against pinned IBM FormalML, and neither
+by itself supplies the distributional bridge for every jointly
+Gaussian law or the singular pseudoinverse result. The QBS/MathComp
+posterior first-moment proof addresses a distinct normalized
+single-observation model. No compatibility-smoke result, covariance
+identity, or independent-product calculation is a certificate of the
+universal Gaussian conditional-expectation theorem.
 
 \paragraph{Pointwise interpretation.}
 When \(B\) is singular, \eqref{eq:gaussian-ce-event-integral}
