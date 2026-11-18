@@ -6,6 +6,20 @@
 
 This register tracks D050's 56, D051's 101, D052's 30, and D053–D056's 105 source-ordered Rocq proofs about Gaussian prior-plus-likelihood *pointwise densities*: quadratic completion, model precision and variance, dependence on arbitrary unequal observed scores, evidence cancellation and posterior symmetry. Its scope deliberately excludes the stronger measurable conditional-expectation assertion unless a separate formally verified probability library supplies integral normalization, integrability and disintegration.
 
+**Verified November 18, 2026 singular-PSD extension (draft PR #57).**
+The [Rocq 9.2 kernel run at revision `356e7c8ba5a9`](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44298839114)
+accepted `gcd_psd_covariance_cauchy_schwarz` and
+`gcd_psd_covariance_characterization`. Together with the two earlier
+null-direction lemmas, this raises the five-module Gaussian-specific
+declaration count from the historical 292 to **296** (35 Gaussian kernel,
+156 covariance-domain, 43 innovation-bound, 30 batch-balance and
+32 finite-history). This is a count of kernel-checked mathematical
+declarations, not a count of independent distributional Gaussian theorems.
+Neither the generic joint-Gaussian residual-independence theorem nor
+the unrestricted measure-theoretic Gaussian conditional expectation
+has been proved in the Rocq kernel; the FormalML CE source and
+version-compatibility build remain distinct uncompleted obligations.
+
 **Verified D053–D056 checkpoint (November 17, 2026).** The
 [Rocq 9.2 kernel workflow for D056](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44153123270)
 passed at commit `a4cb5346b25566687539556bf2de2fb57d5798f9`, following
