@@ -2639,9 +2639,11 @@ Qed.
  This remains valid when a=0 or c=0 and when b is negative.
  Exact proposition: for nonnegative diagonal variances a,c, nonnegativity
  of the quadratic form a*t^2+2*b*t+c for all real t entails b*b<=a*c.
- Proof method: For a>0 evaluate the form at t=-b/a and multiply by
- the positive denominator. For a=0, a nonzero cross term would make
- the form negative at t=-(c+1)/(2*b), a contradiction.
+ Premises and side conditions: Both diagonal entries are nonnegative;
+ the entire quadratic form must be nonnegative for every real t.
+ Proof/definition method: For a>0 evaluate the form at t=-b/a and
+ multiply by the positive denominator. For a=0, a nonzero cross term
+ makes the form negative at t=-(c+1)/(2*b), a contradiction.
  Library reuse: Stdlib Rle_lt_or_eq_dec, Req_EM_T, Field, Ring, Psatz.
  No Gaussian measure, new matrix structure, assumed independence or axiom.
  Boundary: This is a covariance inequality, not an assertion of
@@ -2679,8 +2681,11 @@ Qed.
  when its cross covariance satisfies b^2 <= a*c.
  Exact proposition: universal nonnegativity of a*t*t+2*b*t+c
  is equivalent to b*b<=a*c, with explicit a>=0, c>=0 premises.
- Proof method: Necessity reuses the preceding Cauchy--Schwarz theorem;
- sufficiency completes the square after multiplying by positive a.
+ Premises and side conditions: Both diagonal entries must be
+ nonnegative; no strict positivity or invertibility is required.
+ Proof/definition method: Necessity reuses the preceding
+ Cauchy--Schwarz theorem; sufficiency completes the square after
+ multiplying by strictly positive a.
  When a=0 the squared bound implies b=0, so the form is c>=0.
  Library reuse: [gcd_psd_covariance_cauchy_schwarz] and Stdlib
  Ring, Lra, Psatz. No custom PSD matrix implementation is introduced.
