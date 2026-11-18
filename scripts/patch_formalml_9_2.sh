@@ -816,7 +816,8 @@ sed -i "${hilbert_opp_line}c\try rewrite <- scal_opp_l." rocq/CertRL/LM/hilbert.
 
 # D147 diagnostic/proof stabilization: the Hilbert projection proof
 # has already normalized the quadratic factor on a preceding branch.
-# Discharge the independent squared-norm monotonicity and negation\n# subgoals by maintained Rmult_le_compat before substituting E1.\n# Show the remaining goal until the compatibility proof is kernel-checked.
+# Discharge the independent squared-norm monotonicity and negation
+# subgoals by maintained Rmult_le_compat before substituting E1.\n# Show the remaining goal until the compatibility proof is kernel-checked.
 hilbert_e1_line=$(grep -n '^rewrite <- E1\.$' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
 test -n "$hilbert_e1_line"
 test "$(sed -n "${hilbert_e1_line}p" rocq/CertRL/LM/hilbert.v)" = "rewrite <- E1."
