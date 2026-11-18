@@ -289,6 +289,51 @@ of \(\mathbb R^q\); its values outside the support of \(X\) are not
 identified uniquely by conditional expectation. The later uniqueness
 lemma requires \(B\) positive definite.
 
+
+% The finite signed-equicorrelation specialization is an application of the
+% preceding event-integral theorem and of the canonical common-mode
+% eigenvalue. Do not reuse the nonnegative-only common-factor simulation
+% construction to claim existence when c is negative.
+\begin{corollary}[Signed equicorrelation conditional mean]
+\label{cor:gaussian-ce-signed-equicorrelation}
+Let \(n,k\geq1\), and suppose
+\((X_1,\ldots,X_n,Y_1,\ldots,Y_k)\) is a centered jointly
+Gaussian vector with unit coordinate variances and common
+off-diagonal covariance \(c\). For
+\(-1/(n+k-1)\leq c<1\), define \(d_n=1+(n-1)c\). Then
+\(d_n>0\), and for every \(1\leq j\leq k\),
+\[
+  \E[Y_j\given\sigma(X_1,\ldots,X_n)]
+  =\frac{c}{d_n}\sum_{i=1}^n X_i
+  \qquad\text{almost surely}.
+\]
+This includes the negative full-matrix singular boundary
+\(c=-1/(n+k-1)\). At the other singular endpoint \(c=1\),
+every coordinate equals \(X_1\) almost surely and the conditional
+mean is \(X_1\).
+\end{corollary}
+
+\begin{proof}
+The observed covariance is
+\(B=(1-c)I_n+c\mathbf1_n\mathbf1_n^{\mathsf T}\).
+Its contrast eigenvalue is \(1-c>0\), and its common-mode
+eigenvalue satisfies
+\[
+ d_n=1+(n-1)c
+ \geq 1-\frac{n-1}{n+k-1}
+ =\frac{k}{n+k-1}>0.
+\]
+Hence \(B\) is invertible, with
+\(B^{-1}\mathbf1_n=d_n^{-1}\mathbf1_n\).
+Each cross-covariance row is \(C=c\mathbf1_n^{\mathsf T}\).
+Substitute into \Cref{thm:gaussian-ce-event-integral};
+the equality holds for all observed events, not merely in a
+least-squares sense. When \(c=1\),
+\(\Var(X_i-X_1)=\Var(Y_j-X_1)=0\);
+\Cref{thm:moments} makes those differences zero almost surely,
+and \Cref{thm:conditional} fixes the observed variable \(X_1\).
+\end{proof}
+
 \begin{lemma}[Unique continuous conditional-mean version]
 \label{lem:continuous-version}
 If \(V\) is a Gaussian vector with positive-definite covariance, two
