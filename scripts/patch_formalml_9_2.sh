@@ -831,3 +831,21 @@ sed -i '2085c\
     destruct (u x); simpl in *.\
     Show.\
     all: try rbar_prover.' rocq/utils/ELim_Seq.v
+
+# D150: The Hilbert proof's first residual side goal is a scalar
+# real-ring negation identity. Discharge these algebraic side goals
+# before the existing E1-based parallelogram rearrangement; otherwise
+# Rocq tries the group-associativity rewrite on the scalar subgoal.
+# Keep the real proof obligation and subsequent unique-projection proof.
+hilbert_e1_now=$(grep -n '^rewrite <- E1\.$' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$hilbert_e1_now"
+test "$(sed -n "${hilbert_e1_now}p" rocq/CertRL/LM/hilbert.v)" = "rewrite <- E1."
+sed -i "${hilbert_e1_now}i\all: try solve [reflexivity | ring | (unfold opp; simpl; ring) | (unfold plus, opp; simpl; ring)]." rocq/CertRL/LM/hilbert.v
+
+# D151: Rocq 9.2 retains the nonzero denominator proof obligation
+# after rewriting eps*(/eps)=1. Solve it *before* the subsequent
+# `assert (r <> 0)` branch; leaving it unsolved switches the target
+# and makes the real-branch hypothesis H apparently disappear.
+elim_rewrite_now=$((elim_inv_line + 2))
+test "$(sed -n "${elim_rewrite_now}p" rocq/utils/ELim_Seq.v)" = "      rewrite Rinv_l in H."
+sed -i "${elim_rewrite_now}c\      rewrite Rinv_l in H by (apply Rgt_not_eq; apply cond_pos)." rocq/utils/ELim_Seq.v
