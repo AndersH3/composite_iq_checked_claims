@@ -7,8 +7,8 @@
   pdfkeywords={IQ, admissions, Grady Towers, bivariate normal, phi correlation, selection}
 }
 \newcommand{\sfN}{\overline{\Phi}}
-\ihead{Multiple-test admissions}
-\ohead{Joint analysis and corrected article}
+\renewcommand{\ProjectReportRunningTitle}{Multiple-test admissions}
+\renewcommand{\ProjectReportRunningSubtitle}{Joint analysis and corrected article}
 \title{Multiple-Test Admissions}
 \subtitle{A joint analysis and corrected version of two Grady Towers letters}
 \author{\ProjectAuthor}
@@ -37,11 +37,6 @@ inconsistent marginal denominators. Neither letter establishes actual
 membership proportions or a latent-ability interpretation. A corrected
 combined article and reproducible calculations are provided.
 \end{abstract}
-
-\noindent\textbf{AI disclosure.} This report was substantially generated and revised
-with OpenAI Codex and collaborating AI agents, including its analysis,
-replacement text, code and verification workflow. Provenance details, human
-involvement and limitations are disclosed in \cref{sec:ai-disclosure}.
 
 \noindent\textbf{Proof coverage.} Every mathematical identity, inequality and
 model implication is derived in Appendices~\ref{sec:proof-foundations},
@@ -518,50 +513,5 @@ revision. No new experimental draws are claimed by this editorial migration.
 \bibliographystyle{plainnat}
 \bibliography{references,simulation_references}
 
-\chapter{AI disclosure and provenance}\label{sec:ai-disclosure}
-
-This report was substantially generated and revised using OpenAI Codex
-and collaborating AI sub-agents. The session identifies Codex as based on
-the GPT-6 family. An exact serving checkpoint, per-agent model identifiers,
-and generation settings were not preserved as versioned provenance; no
-more precise model attribution is claimed. This disclosure applies to the
-analysis, corrected replacement text, project-authored software, and earlier revisions,
-as well as the present additions.
-
-AI contributions included interpreting the supplied articles, drafting and
-revising the mathematical exposition and statistical discussion, selecting
-and checking numerical examples, researching references, designing and
-editing Python/Dask/Deal programs, tests and numerical auditors, orchestrating verification, typesetting and inspecting
-the PDFs, and preparing repository commits. The requester \mbox{\ProjectAuthor} supplied
-the source articles, specified the objectives, formats and verification
-requirements, requested revisions, and authorized repository publication.
-The recorded audits and parallel reviews were performed by AI agents and
-automated tools. Independent human peer review or professional sign-off
-is not recorded and is not claimed. Repository ownership and Git commit
-attribution do not identify passages as human-authored.
-
-The original authors remain credited as sources. The replacement text is
-an AI-generated analytical reconstruction prepared for this project;
-no endorsement by the original authors, their hosts, or cited organizations
-is claimed. Sources were consulted at different levels, including article
-text, software documentation and bibliographic metadata. Per-reference
-notes identify relevant access limits; full-text review of every cited
-work is not claimed.
-
-Recorded numerical results correspond to the identified source
-revisions and model assumptions. Python/Deal checks, numerical validation,
-and Rocq kernel proofs establish their own explicitly scoped properties;
-neither an automated proof count nor a finite simulation validates the
-assumed psychometric population. The removed implementation's history
-remains available in earlier Git revisions and is not represented as
-current experimental evidence.
-
-No new participant data were collected and no empirical psychometric
-validation study was conducted for this project. Simulations use synthetic
-draws under the stated mathematical model. The repository preserves source
-and evidence history, but not a complete prompt/tool transcript, exact
-per-line authorship, or an AI-contribution percentage. Those details cannot
-be reconstructed reliably and have not been invented. The disclosure is
-current through 15 November 2026. The present revision adds written proofs
-and a claim register; it does not claim a new simulation or an independent human review.
+\ProjectReportAIAppendix
 \end{document}

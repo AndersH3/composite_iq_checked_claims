@@ -43,8 +43,11 @@
 \clearpairofpagestyles
 \automark[chapter]{chapter}
 \renewcommand*{\chaptermarkformat}{}
-\ihead{\small\sffamily \headmark}
-\ohead{\small\sffamily \headmark}
+% Running heads are configured as report metadata, not independently restyled.
+\newcommand{\ProjectReportRunningTitle}{Mathematical and computational report}
+\newcommand{\ProjectReportRunningSubtitle}{\headmark}
+\ihead{\ProjectReportRunningTitle}
+\ohead{\ProjectReportRunningSubtitle}
 \cfoot*{\pagemark}
 \pagestyle{scrheadings}
 \setkomafont{disposition}{\sffamily\bfseries\color{ink}}
@@ -130,8 +133,15 @@
     \vfill
     Prepared at the request of \textbf{\ProjectAuthor}\\
     Report date: \textbf{\@date}\\
-    Authoring workflow: OpenAI-assisted research and typesetting\\
     Format: XeLaTeX, KOMA-Script \texttt{scrbook}; A4, narrow margins
   \end{titlepage}%
 }
 \makeatother
+
+% Canonical complete appendix. Keep after \appendix and all other chapters.
+% The first-page notice is intentionally short; no second initial notice.
+\newcommand{\ProjectReportAIAppendix}{%
+  \clearpage
+  \chapter{AI disclosure and provenance}\label{sec:ai-disclosure}
+  \input{../../library/latex/ai_disclosure}%
+}
