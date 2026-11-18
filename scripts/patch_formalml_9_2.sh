@@ -650,10 +650,11 @@ sed -i "${repeat_start},${repeat_end}c\Proof.\n  induction n as [|n IH]; intros 
 
 # D125: Excluded quotient buckets are disjoint: a =/= x0 and
 # R x0 a imply False by symmetry of the inherited equivalence.
-# This replaces the proven-open upstream 'intuition' subgoal.
+# Upstream intuition introduces H6 : R x0 a; finish its remaining goal
+# with the existing EqDec negative branch and Equivalence symmetry.
 sed -n '163p' rocq/utils/Quotient.v | grep -Eq '^[[:space:]]*intuition[.]$'
 sed -i '163c\
-              exfalso; apply c; symmetry; exact H6.' rocq/utils/Quotient.v
+              intuition; apply c; symmetry; exact H6.' rocq/utils/Quotient.v
 
 # D126: An empty finite index has no proof of strong membership.
 # Use the library-defined boolean In_strong nil = false instead of intuition.
@@ -674,3 +675,19 @@ test "$(sed -n "${abs2_start}p" rocq/CertRL/LM/hilbert.v)" = "unfold Rabs."
 test "$(sed -n "${abs2_second}p" rocq/CertRL/LM/hilbert.v)" = "unfold Rabs."
 test "$(sed -n "${abs2_end}p" rocq/CertRL/LM/hilbert.v)" = "reflexivity."
 sed -i "${abs2_start},${abs2_end}c\unfold Rabs; destruct (Rcase_abs 2); lra.\n  unfold Rabs; destruct (Rcase_abs 2); lra." rocq/CertRL/LM/hilbert.v
+
+# D128: The Hilbert midpoint factor 1/2 is positive.
+# Upstream intuition applies a nonmatching order lemma in Rocq 9.2.
+# Preserve the denominator's original strict-positivity obligation.
+half_line=$(grep -nF 'assert (Hs : 0 < 1 / 2).' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
+test -n "$half_line"
+half_proof=$((half_line + 1))
+test "$(sed -n "${half_proof}p" rocq/CertRL/LM/hilbert.v)" = "apply Rdiv_lt_0_compat; intuition."
+sed -i "${half_proof}c\apply Rdiv_lt_0_compat; lra." rocq/CertRL/LM/hilbert.v
+
+# D130: The two closed min/max notation forms retain their meanings
+# but must be defined at level 0 under Rocq 9.2's parser check.
+sed -n '3341p' rocq/utils/RealAdd.v | grep -Fq 'Notation "Max_{ l } ( f )"'
+sed -n '3342p' rocq/utils/RealAdd.v | grep -Fq 'Notation "Min_{ l } ( f )"'
+sed -n '3341,3342p' rocq/utils/RealAdd.v | grep -Fq '(at level 50)'
+sed -i '3341,3342s/(at level 50)/(at level 0)/' rocq/utils/RealAdd.v
