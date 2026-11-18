@@ -2748,3 +2748,50 @@ Proof.
     with (a*t*t/2 + b*s*s/2) by (field; lra).
   apply exp_plus.
 Qed.
+
+(** [gcd_psd_scalar_regression_residual_exists] (theorem).
+ Mathematical meaning: A scalar observed variable with variance [a],
+ cross covariance [b] with the future score, and future variance [c]
+ admits a linear residual-orthogonalizing regression coefficient, even
+ when the observed variance [a] vanishes.
+ Exact proposition: Every positive-semidefinite quadratic covariance
+ block has some [beta] satisfying [b = beta*a] and
+ [0 <= c-beta*b]. The first identity is zero residual cross covariance;
+ the second is nonnegative variance of the residual.
+ Premises and side conditions: Both marginal variances are nonnegative
+ and [a*t*t + 2*b*t + c] is nonnegative at every real [t].
+ The degenerate case [a=0] forces [b=0], and [beta=0] is admissible.
+ Proof method: Reuse the existing, kernel-checked two-by-two covariance
+ Cauchy--Schwarz bound, then use [field] and [nra] from Stdlib.
+ This does not reimplement a pseudoinverse, matrix library, Gaussian
+ probability measure, or conditional expectation.
+ Limitations: This is the exact algebraic residual existence statement
+ for one observed coordinate; the implication from joint Gaussianity
+ to independence of the residual and the observed sigma-algebra, and
+ the event-integral conditional-expectation theorem, are separate.
+*)
+Theorem gcd_psd_scalar_regression_residual_exists :
+  forall a b c : R,
+    0 <= a ->
+    0 <= c ->
+    (forall t : R, 0 <= a*t*t + 2*b*t + c) ->
+    exists beta : R,
+      b = beta*a /\ 0 <= c - beta*b.
+Proof.
+  intros a b c Ha Hc Hquad.
+  pose proof (gcd_psd_covariance_cauchy_schwarz a b c Ha Hc Hquad)
+    as Hcs.
+  destruct (Rle_lt_or_eq_dec 0 a Ha) as [Hapos | Hazero].
+  - exists (b/a).
+    split.
+    + field; lra.
+    + assert (Hfactor :
+        a*(c - (b/a)*b) = a*c - b*b).
+      { field; lra. }
+      nra.
+  - subst a.
+    assert (Hbzero : b = 0) by nra.
+    subst b.
+    exists 0.
+    split; nra.
+Qed.
