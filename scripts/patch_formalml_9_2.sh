@@ -334,3 +334,17 @@ test "$(sed -n "${part_start}p" rocq/lib_utils/LibUtilsSublist.v)" = "    Proof.
 test "$(sed -n "${part_end}p" rocq/lib_utils/LibUtilsSublist.v)" = "    Qed."
 sed -i "${part_start},${part_end}c\\    Proof.\\n      unfold PartialOrder, relation_equivalence, relation_conjunction,\\n        predicate_equivalence, predicate_intersection, Basics.flip; simpl.\\n      split.\\n      - intro Heq; subst; split; reflexivity.\\n      - intros [Hxy Hyx].\\n        apply sublist_antisymm; assumption.\\n    Qed." \
   rocq/lib_utils/LibUtilsSublist.v
+
+# D094: The upstream decision procedure for the inductive subsequence
+# relation used inversion/intuition in its negative branch, leaving
+# unresolved goals in Rocq 9.2. The structural algorithm is unchanged:
+# reuse sublist_cons_eq_inv for equal heads and constructor inversion for
+# unequal heads. Retain Defined so the sumbool witness remains executable.
+subdec_line=$(grep -n "^  Lemma sublist_dec " rocq/lib_utils/LibUtilsSublist.v | cut -d: -f1)
+test -n "$subdec_line"
+subdec_start=$((subdec_line + 2))
+subdec_end=$((subdec_line + 17))
+test "$(sed -n "${subdec_start}p" rocq/lib_utils/LibUtilsSublist.v)" = "  Proof."
+test "$(sed -n "${subdec_end}p" rocq/lib_utils/LibUtilsSublist.v)" = "  Defined."
+sed -i "${subdec_start},${subdec_end}c\\  Proof.\\n    revert l1.\\n    induction l2 as [|head tail IH]; intros l1; destruct l1 as [|first rest].\\n    - left; apply sublist_nil.\\n    - right; intro H; apply sublist_nil_r in H; discriminate.\\n    - left; apply sublist_nil_l.\\n    - destruct (first == head) as [Heq | Hneq].\\n      + destruct (IH rest) as [Hsub | Hnot].\\n        * left; unfold equiv in Heq; subst; apply sublist_cons; exact Hsub.\\n        * right; intro Hfull; unfold equiv in Heq; subst.\\n          apply Hnot; now apply sublist_cons_eq_inv in Hfull.\\n      + destruct (IH (first::rest)) as [Hsub | Hnot].\\n        * left; apply sublist_skip; exact Hsub.\\n        * right; intro Hfull; inversion Hfull; subst.\\n          -- exfalso; apply Hneq; reflexivity.\\n          -- apply Hnot; assumption.\\n  Defined." \
+  rocq/lib_utils/LibUtilsSublist.v
