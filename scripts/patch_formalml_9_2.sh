@@ -397,3 +397,29 @@ sed -i "${compat_start},${compat_end}c\\  Proof.\n    intros Hnodup Hcompatible 
 # The earlier Lra import insertion shifts the patched source by one line.
 test "$(sed -n 745p rocq/CertRL/LM/hilbert.v)" = "apply Rle_0_1."
 sed -i '745c\\first [apply Rle_0_1 | lra].' rocq/CertRL/LM/hilbert.v
+
+# D099: The prior rewrite of Rinv_r creates an arithmetic side condition.
+# Rocq 9.2 may expose that obligation before the legacy inequality step.
+# Eliminate both branches using Stdlib Lra after the standard ring
+# normalization. This replaces only the proof body fragment, not the
+# Hilbert-space proposition, and avoids brittle goal ordering.
+hilbert_cleanup=$(grep -nF 'rewrite Rinv_r; [|lra].' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
+test -n "$hilbert_cleanup"
+hilbert_after=$((hilbert_cleanup + 3))
+test "$(sed -n "${hilbert_after}p" rocq/CertRL/LM/hilbert.v)" = "first [apply Rle_0_1 | lra]."
+sed -i "${hilbert_cleanup},${hilbert_after}c\\rewrite Rinv_r.\\nall: try rewrite Rmult_1_r.\\nall: try ring_simplify.\\nall: lra." \
+  rocq/CertRL/LM/hilbert.v
+
+# D100: Insertion sort does not change the lookup of a *different*
+# key. A fresh key appended to the original association list therefore
+# retains its unique value after sorting. Replace upstream intuition
+# with explicit induction, the maintained lookup-insertion lemma, and
+# the standard list-membership cases. No new lookup abstraction.
+bindings_line=$(grep -n "^  Lemma assoc_lookupr_insertion_sort_fresh " rocq/lib_utils/LibUtilsBindings.v | cut -d: -f1)
+test -n "$bindings_line"
+bindings_start=$((bindings_line + 5))
+bindings_end=$((bindings_line + 10))
+test "$(sed -n "${bindings_start}p" rocq/lib_utils/LibUtilsBindings.v)" = "  Proof."
+test "$(sed -n "${bindings_end}p" rocq/lib_utils/LibUtilsBindings.v)" = "  Qed."
+sed -i "${bindings_start},${bindings_end}c\\  Proof.\\n    revert x d.\\n    induction b as [|[key value] tail IH]; intros x d Hfresh; simpl in *.\\n    - destruct (ODT_eqdec x x) as [_ | Hneq].\\n      + reflexivity.\\n      + exfalso; apply Hneq; reflexivity.\\n    - assert (Hkey : x <> key).\\n      { intro Hx; apply Hfresh; left; symmetry; exact Hx. }\\n      assert (Htail : ~ In x (domain tail)).\\n      { intro Hx; apply Hfresh; right; exact Hx. }\\n      rewrite assoc_lookupr_insertion_sort_insert_neq by exact Hkey.\\n      apply IH; exact Htail.\\n  Qed." \
+  rocq/lib_utils/LibUtilsBindings.v
