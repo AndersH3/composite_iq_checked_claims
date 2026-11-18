@@ -404,6 +404,7 @@ sed -i '742,745c\
 rewrite Rinv_r.\
 all: try rewrite Rmult_1_r.\
 all: try ring_simplify.\
+Show.\
 all: lra.' rocq/CertRL/LM/hilbert.v
 
 # D100: Insertion sort does not change the lookup of a *different*
@@ -433,3 +434,29 @@ test "$(sed -n "${sortdom_start}p" rocq/lib_utils/LibUtilsBindings.v)" = "  Proo
 test "$(sed -n "${sortdom_end}p" rocq/lib_utils/LibUtilsBindings.v)" = "  Qed."
 sed -i "${sortdom_start},${sortdom_end}c\  Proof.\n    destruct a as [target value].\n    induction l as [|[head old] tail IH]; intros Hin Hsorted; simpl in *.\n    - contradiction.\n    - destruct Hin as [Heq | Htail].\n      + subst head.\n        unfold rec_field_lt_dec; simpl.\n        destruct (ODT_lt_dec target target) as [Hbad | _].\n        * exfalso; apply (ODT_lt_irr target); exact Hbad.\n        * destruct (ODT_lt_dec target target) as [Hbad | _].\n          -- exfalso; apply (ODT_lt_irr target); exact Hbad.\n          -- reflexivity.\n      + assert (Hsorted_tail :\n           is_list_sorted ODT_lt_dec (domain tail) = true).\n        { eapply is_list_sorted_cons_inv; eauto. }\n        assert (Hhead_lt : ODT_lt head target).\n        { apply (proj1 (sorted_StronglySorted ODT_lt_dec (head :: domain tail))) in Hsorted.\n          eapply StronglySorted_cons_in; eauto. }\n        unfold rec_field_lt_dec; simpl.\n        destruct (ODT_lt_dec target head) as [Hbad | _].\n        * exfalso; apply (ODT_lt_irr head).\n          eapply transitivity; eauto.\n        * destruct (ODT_lt_dec head target) as [_ | Hbad].\n          -- f_equal; apply IH; assumption.\n          -- exfalso; apply Hbad; exact Hhead_lt.\n  Qed." \
   rocq/lib_utils/LibUtilsBindings.v
+
+# D102: The upstream nonempty-sequence lemma relies on the old shape
+# of intuition's generated hypothesis H0. Eliminate the impossible
+# zero-length case by Presburger arithmetic, and the successor-length
+# case by constructor discrimination. Reuse Stdlib Lia.
+test "$(sed -n 246p rocq/utils/ListAdd.v)" = "  Proof."
+test "$(sed -n 249p rocq/utils/ListAdd.v)" = "  Qed."
+sed -i '246,249c\
+  Proof.\
+    intros m [|n] Hpositive.\
+    - lia.\
+    - discriminate.\
+  Qed.' rocq/utils/ListAdd.v
+
+# D103: Coquelicot's generalized Chasles rewrite exposes existence
+# subgoals before the integral equality under Rocq 9.2. Resolve the
+# existence subgoals by their original hypotheses, and the equality
+# using Coquelicot's independently proved integral uniqueness.
+test "$(sed -n 291p rocq/utils/CoquelicotAdd.v)" = "  rewrite RInt_gen_Chasles."
+test "$(sed -n 292p rocq/utils/CoquelicotAdd.v)" = "  now apply is_RInt_gen_unique."
+test "$(sed -n 293p rocq/utils/CoquelicotAdd.v)" = "  trivial."
+test "$(sed -n 294p rocq/utils/CoquelicotAdd.v)" = "  trivial."
+sed -i '291,294c\
+  rewrite RInt_gen_Chasles.\
+  all: first [assumption | now apply is_RInt_gen_unique | symmetry; now apply is_RInt_gen_unique].' \
+  rocq/utils/CoquelicotAdd.v
