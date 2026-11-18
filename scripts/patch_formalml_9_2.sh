@@ -374,3 +374,25 @@ test "$(sed -n "${fresh_start}p" rocq/lib_utils/LibUtilsSublist.v)" = "  Proof."
 test "$(sed -n "${fresh_end}p" rocq/lib_utils/LibUtilsSublist.v)" = "  Defined."
 sed -i "${fresh_start},${fresh_end}c\\  Proof.\\n    intros Hlength Hnodup.\\n    rewrite find_filter.\\n    unfold hd_error.\\n    destruct (filter (fun x : A =>\\n              if in_dec equiv_dec x bad then false else true) l)\\n      as [|fresh tail] eqn:Hfilter.\\n    - exfalso.\\n      assert (Hincl : incl l bad).\\n      { intros x Hx.\\n        destruct (in_dec equiv_dec x bad) as [Hin | Hnin].\\n        - exact Hin.\\n        - exfalso.\\n          assert (Hfiltered : In x (filter (fun z : A =>\\n                   if in_dec equiv_dec z bad then false else true) l)).\\n          { apply filter_In; split; [exact Hx |].\\n            destruct (in_dec equiv_dec x bad) as [Hin2 | Hnin2].\\n            - contradiction.\\n            - reflexivity. }\\n          rewrite Hfilter in Hfiltered; contradiction. }\\n      pose proof (incl_NoDup_length_le Hnodup Hincl) as Hbound.\\n      lia.\\n    - exists fresh; reflexivity.\\n  Defined." \
   rocq/lib_utils/LibUtilsSublist.v
+
+# D097: Prove right-cons compatibility using the maintained right-biased
+# association lookup and its NoDup completeness theorem, instead of the
+# brittle nested dest_eqdec / intuition script in IBM FormalML.
+# We inspect the exact upstream proof delimiters before replacement.
+# The theorem's original inputs, conclusion and independence from any
+# probability assumption remain unchanged.
+compat_line=$(grep -n "^  Lemma compatible_cons_r " rocq/lib_utils/LibUtilsCompat.v | cut -d: -f1)
+test -n "$compat_line"
+compat_start=$((compat_line + 5))
+compat_end=$((compat_line + 32))
+test "$(sed -n "${compat_start}p" rocq/lib_utils/LibUtilsCompat.v)" = "  Proof."
+test "$(sed -n "${compat_end}p" rocq/lib_utils/LibUtilsCompat.v)" = "  Qed."
+sed -i "${compat_start},${compat_end}c\\  Proof.\n    intros Hnodup Hcompatible Hnew.\n    destruct a as [y yv].\n    unfold compatible in *.\n    apply forallb_forall.\n    intros [x xv] Hin.\n    apply forallb_forall in Hcompatible.\n    specialize (Hcompatible (x, xv) Hin).\n    unfold compatible_with in *.\n    simpl in *.\n    destruct (assoc_lookupr equiv_dec l' x) eqn:Hold.\n    - exact Hcompatible.\n    - destruct (equiv_dec x y) as [Hxy | Hxy].\n      + unfold equiv in Hxy; subst y.\n        assert (Hown : assoc_lookupr equiv_dec l x = Some xv).\n        { eapply in_assoc_lookupr_nodup; eauto. }\n        rewrite Hown in Hnew.\n        destruct (equiv_dec yv xv) as [Hsame | Hdiff];\n          [|discriminate Hnew].\n        destruct (equiv_dec xv yv) as [Hsame' | Hdiff'];\n          [reflexivity |].\n        unfold equiv, complement in *; congruence.\n      + reflexivity.\n  Qed." \
+  rocq/lib_utils/LibUtilsCompat.v
+
+# D098: The remaining Hilbert side condition is 2 <> 0, not 0 <= 1.
+# Preserve both branches of this established estimate: the standard
+# inequality when it is the main goal, and linear arithmetic when the
+# nonzero rational-denominator side goal is exposed by Rocq 9.2.
+test "$(sed -n 744p rocq/CertRL/LM/hilbert.v)" = "apply Rle_0_1."
+sed -i '744c\\first [apply Rle_0_1 | lra].' rocq/CertRL/LM/hilbert.v
