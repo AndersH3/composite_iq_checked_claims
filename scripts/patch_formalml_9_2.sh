@@ -332,5 +332,5 @@ part_start=$((part_line + 1))
 part_end=$((part_line + 6))
 test "$(sed -n "${part_start}p" rocq/lib_utils/LibUtilsSublist.v)" = "    Proof."
 test "$(sed -n "${part_end}p" rocq/lib_utils/LibUtilsSublist.v)" = "    Qed."
-sed -i "${part_start},${part_end}c\\    Proof.\\n      unfold PartialOrder, relation_equivalence, relation_conjunction,\\n        predicate_equivalence, predicate_intersection, Basics.flip; simpl.\\n      split.\\n      - intros ? ? Heq; subst; split; reflexivity.\\n      - intros ? ? [Hxy Hyx].\\n        apply sublist_antisymm; assumption.\\n    Qed." \
+sed -i "${part_start},${part_end}c\\    Proof.\\n      unfold PartialOrder, relation_equivalence, relation_conjunction,\\n        predicate_equivalence, predicate_intersection, Basics.flip; simpl.\\n      split.\\n      - intro Heq; subst; split; reflexivity.\\n      - intros [Hxy Hyx].\\n        apply sublist_antisymm; assumption.\\n    Qed." \
   rocq/lib_utils/LibUtilsSublist.v
