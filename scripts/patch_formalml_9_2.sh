@@ -879,7 +879,7 @@ test -n "$elim_recip_start"
 test -n "$elim_recip_next"
 test "$elim_recip_start" -lt "$elim_recip_next"
 elim_recip_end=$((elim_recip_next - 1))
-sed -i "${elim_recip_start},${elim_recip_end}c\\    + assert (Hrpos : 0 < r) by (pose proof (cond_pos eps); nra).\\n      rewrite Rabs_right.\\n      * apply (Rmult_lt_reg_l r); [exact Hrpos |].\\n        replace (r * / r) with 1 by (apply Rinv_r; lra).\\n        exact H.\\n      * left; apply Rinv_0_lt_compat; exact Hrpos." rocq/utils/ELim_Seq.v
+sed -i "${elim_recip_start},${elim_recip_end}c\\    + assert (Hrpos : 0 < r) by (eapply Rlt_trans; [apply Rinv_0_lt_compat; apply cond_pos | exact H]).\\n      apply (Rmult_lt_compat_r eps _ _ (cond_pos eps)) in H.\\n      rewrite Rinv_l in H; [| apply Rgt_not_eq; apply cond_pos].\\n      rewrite Rabs_right.\\n      * apply (Rmult_lt_reg_l r); [exact Hrpos |].\\n        replace (r * / r) with 1 by (apply Rinv_r; lra).\\n        exact H.\\n      * left; apply Rinv_0_lt_compat; exact Hrpos." rocq/utils/ELim_Seq.v
 
 # D155: In the second Hilbert scalar-negation case, the proof has
 # already advanced from the numerical identity to the final uniqueness
@@ -887,3 +887,12 @@ sed -i "${elim_recip_start},${elim_recip_end}c\\    + assert (Hrpos : 0 < r) by 
 # subsequent existing squared-norm argument proves the latter.
 test "$(sed -n "${hilbert_second_next}p" rocq/CertRL/LM/hilbert.v)" = "reflexivity."
 sed -i "${hilbert_second_next}c\\try reflexivity." rocq/CertRL/LM/hilbert.v
+
+# D156: Both zero-extended-real constructors require Rabs 0 < eps.
+# Derive this from the positive-real certificate, not an intuition hint.
+elim_zero_line=$(grep -nF '    + rewrite Rabs_R0.' rocq/utils/ELim_Seq.v | awk -F: -v start="$elim_recip_start" '$1 > start {print $1; exit}')
+test -n "$elim_zero_line"
+elim_zero_next=$((elim_zero_line + 1))
+test "$(sed -n "${elim_zero_line}p" rocq/utils/ELim_Seq.v)" = "    + rewrite Rabs_R0."
+test "$(sed -n "${elim_zero_next}p" rocq/utils/ELim_Seq.v)" = "      now destruct eps."
+sed -i "${elim_zero_line},${elim_zero_next}c\all: rewrite Rabs_R0; apply cond_pos." rocq/utils/ELim_Seq.v
