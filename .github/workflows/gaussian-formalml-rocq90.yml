@@ -1,0 +1,56 @@
+# Independent library-compatibility lane for the pinned IBM FormalML source.
+# AI disclosure: ChatGPT assisted this verification workflow for Anders Hellström.
+# This is not a substitute for Rocq 9.2 or the missing universal jointly
+# Gaussian residual-independence/pseudoinverse proof.
+name: Gaussian CE (FormalML Rocq 9.0 independent)
+
+on:
+  push:
+    paths:
+      - 'analyses/sequential-conditional-means/formalml/**'
+      - '.github/workflows/gaussian-formalml-rocq90.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gaussian-formalml-rocq90-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-ce-rocq90:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Check exact source revision
+        uses: actions/checkout@v4
+      - name: Reject new CE axioms or unfinished proofs
+        shell: bash
+        run: |
+          if grep -nE '^[[:space:]]*(Admitted|Axiom|Axioms|Parameter|Parameters|Conjecture|Abort)[[:space:].:]' \
+              analyses/sequential-conditional-means/formalml/*.v; then
+            echo 'Unproved or assumed Gaussian CE proposition' >&2
+            exit 1
+          fi
+      - name: Compile pinned FormalML probability library and project CE theorems
+        shell: bash
+        run: |
+          docker run --rm -v "$PWD:/workspace:ro" rocq/rocq-prover:9.0.0 sh -euc '
+            opam repository set-url rocq-released https://rocq-prover.org/opam/released -y
+            opam update -y
+            git clone --depth 1 https://github.com/IBM/FormalML.git /tmp/FormalML
+            cd /tmp/FormalML
+            git fetch --depth 1 origin 8ee433dc802fca35f6bceb6dacb69d3c1315e886
+            git checkout --detach 8ee433dc802fca35f6bceb6dacb69d3c1315e886
+            opam install -y -j 2 --deps-only .
+            opam exec -- make Makefile.rocq
+            opam exec -- make -k -j 2 -f Makefile.rocq \
+              rocq/ProbTheory/ConditionalExpectation.vo \
+              rocq/ProbTheory/ProductSpace.vo
+            mkdir -p /tmp/formalml-gaussian
+            cp /workspace/analyses/sequential-conditional-means/formalml/*.v /tmp/formalml-gaussian/
+            cd /tmp/formalml-gaussian
+            opam exec -- rocq compile -R /tmp/FormalML/rocq FormalML GaussianResidualConditionalExpectation.v
+            opam exec -- rocq compile -R /tmp/FormalML/rocq FormalML GaussianProductConditionalExpectation.v
+          '
