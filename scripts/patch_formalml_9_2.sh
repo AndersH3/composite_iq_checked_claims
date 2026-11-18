@@ -401,11 +401,7 @@ test "$(sed -n 743p rocq/CertRL/LM/hilbert.v)" = "try rewrite Rmult_1_r."
 test "$(sed -n 744p rocq/CertRL/LM/hilbert.v)" = "apply Rplus_le_reg_l with (-1); ring_simplify."
 test "$(sed -n 745p rocq/CertRL/LM/hilbert.v)" = "apply Rle_0_1."
 sed -i '742,745c\
-rewrite Rinv_r.\
-all: try rewrite Rmult_1_r.\
-all: try ring_simplify.\
-Show.\
-all: lra.' rocq/CertRL/LM/hilbert.v
+rewrite Rinv_r; [lra | lra].' rocq/CertRL/LM/hilbert.v
 
 # D100: Insertion sort does not change the lookup of a *different*
 # key. A fresh key appended to the original association list therefore
@@ -459,4 +455,30 @@ test "$(sed -n 294p rocq/utils/CoquelicotAdd.v)" = "  trivial."
 sed -i '291,294c\
   rewrite RInt_gen_Chasles.\
   all: first [assumption | now apply is_RInt_gen_unique | symmetry; now apply is_RInt_gen_unique].' \
+  rocq/utils/CoquelicotAdd.v
+
+# D104: The equal-length sequential-list inclusion follows from
+# Stdlib seq_app and the already established sublist_app_l theorem.
+# Avoid recursion over a <= proof whose induction-variable name is no
+# longer stable in Rocq 9.2. This is the original theorem, strengthened
+# neither by an axiom nor by a replacement definition.
+seqsub_line=$(grep -n "^  Lemma sublist_seq_le :" rocq/utils/ListAdd.v | cut -d: -f1)
+test -n "$seqsub_line"
+seqsub_start=$((seqsub_line + 2))
+seqsub_end=$((seqsub_line + 12))
+test "$(sed -n "${seqsub_start}p" rocq/utils/ListAdd.v)" = "  Proof."
+test "$(sed -n "${seqsub_end}p" rocq/utils/ListAdd.v)" = "  Qed."
+sed -i "${seqsub_start},${seqsub_end}c\  Proof.\n    intros n k Hnk.\n    replace k with (n + (k - n))%nat by lia.\n    rewrite seq_app.\n    apply sublist_app_l.\n  Qed." \
+  rocq/utils/ListAdd.v
+
+# D105: The lub-witness set difference is an inequality witness:
+# x in S1 and x not in {y in S1 | y <= L2} imply x > L2.
+# Eliminate the conjunction explicitly and reuse Stdlib Lra.
+lub_line=$(grep -n "^Lemma lub_witness " rocq/utils/CoquelicotAdd.v | cut -d: -f1)
+test -n "$lub_line"
+lub_start=$((lub_line + 13))
+lub_end=$((lub_line + 18))
+test "$(sed -n "${lub_start}p" rocq/utils/CoquelicotAdd.v)" = "  - destruct H1."
+test "$(sed -n "${lub_end}p" rocq/utils/CoquelicotAdd.v)" = "    intuition."
+sed -i "${lub_start},${lub_end}c\  - destruct H1 as [x [Hin Hout]].\n    exists x; split; [exact Hin |].\n    unfold S2, In in Hout.\n    assert (Hnot_le : ~ x <= L2).\n    { intro Hle; apply Hout; split; [exact Hin | exact Hle]. }\n    lra." \
   rocq/utils/CoquelicotAdd.v
