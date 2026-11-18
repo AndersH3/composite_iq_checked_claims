@@ -648,8 +648,29 @@ test "$(sed -n "${repeat_start}p" rocq/utils/PairEncoding.v)" = "Proof."
 test "$(sed -n "${repeat_end}p" rocq/utils/PairEncoding.v)" = "Qed."
 sed -i "${repeat_start},${repeat_end}c\Proof.\n  induction n as [|n IH]; intros Hpositive; [lia |].\n  destruct n as [|n].\n  - reflexivity.\n  - simpl; apply IH; lia.\nQed." rocq/utils/PairEncoding.v
 
-# D125 temporary diagnostic: inspect the remaining quotient
-# bucket-separation subgoal. This patch is guarded by the exact
-# upstream tactic and adds no axiom or assumption.
+# D125: Excluded quotient buckets are disjoint: a =/= x0 and
+# R x0 a imply False by symmetry of the inherited equivalence.
+# This replaces the proven-open upstream 'intuition' subgoal.
 sed -n '163p' rocq/utils/Quotient.v | grep -Eq '^[[:space:]]*intuition[.]$'
-sed -i '163a\              Show.' rocq/utils/Quotient.v
+sed -i '163c\
+              exfalso; apply c; symmetry; exact H6.' rocq/utils/Quotient.v
+
+# D126: An empty finite index has no proof of strong membership.
+# Use the library-defined boolean In_strong nil = false instead of intuition.
+dep_line=$(grep -n '^Lemma FiniteType_fun_dep_elems_aux_all' rocq/utils/FiniteType.v | cut -d: -f1)
+test -n "$dep_line"
+dep_false_line=$((dep_line + 11))
+test "$(sed -n "${dep_false_line}p" rocq/utils/FiniteType.v)" = "     intuition."
+sed -i "${dep_false_line}c\     unfold In_strong in ina; simpl in ina; discriminate." rocq/utils/FiniteType.v
+
+# D127: The positive numeral 2 satisfies Rabs 2 = 2; eliminate
+# both obsolete absurd/intuition scripts with Stdlib real arithmetic.
+abs2_line=$(grep -nF 'replace 2 with (Rabs 2) at 1.' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
+test -n "$abs2_line"
+abs2_start=$((abs2_line + 13))
+abs2_second=$((abs2_line + 20))
+abs2_end=$((abs2_line + 26))
+test "$(sed -n "${abs2_start}p" rocq/CertRL/LM/hilbert.v)" = "unfold Rabs."
+test "$(sed -n "${abs2_second}p" rocq/CertRL/LM/hilbert.v)" = "unfold Rabs."
+test "$(sed -n "${abs2_end}p" rocq/CertRL/LM/hilbert.v)" = "reflexivity."
+sed -i "${abs2_start},${abs2_end}c\unfold Rabs; destruct (Rcase_abs 2); lra.\n  unfold Rabs; destruct (Rcase_abs 2); lra." rocq/CertRL/LM/hilbert.v
