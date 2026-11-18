@@ -323,6 +323,23 @@ No compatibility-smoke result, covariance identity, scalar conjugacy
 identity, or independent-product calculation is a certificate of the
 universal Gaussian conditional-expectation theorem.
 
+\paragraph{Perfect-information boundary without independence.}
+There is a separate measure-theoretic argument at the perfectly
+observed singular endpoint. Whenever a future score equals an
+observed-measurable, integrable predictor almost surely, the defining
+event-integral conditional-expectation equality follows from
+FormalML's \texttt{is\_conditional\_expectation\_id} and
+\texttt{is\_conditional\_expectation\_proper}, without assuming an
+independent Gaussian residual. The revised
+\texttt{GaussianResidualConditionalExpectation.v} includes this
+event-integral proposition and its almost-sure uniqueness consequence,
+both subject to pinned FormalML kernel compilation. To specialize
+either proposition to equicorrelation \(c=1\), a separate formal
+variance-zero argument must show that the future score agrees almost
+surely with the observed score. Neither the shared covariance
+identities nor the perfect-information implication alone establish the
+general singular Gaussian conditional-expectation theorem.
+
 \paragraph{Pointwise interpretation.}
 When \(B\) is singular, \eqref{eq:gaussian-ce-event-integral}
 determines the conditional mean only \(P_X\)-almost everywhere.
