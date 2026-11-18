@@ -708,8 +708,25 @@ sed -n '4240p' rocq/utils/RealAdd.v | grep -Fq 'Notation "Min_{ l } ( f )"'
 sed -n '4239,4240p' rocq/utils/RealAdd.v | grep -Fq '(at level 50)'
 sed -i '4239,4240s/(at level 50)/(at level 0)/' rocq/utils/RealAdd.v
 
-# D133 temporary diagnostic: locate the remaining negative-quotient
-# bucket goal after the already-corrected symmetry branch.
+# D133: In the second quotient exclusion branch, the equivalence
+# class gives R a0 a, contradicting the EqDec negative decision.
+# Discharge the residual goal explicitly using Equivalence symmetry.
 sed -n '165p' rocq/utils/Quotient.v | grep -Fq 'rewrite (H1 x0 a0); simpl; intuition.'
-sed -i '165a\
-             Show.' rocq/utils/Quotient.v
+sed -i '165c\
+             rewrite (H1 x0 a0); simpl; intuition; apply c; symmetry; exact H8.' rocq/utils/Quotient.v
+
+# D134: Rocq has already reduced the Hilbert scalar distribution
+# expression at this point. Attempt the old rewrite only when present.
+scald_line=$(grep -n '^rewrite scal_distr_l\.$' rocq/CertRL/LM/hilbert.v | tail -n 1 | cut -d: -f1)
+test -n "$scald_line"
+scald_next=$((scald_line + 1))
+test "$(sed -n "${scald_next}p" rocq/CertRL/LM/hilbert.v)" = "reflexivity."
+sed -i "${scald_line}c\try rewrite scal_distr_l." rocq/CertRL/LM/hilbert.v
+
+# D135: The constant-one Rbar multiplication has a strictly-positive
+# branch and an impossible zero branch. Avoid brittle intuition that
+# leaves the strict branch open when Rocq 9.2 changes hint search.
+test "$(sed -n 4299p rocq/utils/RealAdd.v)" = "    destruct (Rle_lt_or_eq_dec 0 1 r); intuition."
+test "$(sed -n 4301p rocq/utils/RealAdd.v)" = "    destruct (Rle_lt_or_eq_dec 0 1 r); intuition."
+sed -i '4299s/; intuition\./; [reflexivity | lra]./' rocq/utils/RealAdd.v
+sed -i '4301s/; intuition\./; [reflexivity | lra]./' rocq/utils/RealAdd.v
