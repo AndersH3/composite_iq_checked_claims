@@ -45,6 +45,11 @@ import deal
 @deal.ensure(lambda value, result:
              not isinstance(value, (str, bytes, bytearray)) or result is False)
 def finite_real(value) -> bool:
+    """Recognize only finite Python real numbers within the numerical working range.
+    
+    Reject booleans despite their integer subclass, strings, NaN, and both infinities.
+    Handle integer-to-float overflow without coercing untrusted values into valid evidence.
+    """
     if not isinstance(value, (int, float)) or isinstance(value, bool):
         return False
     try:

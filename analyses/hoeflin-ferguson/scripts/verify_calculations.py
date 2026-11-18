@@ -126,6 +126,11 @@ def _positive_ratio(numerator: float, denominator: float) -> float:
 @deal.ensure(lambda rows, result: not result or all(row[2] >= 100 for row in rows))
 @deal.ensure(lambda rows, result: not result or all(row[2] >= 16 * row[1] for row in rows))
 def _valid_rows(rows) -> bool:
+    """Validate the complete Hoeflin reference-table schema and numerical domain.
+    
+    Require exactly the maintained composite-size rows plus the limiting case.
+    Reject malformed columns, nonfinite values, and inconsistent model labels before publication.
+    """
     if not isinstance(rows, (list, tuple)) or len(rows) != len(COUNTS) + 1:
         return False
     for row, label in zip(rows, [str(n) for n in COUNTS] + ["infinity"]):
@@ -165,6 +170,11 @@ def _valid_rows(rows) -> bool:
         1e-12, 1e-12 * max(abs(result[0][1]), abs(Q))))
 @deal.post(lambda result: not result or result[-1][2] == 100 + 16 * result[-1][1])
 def thresholds() -> list[tuple[str, float, float]]:
+    """Calculate each finite-composite threshold and the infinite-size limit.
+    
+    Reuse the shared Gaussian variance factor for the chosen correlation and tail quantile.
+    Return labeled standardized and IQ-scale cutoffs without Monte Carlo approximation.
+    """
     rows = []
     for n in COUNTS:
         z = mean_threshold(n, RHO, Q)
@@ -197,6 +207,11 @@ def thresholds() -> list[tuple[str, float, float]]:
 @deal.pre(lambda *args, **kwargs: _finite(RHO) and 0 <= RHO <= 1)
 @deal.pre(lambda *args, **kwargs: _finite(Q) and 0 < Q <= 10)
 def check_close(actual: float, expected: float, label: str) -> None:
+    """Reject any reference number outside the fixed verification tolerance.
+    
+    Compare the independently recomputed model result against its published reference.
+    The labeled exception identifies numerical drift rather than silently updating the report.
+    """
     if not math.isclose(actual, expected, rel_tol=0, abs_tol=1e-9):
         raise ValueError(f"{label}: got {actual!r}, expected {expected!r}")
 
@@ -235,6 +250,11 @@ def check_close(actual: float, expected: float, label: str) -> None:
 @deal.pre(lambda *args, **kwargs: CSV_PATH.suffix == ".csv")
 @deal.pre(lambda *args, **kwargs: ROOT.is_absolute())
 def write_csv(rows: list[tuple[str, float, float]]) -> None:
+    """Publish the fully validated Hoeflin threshold rows in canonical CSV order.
+    
+    Create the maintained data directory and emit the exact field names expected by the report.
+    Keep numeric values machine-readable instead of deriving evidence from formatted TeX.
+    """
     CSV_PATH.parent.mkdir(parents=True, exist_ok=True)
     with CSV_PATH.open("w", newline="", encoding="utf-8") as stream:
         writer = csv.writer(stream)
@@ -260,6 +280,11 @@ def write_csv(rows: list[tuple[str, float, float]]) -> None:
 @deal.pre(lambda *args, **kwargs: _finite(RHO) and 0 <= RHO <= 1)
 @deal.pre(lambda *args, **kwargs: _finite(Q) and 0 < Q <= 10)
 def verify_csv(rows: list[tuple[str, float, float]]) -> None:
+    """Check that the published Hoeflin CSV reproduces the expected rows.
+    
+    Require the canonical header and compare every stored numeric value with its calculation.
+    Fail on stale or malformed artifacts instead of accepting approximate table shape alone.
+    """
     with CSV_PATH.open(newline="", encoding="utf-8") as stream:
         reader = csv.DictReader(stream)
         if tuple(reader.fieldnames or ()) != FIELDS:
@@ -299,6 +324,11 @@ def verify_csv(rows: list[tuple[str, float, float]]) -> None:
 @deal.pre(lambda *args, **kwargs: _finite(RHO) and 0 <= RHO <= 1)
 @deal.pre(lambda *args, **kwargs: _finite(Q) and 0 < Q <= 10)
 def verify_source_values(rows: list[tuple[str, float, float]]) -> None:
+    """Cross-check the XeLaTeX report's displayed constants against computed results.
+    
+    When the optional source exists, inspect its maintained values without rewriting prose.
+    Avoid claiming source verification when the TeX input is absent from a workspace.
+    """
     if not TEX_PATH.exists():
         print("XeLaTeX source not present; source-value check skipped.")
         return
@@ -332,6 +362,11 @@ def verify_source_values(rows: list[tuple[str, float, float]]) -> None:
 @deal.pre(lambda *args, **kwargs: _finite(RHO) and 0 <= RHO <= 1)
 @deal.pre(lambda *args, **kwargs: len(FIELDS) == 3 and len(set(FIELDS)) == 3)
 def verify_examples() -> None:
+    """Verify independent Gaussian quantile and finite-composite regression examples.
+    
+    Check the extreme-tail normalization and representative intertest-correlation cases.
+    These regression anchors detect sign, variance-factor, and IQ-scale mistakes.
+    """
     check_close(Q, 4.753424308822899, "upper-tail normal quantile")
     check_close(float(norm.sf(Q)), 1e-6, "quantile's upper-tail probability")
 
@@ -372,6 +407,11 @@ def verify_examples() -> None:
 @deal.pre(lambda *args, **kwargs: _finite(RHO) and 0 <= RHO <= 1)
 @deal.pre(lambda *args, **kwargs: _finite(Q) and 0 < Q <= 10)
 def main() -> None:
+    """Run the Hoeflin reference verifier and optional deterministic CSV regeneration.
+    
+    Parse the explicit write flag and recompute the reference table before comparing artifacts.
+    Preserve a failing exit on invalid model constants or mismatched published data.
+    """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--write", action="store_true",
                         help="regenerate data/thresholds.csv before checking")
