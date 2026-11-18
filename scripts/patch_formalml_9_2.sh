@@ -1014,5 +1014,5 @@ sed -i "${hilbert_recip_line}c\     apply Rdiv_lt_0_compat; lra." rocq/CertRL/LM
 # behind after the decision by Rmin; both cases are directly proved
 # by the existing positivity hypotheses and library lemmas.
 hilbert_rmin_line=$((hilbert_ratio_line + 1))
-test "$(sed -n "${hilbert_rmin_line}p" rocq/CertRL/LM/hilbert.v)" = "      apply Rmin_l."
+test "$(sed -n "${hilbert_rmin_line}p" rocq/CertRL/LM/hilbert.v)" = "     apply Rmin_l."
 sed -i "${hilbert_rmin_line}c\      all: first [solve [apply Rmin_l] | solve [apply Rdiv_lt_0_compat; [exact r | exact H2]]]." rocq/CertRL/LM/hilbert.v
