@@ -1,5 +1,79 @@
 # Sequential conditional-means — Rocq formalization
 
+## D052 — 30 additional verified signed-covariance and monotonicity theorems
+
+**AI disclosure:** OpenAI ChatGPT generated the candidate statements, Rocq proofs and documentation under the direction of researcher/requester Anders Hellström. Formal verification means acceptance by the pinned Rocq 9.2 kernel at the cited exact commit, not merely written proof scripts.
+
+[Successful Rocq 9.2 CI run #44143829182](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44143829182) verifies **30 additional D052 results** at [`03c03077`](https://github.com/AndersH3/composite_iq_checked_claims/commit/03c030770f16db590bc3b077981fafcde8c05f46). Together with D051's 101 new proofs and D050's 56, this is **187 source-ordered, kernel-checked theorem declarations**, **131 of them new in D051–D052**.
+
+The D052 additions include:
+
+- **10** signed common-mode eigenvalue inequalities and battery-length monotonicity results.
+- **10** conditional cross-covariance and diagonal/contrast variance bounds, including strict variance reduction for nonzero correlation.
+- **4** PSD/PD common-mode and future-score-total variance inequalities.
+- **4** monotonicity and prior-comparison results for prediction variance and residual covariance, reusing the already checked Schur variance-reduction identity and unchanged contrast mode.
+- **2** sign-preservation properties of the sufficient-history predictor.
+
+All formulas are symbolic. They require the explicit nonzero denominators and covariance-domain assumptions stated in their respective theorems; PSD admissibility for negatively correlated jointly Gaussian scores is a separate full-battery constraint. The signed Gaussian joint probability measure, independence of uncorrelated Gaussian blocks, and the observed-sigma-algebra conditional expectation remain unproved in Rocq. Separate MathComp-Analysis and FormalML workflows must pass before their probability theorems can be counted.
+
+**Full AI disclosure:** OpenAI generated statements, proof strategies, source code, documentation, CI fixes, and theorem counts; Anders Hellström specified the research problems and proof-assistant requirements. Automated kernel acceptance certifies the exact compiled propositions only, not empirical IQ validity, simulation methodology, or independent human peer review.
+
+## D051 — 101 additional Rocq-verified Gaussian update and covariance propositions
+
+**AI disclosure:** These statements, proof scripts, and documentation were AI-assisted under researcher/requester Anders Hellström. Proof status is based solely on the Rocq 9.2 kernel, not theorem counts or an informal argument.
+
+The [exact pinned Rocq workflow](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44140614519) accepted **101 additional proofs** at commit [`27306fe4`](https://github.com/AndersH3/composite_iq_checked_claims/commit/27306fe455f97ad257183fff4a18f3f03f4a68d1). These additions raise the D050/D051 Gaussian and covariance collection from **56 to 157 kernel-checked theorem declarations**:
+
+- **29** equicorrelation common-eigenvalue and sequential-history denominator identities, sensitivities, and block operations.
+- **34** signed Schur conditional-variance, cross-covariance, future-batch variance, and contrast/common-mode results.
+- **30** exact one-step/multistep Gaussian sufficient-statistic posterior-mean innovations, batch residuals, and update identities.
+- **8** links between the list-valued Gaussian posterior variance, Schur covariance, and posterior precision, including no-history and independent-score cases.
+
+A portion are basic arithmetic specializations and consistency checks; the numerical count must not be described as 101 independent major probability theorems. All identities assume precisely the denominators stated. Negative-correlation feasibility needs the **full** covariance PSD condition. Neither these 101 results nor the earlier 56 constructs a multivariate Gaussian measure or proves the observed-sigma-algebra conditional expectation; the FormalML/MathComp bridge is independently tracked and must pass its own CI.
+
+**Full AI disclosure:** OpenAI ChatGPT generated the candidate theorems, proofs, source edits, and CI-backed documentation; Anders Hellström directed the research questions and verification requirements. A green kernel check establishes only the exact propositions compiled, not empirical IQ validity, a proof of Gaussianity, or peer-reviewed scientific conclusions.
+
+## D050 — 56 checked Gaussian density and signed covariance-domain proofs
+
+**AI disclosure:** These candidate formal proofs, probability model analysis and
+documentation were AI-assisted. Kernel acceptance, not source-counting,
+establishes any proved statement. The full regular conditional-expectation
+theorem remains an explicit open Rocq obligation.
+
+At the exact D050 revision `20801d4a693adb0582133876d1a8d41c2ba48bcf`,
+the [pinned Rocq 9.2 kernel](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43997860735)
+accepted **35 Gaussian kernel/sufficiency proofs and 21 concrete
+Schur-covariance proofs**. Five of the kernel proofs factor an arbitrary
+unequal-score Gaussian likelihood through its sample mean; four
+covariance proofs establish full PSD/PD necessity and sufficiency for
+concrete future-score lists of length at least two, plus the one-future-score variance PSD/PD iff and both singular endpoints.
+
+A separate [MathComp normalized posterior measure module](../mathcomp/GaussianPosteriorMeasure.v)
+uses the maintained Gaussian conjugacy theorem but remains outside the
+Stdlib 9.2 kernel count until its dedicated workflow passes. Neither
+step alone proves the full observed-sigma-algebra conditional
+expectation of a future Gaussian score.
+
+The new `GaussianConditionalKernel.v` specifies the latent common-factor
+Gaussian prior and arbitrary unequal-history likelihood for `0<c<1`,
+and uses finite-score sums to complete the posterior normal quadratic.
+It identifies the candidate posterior center `c*S_n/d_n(c)`, posterior
+variance `c*(1-c)/d_n(c)`, and factors the *unnormalized* joint
+density into evidence and posterior-shape kernels.
+
+`GaussianCovarianceDomain.v` extends Schur-complement PSD and PD conditions
+to **negative** admissible correlations using the exact eigenvalue
+`(1-c)*d_(n+k)(c)/d_n(c)` of the conditional common-score direction.
+It deliberately reuses canonical finite-list Cauchy-Schwarz and
+equicorrelation spectral lemmas.
+
+The separate [Gaussian conditioning mathematical derivation](../../../rocq/GAUSSIAN_CONDITIONING_THEOREM.md)
+distinguishes those kernels from the additional multivariate normal
+independence/disintegration and conditional-expectation theorems needed
+for complete formalization. Existing Gaussian normal-probability results
+in MathComp-Analysis should be reused, rather than made into axioms.
+
+
 **Researcher:** Anders Hellström.
 
 > **AI disclosure:** OpenAI ChatGPT/Codex materially assisted theorem selection, Rocq proof scripts and commentary. Mathematical proof status depends exclusively on Rocq 9.2 kernel validation of the exact source revision.

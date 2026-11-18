@@ -1,0 +1,54 @@
+name: Gaussian posterior first moment (QBS + MathComp)
+
+on:
+  push:
+    paths:
+      - 'analyses/sequential-conditional-means/qbs/**'
+      - '.github/workflows/gaussian-qbs.yml'
+  # Synchronization on this repository is covered by push; avoid
+  # repeatedly cancelling a long QBS Rocq build when only unrelated
+  # FormalML compatibility files are updated on an open draft PR.
+  pull_request:
+    types: [opened, reopened]
+    paths:
+      - 'analyses/sequential-conditional-means/qbs/**'
+      - '.github/workflows/gaussian-qbs.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  checked-normal-mean:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Check out exact source
+        uses: actions/checkout@v4
+      - name: Reject proof holes
+        shell: bash
+        run: |
+          if grep -nE '^[[:space:]]*(Admitted|Axiom|Axioms|Parameter|Parameters|Conjecture|Abort)[[:space:].:]' analyses/sequential-conditional-means/qbs/*.v; then
+            exit 1
+          fi
+          test "$(grep -c '^Theorem ' analyses/sequential-conditional-means/qbs/GaussianPosteriorExpectation.v)" -eq 2
+      - name: Compile QBS normal first moment then Gaussian posterior specialization
+        shell: bash
+        run: |
+          docker run --rm -v "$PWD:/workspace:ro" rocq/rocq-prover:9.2.0 sh -euc '
+            opam repository set-url rocq-released https://rocq-prover.org/opam/released -y
+            opam update -y
+            opam install -y -j 3 rocq-core.9.2.0 rocq-hierarchy-builder rocq-mathcomp-analysis.1.18.0
+            git clone --depth 1 https://github.com/LLM4Rocq/mathcomp-qbs.git /tmp/qbs
+            cd /tmp/qbs
+            git fetch --depth 1 origin 76bc6fd9eaf48f3e181af803aae84151acbba521
+            git checkout --detach 76bc6fd9eaf48f3e181af803aae84151acbba521
+            opam exec -- rocq compile -Q theories QBS theories/normal_centred.v
+            mkdir -p /tmp/gaussian-qbs
+            cp /workspace/analyses/sequential-conditional-means/mathcomp/GaussianPosteriorMeasure.v /tmp/gaussian-qbs/
+            cp /workspace/analyses/sequential-conditional-means/qbs/GaussianPosteriorExpectation.v /tmp/gaussian-qbs/
+            cd /tmp/gaussian-qbs
+            opam exec -- rocq compile -Q /tmp/qbs/theories QBS GaussianPosteriorMeasure.v
+            opam exec -- rocq compile -Q /tmp/qbs/theories QBS GaussianPosteriorExpectation.v
+          '

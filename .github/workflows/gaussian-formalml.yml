@@ -1,0 +1,69 @@
+name: Gaussian conditional expectation (FormalML)
+
+on:
+  push:
+    paths:
+      - 'analyses/sequential-conditional-means/formalml/**'
+      - '.github/workflows/gaussian-formalml.yml'
+      - 'scripts/patch_formalml_9_2.sh'
+  # A same-repository push already tests each new revision. Avoid an
+  # independent PR synchronization run racing/cancelling the push build.
+  pull_request:
+    types: [opened, reopened]
+    paths:
+      - 'analyses/sequential-conditional-means/formalml/**'
+      - '.github/workflows/gaussian-formalml.yml'
+      - 'scripts/patch_formalml_9_2.sh'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  gaussian-measure-theoretic-ce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Check out exact repository revision
+        uses: actions/checkout@v4
+
+      - name: Check no assumed Gaussian CE or unfinished proof
+        shell: bash
+        run: |
+          if grep -nE '^[[:space:]]*(Admitted|Axiom|Axioms|Parameter|Parameters|Conjecture|Abort)[[:space:].:]' \
+             analyses/sequential-conditional-means/formalml/*.v; then
+            echo 'FormalML Gaussian CE cannot use new axioms or placeholders.' >&2
+            exit 1
+          fi
+          test "$(grep -Ec '^[[:space:]]*Theorem ' analyses/sequential-conditional-means/formalml/GaussianResidualConditionalExpectation.v)" -ge 2
+          test "$(grep -Ec '^[[:space:]]*Theorem ' analyses/sequential-conditional-means/formalml/GaussianProductConditionalExpectation.v)" -ge 2
+
+      - name: Verify FormalML measure-theoretic Gaussian CE proof with Rocq 9.2
+        shell: bash
+        run: |
+          docker run --rm -v "$PWD:/workspace:ro" rocq/rocq-prover:9.2.0 sh -euc '
+            opam repository set-url rocq-released https://rocq-prover.org/opam/released -y
+            opam update -y
+            git clone --depth 1 https://github.com/IBM/FormalML.git /tmp/FormalML
+            cd /tmp/FormalML
+            git fetch --depth 1 origin 8ee433dc802fca35f6bceb6dacb69d3c1315e886
+            git checkout --detach 8ee433dc802fca35f6bceb6dacb69d3c1315e886
+            opam install -y -j 2 --deps-only .
+            sh /workspace/scripts/patch_formalml_9_2.sh
+            # Compile only the probability modules required by this
+            # result, not the unrelated FormalML RL/model-checking corpus.
+            # The generated Rocq makefile tracks their full dependencies.
+            opam exec -- make Makefile.rocq
+            # Preserve the failure status, but continue compiling independent
+            # nodes to reveal multiple incompatible upstream proofs per run.
+            opam exec -- make -k -j 2 -f Makefile.rocq \
+              rocq/ProbTheory/ConditionalExpectation.vo \
+              rocq/ProbTheory/ProductSpace.vo
+            mkdir -p /tmp/formalml-gaussian
+            cp /workspace/analyses/sequential-conditional-means/formalml/GaussianResidualConditionalExpectation.v /tmp/formalml-gaussian/
+            cp /workspace/analyses/sequential-conditional-means/formalml/GaussianProductConditionalExpectation.v /tmp/formalml-gaussian/
+            cd /tmp/formalml-gaussian
+            opam exec -- rocq compile -R /tmp/FormalML/rocq FormalML GaussianResidualConditionalExpectation.v
+            opam exec -- rocq compile -R /tmp/FormalML/rocq FormalML GaussianProductConditionalExpectation.v
+          '

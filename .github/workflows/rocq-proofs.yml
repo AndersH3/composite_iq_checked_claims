@@ -11,6 +11,10 @@ on:
       - 'library/python/**'
       - '.github/workflows/rocq-proofs.yml'
       - 'scripts/check_rocq_documentation.sh'
+      - 'scripts/check_rocq_only_proofs.sh'
+      - '**/*.lean'
+      - 'lake*'
+      - 'lean-toolchain'
   pull_request:
     paths:
       - 'rocq/**'
@@ -21,7 +25,15 @@ on:
       - 'library/python/**'
       - '.github/workflows/rocq-proofs.yml'
       - 'scripts/check_rocq_documentation.sh'
+      - 'scripts/check_rocq_only_proofs.sh'
+      - '**/*.lean'
+      - 'lake*'
+      - 'lean-toolchain'
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
 
 jobs:
   kernel-check:
@@ -29,6 +41,10 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
+      - name: Enforce Rocq-only formal proof language
+        shell: bash
+        run: sh scripts/check_rocq_only_proofs.sh
 
       - name: Check module headers and per-declaration proof documentation
         shell: bash

@@ -1,5 +1,53 @@
 # Rocq formalization of checked claims
 
+## Mandatory Rocq-only verification
+
+Researcher/requester: Anders Hellström. **All formal theorems and proof obligations must be proved in Rocq and accepted by its kernel.** Lean is not an accepted alternative, even if a Lean proof happens to compile. The D050 Lean prototype and its Lake/CI configuration were deleted; the canonical Rocq workflow invokes `scripts/check_rocq_only_proofs.sh` to prevent reintroducing such files. Rocq-compatible libraries, including the Rocq Stdlib, MathComp-Analysis and FormalML, may be reused rather than recreating probability theory. An uncompiled candidate `.v` file is **not** a completed proof, and a conventional mathematical derivation is not equivalent to a Rocq proof.
+
+**AI disclosure:** The proof-language guard, documentation and formalization work were AI-assisted; verification claims apply only to the exact statements accepted by Rocq.
+
+## D050 — 56 kernel-verified Gaussian kernel and covariance-domain results
+
+**AI disclosure:** These candidate formal proofs, probability model analysis and
+documentation were AI-assisted. Kernel acceptance, not source-counting,
+establishes any proved statement. The full regular conditional-expectation
+theorem remains an explicit open Rocq obligation.
+
+The [Rocq 9.2 kernel and source-order audit](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43997860735)
+accepted **56 new D050 theorems** (35 Gaussian density/predictive and
+finite-score sufficiency lemmas; 21 signed-correlation covariance and
+concrete future-vector PSD/PD lemmas). The overall Stdlib corpus
+contains **3,434 proof scripts across 41 Rocq modules** with 3,755
+documented declarations, at D050 source revision
+`20801d4a693adb0582133876d1a8d41c2ba48bcf`.
+
+The separate MathComp-Analysis 1.18.0
+[normalized posterior-measure bridge](../analyses/sequential-conditional-means/mathcomp/GaussianPosteriorMeasure.v)
+contains three candidate proofs. These are **not** counted among the 56
+until the dedicated MathComp workflow succeeds. Even a successful
+normalized posterior proof for a sample-mean observation is not yet a
+kernel-checked full-vector conditional-expectation theorem.
+
+The new `GaussianConditionalKernel.v` specifies the latent common-factor
+Gaussian prior and arbitrary unequal-history likelihood for `0<c<1`,
+and uses finite-score sums to complete the posterior normal quadratic.
+It identifies the candidate posterior center `c*S_n/d_n(c)`, posterior
+variance `c*(1-c)/d_n(c)`, and factors the *unnormalized* joint
+density into evidence and posterior-shape kernels.
+
+`GaussianCovarianceDomain.v` extends Schur-complement PSD and PD conditions
+to **negative** admissible correlations using the exact eigenvalue
+`(1-c)*d_(n+k)(c)/d_n(c)` of the conditional common-score direction.
+It deliberately reuses canonical finite-list Cauchy-Schwarz and
+equicorrelation spectral lemmas.
+
+The separate [Gaussian conditioning mathematical derivation](GAUSSIAN_CONDITIONING_THEOREM.md)
+distinguishes those kernels from the additional multivariate normal
+independence/disintegration and conditional-expectation theorems needed
+for complete formalization. Existing Gaussian normal-probability results
+in MathComp-Analysis should be reused, rather than made into axioms.
+
+
 ## D049x — 120 Rocq-checked unequal-history and finite-list proofs
 
 **AI disclosure:** OpenAI ChatGPT assisted source, proof design and documentation.

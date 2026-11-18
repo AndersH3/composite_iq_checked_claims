@@ -201,6 +201,139 @@ residual proof here supplies the version needed when only the conditioning
 block is nonsingular.
 \end{proof}
 
+
+% A finite-dimensional, measure-theoretic statement. This is a mathematical
+% argument in the book; it must not be counted as Rocq-kernel-checked merely
+% because the numerical covariance and constructed product models are checked.
+% The pseudoinverse extends the event identity to singular observation laws.
+\begin{theorem}[Gaussian conditional expectation as an event-integral identity]
+\label{thm:gaussian-ce-event-integral}
+Let \((Y,X)\) be a jointly Gaussian random vector, with \(Y\) real-valued
+and \(X\in\mathbb R^q\). Write
+\[
+ \mu_Y=\E[Y],\quad \mu_X=\E[X],\quad
+ B=\Cov(X),\quad C=\Cov(Y,X),
+ \qquad m(x)=\mu_Y+CB^+(x-\mu_X),
+\]
+where \(B^+\) is the Moore--Penrose pseudoinverse of the nonnegative
+symmetric matrix \(B\). Without any nonsingularity assumption on the
+joint covariance \emph{or on \(B\)}, \(m(X)\) is integrable and
+\(\sigma(X)\)-measurable, and for every \(A\in\sigma(X)\),
+\begin{equation}
+ \E[\one_A Y]=\E[\one_A m(X)].
+ \label{eq:gaussian-ce-event-integral}
+\end{equation}
+Consequently \(m(X)=\E[Y\given\sigma(X)]\) almost surely.
+The statement applies to admissible negative equicorrelations and to
+singular covariance boundaries.
+\end{theorem}
+
+\begin{proof}
+Choose an orthonormal eigenbasis of \(B\) and let \(\lambda_j\geq0\)
+be its eigenvalues. If \(\lambda_j=0\), the corresponding centered
+linear combination \(v_j^{\mathsf T}(X-\mu_X)\) has variance zero, so
+it equals zero almost surely by \Cref{thm:moments}. Therefore
+\(Cv_j=\Cov(Y,v_j^{\mathsf T}X)=0\). Since \(B^+B\) is the orthogonal
+projection onto the span of eigenvectors with positive eigenvalue,
+\[
+ C=CB^+B.
+\]
+Put \(\beta=CB^+\) and
+\(W=Y-\mu_Y-\beta(X-\mu_X)\). Direct expansion gives
+\(\E[W]=0\) and
+\[
+ \Cov(W,X)=C-\beta B=C-CB^+B=0.
+\]
+Both \(W\) and \(X\) are affine images of the original jointly Gaussian
+vector. The characteristic-function factorization in
+\Cref{thm:gaussian} therefore makes \(W\) independent of the
+\emph{entire} vector \(X\), equivalently of its generated
+\(\sigma\)-algebra. No independence follows merely from uncorrelatedness
+without this joint-Gaussian premise.
+
+By construction, \(Y=m(X)+W\). Gaussian first moments are finite, and
+\(m(X)\) is an affine measurable function of \(X\). For an
+\emph{arbitrary} \(A\in\sigma(X)\), linearity, integrability and
+independence give the defining event-integral equality:
+\[
+ \E[\one_A Y]-\E[\one_A m(X)]
+ =\E[\one_A W]
+ =P(A)\E[W]=0.
+\]
+Existence and almost-sure uniqueness from \Cref{thm:conditional}
+now prove the conditional-expectation identity. No conditioning on
+a probability-zero point event is used.
+\end{proof}
+
+\paragraph{Formal verification boundary.}
+The preceding is a mathematical proof in the \LaTeX{} report, not
+a claim that the complete theorem has been checked by the Rocq kernel.
+The dedicated Rocq module
+\texttt{GaussianResidualConditionalExpectation.v} states the genuine
+event-integral conditional-expectation property given residual
+independence, and
+\texttt{GaussianProductConditionalExpectation.v} constructs
+independence for a particular product space. Their compilation depends
+on the separately tracked pinned FormalML library. The additional
+distributional bridge from an \emph{arbitrary} jointly Gaussian vector
+to residual independence, together with the singular pseudoinverse
+case, remains a separate Rocq formalization obligation. Algebraic
+covariance and Schur-complement proofs must not be presented as
+verification of this measure-theoretic bridge.
+
+\paragraph{Pointwise interpretation.}
+When \(B\) is singular, \eqref{eq:gaussian-ce-event-integral}
+determines the conditional mean only \(P_X\)-almost everywhere.
+The displayed affine function specifies a valid Borel version on all
+of \(\mathbb R^q\); its values outside the support of \(X\) are not
+identified uniquely by conditional expectation. The later uniqueness
+lemma requires \(B\) positive definite.
+
+
+% The finite signed-equicorrelation specialization is an application of the
+% preceding event-integral theorem and of the canonical common-mode
+% eigenvalue. Do not reuse the nonnegative-only common-factor simulation
+% construction to claim existence when c is negative.
+\begin{corollary}[Signed equicorrelation conditional mean]
+\label{cor:gaussian-ce-signed-equicorrelation}
+Let \(n,k\geq1\), and suppose
+\((X_1,\ldots,X_n,Y_1,\ldots,Y_k)\) is a centered jointly
+Gaussian vector with unit coordinate variances and common
+off-diagonal covariance \(c\). For
+\(-1/(n+k-1)\leq c<1\), define \(d_n=1+(n-1)c\). Then
+\(d_n>0\), and for every \(1\leq j\leq k\),
+\[
+  \E[Y_j\given\sigma(X_1,\ldots,X_n)]
+  =\frac{c}{d_n}\sum_{i=1}^n X_i
+  \qquad\text{almost surely}.
+\]
+This includes the negative full-matrix singular boundary
+\(c=-1/(n+k-1)\). At the other singular endpoint \(c=1\),
+every coordinate equals \(X_1\) almost surely and the conditional
+mean is \(X_1\).
+\end{corollary}
+
+\begin{proof}
+The observed covariance is
+\(B=(1-c)I_n+c\mathbf1_n\mathbf1_n^{\mathsf T}\).
+Its contrast eigenvalue is \(1-c>0\), and its common-mode
+eigenvalue satisfies
+\[
+ d_n=1+(n-1)c
+ \geq 1-\frac{n-1}{n+k-1}
+ =\frac{k}{n+k-1}>0.
+\]
+Hence \(B\) is invertible, with
+\(B^{-1}\mathbf1_n=d_n^{-1}\mathbf1_n\).
+Each cross-covariance row is \(C=c\mathbf1_n^{\mathsf T}\).
+Substitute into \Cref{thm:gaussian-ce-event-integral};
+the equality holds for all observed events, not merely in a
+least-squares sense. When \(c=1\),
+\(\Var(X_i-X_1)=\Var(Y_j-X_1)=0\);
+\Cref{thm:moments} makes those differences zero almost surely,
+and \Cref{thm:conditional} fixes the observed variable \(X_1\).
+\end{proof}
+
 \begin{lemma}[Unique continuous conditional-mean version]
 \label{lem:continuous-version}
 If \(V\) is a Gaussian vector with positive-definite covariance, two

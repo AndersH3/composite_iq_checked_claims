@@ -1,0 +1,49 @@
+name: Gaussian posterior measure (MathComp-Analysis)
+
+on:
+  push:
+    paths:
+      - 'analyses/sequential-conditional-means/mathcomp/**'
+      - '.github/workflows/gaussian-mathcomp.yml'
+  pull_request:
+    paths:
+      - 'analyses/sequential-conditional-means/mathcomp/**'
+      - '.github/workflows/gaussian-mathcomp.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  normalized-gaussian-posterior:
+    name: MathComp Gaussian posterior kernel
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Check out exact source revision
+        uses: actions/checkout@v4
+
+      - name: Reject unfinished MathComp proof placeholders
+        shell: bash
+        run: |
+          if grep -nE '^[[:space:]]*(Admitted|Axiom|Axioms|Parameter|Parameters|Conjecture|Abort)[[:space:].:]' \
+            analyses/sequential-conditional-means/mathcomp/*.v; then
+            echo 'No extra axioms or unfinished Gaussian probability proofs are allowed.' >&2
+            exit 1
+          fi
+          test "$(grep -c '^Theorem ' analyses/sequential-conditional-means/mathcomp/GaussianPosteriorMeasure.v)" -eq 3
+
+      - name: Compile normalized posterior-measure theorems with pinned MathComp-Analysis
+        shell: bash
+        run: |
+          docker run --rm -v "$PWD:/workspace:ro" rocq/rocq-prover:9.2.0 sh -euc '
+            opam repository set-url rocq-released https://rocq-prover.org/opam/released -y
+            opam update -y
+            opam install -y -j 3 rocq-core.9.2.0 rocq-mathcomp-analysis.1.18.0
+            mkdir -p /tmp/gaussian-mathcomp
+            cp /workspace/analyses/sequential-conditional-means/mathcomp/GaussianPosteriorMeasure.v /tmp/gaussian-mathcomp/
+            cd /tmp/gaussian-mathcomp
+            opam exec -- rocq --version
+            opam exec -- rocq compile GaussianPosteriorMeasure.v
+          '
