@@ -651,7 +651,11 @@ sed -i "${repeat_start},${repeat_end}c\Proof.\n  induction n as [|n IH]; intros 
 # D125 diagnostic: old 9.2 'intuition' leaves a goal in the quotient
 # bucket separation proof. Show exactly that goal to derive an explicit
 # library-based proof; remove this display before final verification.
-test "$(sed -n 163p rocq/utils/Quotient.v)" = "              intuition."
+sed -n 163p rocq/utils/Quotient.v | grep -Eq '^[[:space:]]*intuition[.]
+sed -i '163c\
+              intuition.\
+              Show.' rocq/utils/Quotient.v
+
 sed -i '163c\
               intuition.\
               Show.' rocq/utils/Quotient.v
