@@ -660,7 +660,7 @@ sed -i '163c\
 dep_line=$(grep -n '^Lemma FiniteType_fun_dep_elems_aux_all' rocq/utils/FiniteType.v | cut -d: -f1)
 test -n "$dep_line"
 dep_false_line=$((dep_line + 11))
-test "$(sed -n "${dep_false_line}p" rocq/utils/FiniteType.v)" = "     intuition."
+test "$(sed -n "${dep_false_line}p" rocq/utils/FiniteType.v)" = "    intuition."
 sed -i "${dep_false_line}c\     unfold In_strong in ina; simpl in ina; discriminate." rocq/utils/FiniteType.v
 
 # D127: The positive numeral 2 satisfies Rabs 2 = 2; eliminate
