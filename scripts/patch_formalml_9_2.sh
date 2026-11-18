@@ -398,6 +398,8 @@ sed -i "${compat_start},${compat_end}c\\  Proof.\n    intros Hnodup Hcompatible 
 test "$(sed -n 745p rocq/CertRL/LM/hilbert.v)" = "apply Rle_0_1."
 sed -i '745c\\first [apply Rle_0_1 | lra].' rocq/CertRL/LM/hilbert.v
 
+# Diagnostic: print the exact fail-closed compatibility guard on CI.
+set -x
 # D099: The prior rewrite of Rinv_r creates an arithmetic side condition.
 # Rocq 9.2 may expose that obligation before the legacy inequality step.
 # Eliminate both branches using Stdlib Lra after the standard ring
