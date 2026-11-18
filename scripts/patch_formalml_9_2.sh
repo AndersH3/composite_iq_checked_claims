@@ -506,9 +506,7 @@ hilbert_sqrt_proof=$((hilbert_sqrt_line + 1))
 hilbert_sqrt_next=$((hilbert_sqrt_line + 2))
 test "$(sed -n "${hilbert_sqrt_proof}p" rocq/CertRL/LM/hilbert.v)" = "right; unfold Rsqr; field."
 test "$(sed -n "${hilbert_sqrt_next}p" rocq/CertRL/LM/hilbert.v)" = "apply Rgt_not_eq; apply Rlt_sqrt2_0."
-sed -i "${hilbert_sqrt_proof},${hilbert_sqrt_next}c\right; unfold Rsqr.\nassert (Hsqrt2pos : 0 < sqrt 2) by apply Rlt_sqrt2_0.\nfield_simplify.
-all: match goal with |- ?G => idtac G end.
-all: nra." \
+sed -i "${hilbert_sqrt_proof},${hilbert_sqrt_next}c\right; unfold Rsqr.\nassert (Hsqrt2pos : 0 < sqrt 2) by apply Rlt_sqrt2_0.\nfield; nra." \
   rocq/CertRL/LM/hilbert.v
 
 # D109: The existing StronglySorted/Forall constructors and the Stdlib
@@ -559,3 +557,15 @@ single_end=$((single_line + 9))
 test "$(sed -n "${single_start}p" rocq/utils/ListAdd.v)" = "Proof."
 test "$(sed -n "${single_end}p" rocq/utils/ListAdd.v)" = "Qed."
 sed -i "${single_start},${single_end}c\Proof.\n  induction l as [|x xs IH]; simpl; intros Habsent.\n  - reflexivity.\n  - match_destr.\n    + exfalso; apply Habsent; simpl; left.\n      unfold equiv in e; congruence.\n    + f_equal; apply IH.\n      intro Hin; apply Habsent; simpl; right; exact Hin.\nQed." rocq/utils/ListAdd.v
+
+# D115: The constructor for a removable member is a permutation,
+# using only Stdlib Permutation's swap and cons-congruence plus the
+# original remove_one definition. Explicitly eliminate an impossible
+# membership of a removed head in the negative EqDec branch.
+perm_line=$(grep -n '^Lemma remove_one_in_perm ' rocq/utils/ListAdd.v | cut -d: -f1)
+test -n "$perm_line"
+perm_start=$((perm_line + 3))
+perm_end=$((perm_line + 12))
+test "$(sed -n "${perm_start}p" rocq/utils/ListAdd.v)" = "Proof."
+test "$(sed -n "${perm_end}p" rocq/utils/ListAdd.v)" = "Qed."
+sed -i "${perm_start},${perm_end}c\Proof.\n  induction l as [|b tail IH]; simpl; intros Hin.\n  - contradiction.\n  - match_destr.\n    + red in e; subst; reflexivity.\n    + destruct Hin as [Heq | Htail].\n      * subst b; exfalso; apply n; reflexivity.\n      * rewrite perm_swap; apply perm_skip; apply IH; exact Htail.\nQed." rocq/utils/ListAdd.v
