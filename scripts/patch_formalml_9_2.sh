@@ -806,3 +806,19 @@ sed -i "${hilbert_inner_line}c\left; lra." rocq/CertRL/LM/hilbert.v
 hilbert_square_line=$((hrx_line + 13))
 test "$(sed -n "${hilbert_square_line}p" rocq/CertRL/LM/hilbert.v)" = "apply Rmult_le_compat; trivial."
 sed -i "${hilbert_square_line}c\apply Rmult_le_pos." rocq/CertRL/LM/hilbert.v
+# D145: Rocq 9.2 may normalize the scalar negation on the Hilbert
+# projection uniqueness branch before the legacy rewrite. Preserve the
+# original reflexivity step; rewrite only if its left side occurs.
+hilbert_opp_line=$(grep -n '^rewrite <- scal_opp_l\.$' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$hilbert_opp_line"
+test "$(sed -n "${hilbert_opp_line}p" rocq/CertRL/LM/hilbert.v)" = "rewrite <- scal_opp_l."
+sed -i "${hilbert_opp_line}c\try rewrite <- scal_opp_l." rocq/CertRL/LM/hilbert.v
+
+# D146 temporary proof-state diagnostic, for ELim_Seq only.
+# The old inversion proof refers to H after an upstream tactic that
+# can discharge/rename it. Display its actual Rocq 9.2 context, then
+# replace this diagnostic with a library-based proof of nonzero.
+elim_assert_line=$(grep -nF "rewrite Rmult_0_l in H." rocq/utils/ELim_Seq.v | tail -n 1 | cut -d: -f1)
+test -n "$elim_assert_line"
+test "$(sed -n "${elim_assert_line}p" rocq/utils/ELim_Seq.v)" = "        rewrite Rmult_0_l in H."
+sed -i "${elim_assert_line}i\        Show." rocq/utils/ELim_Seq.v
