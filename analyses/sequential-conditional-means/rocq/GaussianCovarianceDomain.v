@@ -2731,7 +2731,7 @@ Qed.
  existing exponential addition theorem [exp_plus].
  Library reuse: Stdlib Reals, Ring and [exp_plus]; no hand-written
  exponential function, Gaussian measure, transform or independence axiom.
- Formal boundary: This checks the factorization of a REAL Laplace kernel,
+ Boundary: This checks the factorization of a REAL Laplace kernel,
  not the uniqueness of a probability law from its Laplace transform.
  It does not by itself prove independence of sigma-algebras or the
  universal Gaussian conditional expectation.
