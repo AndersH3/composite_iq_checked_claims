@@ -251,5 +251,5 @@ assoc_start=$((assoc_line + 1))
 assoc_end=$((assoc_line + 7))
 test "$(sed -n "${assoc_start}p" rocq/lib_utils/LibUtilsAssoc.v)" = "    Proof."
 test "$(sed -n "${assoc_end}p" rocq/lib_utils/LibUtilsAssoc.v)" = "    Qed."
-sed -i "${assoc_start},${assoc_end}c\\    Proof.\\n      induction l as [|[key value] tail IH]; intros target Hin; simpl in *.\\n      - contradiction.\\n      - destruct (dec target key) as [Heq | Hneq].\\n        + exists value; reflexivity.\\n        + destruct Hin as [Hhead | Htail].\\n          * exfalso; apply Hneq; symmetry; exact Hhead.\\n          * exact (IH target Htail).\\n    Qed." \
+sed -i "${assoc_start},${assoc_end}c\\    Proof.\\n      induction l as [|[key value] tail IH]; intros target Hin; simpl in *.\\n      - contradiction.\\n      - destruct (dec target key) as [Heq | Hneq].\\n        + exists value; reflexivity.\\n        + assert (Htail : In target (domain tail)).\\n          { destruct Hin as [Hhead | Hfound].\\n            - exfalso; apply Hneq; symmetry; exact Hhead.\\n            - exact Hfound. }\\n          exact (IH target Htail).\\n    Qed." \
   rocq/lib_utils/LibUtilsAssoc.v
