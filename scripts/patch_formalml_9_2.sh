@@ -178,3 +178,28 @@ test "$(sed -n "${seq_start}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Proof."
 test "$(sed -n "${seq_end}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Qed."
 sed -i "${seq_start},${seq_end}c\\    Proof.\\n      intros x Hx.\\n      apply in_seq in Hx.\\n      lia.\\n    Qed." \
   rocq/lib_utils/LibUtilsListAdd.v
+
+# The substring-prefix theorem follows directly from two already proved
+# upstream lemmas (substring_split and prefix_app). Avoid the old partial
+# induction/intuition proof and preserve its exact quantified statement.
+substring_line=$(grep -n "^  Lemma substring_le_prefix " rocq/lib_utils/LibUtilsStringAdd.v | cut -d: -f1)
+test -n "$substring_line"
+substring_start=$((substring_line + 3))
+substring_end=$((substring_line + 8))
+test "$(sed -n "${substring_start}p" rocq/lib_utils/LibUtilsStringAdd.v)" = "  Proof."
+test "$(sed -n "${substring_end}p" rocq/lib_utils/LibUtilsStringAdd.v)" = "  Qed."
+sed -i "${substring_start},${substring_end}c\\  Proof.\\n    intros Hle.\\n    replace m with (n + (m - n)) by lia.\\n    rewrite <- (substring_split s n (m-n) l).\\n    apply prefix_app.\\n  Qed." \
+  rocq/lib_utils/LibUtilsStringAdd.v
+
+# The legacy sorting-insertion witness proof does not completely close
+# under Rocq 9.2. Reuse asymmetric_over_swap/cons_inv to reduce the
+# recursive case, and use the asymmetry-comparability witness in the
+# otherwise-dropping case. No algorithm or theorem statement is changed.
+sort_line=$(grep -n "^    Lemma insertion_sort_insert_in_strong " rocq/lib_utils/LibUtilsSortingAdd.v | cut -d: -f1)
+test -n "$sort_line"
+sort_start=$((sort_line + 3))
+sort_end=$((sort_line + 13))
+test "$(sed -n "${sort_start}p" rocq/lib_utils/LibUtilsSortingAdd.v)" = "    Proof."
+test "$(sed -n "${sort_end}p" rocq/lib_utils/LibUtilsSortingAdd.v)" = "    Qed."
+sed -i "${sort_start},${sort_end}c\\    Proof.\\n      revert x a contr.\\n      induction l as [|b l IH]; intros x a0 contr Hin; simpl in *.\\n      - destruct Hin as [Heq | Hempty]; [subst x; simpl; auto | contradiction].\\n      - destruct (R_dec a0 b) as [Hab | Hab].\\n        + destruct Hin as [Heq | [Heq | Htail]]; subst; simpl; tauto.\\n        + destruct (R_dec b a0) as [Hba | Hba].\\n          * assert (Htailcontr : asymmetric_over R (a0::l)).\\n            { apply asymmetric_over_cons_inv.\\n              apply asymmetric_over_swap; exact contr. }\\n            destruct Hin as [Heq | [Heq | Htail]].\\n            -- right; apply (IH x a0 Htailcontr); left; exact Heq.\\n            -- subst x; left; reflexivity.\\n            -- right; apply (IH x a0 Htailcontr); right; exact Htail.\\n          * assert (Heq : a0 = b).\\n            { apply (contr a0 b); simpl; auto. }\\n            subst a0; simpl.\\n            destruct Hin as [Heq' | [Heq' | Htail]]; subst; simpl; tauto.\\n    Qed." \
+  rocq/lib_utils/LibUtilsSortingAdd.v
