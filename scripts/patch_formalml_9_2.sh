@@ -506,7 +506,7 @@ hilbert_sqrt_proof=$((hilbert_sqrt_line + 1))
 hilbert_sqrt_next=$((hilbert_sqrt_line + 2))
 test "$(sed -n "${hilbert_sqrt_proof}p" rocq/CertRL/LM/hilbert.v)" = "right; unfold Rsqr; field."
 test "$(sed -n "${hilbert_sqrt_next}p" rocq/CertRL/LM/hilbert.v)" = "apply Rgt_not_eq; apply Rlt_sqrt2_0."
-sed -i "${hilbert_sqrt_proof},${hilbert_sqrt_next}c\right; unfold Rsqr.\nassert (Hsqrt2pos : 0 < sqrt 2) by apply Rlt_sqrt2_0.\nfield; nra." \
+sed -i "${hilbert_sqrt_proof},${hilbert_sqrt_next}c\right; unfold Rsqr.\nassert (Hsqrt2pos : 0 < sqrt 2) by apply Rlt_sqrt2_0.\nfield_simplify; nra." \
   rocq/CertRL/LM/hilbert.v
 
 # D109: The existing StronglySorted/Forall constructors and the Stdlib
@@ -534,4 +534,15 @@ limit_first=$(sed -n "${limit_start}p" rocq/utils/CoquelicotAdd.v | sed 's/^[[:s
 limit_last=$(sed -n "${limit_end}p" rocq/utils/CoquelicotAdd.v | sed 's/^[[:space:]]*//')
 test "$limit_first" = "rewrite Rabs_pos_eq."
 test "$limit_last" = "now exists x1."
-sed -i "${limit_start},${limit_end}c\       assert (Hupper : f x1 <= L).\n       { unfold is_upper_bound in H1; apply H1; now exists x1. }\n       rewrite Rabs_pos_eq by lra.\n       assert (Hmono : f x0 <= f x1).\n       { apply H; now left. }\n       lra." rocq/utils/CoquelicotAdd.v
+sed -i "${limit_start},${limit_end}c\       assert (Hupper : f x1 <= L).\n       { unfold is_upper_bound in H1; apply H1; now exists x1. }\n       rewrite Rabs_pos_eq; try lra.\n       assert (Hmono : f x0 <= f x1).\n       { apply H; now left. }\n       lra." rocq/utils/CoquelicotAdd.v
+
+# D113: Replace an obsolete intuition proof of a fresh-key list removal
+# with direct contradiction and the existing induction hypothesis.
+# The original remove_one and permutation/list definitions are reused.
+rem_line=$(grep -n '^Lemma remove_one_app_nin ' rocq/utils/ListAdd.v | cut -d: -f1)
+test -n "$rem_line"
+rem_start=$((rem_line + 3))
+rem_end=$((rem_line + 11))
+test "$(sed -n "${rem_start}p" rocq/utils/ListAdd.v)" = "Proof."
+test "$(sed -n "${rem_end}p" rocq/utils/ListAdd.v)" = "Qed."
+sed -i "${rem_start},${rem_end}c\Proof.\n  induction l1 as [|x xs IH]; simpl; intros Hfresh.\n  - reflexivity.\n  - match_destr.\n    + exfalso; apply Hfresh; simpl; left.\n      unfold equiv in e; congruence.\n    + f_equal; apply IH.\n      intro Hin; apply Hfresh; simpl; right; exact Hin.\nQed." rocq/utils/ListAdd.v
