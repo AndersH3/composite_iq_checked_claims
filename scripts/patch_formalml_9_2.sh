@@ -648,14 +648,8 @@ test "$(sed -n "${repeat_start}p" rocq/utils/PairEncoding.v)" = "Proof."
 test "$(sed -n "${repeat_end}p" rocq/utils/PairEncoding.v)" = "Qed."
 sed -i "${repeat_start},${repeat_end}c\Proof.\n  induction n as [|n IH]; intros Hpositive; [lia |].\n  destruct n as [|n].\n  - reflexivity.\n  - simpl; apply IH; lia.\nQed." rocq/utils/PairEncoding.v
 
-# D125 diagnostic: old 9.2 'intuition' leaves a goal in the quotient
-# bucket separation proof. Show exactly that goal to derive an explicit
-# library-based proof; remove this display before final verification.
-sed -n 163p rocq/utils/Quotient.v | grep -Eq '^[[:space:]]*intuition[.]
-sed -i '163c\
-              intuition.\
-              Show.' rocq/utils/Quotient.v
-
-sed -i '163c\
-              intuition.\
-              Show.' rocq/utils/Quotient.v
+# D125 temporary diagnostic: inspect the remaining quotient
+# bucket-separation subgoal. This patch is guarded by the exact
+# upstream tactic and adds no axiom or assumption.
+sed -n '163p' rocq/utils/Quotient.v | grep -Eq '^[[:space:]]*intuition[.]$'
+sed -i '163a\              Show.' rocq/utils/Quotient.v
