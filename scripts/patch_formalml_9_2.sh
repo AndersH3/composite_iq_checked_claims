@@ -748,8 +748,19 @@ test "$(sed -n 1304p rocq/utils/Quotient.v)" = "        * specialize (nnil []); 
 sed -i '1304c\
         * specialize (nnil [] (or_introl eq_refl)); simpl in nnil; discriminate.' rocq/utils/Quotient.v
 
-# D138: Diagnostic only, identify the exact remaining subgoal in the
-# upstream nonnegative-series shift result; do not accept a partial proof.
+# D138: The upstream shift lemma leaves (0 < N)%nat under the
+# decidable disequality H : N = 0 -> False. The maintained Lia
+# library proves this directly; no change to the convergence theorem.
 test "$(sed -n 4785p rocq/utils/RealAdd.v)" = "Qed."
 sed -i '4785i\
-  Show.' rocq/utils/RealAdd.v
+  lia.' rocq/utils/RealAdd.v
+
+# D139: In the Hilbert projection existence proof, the extended-real
+# decomposition generates either a norm-nonnegative branch or a
+# numerically trivial 0 <= 1+1 branch. Solve with Stdlib Lra or
+# the existing Hilbert norm_ge_0 lemma without assuming positivity.
+hrx_line=$(grep -nF 'assert (Hrx : real x <= norm (minus u v' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
+test -n "$hrx_line"
+hrx_nonneg=$((hrx_line + 6))
+test "$(sed -n "${hrx_nonneg}p" rocq/CertRL/LM/hilbert.v)" = "apply norm_ge_0."
+sed -i "${hrx_nonneg}c\first [lra | apply norm_ge_0]." rocq/CertRL/LM/hilbert.v
