@@ -390,27 +390,21 @@ test "$(sed -n "${compat_end}p" rocq/lib_utils/LibUtilsCompat.v)" = "  Qed."
 sed -i "${compat_start},${compat_end}c\\  Proof.\n    intros Hnodup Hcompatible Hnew.\n    destruct a as [y yv].\n    unfold compatible in *.\n    apply forallb_forall.\n    intros [x xv] Hin.\n    rewrite forallb_forall in Hcompatible.\n    specialize (Hcompatible (x, xv) Hin).\n    unfold compatible_with in *.\n    simpl in *.\n    destruct (assoc_lookupr equiv_dec l' x) eqn:Hold.\n    - exact Hcompatible.\n    - destruct (equiv_dec x y) as [Hxy | Hxy].\n      + unfold equiv in Hxy.\n        change (x = y) in Hxy.\n        subst y.\n        assert (Hown : assoc_lookupr equiv_dec l x = Some xv).\n        { eapply in_assoc_lookupr_nodup; eauto. }\n        rewrite Hown in Hnew.\n        destruct (equiv_dec yv xv) as [Hsame | Hdiff];\n          [|discriminate Hnew].\n        destruct (equiv_dec xv yv) as [Hsame' | Hdiff'];\n          [reflexivity |].\n        unfold equiv, complement in *; congruence.\n      + reflexivity.\n  Qed." \
   rocq/lib_utils/LibUtilsCompat.v
 
-# D098: The remaining Hilbert side condition is 2 <> 0, not 0 <= 1.
-# Preserve both branches of this established estimate: the standard
-# inequality when it is the main goal, and linear arithmetic when the
-# nonzero rational-denominator side goal is exposed by Rocq 9.2.
-# The earlier Lra import insertion shifts the patched source by one line.
+# D098-D099: The upstream Hilbert convexity calculation combines a
+# 2 <> 0 side condition with a 0 <= 1 inequality. Older sequential
+# tactics assume the wrong subgoal order under Rocq 9.2. Rewrite this
+# four-line *proof fragment only*, retaining the surrounding theorem,
+# existing Rinv_r and standard algebraic normalization. Fail closed on
+# the pinned upstream proof shape; never change theorem statements.
+test "$(sed -n 742p rocq/CertRL/LM/hilbert.v)" = "rewrite Rinv_r; [|lra]."
+test "$(sed -n 743p rocq/CertRL/LM/hilbert.v)" = "try rewrite Rmult_1_r."
+test "$(sed -n 744p rocq/CertRL/LM/hilbert.v)" = "apply Rplus_le_reg_l with (-1); ring_simplify."
 test "$(sed -n 745p rocq/CertRL/LM/hilbert.v)" = "apply Rle_0_1."
-sed -i '745c\\first [apply Rle_0_1 | lra].' rocq/CertRL/LM/hilbert.v
-
-# Diagnostic: print the exact fail-closed compatibility guard on CI.
-set -x
-# D099: The prior rewrite of Rinv_r creates an arithmetic side condition.
-# Rocq 9.2 may expose that obligation before the legacy inequality step.
-# Eliminate both branches using Stdlib Lra after the standard ring
-# normalization. This replaces only the proof body fragment, not the
-# Hilbert-space proposition, and avoids brittle goal ordering.
-hilbert_cleanup=$(grep -nF 'rewrite Rinv_r; [|lra].' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
-test -n "$hilbert_cleanup"
-hilbert_after=$((hilbert_cleanup + 3))
-test "$(sed -n "${hilbert_after}p" rocq/CertRL/LM/hilbert.v)" = "first [apply Rle_0_1 | lra]."
-sed -i "${hilbert_cleanup},${hilbert_after}c\\rewrite Rinv_r.\\nall: try rewrite Rmult_1_r.\\nall: try ring_simplify.\\nall: lra." \
-  rocq/CertRL/LM/hilbert.v
+sed -i '742,745c\
+rewrite Rinv_r.\
+all: try rewrite Rmult_1_r.\
+all: try ring_simplify.\
+all: lra.' rocq/CertRL/LM/hilbert.v
 
 # D100: Insertion sort does not change the lookup of a *different*
 # key. A fresh key appended to the original association list therefore
