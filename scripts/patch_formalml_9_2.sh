@@ -511,5 +511,27 @@ hilbert_sqrt_line=$(grep -nF 'apply Rle_trans with (eps²/((sqrt 2)²)).' rocq/C
 test -n "$hilbert_sqrt_line"
 hilbert_sqrt_proof=$((hilbert_sqrt_line + 1))
 test "$(sed -n "${hilbert_sqrt_proof}p" rocq/CertRL/LM/hilbert.v)" = "right; unfold Rsqr; field."
-sed -i "${hilbert_sqrt_proof}c\right; unfold Rsqr; Show; field." \
+sed -i "${hilbert_sqrt_proof}c\right; unfold Rsqr; match goal with |- ?G => idtac G end; field." \
   rocq/CertRL/LM/hilbert.v
+
+# D109: The existing StronglySorted/Forall constructors and the Stdlib
+# in_map_iff membership equivalence prove functional composition without
+# brittle intuition or inversion-generated hypothesis names.
+compose_line=$(grep -n '^Lemma StronglySorted_compose ' rocq/utils/ListAdd.v | cut -d: -f1)
+test -n "$compose_line"
+compose_start=$((compose_line + 3))
+compose_end=$((compose_line + 9))
+test "$(sed -n "${compose_start}p" rocq/utils/ListAdd.v)" = "Proof."
+test "$(sed -n "${compose_end}p" rocq/utils/ListAdd.v)" = "Qed."
+sed -i "${compose_start},${compose_end}c\Proof.\n  induction l as [|a l IH]; simpl.\n  - split; intro H; constructor.\n  - split; intro H.\n    + inversion H as [|b bs Htail Hforall]; subst.\n      constructor.\n      * apply (proj1 IH); exact Htail.\n      * apply Forall_forall; intros x Hx.\n        apply Forall_forall in Hforall.\n        apply Hforall; apply in_map; exact Hx.\n    + inversion H as [|b bs Htail Hforall]; subst.\n      constructor.\n      * apply (proj2 IH); exact Htail.\n      * apply Forall_forall; intros y Hy.\n        apply in_map_iff in Hy as [x [Heq Hx]].\n        subst y.\n        apply Forall_forall in Hforall.\n        apply Hforall; exact Hx.\nQed." \
+  rocq/utils/ListAdd.v
+
+# D110 diagnostic: expose the exact remaining real inequality for the
+# upstream increasing/upper-bound limit proof, without changing its goal.
+# This trace must be removed once the compatible proof is established.
+limit_line=$(grep -nF '        -- apply (H x0 x1).' rocq/utils/CoquelicotAdd.v | cut -d: -f1)
+test -n "$limit_line"
+limit_lra=$((limit_line + 2))
+test "$(sed -n "${limit_lra}p" rocq/utils/CoquelicotAdd.v)" = "        -- lra."
+sed -i "${limit_lra}c\        -- match goal with |- ?G => idtac G end; lra." \
+  rocq/utils/CoquelicotAdd.v
