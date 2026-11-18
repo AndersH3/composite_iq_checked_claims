@@ -507,7 +507,7 @@ hilbert_sqrt_next=$((hilbert_sqrt_line + 2))
 test "$(sed -n "${hilbert_sqrt_proof}p" rocq/CertRL/LM/hilbert.v)" = "right; unfold Rsqr; field."
 test "$(sed -n "${hilbert_sqrt_next}p" rocq/CertRL/LM/hilbert.v)" = "apply Rgt_not_eq; apply Rlt_sqrt2_0."
 sed -i "${hilbert_sqrt_proof},${hilbert_sqrt_next}c\right; unfold Rsqr.\nassert (Hsqrt2pos : 0 < sqrt 2) by apply Rlt_sqrt2_0.\nfield_simplify.
-all: match goal with |- ?G => idtac "D114 Hilbert denominator obligation:" G end.
+all: match goal with |- ?G => idtac G end.
 all: nra." \
   rocq/CertRL/LM/hilbert.v
 
