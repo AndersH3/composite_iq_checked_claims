@@ -275,9 +275,15 @@ must be distinguished:
       using the verified matrix/domain developments, including
       the zero-variance directions of singular \(B\). The Rocq
       theorems \texttt{gcd\_psd\_quadratic\_zero\_cross} and
-      \texttt{gcd\_psd\_null\_covariance} verify the underlying
-      positive-semidefinite null-direction identity, but do not
-      establish the distributional independence statement below.
+      \texttt{gcd\_psd\_null\_covariance} verify the
+      positive-semidefinite null-direction identity. The independently
+      kernel-checked \texttt{gcd\_psd\_covariance\_cauchy\_schwarz}
+      and \texttt{gcd\_psd\_covariance\_characterization} establish
+      the sharp \(b^2\leq ac\) criterion for a symmetric
+      \(2\times2\) covariance block with nonnegative diagonals,
+      including the equality and zero-variance boundaries.
+      These algebraic results do not establish the distributional
+      independence statement below.
 \item \emph{Gaussian-to-independence bridge:} construct the joint
       Gaussian law and use a library-verified characteristic-function
       or equivalent distributional uniqueness result to prove that
