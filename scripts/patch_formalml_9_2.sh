@@ -394,5 +394,6 @@ sed -i "${compat_start},${compat_end}c\\  Proof.\n    intros Hnodup Hcompatible 
 # Preserve both branches of this established estimate: the standard
 # inequality when it is the main goal, and linear arithmetic when the
 # nonzero rational-denominator side goal is exposed by Rocq 9.2.
-test "$(sed -n 744p rocq/CertRL/LM/hilbert.v)" = "apply Rle_0_1."
-sed -i '744c\\first [apply Rle_0_1 | lra].' rocq/CertRL/LM/hilbert.v
+# The earlier Lra import insertion shifts the patched source by one line.
+test "$(sed -n 745p rocq/CertRL/LM/hilbert.v)" = "apply Rle_0_1."
+sed -i '745c\\first [apply Rle_0_1 | lra].' rocq/CertRL/LM/hilbert.v
