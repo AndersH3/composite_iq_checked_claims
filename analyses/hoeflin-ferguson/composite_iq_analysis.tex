@@ -1,6 +1,6 @@
 % !TeX program = xelatex
 % Canonical XeLaTeX/KOMA-Script book layout and required package set.
-\input{../../reporting/book_style}
+\input{../../library/latex/report_style}
 \hypersetup{
   pdftitle={Combining IQ Scores: Analysis and a Corrected Statistical Treatment},
   pdfsubject={Composite-score standardization, population calibration, and extreme percentiles},
@@ -14,9 +14,15 @@
 \author{\ProjectAuthor}
 \date{15 November 2026}
 
+% Edition-specific findings displayed on the shared reference-style title page.
+\renewcommand{\ProjectReportHighlights}{\textbf{The covariance identities are correct}, but population calibration,
+selection effects, tail assumptions and score interpretation limit their
+application to high-IQ qualification. The corrected 100-test example is
+approximately \(3.69\) standard deviations, rather than \(3.71\).}
+
 \begin{document}
 \frontmatter
-\maketitle
+\ProjectReportTitlePage
 \thispagestyle{plain.scrheadings}
 
 \begin{abstract}

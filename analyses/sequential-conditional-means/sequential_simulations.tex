@@ -2,7 +2,7 @@
 % Standalone simulation report.  Mathematical exposition is handwritten;
 % Python/Dask produces the numerical tables and PGFPlots coordinates.
 % The existing Dask run is documented by its source and data manifest.
-\input{../../reporting/simulation_style}
+\input{../../library/latex/simulation_style}
 \hypersetup{pdftitle={Sequential Conditional Means: Simulation Methods and Results},
   pdfsubject={Python/Dask experiments with population and conditional actual-score means}}
 \title{Sequential Conditional Means:\\Simulation Methods and Results}
@@ -10,10 +10,16 @@
 \author{\ProjectAuthor}
 \date{16 November 2026}
 
+% Edition-specific findings displayed on the shared reference-style title page.
+\renewcommand{\ProjectReportHighlights}{The recorded Python/Dask experiment samples \(1\), \(2\) or \(3\)
+initial IQ-150 results and \(1\), \(2\) or \(10\) later outcomes. The
+underlying conditional-Gaussian theory permits arbitrary positive
+initial counts. Results are synthetic and conditional on the model.}
+
 \begin{document}
 \frontmatter
 \input{simulation-data/macros.tex}
-\maketitle
+\ProjectReportTitlePage
 \thispagestyle{plain.scrheadings}
 
 \begin{abstract}

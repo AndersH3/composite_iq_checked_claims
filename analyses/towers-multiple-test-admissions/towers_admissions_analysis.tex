@@ -1,5 +1,5 @@
 % !TeX program = xelatex
-\input{../../reporting/book_style}
+\input{../../library/latex/report_style}
 \setcitestyle{authoryear,round}
 \hypersetup{
   pdftitle={Multiple-Test Admissions: A Joint Analysis of Two Grady Towers Letters},
@@ -14,9 +14,15 @@
 \author{\ProjectAuthor}
 \date{15 November 2026}
 
+% Edition-specific findings displayed on the shared reference-style title page.
+\renewcommand{\ProjectReportHighlights}{Under joint normality with correlation \(0.7\), two top-\(2\%\)
+cutoffs give approximately \textbf{3.3724\%} eligible through either
+test and \textbf{31.3814\%} repeat qualification among passers of a specified
+test. These are model probabilities, not observed society admissions.}
+
 \begin{document}
 \frontmatter
-\maketitle
+\ProjectReportTitlePage
 \begin{abstract}
 Grady Towers's first letter gives incorrect overlap probabilities for
 correlated IQ tests; his follow-up explicitly retracts that calculation and

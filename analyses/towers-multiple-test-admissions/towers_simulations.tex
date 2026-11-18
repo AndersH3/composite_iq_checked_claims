@@ -1,13 +1,19 @@
 % !TeX program = xelatex
-\input{../../reporting/simulation_style}
+\input{../../library/latex/simulation_style}
 \title{Simulating Multiple-Test Admissions}
 \subtitle{Python/Dask methods, results and verification limits}
 \author{\ProjectAuthor}
 \date{16 November 2026}
 
+% Edition-specific findings displayed on the shared reference-style title page.
+\renewcommand{\ProjectReportHighlights}{Seeded Python/Dask experiments estimate union, intersection and
+conditional event frequencies for correlated Gaussian tests and compare
+them with reference integrals. The reported counts and uncertainty
+do not establish actual membership frequencies.}
+
 \begin{document}
 \frontmatter
-\maketitle
+\ProjectReportTitlePage
 \input{simulation-data/macros.tex}
 
 \begin{abstract}

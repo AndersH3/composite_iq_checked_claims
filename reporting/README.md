@@ -11,7 +11,7 @@ The active pipeline is Python/Dask/NumPy/SciPy with Deal contracts. All three an
 - `assets.py`: reproducible numerical tables and CSV/TeX plot data. Report displays round values; the underlying records retain numerical precision.
 - `provenance.py`: SHA-256 and JSON source/output manifests.
 - `rebuild_proofs.py`: document-only XeLaTeX/KOMA-Script rebuild for six books from current recorded Dask assets, without generating fresh random draws.
-- `simulation_style.tex`, `book_style.tex` and shared proof inputs: common report typography, bibliography and formal/methodological exposition.
+- `../library/latex/report_style.tex` and `../library/latex/simulation_style.tex`: canonical shared book typography and title pages. The `reporting/*_style.tex` files are compatibility wrappers; the proof inputs remain here.
 
 ## Scaled runs and memory model
 
