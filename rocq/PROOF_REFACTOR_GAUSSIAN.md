@@ -6,6 +6,18 @@
 
 This register tracks D050's 56, D051's 101, D052's 30, and D053–D056's 105 source-ordered Rocq proofs about Gaussian prior-plus-likelihood *pointwise densities*: quadratic completion, model precision and variance, dependence on arbitrary unequal observed scores, evidence cancellation and posterior symmetry. Its scope deliberately excludes the stronger measurable conditional-expectation assertion unless a separate formally verified probability library supplies integral normalization, integrability and disintegration.
 
+**Verified November 18, 2026 Gaussian Laplace-kernel algebra (draft PR #57).**
+The [Rocq 9.2 kernel workflow](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44375980346)
+at source revision `e6191f9cacf2648f28914b928e2f5da62beadd93`
+accepted `gcd_gaussian_uncorrelated_laplace_kernel_factor`.
+The five-module register now contains **297 kernel-checked mathematical
+declarations** (35 conditional-kernel, 157 covariance-domain,
+43 innovation-bound, 30 batch-balance, 32 finite-history).
+The new equality is the algebraic factorization of a Gaussian
+*real Laplace kernel*, not a probability-law identification,
+distributional uniqueness result, jointly Gaussian residual
+independence theorem, or measure-theoretic conditional expectation.
+
 **Verified November 18, 2026 singular-PSD extension (draft PR #57).**
 The [Rocq 9.2 kernel run at revision `356e7c8ba5a9`](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44298839114)
 accepted `gcd_psd_covariance_cauchy_schwarz` and
