@@ -5,7 +5,11 @@ on:
     paths:
       - 'analyses/sequential-conditional-means/qbs/**'
       - '.github/workflows/gaussian-qbs.yml'
+  # Synchronization on this repository is covered by push; avoid
+  # repeatedly cancelling a long QBS Rocq build when only unrelated
+  # FormalML compatibility files are updated on an open draft PR.
   pull_request:
+    types: [opened, reopened]
     paths:
       - 'analyses/sequential-conditional-means/qbs/**'
       - '.github/workflows/gaussian-qbs.yml'
