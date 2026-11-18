@@ -2626,7 +2626,7 @@ Theorem gcd_psd_null_covariance :
 Proof.
   intros a b c Hquad Hzero.
   subst c.
-  apply gcd_psd_quadratic_zero_cross.
+  apply (gcd_psd_quadratic_zero_cross a b).
   intro t.
   specialize (Hquad t).
   nra.
