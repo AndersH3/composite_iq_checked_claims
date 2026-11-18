@@ -361,3 +361,16 @@ inclprev=$((includeline - 1))
 test "$(sed -n "${inclprev}p" rocq/lib_utils/LibUtilsSublist.v)" = "        * intros ? inn."
 sed -i "${inclprev},${includeline}c\\        * intros item Hitem.\\n          destruct (H0 item Hitem) as [Heq | Htail].\\n          { subst item; contradiction. }\\n          exact Htail." \
   rocq/lib_utils/LibUtilsSublist.v
+
+# D096: Extract a fresh key constructively from a list longer than a
+# duplicate-free exclusion set. The filtered empty case contradicts
+# the existing NoDup/inclusion length bound; the nonempty case returns
+# its actual head. Replace obsolete inversion/intuition and keep Defined.
+fresh_line=$(grep -n "^  Lemma find_fresh_from " rocq/lib_utils/LibUtilsSublist.v | cut -d: -f1)
+test -n "$fresh_line"
+fresh_start=$((fresh_line + 4))
+fresh_end=$((fresh_line + 14))
+test "$(sed -n "${fresh_start}p" rocq/lib_utils/LibUtilsSublist.v)" = "  Proof."
+test "$(sed -n "${fresh_end}p" rocq/lib_utils/LibUtilsSublist.v)" = "  Defined."
+sed -i "${fresh_start},${fresh_end}c\\  Proof.\\n    intros Hlength Hnodup.\\n    rewrite find_filter.\\n    unfold hd_error.\\n    destruct (filter (fun x : A =>\\n              if in_dec equiv_dec x bad then false else true) l)\\n      as [|fresh tail] eqn:Hfilter.\\n    - exfalso.\\n      pose proof (filter_nil_implies_not_pred _ l Hfilter) as Habsent.\\n      assert (Hincl : incl l bad).\\n      { intros x Hx.\\n        specialize (Habsent x Hx).\\n        destruct (in_dec equiv_dec x bad) as [Hin | Hnin].\\n        - exact Hin.\\n        - discriminate Habsent. }\\n      pose proof (incl_NoDup_length_le Hnodup Hincl) as Hbound.\\n      lia.\\n    - exists fresh; reflexivity.\\n  Defined." \
+  rocq/lib_utils/LibUtilsSublist.v
