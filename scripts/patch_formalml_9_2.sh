@@ -613,4 +613,4 @@ test -n "$rabs_line"
 rabs_end=$((rabs_line + 11))
 test "$(sed -n "${rabs_line}p" rocq/CertRL/LM/hilbert.v)" = "rewrite Rabs_right."
 test "$(sed -n "${rabs_end}p" rocq/CertRL/LM/hilbert.v)" = "rewrite <- ortho_projection_aux in H2; easy."
-sed -i "${rabs_line},${rabs_end}c\assert (H2 : Rbar_le (Glb_Rbar (fun r : R =>\n  exists w0 : E, phi w0 /\\\\ r = norm (minus u w0)))\n  (norm (minus u w))).\n{ apply Glb_Rbar_correct; exists w; now split. }\nrewrite <- ortho_projection_aux in H2; simpl in H2.\nrewrite Rabs_right.\nall: unfold minus at 1; unfold plus, opp; simpl.\nall: match goal with |- ?G => idtac "D119 H2" H2 "GOAL" G end.\nall: first [lra | apply Rle_ge; lra]." rocq/CertRL/LM/hilbert.v
+sed -i "${rabs_line},${rabs_end}c\assert (H2 : Rbar_le (Glb_Rbar (fun r : R =>\n  exists w0 : E, phi w0 /\\\\ r = norm (minus u w0)))\n  (norm (minus u w))).\n{ apply Glb_Rbar_correct; exists w; now split. }\nrewrite <- ortho_projection_aux in H2; simpl in H2.\nrewrite Rabs_right.\nall: unfold minus at 1; unfold plus, opp; simpl.\nall: match goal with |- ?G => idtac H2 G end.\nall: first [lra | apply Rle_ge; lra]." rocq/CertRL/LM/hilbert.v
