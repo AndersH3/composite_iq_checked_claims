@@ -879,7 +879,7 @@ test -n "$elim_recip_start"
 test -n "$elim_recip_next"
 test "$elim_recip_start" -lt "$elim_recip_next"
 elim_recip_end=$((elim_recip_next - 1))
-sed -i "${elim_recip_start},${elim_recip_end}c\\    + assert (Hrpos : 0 < r) by (eapply Rlt_trans; [apply Rinv_0_lt_compat; apply cond_pos | exact H]).\\n      apply (Rmult_lt_compat_r eps _ _ (cond_pos eps)) in H.\\n      rewrite Rinv_l in H; [| apply Rgt_not_eq; apply cond_pos].\\n      rewrite Rabs_right.\\n      * apply (Rmult_lt_reg_l r); [exact Hrpos |].\\n        replace (r * / r) with 1 by (apply Rinv_r; lra).\\n        exact H.\\n      * left; apply Rinv_0_lt_compat; exact Hrpos." rocq/utils/ELim_Seq.v
+sed -i "${elim_recip_start},${elim_recip_end}c\\    + assert (Hrpos : 0 < r) by (eapply Rlt_trans; [apply Rinv_0_lt_compat; apply cond_pos | exact H]).\\n      apply (Rmult_lt_compat_r eps _ _ (cond_pos eps)) in H.\\n      rewrite Rinv_l in H by (apply Rgt_not_eq; apply cond_pos).\\n      rewrite Rabs_right.\\n      * apply (Rmult_lt_reg_l r); [exact Hrpos |].\\n        replace (r * / r) with 1 by (apply Rinv_r; lra).\\n        exact H.\\n      * left; apply Rinv_0_lt_compat; exact Hrpos." rocq/utils/ELim_Seq.v
 
 # D155: In the second Hilbert scalar-negation case, the proof has
 # already advanced from the numerical identity to the final uniqueness
@@ -896,3 +896,70 @@ elim_zero_next=$((elim_zero_line + 1))
 test "$(sed -n "${elim_zero_line}p" rocq/utils/ELim_Seq.v)" = "    + rewrite Rabs_R0."
 test "$(sed -n "${elim_zero_next}p" rocq/utils/ELim_Seq.v)" = "      now destruct eps."
 sed -i "${elim_zero_line},${elim_zero_next}c\all: rewrite Rabs_R0; apply cond_pos." rocq/utils/ELim_Seq.v
+
+# D157: Refactor the completion of the Hilbert projection-uniqueness
+# theorem. Earlier upstream replace commands left three real-ring
+# side conditions unresolved, then targeted the wrong focused goal.
+# Reuse the already proved parallelogram identity E1, the library's
+# convex predicate, Glb_Rbar_correct, norm_ge_0 and norm_eq_zero.
+# Real closed-field arithmetic is discharged by Stdlib nra; no axiom
+# or change to the theorem proposition is introduced.
+hilbert_tail_start=$(grep -nF "assert (Hmin : norm (minus v v') * norm (minus v v') <= 0)." rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+hilbert_next_theorem=$(grep -n '^Theorem ortho_projection_convex:' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$hilbert_tail_start"
+test -n "$hilbert_next_theorem"
+hilbert_tail_end=$((hilbert_next_theorem - 2))
+test "$hilbert_tail_start" -lt "$hilbert_tail_end"
+test "$(sed -n "${hilbert_tail_end}p" rocq/CertRL/LM/hilbert.v)" = "Qed."
+hilbert_replacement=$(mktemp)
+cat > "$hilbert_replacement" <<'ROCQ_HILBERT_UNIQUENESS'
+(* The midpoint of two minimizers belongs to the convex set. *)
+assert (Hmid : phi v'').
+{
+  unfold v''.
+  replace (scal (1 / 2) (@plus E v v'))
+    with (plus (scal (1 / 2) v) (scal (1 - (1 / 2)) v')).
+  - unfold convex in phi_convex.
+    apply phi_convex; try assumption; split; lra.
+  - replace (1 - (1 / 2)) with (1 / 2) by field.
+    rewrite scal_distr_l; reflexivity.
+}
+(* The greatest lower bound is no greater than a midpoint norm. *)
+assert (Hglb : Rbar_le
+  (Glb_Rbar (fun r : R => exists w : E,
+                 phi w /\ r = norm (minus u w)))
+  (norm (minus u v''))).
+{
+  apply Glb_Rbar_correct.
+  exists v''; split; [exact Hmid | reflexivity].
+}
+assert (HdGlb : d = Glb_Rbar
+  (fun r : R => exists w : E, phi w /\ r = norm (minus u w))).
+{
+  unfold d; rewrite H1; exact H3.
+}
+rewrite <- HdGlb in Hglb.
+simpl in Hglb.
+assert (Hd : d <= norm (minus u v'')) by exact Hglb.
+assert (Hd0 : 0 <= d) by (unfold d; apply norm_ge_0).
+(* The parallelogram identity and minimality imply a zero difference. *)
+assert (Hdiff0 : norm (minus v v') = 0).
+{
+  change
+    (4 * (norm (minus u v'') * norm (minus u v'')) +
+     norm (minus v v') * norm (minus v v') = 4 * (d * d)) in E1.
+  pose proof (norm_ge_0 (minus u v'')) as Hmid0.
+  nra.
+}
+(* A Hilbert-space vector of zero norm is the zero vector. *)
+apply norm_eq_zero in Hdiff0.
+unfold minus in Hdiff0.
+apply plus_reg_r with (opp v').
+rewrite plus_opp_r.
+exact Hdiff0.
+Qed.
+ROCQ_HILBERT_UNIQUENESS
+hilbert_rewritten=$(mktemp)
+awk -v first="$hilbert_tail_start" -v last="$hilbert_tail_end" -v proof="$hilbert_replacement" 'NR == first { while ((getline line < proof) > 0) print line } NR < first || NR > last { print }' rocq/CertRL/LM/hilbert.v > "$hilbert_rewritten"
+mv "$hilbert_rewritten" rocq/CertRL/LM/hilbert.v
+rm "$hilbert_replacement"
