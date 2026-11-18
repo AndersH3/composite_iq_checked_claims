@@ -482,3 +482,32 @@ test "$(sed -n "${lub_start}p" rocq/utils/CoquelicotAdd.v)" = "  - destruct H1."
 test "$(sed -n "${lub_end}p" rocq/utils/CoquelicotAdd.v)" = "    intuition."
 sed -i "${lub_start},${lub_end}c\  - destruct H1 as [x [Hin Hout]].\n    exists x; split; [exact Hin |].\n    unfold S2, In in Hout.\n    assert (Hnot_le : ~ x <= L2).\n    { intro Hle; apply Hout; split; [exact Hin | exact Hle]. }\n    lra." \
   rocq/utils/CoquelicotAdd.v
+
+# D106: Reuse Stdlib's in_app_iff and Forall_forall in both directions.
+# Upstream intuition had selected a universally quantified hypothesis
+# instead of the membership goal. The theorem statement is unchanged.
+forall_app_line=$(grep -n '^Lemma Forall_app_iff ' rocq/utils/ListAdd.v | cut -d: -f1)
+test -n "$forall_app_line"
+forall_app_start=$((forall_app_line + 3))
+forall_app_end=$((forall_app_line + 7))
+test "$(sed -n "${forall_app_start}p" rocq/utils/ListAdd.v)" = "Proof."
+test "$(sed -n "${forall_app_end}p" rocq/utils/ListAdd.v)" = "Qed."
+sed -i "${forall_app_start},${forall_app_end}c\Proof.\n  repeat rewrite Forall_forall.\n  split.\n  - intros Hall; split; intros x Hx; apply Hall; apply in_app_iff.\n    + left; exact Hx.\n    + right; exact Hx.\n  - intros [Hl Hr] x Hx.\n    apply in_app_iff in Hx.\n    destruct Hx as [Hx | Hx]; [apply Hl | apply Hr]; exact Hx.\nQed." \
+  rocq/utils/ListAdd.v
+
+# D107: The increasing limit proof identifies the two arguments of the
+# existing monotonicity hypothesis explicitly rather than relying on
+# Rocq 9.2's changed apply unification.
+test "$(grep -Fc '         -- apply H.' rocq/utils/CoquelicotAdd.v)" -eq 1
+sed -i 's/         -- apply H\./         -- apply (H x0 x1)./' \
+  rocq/utils/CoquelicotAdd.v
+
+# D108 diagnostic, removed once the next exact-source Hilbert goal is
+# fully identified. Display the original norm/denominator equality
+# before the maintained field tactic (no theorem/axiom changes).
+hilbert_sqrt_line=$(grep -nF 'apply Rle_trans with (eps²/((sqrt 2)²)).' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
+test -n "$hilbert_sqrt_line"
+hilbert_sqrt_proof=$((hilbert_sqrt_line + 1))
+test "$(sed -n "${hilbert_sqrt_proof}p" rocq/CertRL/LM/hilbert.v)" = "right; unfold Rsqr; field."
+sed -i "${hilbert_sqrt_proof}c\right; unfold Rsqr; Show; field." \
+  rocq/CertRL/LM/hilbert.v
