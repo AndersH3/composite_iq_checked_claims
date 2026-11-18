@@ -2688,7 +2688,7 @@ Qed.
  multiplying by strictly positive a.
  When a=0 the squared bound implies b=0, so the form is c>=0.
  Library reuse: [gcd_psd_covariance_cauchy_schwarz] and Stdlib
- Ring, Lra, Psatz. No custom PSD matrix implementation is introduced.
+ Ring, Rle_0_sqr, Lra and Psatz. No custom PSD matrix implementation is introduced.
  Boundary: Handles signed and singular covariance algebra, but cannot
  establish the Gaussian characteristic-function factorization or the
  defining event-integral conditional-expectation identity by itself.
@@ -2705,7 +2705,8 @@ Proof.
     apply (gcd_psd_covariance_cauchy_schwarz a b c Ha Hc Hquad).
   - intros Hbound t.
     destruct (Rle_lt_or_eq_dec 0 a Ha) as [Hapos | Hazero].
-    + assert (Hsquared : 0 <= (a*t+b)*(a*t+b)) by nra.
+    + assert (Hsquared : 0 <= (a*t+b)*(a*t+b)).
+      { change (0 <= Rsqr (a*t+b)); apply Rle_0_sqr. }
       assert (Hidentity :
         a*(a*t*t + 2*b*t+c) =
           (a*t+b)*(a*t+b)+(a*c-b*b)) by ring.
