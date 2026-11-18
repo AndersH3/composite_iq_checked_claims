@@ -223,3 +223,10 @@ sed -i "${sortin_start},${sortin_end}c\\    Proof.\\n      intro Hin.\\n      ea
 test "$(sed -n 689p rocq/CertRL/LM/hilbert.v)" = "rewrite scal_distr_l scal_opp_r scal_assoc."
 sed -i "689c\\unfold minus; rewrite scal_distr_l scal_opp_r scal_assoc." \
   rocq/CertRL/LM/hilbert.v
+
+# The exact normalization by Rinv_r already removes the only product
+# by one in this Hilbert convexity side condition under Rocq 9.2.
+# Preserve the source algebraic goal, making the now-redundant rewrite
+# optional rather than aborting the valid proof.
+test "$(sed -n 742p rocq/CertRL/LM/hilbert.v)" = "rewrite Rmult_1_r."
+sed -i "742c\\try rewrite Rmult_1_r." rocq/CertRL/LM/hilbert.v
