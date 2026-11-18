@@ -348,3 +348,16 @@ test "$(sed -n "${subdec_start}p" rocq/lib_utils/LibUtilsSublist.v)" = "  Proof.
 test "$(sed -n "${subdec_end}p" rocq/lib_utils/LibUtilsSublist.v)" = "  Defined."
 sed -i "${subdec_start},${subdec_end}c\\  Proof.\\n    revert l1.\\n    induction l2 as [|head tail IH]; intros l1; destruct l1 as [|first rest].\\n    - left; apply sublist_nil.\\n    - right; intro H; apply sublist_nil_r in H; discriminate.\\n    - left; apply sublist_nil_l.\\n    - destruct (first == head) as [Heq | Hneq].\\n      + destruct (IH rest) as [Hsub | Hnot].\\n        * left; unfold equiv in Heq; subst; apply sublist_cons; exact Hsub.\\n        * right; intro Hfull; unfold equiv in Heq; subst.\\n          apply Hnot; now apply sublist_cons_eq_inv in Hfull.\\n      + destruct (IH (first::rest)) as [Hsub | Hnot].\\n        * left; apply sublist_skip; exact Hsub.\\n        * right; intro Hfull; inversion Hfull; subst.\\n          -- exfalso; apply Hneq; reflexivity.\\n          -- apply Hnot; assumption.\\n  Defined." \
   rocq/lib_utils/LibUtilsSublist.v
+
+# D095: A sublist witness can be constructed from NoDup and inclusion.
+# In the branch where the head is not in the source, the upstream
+# intuition tactic leaves the excluded-head case open. Explicitly
+# eliminate it using the existing In_dec negative witness, then pass
+# inclusion for the tail to the unchanged induction hypothesis.
+includeline=$(grep -nF "          destruct (H0 _ inn); subst; intuition." \
+  rocq/lib_utils/LibUtilsSublist.v | cut -d: -f1)
+test -n "$includeline"
+inclprev=$((includeline - 1))
+test "$(sed -n "${inclprev}p" rocq/lib_utils/LibUtilsSublist.v)" = "        * intros ? inn."
+sed -i "${inclprev},${includeline}c\\        * intros item Hitem.\\n          destruct (H0 item Hitem) as [Heq | Htail].\\n          { subst item; contradiction. }\\n          exact Htail." \
+  rocq/lib_utils/LibUtilsSublist.v
