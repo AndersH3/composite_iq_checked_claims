@@ -38,6 +38,8 @@ def test_coverage_finds_a_missing_function_contract(coverage_checker, tmp_path):
     assert report["imports_deal"] is True
     assert report["function_count"] == 1 and report["contract_count"] == 0
     assert [row["name"] for row in report["missing"]] == ["unchecked"]
+    assert not report["module_documented"]
+    assert [row["name"] for row in report["undocumented"]] == ["unchecked"]
 
 
 @deal.pre(lambda coverage_checker, tmp_path: protected_history_intact())
@@ -218,6 +220,8 @@ def test_every_repository_python_function_has_a_real_contract(coverage_checker):
     for path in files:
         report = coverage_checker.audit_file(path)
         relpath = path.relative_to(ROOT).as_posix()
+        assert report["module_documented"], (path, "missing file-purpose docstring")
+        assert not report["undocumented"], (path, report["undocumented"])
         # A module with no named function has no Deal contracts to attach.
         # Reject any other source that silently becomes import-only:
         # every new exception requires an explicit source-ownership review.

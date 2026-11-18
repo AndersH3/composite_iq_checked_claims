@@ -92,8 +92,13 @@ def audit_file(path: Path) -> dict:
     
     Count distinct Deal preconditions, postconditions, effects, and other validators.
     Expose missing, duplicated, and below-floor contracts without executing source code.
+    Also audit module and function descriptions without loading the module.
     """
     tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    # The first AST statement must be an explanatory module docstring.
+    # This includes package facades and test files with no named functions.
+    purpose = ast.get_docstring(tree)
+    module_documented = bool(purpose and len(purpose.split()) >= 6)
     aliases = {alias.asname or "deal" for node in tree.body if isinstance(node, ast.Import)
                for alias in node.names if alias.name == "deal"}
     functions = [node for node in ast.walk(tree) if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))]
@@ -147,7 +152,12 @@ def audit_file(path: Path) -> dict:
                               for keyword in decorator.keywords)
                         if isinstance(decorator, ast.Call) else None)
             identities.append(identity)
+        # Every nested or top-level function needs its own description.
+        # The AST excludes decorator-looking text inside strings/comments.
+        description = ast.get_docstring(node)
+        documented = bool(description and len(description.split()) >= 6)
         function_contracts.append({"name": node.name, "line": node.lineno,
+                                   "documented": documented,
                                    "contract_count": len(decorators),
                                    "distinct_contract_count": len(set(identities)),
                                    "duplicate_contract_count": len(identities) - len(set(identities))})
@@ -155,6 +165,8 @@ def audit_file(path: Path) -> dict:
                if row["contract_count"] == 0]
     insufficient = [row for row in function_contracts if row["distinct_contract_count"] < MINIMUM_CONTRACTS]
     duplicated = [row for row in function_contracts if row["duplicate_contract_count"]]
+    undocumented = [{"name": row["name"], "line": row["line"]}
+                    for row in function_contracts if not row["documented"]]
     count = sum(row["contract_count"] for row in function_contracts)
     distinct = sum(row["distinct_contract_count"] for row in function_contracts)
     # Count only distinct AST contract expressions *within each function*.
@@ -162,6 +174,7 @@ def audit_file(path: Path) -> dict:
     # different checks, whereas repeating one decorator is not progress.
     file_below_floor = bool(functions) and distinct < MINIMUM_FILE_CONTRACTS
     return {"path": str(path), "function_count": len(functions), "missing": missing,
+            "module_documented": module_documented, "undocumented": undocumented,
             "imports_deal": bool(aliases), "contract_count": count,
             "file_distinct_contract_count": distinct,
             "minimum_contracts": MINIMUM_CONTRACTS,
@@ -247,13 +260,16 @@ def main() -> None:
     # meet the full >=15 per-function contract floor; the negative fixture
     # tests this non-vacuous requirement.
     problems = [r for r in rows if r["insufficient"] or r["insufficient_file"]
-                or r["duplicated"] or (r["function_count"] > 0
+                or r["duplicated"] or r["undocumented"] or not r["module_documented"]
+                or (r["function_count"] > 0
                     and (not r["imports_deal"] or r["contract_count"] == 0))]
     report = {"python_files": len(rows), "named_functions": sum(r["function_count"] for r in rows),
               "deal_contracts": sum(r["contract_count"] for r in rows), "problems": problems,
               "minimum_contracts": MINIMUM_CONTRACTS,
               "minimum_file_contracts": MINIMUM_FILE_CONTRACTS,
               "files_below_minimum": sum(r["insufficient_file"] for r in rows),
+              "files_without_purpose": sum(not r["module_documented"] for r in rows),
+              "undocumented_functions": sum(len(r["undocumented"]) for r in rows),
               "minimum_observed": min(row["distinct_contract_count"] for r in rows for row in r["function_contracts"]),
               "complete": not problems}
     contract_counts = [function["distinct_contract_count"] for row in rows
