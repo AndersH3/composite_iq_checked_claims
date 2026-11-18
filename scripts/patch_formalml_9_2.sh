@@ -1044,3 +1044,17 @@ test -n "$elim_pos_start"
 elim_pos_end=$(awk -v start="$elim_pos_start" 'NR > start && /^[[:space:]]*Qed[.]/ {print NR; exit}' rocq/utils/ELim_Seq.v)
 test -n "$elim_pos_end"
 sed -i "${elim_pos_end}i\  all: try solve [rewrite Rabs_R0; apply cond_pos].\n  all: try solve [\n    assert (Hepspos : 0 < eps) by apply cond_pos;\n    assert (Hrpos : 0 < r) by\n      (eapply Rlt_trans; [apply Rinv_0_lt_compat; exact Hepspos | exact H]);\n    assert (Heps_nonzero : eps <> 0) by\n      (apply Rgt_not_eq; exact Hepspos);\n    rewrite Rabs_right; [| left; apply Rinv_0_lt_compat; exact Hrpos];\n    apply (Rmult_lt_reg_l r); [exact Hrpos |];\n    replace (r * / r) with 1 by (symmetry; apply Rinv_r; lra);\n    apply (Rmult_lt_compat_r eps) in H; [| exact Hepspos];\n    rewrite (Rinv_l (pos eps) Heps_nonzero) in H;\n    exact H]." rocq/utils/ELim_Seq.v
+
+# D169: After Rocq 9.2 reduces multiplication by 1, retain only
+# the applicable Stdlib normalization; the mathematical goal is
+# unchanged. Locate this step relative to the D167 reciprocal proof.
+hilbert_multone_line=$((hilbert_invone_line + 1))
+test "$(sed -n "${hilbert_multone_line}p" rocq/CertRL/LM/hilbert.v)" = "     rewrite Rmult_1_r."
+sed -i "${hilbert_multone_line}c\     try rewrite Rmult_1_r." rocq/CertRL/LM/hilbert.v
+
+# D170 temporary Rocq proof-state diagnostic: the previous ELim
+# Show occurs before D168's remaining-goal tactics. Show the exact
+# state after applying the Stdlib reciprocal/zero branches.
+elim_pos_end=$(awk -v start="$elim_pos_start" 'NR > start && /^[[:space:]]*Qed[.]/ {print NR; exit}' rocq/utils/ELim_Seq.v)
+test -n "$elim_pos_end"
+sed -i "${elim_pos_end}i\  Show." rocq/utils/ELim_Seq.v
