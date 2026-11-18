@@ -879,7 +879,7 @@ test -n "$elim_recip_start"
 test -n "$elim_recip_next"
 test "$elim_recip_start" -lt "$elim_recip_next"
 elim_recip_end=$((elim_recip_next - 1))
-sed -i "${elim_recip_start},${elim_recip_end}c\\    + assert (Hrpos : 0 < r) by (eapply Rlt_trans; [apply Rinv_0_lt_compat; apply cond_pos | exact H]).\\n      apply (Rmult_lt_compat_r eps _ _ (cond_pos eps)) in H.\\n      assert (Heps_nonzero : pos eps <> 0) by (apply Rgt_not_eq; apply cond_pos).\\n      rewrite (Rinv_l (pos eps) Heps_nonzero) in H.\\n      assert (Hinvpos : 0 < / r) by (apply Rinv_0_lt_compat; exact Hrpos).\\n      rewrite Rabs_right.\\n      2: lra.\\n      apply (Rmult_lt_reg_l r); [exact Hrpos |].\\n      replace (r * / r) with 1 by (apply Rinv_r; lra).\\n      exact H." rocq/utils/ELim_Seq.v
+sed -i "${elim_recip_start},${elim_recip_end}c\\    + assert (Hrpos : 0 < r) by (eapply Rlt_trans; [apply Rinv_0_lt_compat; apply cond_pos | exact H]).\\n      apply (Rmult_lt_compat_r eps _ _ (cond_pos eps)) in H.\\n      assert (Heps_nonzero : pos eps <> 0) by (apply Rgt_not_eq; apply cond_pos).\\n      rewrite (Rinv_l (pos eps) Heps_nonzero) in H.\\n      assert (Hinvpos : 0 < / r) by (apply Rinv_0_lt_compat; exact Hrpos).\\n      rewrite Rabs_right by lra.\\n      apply (Rmult_lt_reg_l r); [exact Hrpos |].\\n      replace (r * / r) with 1 by (apply Rinv_r; lra).\\n      exact H." rocq/utils/ELim_Seq.v
 
 # D155: In the second Hilbert scalar-negation case, the proof has
 # already advanced from the numerical identity to the final uniqueness
@@ -999,12 +999,12 @@ sed -i "${hilbert_zero_tail}c\    apply charac_ortho_projection_convex_aux5; try
 # D163: In the positive-ratio branch of Hilbert projection
 # characterization, the remaining obligation is 0 < 1, not the
 # positivity of a quotient. Preserve the original hypotheses and
-# finish with Rocq's real linear arithmetic instead of a mismatched
-# application of Rdiv_lt_0_compat.
+# use the maintained real-division positivity lemma for the actual
+# quotient goal, and linear arithmetic for the remaining branches.
 hilbert_ratio_line=$(grep -nF 'intuition. apply Rdiv_lt_0_compat; intuition.' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
 test -n "$hilbert_ratio_line"
 sed -n "${hilbert_ratio_line}p" rocq/CertRL/LM/hilbert.v | grep -Fq 'intuition. apply Rdiv_lt_0_compat; intuition.'
-sed -i "${hilbert_ratio_line}c\     intuition; lra." rocq/CertRL/LM/hilbert.v
+sed -i "${hilbert_ratio_line}c\     intuition; try (apply Rdiv_lt_0_compat; lra); try lra." rocq/CertRL/LM/hilbert.v
 hilbert_recip_line=$(grep -nF '     apply Rdiv_lt_0_compat; intuition.' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
 test -n "$hilbert_recip_line"
 sed -n "${hilbert_recip_line}p" rocq/CertRL/LM/hilbert.v | grep -Fq 'apply Rdiv_lt_0_compat; intuition.'
