@@ -2631,3 +2631,81 @@ Proof.
   specialize (Hquad t).
   nra.
 Qed.
+
+
+(** [gcd_psd_covariance_cauchy_schwarz] (theorem).
+ Mathematical meaning: Every positive-semidefinite two-by-two covariance
+ block satisfies the complete Cauchy--Schwarz inequality b^2 <= a*c.
+ This remains valid when a=0 or c=0 and when b is negative.
+ Exact proposition: for nonnegative diagonal variances a,c, nonnegativity
+ of the quadratic form a*t^2+2*b*t+c for all real t entails b*b<=a*c.
+ Proof method: For a>0 evaluate the form at t=-b/a and multiply by
+ the positive denominator. For a=0, a nonzero cross term would make
+ the form negative at t=-(c+1)/(2*b), a contradiction.
+ Library reuse: Stdlib Rle_lt_or_eq_dec, Req_EM_T, Field, Ring, Psatz.
+ No Gaussian measure, new matrix structure, assumed independence or axiom.
+ Boundary: This is a covariance inequality, not an assertion of
+ conditional expectation or probabilistic independence.
+*)
+Theorem gcd_psd_covariance_cauchy_schwarz :
+  forall a b c : R,
+    0 <= a ->
+    0 <= c ->
+    (forall t : R, 0 <= a*t*t + 2*b*t + c) ->
+    b*b <= a*c.
+Proof.
+  intros a b c Ha Hc Hquad.
+  destruct (Rle_lt_or_eq_dec 0 a Ha) as [Hapos | Hazero].
+  - pose proof (Hquad (-b/a)) as Hmin.
+    assert (Hscaled :
+      a*(a*(-b/a)*(-b/a) + 2*b*(-b/a) + c) = a*c-b*b).
+    { field; lra. }
+    assert (Hnonneg :
+      0 <= a*(a*(-b/a)*(-b/a) + 2*b*(-b/a) + c)).
+    { apply Rmult_le_pos; lra. }
+    nra.
+  - subst a.
+    destruct (Req_EM_T b 0) as [Hbzero | Hbnonzero].
+    + subst b; nra.
+    + pose proof (Hquad (-(c+1)/(2*b))) as Hbad.
+      assert (Hcancellation : 2*b*(-(c+1)/(2*b)) = -(c+1)).
+      { field; lra. }
+      nra.
+Qed.
+
+(** [gcd_psd_covariance_characterization] (theorem).
+ Mathematical meaning: For nonnegative marginal variances, an arbitrary
+ symmetric two-by-two covariance block is positive semidefinite exactly
+ when its cross covariance satisfies b^2 <= a*c.
+ Exact proposition: universal nonnegativity of a*t*t+2*b*t+c
+ is equivalent to b*b<=a*c, with explicit a>=0, c>=0 premises.
+ Proof method: Necessity reuses the preceding Cauchy--Schwarz theorem;
+ sufficiency completes the square after multiplying by positive a.
+ When a=0 the squared bound implies b=0, so the form is c>=0.
+ Library reuse: [gcd_psd_covariance_cauchy_schwarz] and Stdlib
+ Ring, Lra, Psatz. No custom PSD matrix implementation is introduced.
+ Boundary: Handles signed and singular covariance algebra, but cannot
+ establish the Gaussian characteristic-function factorization or the
+ defining event-integral conditional-expectation identity by itself.
+*)
+Theorem gcd_psd_covariance_characterization :
+  forall a b c : R,
+    0 <= a ->
+    0 <= c ->
+    ((forall t : R, 0 <= a*t*t + 2*b*t + c) <-> b*b <= a*c).
+Proof.
+  intros a b c Ha Hc.
+  split.
+  - intro Hquad.
+    apply (gcd_psd_covariance_cauchy_schwarz a b c Ha Hc Hquad).
+  - intros Hbound t.
+    destruct (Rle_lt_or_eq_dec 0 a Ha) as [Hapos | Hazero].
+    + assert (Hsquared : 0 <= (a*t+b)*(a*t+b)) by nra.
+      assert (Hidentity :
+        a*(a*t*t + 2*b*t+c) =
+          (a*t+b)*(a*t+b)+(a*c-b*b)) by ring.
+      nra.
+    + subst a.
+      assert (Hbzero : b=0) by nra.
+      subst b; nra.
+Qed.
