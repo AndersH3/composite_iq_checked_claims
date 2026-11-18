@@ -483,6 +483,8 @@ test "$(sed -n "${lub_end}p" rocq/utils/CoquelicotAdd.v)" = "    intuition."
 sed -i "${lub_start},${lub_end}c\  - destruct H1 as [x [Hin Hout]].\n    exists x; split; [exact Hin |].\n    unfold S2, In in Hout.\n    assert (Hnot_le : ~ x <= L2).\n    { intro Hle; apply Hout; split; [exact Hin | exact Hle]. }\n    lra." \
   rocq/utils/CoquelicotAdd.v
 
+# Diagnostic for strict upstream source guards (remove after resolution).
+set -x
 # D106: Reuse Stdlib's in_app_iff and Forall_forall in both directions.
 # Upstream intuition had selected a universally quantified hypothesis
 # instead of the membership goal. The theorem statement is unchanged.
