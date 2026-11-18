@@ -265,3 +265,16 @@ test "$(sed -n "${distinct_start}p" rocq/lib_utils/LibUtilsAssoc.v)" = "    Proo
 test "$(sed -n "${distinct_end}p" rocq/lib_utils/LibUtilsAssoc.v)" = "    Qed."
 sed -i "${distinct_start},${distinct_end}c\\    Proof.\\n      induction l as [|[key value] tail IH]; simpl.\\n      - constructor.\\n      - destruct (existsb (fun z : A*B => key ==b fst z)\\n                    (bdistinct_domain tail)) eqn:Hmember.\\n        + exact IH.\\n        + constructor; [|exact IH].\\n          intros Hin.\\n          destruct (in_domain_in Hin) as [v Hv].\\n          assert (Hexists :\\n            existsb (fun z : A*B => key ==b fst z)\\n              (bdistinct_domain tail) = true).\\n          { apply existsb_exists.\\n            exists (key,v); split; [exact Hv |].\\n            simpl; unfold equiv_decb.\\n            destruct (equiv_dec key key) as [_ | Hbad].\\n            - reflexivity.\\n            - exfalso; apply Hbad; reflexivity. }\\n          rewrite Hmember in Hexists; discriminate.\\n    Qed." \
   rocq/lib_utils/LibUtilsAssoc.v
+
+# D087: The two inclusion directions of domain-append restriction
+# are immediate consequences of Stdlib in_app_iff; old intuition
+# leaves an unsolved subgoal under current Rocq. Reuse the existing
+# lookup_equiv_on predicate and prove both directions explicitly.
+lookapp_line=$(grep -n "^    Lemma lookup_equiv_on_dom_app  " rocq/lib_utils/LibUtilsAssoc.v | cut -d: -f1)
+test -n "$lookapp_line"
+lookapp_start=$((lookapp_line + 5))
+lookapp_end=$((lookapp_line + 7))
+test "$(sed -n "${lookapp_start}p" rocq/lib_utils/LibUtilsAssoc.v)" = "    Proof."
+test "$(sed -n "${lookapp_end}p" rocq/lib_utils/LibUtilsAssoc.v)" = "    Qed."
+sed -i "${lookapp_start},${lookapp_end}c\\    Proof.\\n      unfold lookup_equiv_on.\\n      intro Hall; split; intros x Hx; apply Hall; apply in_app_iff.\\n      - left; exact Hx.\\n      - right; exact Hx.\\n    Qed." \
+  rocq/lib_utils/LibUtilsAssoc.v
