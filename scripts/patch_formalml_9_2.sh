@@ -569,3 +569,12 @@ perm_end=$((perm_line + 12))
 test "$(sed -n "${perm_start}p" rocq/utils/ListAdd.v)" = "Proof."
 test "$(sed -n "${perm_end}p" rocq/utils/ListAdd.v)" = "Qed."
 sed -i "${perm_start},${perm_end}c\Proof.\n  induction l as [|b tail IH]; simpl; intros Hin.\n  - contradiction.\n  - match_destr.\n    + red in e; subst; reflexivity.\n    + destruct Hin as [Heq | Htail].\n      * subst b; try unfold equiv in *; congruence.\n      * rewrite perm_swap; apply perm_skip; apply IH; exact Htail.\nQed." rocq/utils/ListAdd.v
+
+# D116: The Hilbert sqrt2 rewrite leaves a rational equality that
+# old 'now right' does not normalize under Rocq 9.2. Reuse the original
+# Rsqr_sqrt lemma with standard Field/Lra tactics and unchanged premises.
+sqrt2_rewrite_start=$((hilbert_sqrt_line + 4))
+sqrt2_rewrite_end=$((hilbert_sqrt_line + 6))
+test "$(sed -n "${sqrt2_rewrite_start}p" rocq/CertRL/LM/hilbert.v)" = "rewrite Rsqr_sqrt."
+test "$(sed -n "${sqrt2_rewrite_end}p" rocq/CertRL/LM/hilbert.v)" = "left; apply Rlt_0_2."
+sed -i "${sqrt2_rewrite_start},${sqrt2_rewrite_end}c\rewrite Rsqr_sqrt; [unfold Rsqr; field; lra | lra]." rocq/CertRL/LM/hilbert.v
