@@ -879,7 +879,7 @@ test -n "$elim_recip_start"
 test -n "$elim_recip_next"
 test "$elim_recip_start" -lt "$elim_recip_next"
 elim_recip_end=$((elim_recip_next - 1))
-sed -i "${elim_recip_start},${elim_recip_end}c\\    + assert (Hrpos : 0 < r) by (eapply Rlt_trans; [apply Rinv_0_lt_compat; apply cond_pos | exact H]).\\n      apply (Rmult_lt_compat_r eps _ _ (cond_pos eps)) in H.\\n      assert (Heps_nonzero : pos eps <> 0) by (apply Rgt_not_eq; apply cond_pos).\\n      rewrite (Rinv_l (pos eps) Heps_nonzero) in H.\\n      rewrite Rabs_right.\\n      * apply (Rmult_lt_reg_l r); [exact Hrpos |].\\n        replace (r * / r) with 1 by (apply Rinv_r; lra).\\n        exact H.\\n      * assert (Hinvpos : 0 < / r) by (apply Rinv_0_lt_compat; exact Hrpos).\\n        lra." rocq/utils/ELim_Seq.v
+sed -i "${elim_recip_start},${elim_recip_end}c\\    + assert (Hrpos : 0 < r) by (eapply Rlt_trans; [apply Rinv_0_lt_compat; apply cond_pos | exact H]).\\n      apply (Rmult_lt_compat_r eps _ _ (cond_pos eps)) in H.\\n      assert (Heps_nonzero : pos eps <> 0) by (apply Rgt_not_eq; apply cond_pos).\\n      rewrite (Rinv_l (pos eps) Heps_nonzero) in H.\\n      assert (Hinvpos : 0 < / r) by (apply Rinv_0_lt_compat; exact Hrpos).\\n      rewrite Rabs_right by lra.\\n      apply (Rmult_lt_reg_l r); [exact Hrpos |].\\n      replace (r * / r) with 1 by (apply Rinv_r; lra).\\n      exact H." rocq/utils/ELim_Seq.v
 
 # D155: In the second Hilbert scalar-negation case, the proof has
 # already advanced from the numerical identity to the final uniqueness
@@ -984,3 +984,14 @@ hilbert_rchar_line=$(grep -nF 'rewrite Hscal in H1. intuition.' rocq/CertRL/LM/h
 test -n "$hilbert_rchar_line"
 test "$(sed -n "${hilbert_rchar_line}p" rocq/CertRL/LM/hilbert.v)" = "rewrite Hscal in H1. intuition."
 sed -i "${hilbert_rchar_line}c\\rewrite Hscal in H1.\\nall: try (change (0 <= - (2 * inner (minus u v) (minus w v)));\\n          change (2 * inner (minus u v) (minus w v) <= 0) in H1; lra).\\nall: try lra." rocq/CertRL/LM/hilbert.v
+
+# D162: Do not let the legacy intuition tactic focus a numeric bound
+# before the Hilbert auxiliary inequality. The two multiplier and
+# Cauchy-bound premises are discharged explicitly with Stdlib lra.
+hilbert_zero_step=$(grep -nF 'apply Rmult_le_reg_l with 2%R. intuition.' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$hilbert_zero_step"
+hilbert_zero_tail=$((hilbert_zero_step + 2))
+test "$(sed -n "${hilbert_zero_step}p" rocq/CertRL/LM/hilbert.v)" = "    apply Rmult_le_reg_l with 2%R. intuition."
+test "$(sed -n "${hilbert_zero_tail}p" rocq/CertRL/LM/hilbert.v)" = "    apply charac_ortho_projection_convex_aux5; intuition."
+sed -i "${hilbert_zero_step}c\    apply Rmult_le_reg_l with 2%R; [lra |]." rocq/CertRL/LM/hilbert.v
+sed -i "${hilbert_zero_tail}c\    apply charac_ortho_projection_convex_aux5; try assumption; lra." rocq/CertRL/LM/hilbert.v
