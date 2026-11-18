@@ -691,3 +691,25 @@ sed -n '3341p' rocq/utils/RealAdd.v | grep -Fq 'Notation "Max_{ l } ( f )"'
 sed -n '3342p' rocq/utils/RealAdd.v | grep -Fq 'Notation "Min_{ l } ( f )"'
 sed -n '3341,3342p' rocq/utils/RealAdd.v | grep -Fq '(at level 50)'
 sed -i '3341,3342s/(at level 50)/(at level 0)/' rocq/utils/RealAdd.v
+
+# D131: After proving 0 < 1/2, the following midpoint normalization
+# uses a positive multiplier 2. A direct lra proof avoids a Rocq 9.2
+# misapplication by the old broad intuition tactic.
+mult2_line=$(grep -nF 'apply Rmult_le_reg_r with 2.' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
+test -n "$mult2_line"
+mult2_side=$((mult2_line + 1))
+test "$(sed -n "${mult2_side}p" rocq/CertRL/LM/hilbert.v)" = "intuition."
+sed -i "${mult2_side}c\lra." rocq/CertRL/LM/hilbert.v
+
+# D132: The upstream RealAdd repeats the two closed Max/Min notations
+# outside the section. Keep their exact definitions with parser level 0.
+sed -n '4239p' rocq/utils/RealAdd.v | grep -Fq 'Notation "Max_{ l } ( f )"'
+sed -n '4240p' rocq/utils/RealAdd.v | grep -Fq 'Notation "Min_{ l } ( f )"'
+sed -n '4239,4240p' rocq/utils/RealAdd.v | grep -Fq '(at level 50)'
+sed -i '4239,4240s/(at level 50)/(at level 0)/' rocq/utils/RealAdd.v
+
+# D133 temporary diagnostic: locate the remaining negative-quotient
+# bucket goal after the already-corrected symmetry branch.
+sed -n '165p' rocq/utils/Quotient.v | grep -Fq 'rewrite (H1 x0 a0); simpl; intuition.'
+sed -i '165a\
+             Show.' rocq/utils/Quotient.v
