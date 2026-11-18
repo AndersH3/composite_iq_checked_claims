@@ -879,7 +879,7 @@ test -n "$elim_recip_start"
 test -n "$elim_recip_next"
 test "$elim_recip_start" -lt "$elim_recip_next"
 elim_recip_end=$((elim_recip_next - 1))
-sed -i "${elim_recip_start},${elim_recip_end}c\\    + assert (Hrpos : 0 < r) by (eapply Rlt_trans; [apply Rinv_0_lt_compat; apply cond_pos | exact H]).\\n      apply (Rmult_lt_compat_r eps _ _ (cond_pos eps)) in H.\\n      assert (Heps_nonzero : pos eps <> 0) by (apply Rgt_not_eq; apply cond_pos).\\n      rewrite (Rinv_l (pos eps) Heps_nonzero) in H.\\n      assert (Hinvpos : 0 < / r) by (apply Rinv_0_lt_compat; exact Hrpos).\\n      rewrite Rabs_right.\\n      apply (Rmult_lt_reg_l r); [exact Hrpos |].\\n      replace (r * / r) with 1 by (apply Rinv_r; lra).\\n      exact H." rocq/utils/ELim_Seq.v
+sed -i "${elim_recip_start},${elim_recip_end}c\\    + assert (Hrpos : 0 < r) by (eapply Rlt_trans; [apply Rinv_0_lt_compat; apply cond_pos | exact H]).\\n      apply (Rmult_lt_compat_r eps _ _ (cond_pos eps)) in H.\\n      assert (Heps_nonzero : pos eps <> 0) by (apply Rgt_not_eq; apply cond_pos).\\n      rewrite (Rinv_l (pos eps) Heps_nonzero) in H.\\n      assert (Hinvpos : 0 < / r) by (apply Rinv_0_lt_compat; exact Hrpos).\\n      rewrite Rabs_right.\\n      all: try (left; exact Hinvpos).\\n      apply (Rmult_lt_reg_l r); [exact Hrpos |].\\n      replace (r * / r) with 1 by (apply Rinv_r; lra).\\n      exact H." rocq/utils/ELim_Seq.v
 
 # D155: In the second Hilbert scalar-negation case, the proof has
 # already advanced from the numerical identity to the final uniqueness
@@ -1015,4 +1015,4 @@ sed -i "${hilbert_recip_line}c\     apply Rdiv_lt_0_compat; lra." rocq/CertRL/LM
 # by the existing positivity hypotheses and library lemmas.
 hilbert_rmin_line=$((hilbert_ratio_line + 1))
 test "$(sed -n "${hilbert_rmin_line}p" rocq/CertRL/LM/hilbert.v)" = "     apply Rmin_l."
-sed -i "${hilbert_rmin_line}c\      all: first [solve [apply Rmin_l] | solve [apply Rdiv_lt_0_compat; [exact r | exact H2]]]." rocq/CertRL/LM/hilbert.v
+sed -i "${hilbert_rmin_line}c\      Show.\n      all: first [solve [apply Rmin_l] | solve [apply Rdiv_lt_0_compat; [exact r | exact H2]]]." rocq/CertRL/LM/hilbert.v
