@@ -53,6 +53,11 @@ TARGET_CONTRACTS = MINIMUM_CONTRACTS
 @deal.ensure(lambda node, aliases, result: not isinstance(node, ast.Lambda) or not result)
 @deal.ensure(lambda node, aliases, result: not isinstance(node, ast.Dict) or not result)
 def is_contract(node: ast.expr, aliases: set) -> bool:
+    """Identify only AST decorators actually imported from the Deal module.
+    
+    Normalize valid import aliases while rejecting unrelated names and syntax nodes.
+    String literals, nested attributes, and comments cannot masquerade as contracts.
+    """
     expression = node.func if isinstance(node, ast.Call) else node
     return (isinstance(expression, ast.Attribute) and isinstance(expression.value, ast.Name)
             and expression.value.id in aliases and expression.attr in CONTRACTS)
@@ -83,6 +88,11 @@ def is_contract(node: ast.expr, aliases: set) -> bool:
 @deal.post(lambda result: all(row["contract_count"] >= row["distinct_contract_count"] >= 0 for row in result["function_contracts"]))
 @deal.post(lambda result: len(result["insufficient"]) == sum(row["distinct_contract_count"] < MINIMUM_CONTRACTS for row in result["function_contracts"]))
 def audit_file(path: Path) -> dict:
+    """Audit every named function in a Python module using its parsed AST.
+    
+    Count distinct Deal preconditions, postconditions, effects, and other validators.
+    Expose missing, duplicated, and below-floor contracts without executing source code.
+    """
     tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
     aliases = {alias.asname or "deal" for node in tree.body if isinstance(node, ast.Import)
                for alias in node.names if alias.name == "deal"}
@@ -184,6 +194,11 @@ def audit_file(path: Path) -> dict:
 @deal.post(lambda result: all(path.parent.is_dir() for path in result))
 @deal.post(lambda result: all(path.resolve().is_file() for path in result))
 def python_files(root: Path) -> list:
+    """Enumerate every relevant tracked Python file within the repository root.
+    
+    Use the Git index when present and a constrained local fallback otherwise.
+    Reject empty inventories, path escapes, symlinks, and duplicate entries.
+    """
     try:
         output = subprocess.check_output(["git", "-C", str(root), "ls-files", "--cached", "--others",
                                           "--exclude-standard", "--", "*.py"], stderr=subprocess.PIPE,
@@ -217,6 +232,11 @@ def python_files(root: Path) -> list:
 @deal.pre(lambda: bool(sys.argv) and isinstance(sys.argv[0], str))
 @deal.pre(lambda: CONTRACTS <= {"pre", "post", "ensure", "raises", "reason", "has", "pure", "safe", "inv", "example", "chain"})
 def main() -> None:
+    """Run the fail-closed repository-wide Deal contract compliance audit.
+    
+    Report per-file and per-function coverage alongside the minimum distinct floor.
+    Return nonzero on missing imports, duplicate contracts, or any below-floor function.
+    """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=ROOT)
     args = parser.parse_args()

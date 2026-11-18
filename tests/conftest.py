@@ -121,6 +121,11 @@ def reference_inputs_intact() -> bool:
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("verification","check_contract_coverage.py").is_file())
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("verification","check_static_lint.py").is_file())
 def load_script(name: str, relative: str) -> ModuleType:
+    """Load an analysis module from its canonical repository source path.
+    
+    A unique import name prevents similarly named report scripts from colliding.
+    Reject missing or invalid module specifications rather than borrowing cached code.
+    """
     spec = importlib.util.spec_from_file_location(name, ROOT / relative)
     module = importlib.util.module_from_spec(spec)
     sys.modules[name] = module
@@ -150,6 +155,11 @@ def load_script(name: str, relative: str) -> ModuleType:
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("verification","check_contract_coverage.py").is_file())
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("verification","check_static_lint.py").is_file())
 def contracts_enabled() -> None:
+    """Activate real Deal runtime contract checks for the pytest session.
+    
+    The tests deliberately reject invalid numerical inputs through preconditions.
+    Do not downgrade failures to mere warnings or bypass the maintained validators.
+    """
     deal.enable(warn=False)
 
 
@@ -176,6 +186,11 @@ def contracts_enabled() -> None:
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("verification","check_contract_coverage.py").is_file())
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("verification","check_static_lint.py").is_file())
 def hoeflin() -> ModuleType:
+    """Provide the isolated Hoeflin report calculation module for regression tests.
+    
+    Load the production verifier rather than a test-only approximation.
+    Keep the same source and strict Deal checks used to regenerate the report.
+    """
     return load_script("checked_hoeflin_numbers", "analyses/hoeflin-ferguson/scripts/verify_calculations.py")
 
 
@@ -202,6 +217,11 @@ def hoeflin() -> ModuleType:
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("verification","check_contract_coverage.py").is_file())
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("verification","check_static_lint.py").is_file())
 def towers() -> ModuleType:
+    """Provide the isolated Towers admission reference implementation to tests.
+    
+    Use the maintained Gaussian quadrature module and its original constants.
+    Avoid accidentally importing the unrelated Hoeflin verifier of the same name.
+    """
     return load_script("checked_towers_numbers", "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py")
 
 
@@ -228,4 +248,9 @@ def towers() -> ModuleType:
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("verification","check_contract_coverage.py").is_file())
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("verification","check_static_lint.py").is_file())
 def coverage_checker() -> ModuleType:
+    """Provide the exact repository-wide Deal contract auditor to pytest.
+    
+    Tests exercise its real AST parser and file inventory, not a mock checker.
+    The fixture keeps expected negative controls separate from maintained modules.
+    """
     return load_script("checked_contract_coverage", "verification/check_contract_coverage.py")

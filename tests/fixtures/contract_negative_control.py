@@ -22,6 +22,11 @@ import deal
 @deal.ensure(lambda value, result: result - value == 0)
 @deal.ensure(lambda value, result: (value <= 0.5) == (result <= 0.5))
 def probability_identity(value: float) -> float:
+    """Provide a positive identity baseline for real Deal static lint.
+    
+    The annotated input and output remain the same probability value.
+    This function ensures the negative fixture tests an actual violation elsewhere.
+    """
     return value
 
 
@@ -42,4 +47,9 @@ def probability_identity(value: float) -> float:
 @deal.post(lambda result: abs(result) == 1)
 @deal.post(lambda result: result % 2 == 1)
 def negative_probability() -> int:
+    """Deliberately return a negative mass to test fail-closed Deal lint.
+    
+    Its declared nonnegative postcondition must be rejected by the real linter.
+    Do not repair the violation: the workflow requires this negative control to fail.
+    """
     return -1

@@ -27,6 +27,11 @@ from conftest import ROOT
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","provenance.py").is_file())
 def test_coverage_finds_a_missing_function_contract(coverage_checker, tmp_path):
+    """Reject a source function that has no actual Deal decorators.
+    
+    Create an isolated bad module and check the auditor identifies its name and line.
+    The check must use parsed syntax, not incidental mentions of a contract.
+    """
     path = tmp_path / "missing.py"
     path.write_text("import deal\n\ndef unchecked(value):\n    return value\n")
     report = coverage_checker.audit_file(path)
@@ -55,6 +60,11 @@ def test_coverage_finds_a_missing_function_contract(coverage_checker, tmp_path):
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","provenance.py").is_file())
 def test_comments_and_strings_are_not_counted_as_contracts(coverage_checker, tmp_path):
+    """Ensure comments and quoted text cannot spoof a Deal decorator.
+    
+    The fixture contains decorator-looking prose but no real Deal import.
+    A parser-based audit must therefore report zero applicable contracts.
+    """
     path = tmp_path / "mentions.py"
     path.write_text('''"""import deal
 @deal.post(lambda result: result > 0)
@@ -88,6 +98,11 @@ def unchecked(value):
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","provenance.py").is_file())
 def test_import_alias_is_recognized_but_five_decorators_are_insufficient(coverage_checker, tmp_path):
+    """Check aliased Deal imports without weakening the fifteen-contract floor.
+    
+    The checker must recognize valid alias syntax and still reject insufficient coverage.
+    This prevents implementation-specific import spelling from bypassing the gate.
+    """
     path = tmp_path / "aliased.py"
     path.write_text("import deal as contracts\n\n@contracts.post(lambda result: isinstance(result, int))\n"
                     "@contracts.post(lambda result: result > 0)\n"
@@ -137,6 +152,11 @@ def test_import_alias_is_recognized_but_five_decorators_are_insufficient(coverag
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","provenance.py").is_file())
 def test_coverage_checks_nested_functions(coverage_checker, tmp_path):
+    """Require coverage for named nested functions, not only module-level APIs.
+    
+    A local function remains an executable Python boundary even when enclosed in another.
+    The AST traversal must report its missing or insufficient decorators.
+    """
     path = tmp_path / "nested.py"
     path.write_text("import deal\n\n@deal.post(lambda result: callable(result))\n"
                     "@deal.post(lambda result: result.__name__ == 'unchecked_inner')\n"
@@ -169,6 +189,11 @@ def test_coverage_checks_nested_functions(coverage_checker, tmp_path):
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","provenance.py").is_file())
 def test_every_repository_python_function_has_a_real_contract(coverage_checker):
+    """Audit every tracked Python source against the canonical Deal requirements.
+    
+    Require at least fifteen distinct decorator contracts per applicable function.
+    Exclude neither production Dask tasks nor maintained tests from the inventory.
+    """
     files = coverage_checker.python_files(ROOT)
     assert files
     # Preserve strengthened contracts in maintained Python numerical,
@@ -324,6 +349,11 @@ def test_aggregate_contracts_never_mask_below_minimum_functions(
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","provenance.py").is_file())
 def test_duplicate_aliases_and_whitespace_do_not_meet_the_floor(coverage_checker, tmp_path):
+    """Reject duplicate AST-equivalent Deal contracts despite formatting differences.
+    
+    Repeated equivalent predicates or import aliases do not increase coverage.
+    Only distinct proof obligations can satisfy the mandatory lower bound.
+    """
     path = tmp_path / "duplicates.py"
     path.write_text("import deal\nimport deal as contracts\n"
                     "@deal.post(lambda result: result > 0)\n"
@@ -377,6 +407,11 @@ def test_duplicate_aliases_and_whitespace_do_not_meet_the_floor(coverage_checker
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","provenance.py").is_file())
 def test_empty_python_inventory_cannot_establish_coverage(coverage_checker, tmp_path):
+    """Ensure the repository-wide audit cannot pass vacuously on no files.
+    
+    An empty or inaccessible source inventory must raise a validation error.
+    This protects the verification result from incomplete repository enumeration.
+    """
     with pytest.raises(ValueError):
         coverage_checker.python_files(tmp_path)
 

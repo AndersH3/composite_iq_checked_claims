@@ -29,6 +29,11 @@ import math
 @deal.ensure(lambda numerator, denominator, result: (numerator == denominator) == (result == 1))
 @deal.ensure(lambda numerator, denominator, result: numerator != 1 or result >= 0.5)
 def positive_ratio(numerator: float, denominator: float) -> float:
+    """Divide finite real inputs only when the denominator is strictly positive.
+    
+    Preserve the exact quotient; the precondition, not a changed calculation, prevents zero division.
+    This is the positive static-lint control for the validated numeric domain.
+    """
     return numerator / denominator
 
 
@@ -49,4 +54,9 @@ def positive_ratio(numerator: float, denominator: float) -> float:
 @deal.post(lambda result: float.fromhex(result.hex()) == result)
 @deal.post(lambda result: result == positive_ratio(1.0, 2.0))
 def safe_half() -> float:
+    """Exercise the contracted positive quotient on an exact unit example.
+    
+    The result must remain one half and retain the same division expression.
+    Provide a known-safe counterpart to the deliberately broken lint fixture.
+    """
     return positive_ratio(1.0, 2.0)
