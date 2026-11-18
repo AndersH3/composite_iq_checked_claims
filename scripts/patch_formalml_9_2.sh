@@ -814,19 +814,19 @@ test -n "$hilbert_opp_line"
 test "$(sed -n "${hilbert_opp_line}p" rocq/CertRL/LM/hilbert.v)" = "rewrite <- scal_opp_l."
 sed -i "${hilbert_opp_line}c\try rewrite <- scal_opp_l." rocq/CertRL/LM/hilbert.v
 
-# D146 temporary proof-state diagnostic, for ELim_Seq only.
-# The old inversion proof refers to H after an upstream tactic that
-# can discharge/rename it. Display its actual Rocq 9.2 context, then
-# replace this diagnostic with a library-based proof of nonzero.
-elim_assert_line=$(grep -nF "rewrite Rmult_0_l in H." rocq/utils/ELim_Seq.v | head -n 1 | cut -d: -f1)
-test -n "$elim_assert_line"
-test "$(sed -n "${elim_assert_line}p" rocq/utils/ELim_Seq.v)" = "        rewrite Rmult_0_l in H."
-sed -i "${elim_assert_line}i\        Show." rocq/utils/ELim_Seq.v
-
 # D147 diagnostic/proof stabilization: the Hilbert projection proof
 # has already normalized the quadratic factor on a preceding branch.
-# Display the exact goal and attempt E1's substitution only if present.
+# Discharge the independent squared-norm monotonicity and negation\n# subgoals by maintained Rmult_le_compat before substituting E1.\n# Show the remaining goal until the compatibility proof is kernel-checked.
 hilbert_e1_line=$(grep -n '^rewrite <- E1\.$' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
 test -n "$hilbert_e1_line"
 test "$(sed -n "${hilbert_e1_line}p" rocq/CertRL/LM/hilbert.v)" = "rewrite <- E1."
-sed -i "${hilbert_e1_line}c\Show.\ntry rewrite <- E1." rocq/CertRL/LM/hilbert.v
+sed -i "${hilbert_e1_line}c\all: try solve [unfold minus in Hd; assert (Hd0 : 0 <= d) by (unfold d; apply norm_ge_0); apply Rmult_le_compat; try assumption; try apply norm_ge_0 | reflexivity].\nShow.\nrewrite <- E1." rocq/CertRL/LM/hilbert.v
+
+# D149 diagnostic: Rocq's legacy rbar_prover may lose hypotheses in
+# the infinite-limit reciprocal branch. Preserve and display the goal
+# state before invoking it on each real-extended constructor case.
+test "$(sed -n 2085p rocq/utils/ELim_Seq.v)" = "    destruct (u x); simpl in *; rbar_prover."
+sed -i '2085c\
+    destruct (u x); simpl in *.\
+    Show.\
+    all: try rbar_prover.' rocq/utils/ELim_Seq.v
