@@ -2564,8 +2564,8 @@ Qed.
  every other square-integrable linear contrast.
  Exact proposition: if a*t*t + 2*b*t is nonnegative for every real t,
  then b=0, without assuming a strictly positive eigenvalue.
- Premises: Nonnegativity for all t, not simply for one value of t.
- Proof: The values t=1 and t=-1 establish a>=0. Evaluate at
+ Premises and side conditions: Nonnegativity for all t, not simply for one value of t.
+ Proof/definition method: The values t=1 and t=-1 establish a>=0. Evaluate at
  t=-b/(a+1), multiply by the positive square of the denominator,
  and conclude that (a+2)*b*b=0 using field arithmetic and order.
  Library reuse: Rocq Stdlib Rmult_le_pos, Rmult_integral, Field,
@@ -2609,9 +2609,9 @@ Qed.
  variance is zero, then its cross covariance is zero.
  Exact proposition: universal nonnegativity of a*t*t+2*b*t+c and
  c=0 together imply b=0; the leading variance need not be positive.
- Premises: Full PSD polynomial inequality for all real contrasts and
+ Premises and side conditions: Full PSD polynomial inequality for all real contrasts and
  an exact zero diagonal element, including singular covariance cases.
- Proof: Substitute the zero constant and reuse the previous checked
+ Proof/definition method: Substitute the zero constant and reuse the previous checked
  scalar null-direction theorem; no independent PSD algorithm is added.
  Library reuse: [gcd_psd_quadratic_zero_cross] and Rocq Stdlib Psatz.
  Boundary: This algebraic fact supports the singular Gaussian residual
