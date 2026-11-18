@@ -28,6 +28,14 @@ jobs:
       - name: Check out exact repository revision
         uses: actions/checkout@v4
 
+      # Shell scripts must be ShellCheck-clean before any invocation.
+      # The Ubuntu GitHub runner ships ShellCheck; fail closed if absent.
+      - name: ShellCheck FormalML compatibility script before execution
+        shell: bash
+        run: |
+          command -v shellcheck
+          shellcheck --shell=sh --severity=warning scripts/patch_formalml_9_2.sh
+
       - name: Check no assumed Gaussian CE or unfinished proof
         shell: bash
         run: |
