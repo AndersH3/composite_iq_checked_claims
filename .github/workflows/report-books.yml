@@ -42,6 +42,11 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+      - name: ShellCheck all tracked shell scripts before report validation
+        shell: bash
+        run: |
+          command -v shellcheck
+          git ls-files -z '*.sh' | xargs -0 -r shellcheck --severity=warning
       - name: Check shared report layout and AI disclosure structure
         run: bash scripts/check_report_template.sh
       - name: Build with XeLaTeX, KOMA-Script and latexmk
