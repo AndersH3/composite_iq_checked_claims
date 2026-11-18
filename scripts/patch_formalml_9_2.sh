@@ -790,4 +790,11 @@ sed -i '2001,2003c\
 # Guard and edit the resulting physical source line, not the original index.
 elim_inv_line=$((2089 - 2))
 test "$(sed -n "${elim_inv_line}p" rocq/utils/ELim_Seq.v)" = "      rewrite Rinv_l in H; [| destruct eps; simpl; lra]."
-sed -i "${elim_inv_line}c\\      rewrite Rinv_l in H; [| pose proof (cond_pos eps); lra]." rocq/utils/ELim_Seq.v
+sed -i "${elim_inv_line}c\\      rewrite Rinv_l in H; [| apply Rgt_not_eq; exact (cond_pos eps)]." rocq/utils/ELim_Seq.v
+
+# D143: The follow-up Hilbert positivity branch is for the numeric
+# sum 1+1, not the norm of a vector.  The old norm_ge_0 tactic
+# therefore cannot unify.  Prove the concrete positive sum with Lra.
+hilbert_inner_line=$((hrx_line + 12))
+test "$(sed -n "${hilbert_inner_line}p" rocq/CertRL/LM/hilbert.v)" = "apply norm_ge_0."
+sed -i "${hilbert_inner_line}c\left; lra." rocq/CertRL/LM/hilbert.v
