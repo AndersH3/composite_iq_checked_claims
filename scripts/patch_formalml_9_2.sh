@@ -498,6 +498,8 @@ sed -i "${forall_app_start},${forall_app_end}c\Proof.\n  repeat rewrite Forall_f
 # D107: Retain the original upstream monotonicity application; the
 # later limit inequality is the actual unresolved Rocq 9.2 subgoal.
 
+# Temporary CI trace for pinned upstream source guards; remove after repair.
+set -x
 # D108/D111: The field equality has a nonzero sqrt(2) denominator.
 # Supply its positivity to Rocq's field tactic, without new assumptions.
 hilbert_sqrt_line=$(grep -nF 'apply Rle_trans with (eps²/((sqrt 2)²)).' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
