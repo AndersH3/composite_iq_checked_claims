@@ -52,7 +52,9 @@ jobs:
             # result, not the unrelated FormalML RL/model-checking corpus.
             # The generated Rocq makefile tracks their full dependencies.
             opam exec -- make Makefile.rocq
-            opam exec -- make -j 2 -f Makefile.rocq \
+            # Preserve the failure status, but continue compiling independent
+            # nodes to reveal multiple incompatible upstream proofs per run.
+            opam exec -- make -k -j 2 -f Makefile.rocq \
               rocq/ProbTheory/ConditionalExpectation.vo \
               rocq/ProbTheory/ProductSpace.vo
             mkdir -p /tmp/formalml-gaussian
