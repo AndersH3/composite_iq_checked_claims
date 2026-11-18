@@ -34,7 +34,7 @@ jobs:
         shell: bash
         run: |
           command -v shellcheck
-          shellcheck --shell=sh --severity=warning scripts/patch_formalml_9_2.sh
+          git ls-files -z '*.sh' | xargs -0 -r shellcheck --severity=warning
 
       - name: Check no assumed Gaussian CE or unfinished proof
         shell: bash
