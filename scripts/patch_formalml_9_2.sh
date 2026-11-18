@@ -577,4 +577,16 @@ sqrt2_rewrite_start=$((hilbert_sqrt_line + 4))
 sqrt2_rewrite_end=$((hilbert_sqrt_line + 6))
 test "$(sed -n "${sqrt2_rewrite_start}p" rocq/CertRL/LM/hilbert.v)" = "rewrite Rsqr_sqrt."
 test "$(sed -n "${sqrt2_rewrite_end}p" rocq/CertRL/LM/hilbert.v)" = "left; apply Rlt_0_2."
-sed -i "${sqrt2_rewrite_start},${sqrt2_rewrite_end}c\rewrite Rsqr_sqrt; [unfold Rsqr; field; lra | lra]." rocq/CertRL/LM/hilbert.v
+sed -i "${sqrt2_rewrite_start},${sqrt2_rewrite_end}c\rewrite Rsqr_sqrt; [right; unfold Rsqr; field; lra | lra]." rocq/CertRL/LM/hilbert.v
+
+# D117: A permutation preserves the list obtained by removing a key.
+# Express Stdlib List.remove as Stdlib List.filter, then reuse the
+# already verified LibUtilsSublist.Permutation_filter theorem instead
+# of a brittle case split over the constructors of Permutation.
+proper_line=$(grep -n '^  Global Instance Permutation_remove ' rocq/utils/ListAdd.v | cut -d: -f1)
+test -n "$proper_line"
+proper_start=$((proper_line + 1))
+proper_end=$((proper_line + 9))
+test "$(sed -n "${proper_start}p" rocq/utils/ListAdd.v)" = "  Proof."
+test "$(sed -n "${proper_end}p" rocq/utils/ListAdd.v)" = "  Qed."
+sed -i "${proper_start},${proper_end}c\  Proof.\n    intros xs ys Hperm.\n    assert (Hremove_filter : forall l : list A,\n      remove eq_dec a l =\n      filter (fun x => if eq_dec a x then false else true) l).\n    { induction l as [|x l IH]; simpl; [reflexivity |].\n      destruct (eq_dec a x); simpl; rewrite IH; reflexivity. }\n    repeat rewrite Hremove_filter.\n    apply Permutation_filter; exact Hperm.\n  Qed." rocq/utils/ListAdd.v
