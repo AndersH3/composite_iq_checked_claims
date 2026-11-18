@@ -2761,11 +2761,13 @@ Qed.
  Premises and side conditions: Both marginal variances are nonnegative
  and [a*t*t + 2*b*t + c] is nonnegative at every real [t].
  The degenerate case [a=0] forces [b=0], and [beta=0] is admissible.
- Proof method: Reuse the existing, kernel-checked two-by-two covariance
+ Proof/definition method: Reuse the existing, kernel-checked two-by-two covariance
  Cauchy--Schwarz bound, then use [field] and [nra] from Stdlib.
+ Library reuse: [gcd_psd_covariance_cauchy_schwarz], Stdlib
+ [Rle_lt_or_eq_dec], [field], [lra] and [nra]; no custom inverse.
  This does not reimplement a pseudoinverse, matrix library, Gaussian
  probability measure, or conditional expectation.
- Limitations: This is the exact algebraic residual existence statement
+ Boundary: This is the exact algebraic residual existence statement
  for one observed coordinate; the implication from joint Gaussianity
  to independence of the residual and the observed sigma-algebra, and
  the event-integral conditional-expectation theorem, are separate.
