@@ -530,10 +530,8 @@ limit_base=$(grep -n '^Lemma increasing_bounded_limit ' rocq/utils/CoquelicotAdd
 test -n "$limit_base"
 limit_start=$((limit_base + 39))
 limit_end=$((limit_base + 49))
-sed -n "${limit_start}p" rocq/utils/CoquelicotAdd.v | grep -Eq '^[[:space:]]*rewrite Rabs_pos_eq[.]
-sed -i "${limit_start},${limit_end}c\       rewrite Rabs_pos_eq.\n       * assert (Hmono : f x0 <= f x1).\n         { apply H; now left. }\n         lra.\n       * unfold is_upper_bound in H1.\n         assert (Hub : f x1 <= L).\n         { apply H1; now exists x1. }\n         lra." rocq/utils/CoquelicotAdd.v
-
-sed -n "${limit_end}p" rocq/utils/CoquelicotAdd.v | grep -Eq '^[[:space:]]*now exists x1[.]
-sed -i "${limit_start},${limit_end}c\       rewrite Rabs_pos_eq.\n       * assert (Hmono : f x0 <= f x1).\n         { apply H; now left. }\n         lra.\n       * unfold is_upper_bound in H1.\n         assert (Hub : f x1 <= L).\n         { apply H1; now exists x1. }\n         lra." rocq/utils/CoquelicotAdd.v
-
+limit_first=$(sed -n "${limit_start}p" rocq/utils/CoquelicotAdd.v | sed 's/^[[:space:]]*//')
+limit_last=$(sed -n "${limit_end}p" rocq/utils/CoquelicotAdd.v | sed 's/^[[:space:]]*//')
+test "$limit_first" = "rewrite Rabs_pos_eq."
+test "$limit_last" = "now exists x1."
 sed -i "${limit_start},${limit_end}c\       rewrite Rabs_pos_eq.\n       * assert (Hmono : f x0 <= f x1).\n         { apply H; now left. }\n         lra.\n       * unfold is_upper_bound in H1.\n         assert (Hub : f x1 <= L).\n         { apply H1; now exists x1. }\n         lra." rocq/utils/CoquelicotAdd.v
