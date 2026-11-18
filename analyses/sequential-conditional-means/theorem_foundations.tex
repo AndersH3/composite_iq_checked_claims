@@ -295,7 +295,15 @@ require successful compilation against pinned IBM FormalML, and neither
 by itself supplies the distributional bridge for every jointly
 Gaussian law or the singular pseudoinverse result. The QBS/MathComp
 posterior first-moment proof addresses a distinct normalized
-single-observation model. No compatibility-smoke result, covariance
+single-observation model. To avoid reimplementing scalar Gaussian
+integration, the next distributional development can reuse IBM
+FormalML's \texttt{ProbTheory/Gaussian.v} (normalized Gaussian density,
+mean, and variance integrals) and MathComp-Analysis'
+\texttt{normal\_prob\_conjugate} (normalized single-observation
+conjugate posterior). Their probability-measure APIs are distinct;
+neither theorem supplies multivariate affine closure, block
+independence, or singular-covariance conditional expectation by itself.
+No compatibility-smoke result, covariance identity, scalar conjugacy
 identity, or independent-product calculation is a certificate of the
 universal Gaussian conditional-expectation theorem.
 
