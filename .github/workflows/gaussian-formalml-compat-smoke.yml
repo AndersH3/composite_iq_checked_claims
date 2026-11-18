@@ -5,7 +5,10 @@ on:
     paths:
       - 'scripts/patch_formalml_9_2.sh'
       - '.github/workflows/gaussian-formalml-compat-smoke.yml'
+  # Push already checks every same-repository commit. Avoid redundant
+  # synchronization runs that repeat the identical pinned Rocq build.
   pull_request:
+    types: [opened, reopened]
     paths:
       - 'scripts/patch_formalml_9_2.sh'
       - '.github/workflows/gaussian-formalml-compat-smoke.yml'
