@@ -489,7 +489,7 @@ sed -i "${lub_start},${lub_end}c\  - destruct H1 as [x [Hin Hout]].\n    exists 
 forall_app_line=$(grep -n '^Lemma Forall_app_iff ' rocq/utils/ListAdd.v | cut -d: -f1)
 test -n "$forall_app_line"
 forall_app_start=$((forall_app_line + 3))
-forall_app_end=$((forall_app_line + 7))
+forall_app_end=$((forall_app_line + 8))
 test "$(sed -n "${forall_app_start}p" rocq/utils/ListAdd.v)" = "Proof."
 test "$(sed -n "${forall_app_end}p" rocq/utils/ListAdd.v)" = "Qed."
 sed -i "${forall_app_start},${forall_app_end}c\Proof.\n  repeat rewrite Forall_forall.\n  split.\n  - intros Hall; split; intros x Hx; apply Hall; apply in_app_iff.\n    + left; exact Hx.\n    + right; exact Hx.\n  - intros [Hl Hr] x Hx.\n    apply in_app_iff in Hx.\n    destruct Hx as [Hx | Hx]; [apply Hl | apply Hr]; exact Hx.\nQed." \
