@@ -768,9 +768,9 @@ sed -i "${hrx_nonneg}c\first [lra | (unfold R1; lra) | apply norm_ge_0]." rocq/C
 # D140: The zero-count branch in an excluded finite-sum shift
 # contradicts the negative EqDec certificate c : n =/= 0.
 # Reuse the existing decision evidence instead of intuition.
-test "$(sed -n 1850p rocq/utils/Sums.v)" = "          + intuition."
+test "$(sed -n 1850p rocq/utils/Sums.v)" = "         + intuition."
 sed -i '1850c\
-          + exfalso; apply c; reflexivity.' rocq/utils/Sums.v
+         + exfalso; apply c; reflexivity.' rocq/utils/Sums.v
 
 # D141 diagnostic: Rocq 9.2 changes the side-goal ordering for
 # ELim_seq_plus. Print the first generated goal in the unchanged
