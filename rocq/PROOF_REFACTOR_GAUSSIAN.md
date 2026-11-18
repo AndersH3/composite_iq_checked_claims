@@ -79,7 +79,7 @@ The [Rocq 9.2 kernel run](https://github.com/AndersH3/composite_iq_checked_claim
 | `gk_posterior_shape_sufficient_statistic` (theorem) | forall xs ys c theta, length xs=length ys -> gk_sum xs=gk_sum ys -> gk_posterior_kernel xs c theta=gk_posterior_kernel ys c theta | EquicorrelationVectors centered-energy mean, GaussianConditionalKernel ratio and Stdlib Ring/Field | Exact pointwise finite-vector likelihood sufficiency, not a normalized Gaussian conditional expectation |
 | `gk_history_likelihood_ratio_sufficient_statistic` (theorem) | forall xs ys c theta, length xs=length ys -> gk_sum xs=gk_sum ys -> c<>0 -> 1-c<>0 -> gk_d xs c<>0 -> gk_joint_kernel xs c theta/gk_evidence_kernel xs c = gk_joint_kernel ys c theta/gk_evidence_kernel ys c | EquicorrelationVectors centered-energy mean, GaussianConditionalKernel ratio and Stdlib Ring/Field | Exact pointwise finite-vector likelihood sufficiency, not a normalized Gaussian conditional expectation |
 
-## GaussianCovarianceDomain.v — 154 proof scripts
+## GaussianCovarianceDomain.v — 156 proof scripts
 
 | Proof script (kind) | Mathematical scope | Library reuse | Boundaries |
 |---|---|---|---|
@@ -248,6 +248,8 @@ The [Rocq 9.2 kernel run](https://github.com/AndersH3/composite_iq_checked_claim
 
 | `gcd_psd_quadratic_zero_cross` (theorem) | Nonnegative quadratic with zero constant coefficient has zero linear cross term, the PSD null-direction identity. | Rocq Stdlib Reals, Lra, Psatz, Field, Rmult_le_pos and Rmult_integral | Singular covariance algebra only; not sigma-algebra independence or conditional expectation |
 | `gcd_psd_null_covariance` (theorem) | Any positive-semidefinite two-dimensional covariance block with one zero variance has zero cross covariance in that direction. | `gcd_psd_quadratic_zero_cross`, Rocq Stdlib real arithmetic | Necessary Gaussian covariance result; cannot by itself imply an event-integral conditional expectation |
+| `gcd_psd_covariance_cauchy_schwarz` (theorem) | Universal quadratic-form nonnegativity for a 2×2 covariance block implies the sharp cross-covariance bound b² ≤ ac even when a=0. | Stdlib Field, Psatz and order splitting | Algebraic Cauchy–Schwarz; not a Gaussian distributional independence proof |
+| `gcd_psd_covariance_characterization` (theorem) | With nonnegative diagonal variances, b² ≤ ac is necessary and sufficient for the entire 2×2 quadratic form to be nonnegative. | `gcd_psd_covariance_cauchy_schwarz`, Stdlib Ring and Psatz | Singular-safe PSD characterization, not a measure-theoretic conditional expectation |
 
 ## Full AI disclosure
 
