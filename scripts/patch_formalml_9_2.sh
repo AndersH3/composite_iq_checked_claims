@@ -601,4 +601,16 @@ other_start=$((other_line + 3))
 other_end=$((other_line + 12))
 test "$(sed -n "${other_start}p" rocq/utils/ListAdd.v)" = "Proof."
 test "$(sed -n "${other_end}p" rocq/utils/ListAdd.v)" = "Qed."
-sed -i "${other_start},${other_end}c\Proof.\n  intros Hneq.\n  induction l as [|b tl IH]; simpl.\n  - tauto.\n  - match_destr.\n    + unfold equiv in e; subst b; simpl.\n      split.\n      * intros [Hbad | Hin]; [exfalso; apply Hneq; exact Hbad | exact Hin].\n      * intro Hin; right; exact Hin.\n    + simpl; rewrite IH; tauto.\nQed." rocq/utils/ListAdd.v
+sed -i "${other_start},${other_end}c\Proof.\n  intros Hneq.\n  induction l as [|b tl IH]; simpl.\n  - tauto.\n  - match_destr.\n    + unfold equiv in e; subst; simpl.\n      split.\n      * intros [Hbad | Hin]; [exfalso; apply Hneq; exact Hbad | exact Hin].\n      * intro Hin; right; exact Hin.\n    + simpl; rewrite IH; tauto.\nQed." rocq/utils/ListAdd.v
+
+# D119: In the projection limit proof, Rocq 9.2 exposes the
+# Rabs_right sign condition ahead of the strict ball inequality.
+# Establish the glb-derived lower bound *before* rewriting abs, then
+# discharge both resulting arithmetic goals by Stdlib Lra. The
+# projection theorem, its hypotheses and its conclusion stay intact.
+rabs_line=$(grep -nF 'rewrite Rabs_right.' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
+test -n "$rabs_line"
+rabs_end=$((rabs_line + 11))
+test "$(sed -n "${rabs_line}p" rocq/CertRL/LM/hilbert.v)" = "rewrite Rabs_right."
+test "$(sed -n "${rabs_end}p" rocq/CertRL/LM/hilbert.v)" = "rewrite <- ortho_projection_aux in H2; easy."
+sed -i "${rabs_line},${rabs_end}c\assert (H2 : Rbar_le (Glb_Rbar (fun r : R =>\n  exists w0 : E, phi w0 /\\\\ r = norm (minus u w0)))\n  (norm (minus u w))).\n{ apply Glb_Rbar_correct; exists w; now split. }\nrewrite <- ortho_projection_aux in H2; simpl in H2.\nrewrite Rabs_right.\nall: unfold minus at 1; unfold plus, opp; simpl.\nall: first [lra | apply Rle_ge; lra]." rocq/CertRL/LM/hilbert.v
