@@ -524,14 +524,12 @@ sed -i "${compose_start},${compose_end}c\Proof.\n  induction l as [|a l IH]; sim
 # D110/D112: Treat the upper-bound side condition of Rabs_pos_eq
 # separately from the monotonicity inequality. Reuse is_upper_bound
 # and Stdlib Lra, retaining the source proposition unchanged.
-test "$(sed -n 380p rocq/utils/CoquelicotAdd.v)" = "       rewrite Rabs_pos_eq."
-test "$(sed -n 390p rocq/utils/CoquelicotAdd.v)" = "         now exists x1."
-sed -i '380,390c\
-       rewrite Rabs_pos_eq.\
-       * assert (Hmono : f x0 <= f x1).\
-         { apply H; now left. }\
-         lra.\
-       * unfold is_upper_bound in H1.\
-         assert (Hub : f x1 <= L).\
-         { apply H1; now exists x1. }\
-         lra.' rocq/utils/CoquelicotAdd.v
+# Earlier CoquelicotAdd replacements shorten this file by two lines.
+# Compute the exact range relative to the unchanged lemma declaration.
+limit_base=$(grep -n '^Lemma increasing_bounded_limit ' rocq/utils/CoquelicotAdd.v | cut -d: -f1)
+test -n "$limit_base"
+limit_start=$((limit_base + 39))
+limit_end=$((limit_base + 49))
+test "$(sed -n "${limit_start}p" rocq/utils/CoquelicotAdd.v)" = "       rewrite Rabs_pos_eq."
+test "$(sed -n "${limit_end}p" rocq/utils/CoquelicotAdd.v)" = "         now exists x1."
+sed -i "${limit_start},${limit_end}c\       rewrite Rabs_pos_eq.\n       * assert (Hmono : f x0 <= f x1).\n         { apply H; now left. }\n         lra.\n       * unfold is_upper_bound in H1.\n         assert (Hub : f x1 <= L).\n         { apply H1; now exists x1. }\n         lra." rocq/utils/CoquelicotAdd.v
