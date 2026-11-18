@@ -763,7 +763,7 @@ hrx_line=$(grep -nF 'assert (Hrx : real x <= norm (minus u v' rocq/CertRL/LM/hil
 test -n "$hrx_line"
 hrx_nonneg=$((hrx_line + 6))
 test "$(sed -n "${hrx_nonneg}p" rocq/CertRL/LM/hilbert.v)" = "apply norm_ge_0."
-sed -i "${hrx_nonneg}c\first [(left; apply Rplus_lt_0_compat; apply Rlt_0_1) | lra | apply norm_ge_0]." rocq/CertRL/LM/hilbert.v
+sed -i "${hrx_nonneg}c\first [solve [left; lra] | solve [right; lra] | solve [apply norm_ge_0]]." rocq/CertRL/LM/hilbert.v
 
 # D140: The zero-count branch in an excluded finite-sum shift
 # contradicts the negative EqDec certificate c : n =/= 0.
@@ -781,3 +781,11 @@ test "$(sed -n 2002p rocq/utils/ELim_Seq.v)" = "  - now apply ex_Elim_seq_opp in
 test "$(sed -n 2003p rocq/utils/ELim_Seq.v)" = "  - now rewrite ELim_seq_opp."
 sed -i '2001,2003c\
   all: first [now apply ex_Elim_seq_opp in H0 | now rewrite ELim_seq_opp].' rocq/utils/ELim_Seq.v
+
+# D142: Under the positive-real hypothesis on eps the reciprocal
+# denominator is nonzero. The old dependent record destruct combined
+# with lra fails after Rocq 9.2 proof-state simplification; retain
+# the positive-real witness and discharge nonzero directly.
+test "$(sed -n 2089p rocq/utils/ELim_Seq.v)" = "      rewrite Rinv_l in H; [| destruct eps; simpl; lra]."
+sed -i '2089c\
+      rewrite Rinv_l in H; [| pose proof (cond_pos eps); lra].' rocq/utils/ELim_Seq.v
