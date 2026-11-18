@@ -1024,3 +1024,23 @@ sed -i "${hilbert_rmin_line}c\      all: try solve [unfold th; apply Rmin_l | ap
 # D166: [Rmin_l] needs the local abbreviation [th] exposed. Solve
 # existing strict-positivity and Rmin bounds independently so that
 # an unrelated unsolved subgoal does not make the whole step fail.
+
+# D167: After reducing the Rmin bound, Rocq 9.2 may have already
+# normalized the reciprocal of 1. Preserve the original Rmin bound
+# and the theorem statement; make the optional canonical rewrite safe.
+hilbert_invone_line=$(grep -n '^     rewrite Rinv_1[.]$' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$hilbert_invone_line"
+test "$(sed -n "${hilbert_invone_line}p" rocq/CertRL/LM/hilbert.v)" = "     rewrite Rinv_1."
+sed -i "${hilbert_invone_line}c\     try rewrite Rinv_1." rocq/CertRL/LM/hilbert.v
+
+# D168: A strictly positive real limit at +infinity has a zero
+# reciprocal limit. In the pinned FormalML proof, the remaining
+# finite branch is Rabs (/r) < eps with H : /eps < r, while the two
+# infinite branches are Rabs 0 < eps. Discharge all three using
+# the existing posreal certificate and Stdlib real-inverse lemmas;
+# no new axiom, Gaussian distribution or CE definition is introduced.
+elim_pos_start=$(grep -n '^Lemma is_Elim_seq_inv_pos ' rocq/utils/ELim_Seq.v | head -n 1 | cut -d: -f1)
+test -n "$elim_pos_start"
+elim_pos_end=$(awk -v start="$elim_pos_start" 'NR > start && /^[[:space:]]*Qed[.]/ {print NR; exit}' rocq/utils/ELim_Seq.v)
+test -n "$elim_pos_end"
+sed -i "${elim_pos_end}i\  all: try solve [rewrite Rabs_R0; apply cond_pos].\n  all: try solve [\n    assert (Hepspos : 0 < eps) by apply cond_pos;\n    assert (Hrpos : 0 < r) by\n      (eapply Rlt_trans; [apply Rinv_0_lt_compat; exact Hepspos | exact H]);\n    assert (Heps_nonzero : eps <> 0) by\n      (apply Rgt_not_eq; exact Hepspos);\n    rewrite Rabs_right; [| left; apply Rinv_0_lt_compat; exact Hrpos];\n    apply (Rmult_lt_reg_l r); [exact Hrpos |];\n    replace (r * / r) with 1 by (symmetry; apply Rinv_r; lra);\n    apply (Rmult_lt_compat_r eps) in H; [| exact Hepspos];\n    rewrite (Rinv_l (pos eps) Heps_nonzero) in H;\n    exact H]." rocq/utils/ELim_Seq.v
