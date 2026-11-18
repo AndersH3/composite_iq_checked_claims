@@ -873,10 +873,17 @@ sed -i "${hilbert_second_scal_opp}c\\try rewrite <- scal_opp_l." rocq/CertRL/LM/
 # using H : 1 < r*eps and the positive-real certificate eps > 0.
 # Derive r > 0 and multiply both sides by r, reusing Stdlib lemmas
 # instead of an unstable rbar_prover tactic combination.
-elim_recip_start=$(grep -nF '+ apply (Rmult_lt_compat_r eps _ _ (cond_pos eps)) in H.' rocq/utils/ELim_Seq.v | tail -n 1 | cut -d: -f1)
-elim_recip_next=$(grep -nF '+ rewrite Rabs_R0.' rocq/utils/ELim_Seq.v | tail -n 1 | cut -d: -f1)
+elim_recip_start=$(grep -nF '+ apply (Rmult_lt_compat_r eps _ _ (cond_pos eps)) in H.' rocq/utils/ELim_Seq.v | head -n 1 | cut -d: -f1)
+elim_recip_next=$(grep -nF '+ rewrite Rabs_R0.' rocq/utils/ELim_Seq.v | head -n 1 | cut -d: -f1)
 test -n "$elim_recip_start"
 test -n "$elim_recip_next"
 test "$elim_recip_start" -lt "$elim_recip_next"
 elim_recip_end=$((elim_recip_next - 1))
 sed -i "${elim_recip_start},${elim_recip_end}c\\    + assert (Hrpos : 0 < r) by (pose proof (cond_pos eps); nra).\\n      rewrite Rabs_right.\\n      * apply (Rmult_lt_reg_l r); [exact Hrpos |].\\n        replace (r * / r) with 1 by (apply Rinv_r; lra).\\n        exact H.\\n      * left; apply Rinv_0_lt_compat; exact Hrpos." rocq/utils/ELim_Seq.v
+
+# D155: In the second Hilbert scalar-negation case, the proof has
+# already advanced from the numerical identity to the final uniqueness
+# goal v = v'. Reflexivity is only applicable to the former; the
+# subsequent existing squared-norm argument proves the latter.
+test "$(sed -n "${hilbert_second_next}p" rocq/CertRL/LM/hilbert.v)" = "reflexivity."
+sed -i "${hilbert_second_next}c\\try reflexivity." rocq/CertRL/LM/hilbert.v
