@@ -497,12 +497,8 @@ test "$(sed -n "${forall_app_end}p" rocq/utils/ListAdd.v)" = "Qed."
 sed -i "${forall_app_start},${forall_app_end}c\Proof.\n  repeat rewrite Forall_forall.\n  split.\n  - intros Hall; split; intros x Hx; apply Hall; apply in_app_iff.\n    + left; exact Hx.\n    + right; exact Hx.\n  - intros [Hl Hr] x Hx.\n    apply in_app_iff in Hx.\n    destruct Hx as [Hx | Hx]; [apply Hl | apply Hr]; exact Hx.\nQed." \
   rocq/utils/ListAdd.v
 
-# D107: The increasing limit proof identifies the two arguments of the
-# existing monotonicity hypothesis explicitly rather than relying on
-# Rocq 9.2's changed apply unification.
-test "$(grep -Fc '        -- apply H.' rocq/utils/CoquelicotAdd.v)" -eq 1
-sed -i 's/         -- apply H\./         -- apply (H x0 x1)./' \
-  rocq/utils/CoquelicotAdd.v
+# D107: Retain the original upstream monotonicity application; the
+# later limit inequality is the actual unresolved Rocq 9.2 subgoal.
 
 # D108 diagnostic, removed once the next exact-source Hilbert goal is
 # fully identified. Display the original norm/denominator equality
@@ -529,7 +525,7 @@ sed -i "${compose_start},${compose_end}c\Proof.\n  induction l as [|a l IH]; sim
 # D110 diagnostic: expose the exact remaining real inequality for the
 # upstream increasing/upper-bound limit proof, without changing its goal.
 # This trace must be removed once the compatible proof is established.
-limit_line=$(grep -nF '        -- apply (H x0 x1).' rocq/utils/CoquelicotAdd.v | cut -d: -f1)
+limit_line=$(grep -nF -- '-- apply H.' rocq/utils/CoquelicotAdd.v | cut -d: -f1)
 test -n "$limit_line"
 limit_lra=$((limit_line + 2))
 test "$(sed -n "${limit_lra}p" rocq/utils/CoquelicotAdd.v)" = "        -- lra."
