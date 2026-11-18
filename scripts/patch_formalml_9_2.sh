@@ -237,7 +237,7 @@ sed -i "742c\\try rewrite Rmult_1_r." rocq/CertRL/LM/hilbert.v
 # This preserves every statement and removes an obsolete proof branch.
 test "$(sed -n 741p rocq/CertRL/LM/hilbert.v)" = "rewrite Rinv_r."
 test "$(sed -n 745p rocq/CertRL/LM/hilbert.v)" = "apply Rgt_not_eq, Rlt_0_2."
-sed -i "741c\\rewrite Rinv_r by lra." rocq/CertRL/LM/hilbert.v
+sed -i "741c\\rewrite Rinv_r; [|lra]." rocq/CertRL/LM/hilbert.v
 sed -i '745d' rocq/CertRL/LM/hilbert.v
 sed -i '23a From Stdlib Require Import Lra.' rocq/CertRL/LM/hilbert.v
 
@@ -278,3 +278,22 @@ test "$(sed -n "${lookapp_start}p" rocq/lib_utils/LibUtilsAssoc.v)" = "    Proof
 test "$(sed -n "${lookapp_end}p" rocq/lib_utils/LibUtilsAssoc.v)" = "    Qed."
 sed -i "${lookapp_start},${lookapp_end}c\\    Proof.\\n      unfold lookup_equiv_on.\\n      intro Hall; split; intros x Hx; apply Hall; apply in_app_iff.\\n      - left; exact Hx.\\n      - right; exact Hx.\\n    Qed." \
   rocq/lib_utils/LibUtilsAssoc.v
+
+# D088: The standard constructors, rather than intuition over an
+# inductive Prop, prove that nil is a sublist of every list.
+subnil_line=$(grep -n "^    Lemma sublist_nil_l " rocq/lib_utils/LibUtilsSublist.v | cut -d: -f1)
+test -n "$subnil_line"
+subnil_start=$((subnil_line + 1))
+subnil_end=$((subnil_line + 3))
+test "$(sed -n "${subnil_start}p" rocq/lib_utils/LibUtilsSublist.v)" = "    Proof."
+test "$(sed -n "${subnil_end}p" rocq/lib_utils/LibUtilsSublist.v)" = "    Qed."
+sed -i "${subnil_start},${subnil_end}c\\    Proof.\\n      induction l as [|x l IH].\\n      - apply sublist_nil.\\n      - apply sublist_skip; exact IH.\\n    Qed." \
+  rocq/lib_utils/LibUtilsSublist.v
+
+# D088: Old FormalML Compat proof accidentally reused a B-valued
+# lookup result x as the A-valued lookup key. Restore the original
+# A-valued key y; no theorem statements or semantics are weakened.
+grep -Fq "(@equiv_dec A (@eq A) equiv0 H) l' x); congruence." \
+  rocq/lib_utils/LibUtilsCompat.v
+sed -i "127s/l' x); congruence\\./l' y); congruence./" \
+  rocq/lib_utils/LibUtilsCompat.v
