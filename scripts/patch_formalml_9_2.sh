@@ -500,7 +500,7 @@ sed -i "${forall_app_start},${forall_app_end}c\Proof.\n  repeat rewrite Forall_f
 # D107: The increasing limit proof identifies the two arguments of the
 # existing monotonicity hypothesis explicitly rather than relying on
 # Rocq 9.2's changed apply unification.
-test "$(grep -Fc '         -- apply H.' rocq/utils/CoquelicotAdd.v)" -eq 1
+test "$(grep -Fc '        -- apply H.' rocq/utils/CoquelicotAdd.v)" -eq 1
 sed -i 's/         -- apply H\./         -- apply (H x0 x1)./' \
   rocq/utils/CoquelicotAdd.v
 
