@@ -297,3 +297,15 @@ grep -Fq "(@equiv_dec A (@eq A) equiv0 H) l' x); congruence." \
   rocq/lib_utils/LibUtilsCompat.v
 sed -i "127s/l' x); congruence\\./l' y); congruence./" \
   rocq/lib_utils/LibUtilsCompat.v
+
+# D089: The legacy PreOrder tactic accidentally consumes the transitivity
+# goal under Rocq 9.2. Prove reflexivity with sublist_nil/sublist_cons
+# and transitivity by induction on the existing second sublist proof.
+subpre_line=$(grep -n "^    Global Instance sublist_pre : PreOrder sublist." rocq/lib_utils/LibUtilsSublist.v | cut -d: -f1)
+test -n "$subpre_line"
+subpre_start=$((subpre_line + 1))
+subpre_end=$((subpre_line + 11))
+test "$(sed -n "${subpre_start}p" rocq/lib_utils/LibUtilsSublist.v)" = "    Proof."
+test "$(sed -n "${subpre_end}p" rocq/lib_utils/LibUtilsSublist.v)" = "    Qed."
+sed -i "${subpre_start},${subpre_end}c\\    Proof.\\n      split.\\n      - intro l; induction l as [|x xs IH].\\n        + apply sublist_nil.\\n        + apply sublist_cons; exact IH.\\n      - intros u v w Huv Hvw.\\n        revert u Huv.\\n        induction Hvw as [|a s t Hst IH|a s t Hst IH]; intros u Hu.\\n        + apply sublist_nil_r in Hu; subst u; apply sublist_nil.\\n        + inversion Hu; subst.\\n          * apply sublist_cons; apply IH; assumption.\\n          * apply sublist_skip; apply IH; assumption.\\n        + apply sublist_skip; apply IH; assumption.\\n    Qed." \
+  rocq/lib_utils/LibUtilsSublist.v
