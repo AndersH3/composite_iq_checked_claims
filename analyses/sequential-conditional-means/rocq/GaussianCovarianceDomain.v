@@ -2715,3 +2715,36 @@ Proof.
       assert (Hbzero : b=0) by nra.
       subst b; nra.
 Qed.
+
+
+(** [gcd_gaussian_uncorrelated_laplace_kernel_factor] (theorem).
+ Mathematical meaning: The Gaussian joint Laplace kernel separates into
+ its two marginal kernels when the cross-covariance vanishes.
+ Exact proposition: for arbitrary real variances a and b, covariance c,
+ and transform coordinates t and s, c=0 implies factorization of the
+ exponential of the bivariate covariance quadratic form.
+ Premises and side conditions: Only c=0 is required for this algebraic
+ statement; actual Gaussian probability laws additionally require the
+ covariance matrix to be positive semidefinite and appropriate moments.
+ Proof/definition method: Substitute the cross-covariance, normalize the
+ real quadratic form with the maintained ring tactic, and use Stdlib's
+ existing exponential addition theorem [exp_plus].
+ Library reuse: Stdlib Reals, Ring and [exp_plus]; no hand-written
+ exponential function, Gaussian measure, transform or independence axiom.
+ Formal boundary: This checks the factorization of a REAL Laplace kernel,
+ not the uniqueness of a probability law from its Laplace transform.
+ It does not by itself prove independence of sigma-algebras or the
+ universal Gaussian conditional expectation.
+*)
+Theorem gcd_gaussian_uncorrelated_laplace_kernel_factor :
+  forall a b c t s : R,
+    c = 0 ->
+    exp ((a*t*t + 2*c*t*s + b*s*s)/2) =
+    exp (a*t*t/2) * exp (b*s*s/2).
+Proof.
+  intros a b c t s Hcross.
+  subst c.
+  replace ((a*t*t + 2*0*t*s + b*s*s)/2)
+    with (a*t*t/2 + b*s*s/2) by ring.
+  apply exp_plus.
+Qed.
