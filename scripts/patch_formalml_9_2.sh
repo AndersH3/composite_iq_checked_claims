@@ -991,7 +991,18 @@ sed -i "${hilbert_rchar_line}c\\rewrite Hscal in H1.\\nall: try (change (0 <= - 
 hilbert_zero_step=$(grep -nF 'apply Rmult_le_reg_l with 2%R. intuition.' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
 test -n "$hilbert_zero_step"
 hilbert_zero_tail=$((hilbert_zero_step + 2))
-test "$(sed -n "${hilbert_zero_step}p" rocq/CertRL/LM/hilbert.v)" = "    apply Rmult_le_reg_l with 2%R. intuition."
+sed -n "${hilbert_zero_step}p" rocq/CertRL/LM/hilbert.v | grep -Eq '^[[:space:]]*apply Rmult_le_reg_l with 2%R[.] intuition[.]
+sed -n "${hilbert_zero_tail}p" rocq/CertRL/LM/hilbert.v | grep -Eq '^[[:space:]]*apply charac_ortho_projection_convex_aux5; intuition[.]
+sed -i "${hilbert_zero_step}c\    apply Rmult_le_reg_l with 2%R; [lra |]." rocq/CertRL/LM/hilbert.v
+sed -i "${hilbert_zero_tail}c\    apply charac_ortho_projection_convex_aux5; try assumption; lra." rocq/CertRL/LM/hilbert.v
+
+test "$(sed -n "${hilbert_zero_tail}p" rocq/CertRL/LM/hilbert.v)" = "    apply charac_ortho_projection_convex_aux5; intuition."
+sed -i "${hilbert_zero_step}c\    apply Rmult_le_reg_l with 2%R; [lra |]." rocq/CertRL/LM/hilbert.v
+sed -i "${hilbert_zero_tail}c\    apply charac_ortho_projection_convex_aux5; try assumption; lra." rocq/CertRL/LM/hilbert.v
+
+sed -i "${hilbert_zero_step}c\    apply Rmult_le_reg_l with 2%R; [lra |]." rocq/CertRL/LM/hilbert.v
+sed -i "${hilbert_zero_tail}c\    apply charac_ortho_projection_convex_aux5; try assumption; lra." rocq/CertRL/LM/hilbert.v
+
 test "$(sed -n "${hilbert_zero_tail}p" rocq/CertRL/LM/hilbert.v)" = "    apply charac_ortho_projection_convex_aux5; intuition."
 sed -i "${hilbert_zero_step}c\    apply Rmult_le_reg_l with 2%R; [lra |]." rocq/CertRL/LM/hilbert.v
 sed -i "${hilbert_zero_tail}c\    apply charac_ortho_projection_convex_aux5; try assumption; lra." rocq/CertRL/LM/hilbert.v
