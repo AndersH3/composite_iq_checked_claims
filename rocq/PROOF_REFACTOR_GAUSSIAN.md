@@ -278,6 +278,7 @@ The [Rocq 9.2 kernel run](https://github.com/AndersH3/composite_iq_checked_claim
 | `gcd_psd_covariance_characterization` (theorem) | With nonnegative diagonal variances, b² ≤ ac is necessary and sufficient for the entire 2×2 quadratic form to be nonnegative. | `gcd_psd_covariance_cauchy_schwarz`, Stdlib Ring and Psatz | Singular-safe PSD characterization, not a measure-theoretic conditional expectation |
 
 | `gcd_gaussian_uncorrelated_laplace_kernel_factor` (theorem) | A bivariate Gaussian Laplace quadratic with zero cross-covariance factors exactly into the two marginal exponential kernels for all real transform arguments. | Stdlib Reals, Ring, `exp_plus`; no custom Gaussian transform | Algebraic factorization only: does not establish transform uniqueness, sigma-algebra independence, or universal Gaussian conditional expectation |
+| `gcd_psd_scalar_regression_residual_exists` (theorem) | Every PSD scalar two-variable covariance block has some regression coefficient with exactly zero residual cross covariance and nonnegative residual variance, including a zero observed variance. | `gcd_psd_covariance_cauchy_schwarz`, Stdlib `field`, `nra` and real-order splitting | Singular-safe scalar covariance regression algebra only; Gaussian independence and the event-integral CE identity remain separate proof obligations |
 
 ## Full AI disclosure
 
