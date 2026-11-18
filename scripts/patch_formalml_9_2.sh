@@ -230,3 +230,26 @@ sed -i "689c\\unfold minus; rewrite scal_distr_l scal_opp_r scal_assoc." \
 # optional rather than aborting the valid proof.
 test "$(sed -n 742p rocq/CertRL/LM/hilbert.v)" = "rewrite Rmult_1_r."
 sed -i "742c\\try rewrite Rmult_1_r." rocq/CertRL/LM/hilbert.v
+
+# D079: Under Rocq 9.2 the old Hilbert convexity tactic attempts to
+# discharge a nonzero-divisor obligation with Rgt_not_eq, whose goal
+# interface no longer matches. Discharge it immediately using Stdlib Lra.
+# This preserves every statement and removes an obsolete proof branch.
+test "$(sed -n 741p rocq/CertRL/LM/hilbert.v)" = "rewrite Rinv_r."
+test "$(sed -n 745p rocq/CertRL/LM/hilbert.v)" = "apply Rgt_not_eq, Rlt_0_2."
+sed -i "741c\\rewrite Rinv_r by lra." rocq/CertRL/LM/hilbert.v
+sed -i '745d' rocq/CertRL/LM/hilbert.v
+sed -i '23a From Stdlib Require Import Lra.' rocq/CertRL/LM/hilbert.v
+
+# D079: Derive association-list lookup existence by induction on the
+# existing Stdlib list representation. Do not recreate a lookup function
+# or assume a choice principle: the witness is the value in the matching
+# pair and the recursion uses the maintained upstream lookup definition.
+assoc_line=$(grep -n "^    Lemma in_dom_lookup_strong :" rocq/lib_utils/LibUtilsAssoc.v | cut -d: -f1)
+test -n "$assoc_line"
+assoc_start=$((assoc_line + 1))
+assoc_end=$((assoc_line + 7))
+test "$(sed -n "${assoc_start}p" rocq/lib_utils/LibUtilsAssoc.v)" = "    Proof."
+test "$(sed -n "${assoc_end}p" rocq/lib_utils/LibUtilsAssoc.v)" = "    Qed."
+sed -i "${assoc_start},${assoc_end}c\\    Proof.\\n      induction l as [|[key value] tail IH]; intros target Hin; simpl in *.\\n      - contradiction.\\n      - destruct (dec target key) as [Heq | Hneq].\\n        + exists value; reflexivity.\\n        + destruct Hin as [Hhead | Htail].\\n          * exfalso; apply Hneq; symmetry; exact Hhead.\\n          * exact (IH target Htail).\\n    Qed." \
+  rocq/lib_utils/LibUtilsAssoc.v
