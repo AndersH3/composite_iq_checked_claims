@@ -419,3 +419,17 @@ test "$(sed -n "${bindings_start}p" rocq/lib_utils/LibUtilsBindings.v)" = "  Pro
 test "$(sed -n "${bindings_end}p" rocq/lib_utils/LibUtilsBindings.v)" = "  Qed."
 sed -i "${bindings_start},${bindings_end}c\\  Proof.\\n    revert x d.\\n    induction b as [|[key value] tail IH]; intros x d Hfresh; simpl in *.\\n    - destruct (ODT_eqdec x x) as [_ | Hneq].\\n      + reflexivity.\\n      + exfalso; apply Hneq; reflexivity.\\n    - assert (Hkey : x <> key).\\n      { intro Hx; apply Hfresh; left; symmetry; exact Hx. }\\n      assert (Htail : ~ In x (domain tail)).\\n      { intro Hx; apply Hfresh; right; exact Hx. }\\n      rewrite assoc_lookupr_insertion_sort_insert_neq by exact Hkey.\\n      apply IH; exact Htail.\\n  Qed." \
   rocq/lib_utils/LibUtilsBindings.v
+
+# D101: If an existing key occurs in a strictly sorted domain, sorted
+# insertion cannot replace its binding. Reuse the library's finite
+# StronglySorted characterization and StrictOrder instance, rather than
+# the fragile nested match_destr/intuition bullets.
+# This source patch changes the proof only, not the original theorem.
+sortdom_line=$(grep -n "^  Lemma rec_sort_insert_in_dom " rocq/lib_utils/LibUtilsBindings.v | cut -d: -f1)
+test -n "$sortdom_line"
+sortdom_start=$((sortdom_line + 4))
+sortdom_end=$((sortdom_line + 24))
+test "$(sed -n "${sortdom_start}p" rocq/lib_utils/LibUtilsBindings.v)" = "  Proof."
+test "$(sed -n "${sortdom_end}p" rocq/lib_utils/LibUtilsBindings.v)" = "  Qed."
+sed -i "${sortdom_start},${sortdom_end}c\  Proof.\n    destruct a as [target value].\n    induction l as [|[head old] tail IH]; intros Hin Hsorted; simpl in *.\n    - contradiction.\n    - destruct Hin as [Heq | Htail].\n      + subst head.\n        unfold rec_field_lt_dec; simpl.\n        destruct (ODT_lt_dec target target) as [Hbad | _].\n        * exfalso; apply (ODT_lt_irr target); exact Hbad.\n        * destruct (ODT_lt_dec target target) as [Hbad | _].\n          -- exfalso; apply (ODT_lt_irr target); exact Hbad.\n          -- reflexivity.\n      + assert (Hsorted_tail :\n           is_list_sorted ODT_lt_dec (domain tail) = true).\n        { eapply is_list_sorted_cons_inv; eauto. }\n        assert (Hhead_lt : ODT_lt head target).\n        { apply (proj1 (sorted_StronglySorted (head :: domain tail))) in Hsorted.\n          eapply StronglySorted_cons_in; eauto. }\n        unfold rec_field_lt_dec; simpl.\n        destruct (ODT_lt_dec target head) as [Hbad | _].\n        * exfalso; apply (ODT_lt_irr head).\n          eapply transitivity; eauto.\n        * destruct (ODT_lt_dec head target) as [_ | Hbad].\n          -- f_equal; apply IH; assumption.\n          -- exfalso; apply Hbad; exact Hhead_lt.\n  Qed." \
+  rocq/lib_utils/LibUtilsBindings.v
