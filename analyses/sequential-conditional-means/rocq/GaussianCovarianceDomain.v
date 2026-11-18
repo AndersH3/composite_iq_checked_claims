@@ -2727,9 +2727,9 @@ Qed.
  statement; actual Gaussian probability laws additionally require the
  covariance matrix to be positive semidefinite and appropriate moments.
  Proof/definition method: Substitute the cross-covariance, normalize the
- real quadratic form with the maintained ring tactic, and use Stdlib's
+ real quadratic form with the maintained field tactic, and use Stdlib's
  existing exponential addition theorem [exp_plus].
- Library reuse: Stdlib Reals, Ring and [exp_plus]; no hand-written
+ Library reuse: Stdlib Reals, Field, Lra and [exp_plus]; no hand-written
  exponential function, Gaussian measure, transform or independence axiom.
  Boundary: This checks the factorization of a REAL Laplace kernel,
  not the uniqueness of a probability law from its Laplace transform.
@@ -2745,6 +2745,6 @@ Proof.
   intros a b c t s Hcross.
   subst c.
   replace ((a*t*t + 2*0*t*s + b*s*s)/2)
-    with (a*t*t/2 + b*s*s/2) by ring.
+    with (a*t*t/2 + b*s*s/2) by (field; lra).
   apply exp_plus.
 Qed.
