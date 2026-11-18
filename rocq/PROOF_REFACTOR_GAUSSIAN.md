@@ -6,12 +6,26 @@
 
 This register tracks D050's 56, D051's 101, D052's 30, and D053–D056's 105 source-ordered Rocq proofs about Gaussian prior-plus-likelihood *pointwise densities*: quadratic completion, model precision and variance, dependence on arbitrary unequal observed scores, evidence cancellation and posterior symmetry. Its scope deliberately excludes the stronger measurable conditional-expectation assertion unless a separate formally verified probability library supplies integral normalization, integrability and disintegration.
 
+**Verified November 18, 2026 singular scalar regression extension (draft PR #57).**
+The [Rocq 9.2 kernel workflow](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44386292225)
+checked `gcd_psd_scalar_regression_residual_exists` in
+`GaussianCovarianceDomain.v`, yielding **298** Gaussian-specific
+kernel-accepted declarations (35 conditional-kernel, 158
+covariance-domain, 43 innovation-bound, 30 batch-balance, 32
+finite-history). This new theorem constructs a coefficient `beta`
+with `b = beta*a` and `c - beta*b >= 0` for any PSD scalar
+two-by-two covariance, even when `a = 0`. This is an algebraic
+regression statement, **not** a proof of jointly Gaussian residual
+independence or the universal measure-theoretic conditional
+expectation. **AI disclosure:** Proof engineering, drafting and
+verification checks were AI-assisted for Anders Hellström.
+
 **Verified November 18, 2026 Gaussian Laplace-kernel algebra (draft PR #57).**
 The [Rocq 9.2 kernel workflow](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44375980346)
 at source revision `e6191f9cacf2648f28914b928e2f5da62beadd93`
 accepted `gcd_gaussian_uncorrelated_laplace_kernel_factor`.
-The five-module register now contains **297 kernel-checked mathematical
-declarations** (35 conditional-kernel, 157 covariance-domain,
+The five-module register now contains **298 kernel-checked mathematical
+declarations** (35 conditional-kernel, 158 covariance-domain,
 43 innovation-bound, 30 batch-balance, 32 finite-history).
 The new equality is the algebraic factorization of a Gaussian
 *real Laplace kernel*, not a probability-law identification,
