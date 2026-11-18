@@ -203,3 +203,15 @@ test "$(sed -n "${sort_start}p" rocq/lib_utils/LibUtilsSortingAdd.v)" = "    Pro
 test "$(sed -n "${sort_end}p" rocq/lib_utils/LibUtilsSortingAdd.v)" = "    Qed."
 sed -i "${sort_start},${sort_end}c\\    Proof.\\n      revert x a contr.\\n      induction l as [|b l IH]; intros x a0 contr Hin; simpl in *.\\n      - destruct Hin as [Heq | Hempty]; [subst x; simpl; auto | contradiction].\\n      - destruct (R_dec a0 b) as [Hab | Hab].\\n        + destruct Hin as [Heq | [Heq | Htail]]; subst; simpl; tauto.\\n        + destruct (R_dec b a0) as [Hba | Hba].\\n          * assert (Htailcontr : asymmetric_over R (a0::l)).\\n            { exact (asymmetric_over_cons_inv (asymmetric_over_swap R contr)). }\\n            destruct Hin as [Heq | [Heq | Htail]].\\n            -- right; apply (IH x a0 Htailcontr); left; exact Heq.\\n            -- subst x; left; reflexivity.\\n            -- right; apply (IH x a0 Htailcontr); right; exact Htail.\\n          * assert (Heq : a0 = b).\\n            { apply (contr a0 b); simpl; auto. }\\n            subst a0; simpl.\\n            destruct Hin as [Heq' | [Heq' | Htail]]; subst; simpl; tauto.\\n    Qed." \
   rocq/lib_utils/LibUtilsSortingAdd.v
+
+# Insertion-sort membership under global comparability: the maintained
+# asymmetric_asymmetric_over lemma supplies the exact local premise of
+# insertion_sort_in_strong, rather than relying on intuition.
+sortin_line=$(grep -n "^    Lemma insertion_sort_in {A R R_dec} " rocq/lib_utils/LibUtilsSortingAdd.v | cut -d: -f1)
+test -n "$sortin_line"
+sortin_start=$((sortin_line + 3))
+sortin_end=$((sortin_line + 5))
+test "$(sed -n "${sortin_start}p" rocq/lib_utils/LibUtilsSortingAdd.v)" = "    Proof."
+test "$(sed -n "${sortin_end}p" rocq/lib_utils/LibUtilsSortingAdd.v)" = "    Qed."
+sed -i "${sortin_start},${sortin_end}c\\    Proof.\\n      intro Hin.\\n      eapply insertion_sort_in_strong.\\n      - apply asymmetric_asymmetric_over; exact contr.\\n      - exact Hin.\\n    Qed." \
+  rocq/lib_utils/LibUtilsSortingAdd.v
