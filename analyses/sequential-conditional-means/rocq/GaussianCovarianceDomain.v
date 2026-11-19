@@ -3358,3 +3358,383 @@ Proof.
       (a*beta-b)*(a*beta-b)) by (field; lra).
   nra.
 Qed.
+
+(** [gcd_binary_residual_variance_gap_identity] (theorem).
+ Mathematical meaning: The exact excess residual variance of any linear predictor over the Gaussian best linear predictor is a nonnegative squared normal-equation error divided by the observed variance.
+ Exact checked proposition: The following universally quantified real
+ covariance or Gaussian Laplace-kernel result, with explicitly stated
+ nonnegativity, invertibility and normal-equation hypotheses.
+ Premises and side conditions: Parameters range over real covariance
+ coefficients; every division requires an explicit positive denominator.
+ Proof/definition method: Multiply by the strictly positive observed variance; field normalization yields the square of the normal-equation discrepancy.
+ Library reuse: Earlier kernel-checked [gcd_binary_*] covariance
+ lemmas, [gcd_psd_scalar_regression_explicit_strict], and Rocq Stdlib
+ Reals, Ring, Field, Lra, Psatz and exponential identities.
+ Boundary: No Gaussian probability law, sigma-algebra independence,
+ or conditional expectation is constructed by this algebraic theorem.
+*)
+Theorem gcd_binary_residual_variance_gap_identity :
+  forall a b c beta : R, 0<a ->
+    a*((c-2*b*beta+a*beta*beta)-(c-b*b/a)) =
+      (a*beta-b)*(a*beta-b).
+Proof.
+  intros; field; lra.
+Qed.
+
+(** [gcd_binary_residual_variance_minimizer_unique] (theorem).
+ Mathematical meaning: For nonzero observed variance, equality at the minimum residual variance uniquely identifies the ordinary least-squares coefficient b/a.
+ Exact checked proposition: The following universally quantified real
+ covariance or Gaussian Laplace-kernel result, with explicitly stated
+ nonnegativity, invertibility and normal-equation hypotheses.
+ Premises and side conditions: Parameters range over real covariance
+ coefficients; every division requires an explicit positive denominator.
+ Proof/definition method: Use the exact squared normal-equation gap and Psatz to force the square to vanish, then normalize the only division.
+ Library reuse: Earlier kernel-checked [gcd_binary_*] covariance
+ lemmas, [gcd_psd_scalar_regression_explicit_strict], and Rocq Stdlib
+ Reals, Ring, Field, Lra, Psatz and exponential identities.
+ Boundary: No Gaussian probability law, sigma-algebra independence,
+ or conditional expectation is constructed by this algebraic theorem.
+*)
+Theorem gcd_binary_residual_variance_minimizer_unique :
+  forall a b c beta : R, 0<a ->
+    c-b*b/a = c-2*b*beta+a*beta*beta ->
+    beta=b/a.
+Proof.
+  intros a b c beta Ha Hmin.
+  pose proof
+    (gcd_binary_residual_variance_gap_identity a b c beta Ha) as Hgap.
+  rewrite <- Hmin in Hgap.
+  assert (Heq : a*beta=b) by nra.
+  rewrite <- Heq; field; lra.
+Qed.
+
+(** [gcd_binary_schur_zero_iff_zero_determinant] (theorem).
+ Mathematical meaning: A positive observed variance has zero conditional Schur variance exactly when the covariance determinant vanishes, the rank-one boundary.
+ Exact checked proposition: The following universally quantified real
+ covariance or Gaussian Laplace-kernel result, with explicitly stated
+ nonnegativity, invertibility and normal-equation hypotheses.
+ Premises and side conditions: Parameters range over real covariance
+ coefficients; every division requires an explicit positive denominator.
+ Proof/definition method: Clear the positive denominator using Field and use real ordered-ring equivalence via Psatz.
+ Library reuse: Earlier kernel-checked [gcd_binary_*] covariance
+ lemmas, [gcd_psd_scalar_regression_explicit_strict], and Rocq Stdlib
+ Reals, Ring, Field, Lra, Psatz and exponential identities.
+ Boundary: No Gaussian probability law, sigma-algebra independence,
+ or conditional expectation is constructed by this algebraic theorem.
+*)
+Theorem gcd_binary_schur_zero_iff_zero_determinant :
+  forall a b c : R, 0<a ->
+    (c-b*b/a=0 <-> b*b=a*c).
+Proof.
+  intros a b c Ha.
+  assert (Hid : a*(c-b*b/a)=a*c-b*b) by (field; lra).
+  split; intro H; nra.
+Qed.
+
+(** [gcd_binary_schur_positive_iff_positive_determinant] (theorem).
+ Mathematical meaning: Strict positivity of the scalar Schur residual variance is equivalent to a strictly positive covariance determinant whenever the observed variance is positive.
+ Exact checked proposition: The following universally quantified real
+ covariance or Gaussian Laplace-kernel result, with explicitly stated
+ nonnegativity, invertibility and normal-equation hypotheses.
+ Premises and side conditions: Parameters range over real covariance
+ coefficients; every division requires an explicit positive denominator.
+ Proof/definition method: Normalize the denominator with Field and transfer strict order through multiplication by a positive factor.
+ Library reuse: Earlier kernel-checked [gcd_binary_*] covariance
+ lemmas, [gcd_psd_scalar_regression_explicit_strict], and Rocq Stdlib
+ Reals, Ring, Field, Lra, Psatz and exponential identities.
+ Boundary: No Gaussian probability law, sigma-algebra independence,
+ or conditional expectation is constructed by this algebraic theorem.
+*)
+Theorem gcd_binary_schur_positive_iff_positive_determinant :
+  forall a b c : R, 0<a ->
+    (0<c-b*b/a <-> b*b<a*c).
+Proof.
+  intros a b c Ha.
+  assert (Hid : a*(c-b*b/a)=a*c-b*b) by (field; lra).
+  split; intro H; nra.
+Qed.
+
+(** [gcd_binary_schur_between_zero_and_future_variance] (theorem).
+ Mathematical meaning: For PSD Gaussian covariance with positive observed variance, conditional residual variance is bounded between zero and the marginal future variance.
+ Exact checked proposition: The following universally quantified real
+ covariance or Gaussian Laplace-kernel result, with explicitly stated
+ nonnegativity, invertibility and normal-equation hypotheses.
+ Premises and side conditions: Parameters range over real covariance
+ coefficients; every division requires an explicit positive denominator.
+ Proof/definition method: Reuse the Schur PSD lemma for the lower bound and the nonnegative regression variance reduction for the upper bound.
+ Library reuse: Earlier kernel-checked [gcd_binary_*] covariance
+ lemmas, [gcd_psd_scalar_regression_explicit_strict], and Rocq Stdlib
+ Reals, Ring, Field, Lra, Psatz and exponential identities.
+ Boundary: No Gaussian probability law, sigma-algebra independence,
+ or conditional expectation is constructed by this algebraic theorem.
+*)
+Theorem gcd_binary_schur_between_zero_and_future_variance :
+  forall a b c : R, 0<a ->
+    (forall t s : R, 0<=gcd_binary_covariance_form a b c t s) ->
+    0<=c-b*b/a /\ c-b*b/a<=c.
+Proof.
+  intros a b c Ha Hpsd; split.
+  - exact (gcd_binary_schur_variance_psd a b c Ha Hpsd).
+  - assert (Hq : 0<=b*b) by nra.
+    assert (Hinv : 0<=/a) by (left; apply Rinv_0_lt_compat; lra).
+    unfold Rdiv; nra.
+Qed.
+
+(** [gcd_binary_schur_strict_variance_reduction] (theorem).
+ Mathematical meaning: A genuinely correlated observed score strictly reduces the future residual variance under positive observed variance, irrespective of the sign of correlation.
+ Exact checked proposition: The following universally quantified real
+ covariance or Gaussian Laplace-kernel result, with explicitly stated
+ nonnegativity, invertibility and normal-equation hypotheses.
+ Premises and side conditions: Parameters range over real covariance
+ coefficients; every division requires an explicit positive denominator.
+ Proof/definition method: Apply strict positivity of the square b*b and the reciprocal 1/a, then compare conditional and marginal variances.
+ Library reuse: Earlier kernel-checked [gcd_binary_*] covariance
+ lemmas, [gcd_psd_scalar_regression_explicit_strict], and Rocq Stdlib
+ Reals, Ring, Field, Lra, Psatz and exponential identities.
+ Boundary: No Gaussian probability law, sigma-algebra independence,
+ or conditional expectation is constructed by this algebraic theorem.
+*)
+Theorem gcd_binary_schur_strict_variance_reduction :
+  forall a b c : R, 0<a -> b<>0 -> c-b*b/a<c.
+Proof.
+  intros a b c Ha Hb.
+  assert (Hq : 0<b*b) by nra.
+  assert (Hinv : 0</a) by (apply Rinv_0_lt_compat; lra).
+  unfold Rdiv; nra.
+Qed.
+
+(** [gcd_binary_schur_nondecreasing_observed_noise] (theorem).
+ Mathematical meaning: Adding independent observation noise to the observed variance cannot reduce the future conditional residual variance in the scalar Gaussian regression formula.
+ Exact checked proposition: The following universally quantified real
+ covariance or Gaussian Laplace-kernel result, with explicitly stated
+ nonnegativity, invertibility and normal-equation hypotheses.
+ Premises and side conditions: Parameters range over real covariance
+ coefficients; every division requires an explicit positive denominator.
+ Proof/definition method: Compare the two Schur complements after multiplying by positive observed-variance denominators; the difference equals a nonnegative b² times added noise.
+ Library reuse: Earlier kernel-checked [gcd_binary_*] covariance
+ lemmas, [gcd_psd_scalar_regression_explicit_strict], and Rocq Stdlib
+ Reals, Ring, Field, Lra, Psatz and exponential identities.
+ Boundary: No Gaussian probability law, sigma-algebra independence,
+ or conditional expectation is constructed by this algebraic theorem.
+*)
+Theorem gcd_binary_schur_nondecreasing_observed_noise :
+  forall a b c e : R, 0<a -> 0<=e ->
+    c-b*b/a <= c-b*b/(a+e).
+Proof.
+  intros a b c e Ha He.
+  assert (Hap : 0<a+e) by lra.
+  assert (Hsq : 0<=b*b*e) by nra.
+  assert (Hid :
+    a*(a+e)*((c-b*b/(a+e))-(c-b*b/a))=b*b*e)
+    by (field; lra).
+  nra.
+Qed.
+
+(** [gcd_binary_schur_strictly_increasing_observed_noise] (theorem).
+ Mathematical meaning: If the observed and future scores are correlated, any strictly positive added observation noise strictly increases residual uncertainty.
+ Exact checked proposition: The following universally quantified real
+ covariance or Gaussian Laplace-kernel result, with explicitly stated
+ nonnegativity, invertibility and normal-equation hypotheses.
+ Premises and side conditions: Parameters range over real covariance
+ coefficients; every division requires an explicit positive denominator.
+ Proof/definition method: Use the exact noise difference identity, positive covariance square, and both positive denominators to derive strict monotonicity.
+ Library reuse: Earlier kernel-checked [gcd_binary_*] covariance
+ lemmas, [gcd_psd_scalar_regression_explicit_strict], and Rocq Stdlib
+ Reals, Ring, Field, Lra, Psatz and exponential identities.
+ Boundary: No Gaussian probability law, sigma-algebra independence,
+ or conditional expectation is constructed by this algebraic theorem.
+*)
+Theorem gcd_binary_schur_strictly_increasing_observed_noise :
+  forall a b c e : R, 0<a -> 0<e -> b<>0 ->
+    c-b*b/a < c-b*b/(a+e).
+Proof.
+  intros a b c e Ha He Hb.
+  assert (Hap : 0<a+e) by lra.
+  assert (Hsq : 0<b*b*e) by nra.
+  assert (Hid :
+    a*(a+e)*((c-b*b/(a+e))-(c-b*b/a))=b*b*e)
+    by (field; lra).
+  nra.
+Qed.
+
+(** [gcd_binary_regression_residual_psd_any_coefficient] (theorem).
+ Mathematical meaning: A PSD two-variable covariance necessarily gives a nonnegative residual variance for every candidate regression coefficient, not just the optimum.
+ Exact checked proposition: The following universally quantified real
+ covariance or Gaussian Laplace-kernel result, with explicitly stated
+ nonnegativity, invertibility and normal-equation hypotheses.
+ Premises and side conditions: Parameters range over real covariance
+ coefficients; every division requires an explicit positive denominator.
+ Proof/definition method: Evaluate the original PSD quadratic on the regression contrast vector (-beta,1) and normalize the resulting polynomial.
+ Library reuse: Earlier kernel-checked [gcd_binary_*] covariance
+ lemmas, [gcd_psd_scalar_regression_explicit_strict], and Rocq Stdlib
+ Reals, Ring, Field, Lra, Psatz and exponential identities.
+ Boundary: No Gaussian probability law, sigma-algebra independence,
+ or conditional expectation is constructed by this algebraic theorem.
+*)
+Theorem gcd_binary_regression_residual_psd_any_coefficient :
+  forall a b c beta : R,
+    (forall t s : R, 0<=gcd_binary_covariance_form a b c t s) ->
+    0<=c-2*b*beta+a*beta*beta.
+Proof.
+  intros a b c beta Hpsd.
+  specialize (Hpsd (-beta) 1).
+  unfold gcd_binary_covariance_form in Hpsd; nra.
+Qed.
+
+(** [gcd_binary_regression_transformed_block_psd] (theorem).
+ Mathematical meaning: Subtracting any scalar linear predictor from an observed coordinate preserves positive semidefiniteness of the complete two-variable covariance block.
+ Exact checked proposition: The following universally quantified real
+ covariance or Gaussian Laplace-kernel result, with explicitly stated
+ nonnegativity, invertibility and normal-equation hypotheses.
+ Premises and side conditions: Parameters range over real covariance
+ coefficients; every division requires an explicit positive denominator.
+ Proof/definition method: Rewrite the transformed quadratic by the triangular congruence identity and appeal to universal PSD of the original block.
+ Library reuse: Earlier kernel-checked [gcd_binary_*] covariance
+ lemmas, [gcd_psd_scalar_regression_explicit_strict], and Rocq Stdlib
+ Reals, Ring, Field, Lra, Psatz and exponential identities.
+ Boundary: No Gaussian probability law, sigma-algebra independence,
+ or conditional expectation is constructed by this algebraic theorem.
+*)
+Theorem gcd_binary_regression_transformed_block_psd :
+  forall a b c beta : R,
+    (forall t s : R, 0<=gcd_binary_covariance_form a b c t s) ->
+    forall t s : R,
+      0<=gcd_binary_covariance_form a (b-a*beta)
+        (c-2*b*beta+a*beta*beta) t s.
+Proof.
+  intros a b c beta Hpsd t s.
+  rewrite <- (gcd_binary_form_regression_change a b c beta t s).
+  apply Hpsd.
+Qed.
+
+(** [gcd_binary_regression_normal_equation_unique] (theorem).
+ Mathematical meaning: With positive observed variance, the covariance orthogonality normal equation has a unique coefficient, equal to the covariance-to-variance ratio.
+ Exact checked proposition: The following universally quantified real
+ covariance or Gaussian Laplace-kernel result, with explicitly stated
+ nonnegativity, invertibility and normal-equation hypotheses.
+ Premises and side conditions: Parameters range over real covariance
+ coefficients; every division requires an explicit positive denominator.
+ Proof/definition method: Reduce the equation to the previously checked scalar regression coefficient theorem; no matrix inverse is introduced.
+ Library reuse: Earlier kernel-checked [gcd_binary_*] covariance
+ lemmas, [gcd_psd_scalar_regression_explicit_strict], and Rocq Stdlib
+ Reals, Ring, Field, Lra, Psatz and exponential identities.
+ Boundary: No Gaussian probability law, sigma-algebra independence,
+ or conditional expectation is constructed by this algebraic theorem.
+*)
+Theorem gcd_binary_regression_normal_equation_unique :
+  forall a b beta : R, 0<a -> b-a*beta=0 -> beta=b/a.
+Proof.
+  intros a b beta Ha Heq.
+  apply (gcd_psd_scalar_regression_explicit_strict a b beta Ha).
+  nra.
+Qed.
+
+(** [gcd_binary_rank_one_null_contrast] (theorem).
+ Mathematical meaning: At the singular positive-semidefinite rank-one boundary, the regression-normalized contrast has exactly zero quadratic energy.
+ Exact checked proposition: The following universally quantified real
+ covariance or Gaussian Laplace-kernel result, with explicitly stated
+ nonnegativity, invertibility and normal-equation hypotheses.
+ Premises and side conditions: Parameters range over real covariance
+ coefficients; every division requires an explicit positive denominator.
+ Proof/definition method: Complete the covariance square and replace the Schur residual by zero using the determinant-vanishing characterization.
+ Library reuse: Earlier kernel-checked [gcd_binary_*] covariance
+ lemmas, [gcd_psd_scalar_regression_explicit_strict], and Rocq Stdlib
+ Reals, Ring, Field, Lra, Psatz and exponential identities.
+ Boundary: No Gaussian probability law, sigma-algebra independence,
+ or conditional expectation is constructed by this algebraic theorem.
+*)
+Theorem gcd_binary_rank_one_null_contrast :
+  forall a b c : R, 0<a -> b*b=a*c ->
+    gcd_binary_covariance_form a b c (-b/a) 1 = 0.
+Proof.
+  intros a b c Ha Hdet.
+  rewrite (gcd_binary_form_complete_square a b c (-b/a) 1 Ha).
+  assert (Hschur : c-b*b/a=0).
+  { apply (proj2 (gcd_binary_schur_zero_iff_zero_determinant a b c Ha)).
+    exact Hdet. }
+  rewrite Hschur.
+  field; lra.
+Qed.
+
+(** [gcd_binary_strict_positive_form_from_schur] (theorem).
+ Mathematical meaning: Positive observed variance and strictly positive Schur residual imply positive covariance energy for every nonzero two-dimensional contrast.
+ Exact checked proposition: The following universally quantified real
+ covariance or Gaussian Laplace-kernel result, with explicitly stated
+ nonnegativity, invertibility and normal-equation hypotheses.
+ Premises and side conditions: Parameters range over real covariance
+ coefficients; every division requires an explicit positive denominator.
+ Proof/definition method: Use square completion, strict positivity of real squares for nonzero contrasts, and a split into zero/nonzero second-coordinate cases.
+ Library reuse: Earlier kernel-checked [gcd_binary_*] covariance
+ lemmas, [gcd_psd_scalar_regression_explicit_strict], and Rocq Stdlib
+ Reals, Ring, Field, Lra, Psatz and exponential identities.
+ Boundary: No Gaussian probability law, sigma-algebra independence,
+ or conditional expectation is constructed by this algebraic theorem.
+*)
+Theorem gcd_binary_strict_positive_form_from_schur :
+  forall a b c : R, 0<a -> 0<c-b*b/a ->
+    forall t s : R, t<>0 \/ s<>0 ->
+      0<gcd_binary_covariance_form a b c t s.
+Proof.
+  intros a b c Ha Hschur t s Hnonzero.
+  rewrite (gcd_binary_form_complete_square a b c t s Ha).
+  destruct (Req_EM_T s 0) as [Hs | Hs].
+  - subst s.
+    destruct Hnonzero as [Ht | Hfalse]; [|contradiction].
+    assert (Hsq : 0<t*t) by nra.
+    nra.
+  - assert (Hsq : 0 <= (t+b/a*s)*(t+b/a*s)).
+    { change (0 <= Rsqr (t+b/a*s)); apply Rle_0_sqr. }
+    assert (Hs2 : 0 < s*s) by nra.
+    nra.
+Qed.
+
+(** [gcd_binary_noise_preserves_psd_schur_lower_bound] (theorem).
+ Mathematical meaning: For a PSD covariance, additional observation noise preserves nonnegativity and can only increase the scalar conditional variance.
+ Exact checked proposition: The following universally quantified real
+ covariance or Gaussian Laplace-kernel result, with explicitly stated
+ nonnegativity, invertibility and normal-equation hypotheses.
+ Premises and side conditions: Parameters range over real covariance
+ coefficients; every division requires an explicit positive denominator.
+ Proof/definition method: Combine the kernel-verified Schur PSD inequality with observation-noise monotonicity, preserving signed covariance and singular future residuals.
+ Library reuse: Earlier kernel-checked [gcd_binary_*] covariance
+ lemmas, [gcd_psd_scalar_regression_explicit_strict], and Rocq Stdlib
+ Reals, Ring, Field, Lra, Psatz and exponential identities.
+ Boundary: No Gaussian probability law, sigma-algebra independence,
+ or conditional expectation is constructed by this algebraic theorem.
+*)
+Theorem gcd_binary_noise_preserves_psd_schur_lower_bound :
+  forall a b c e : R, 0<a -> 0<=e ->
+    (forall t s : R, 0<=gcd_binary_covariance_form a b c t s) ->
+    0<=c-b*b/(a+e).
+Proof.
+  intros a b c e Ha He Hpsd.
+  eapply Rle_trans.
+  - exact (gcd_binary_schur_variance_psd a b c Ha Hpsd).
+  - exact (gcd_binary_schur_nondecreasing_observed_noise a b c e Ha He).
+Qed.
+
+(** [gcd_binary_gaussian_laplace_regression_factor] (theorem).
+ Mathematical meaning: A scalar Gaussian Laplace kernel factors exactly into observed and residual kernels after removing covariance by the regression normal equation.
+ Exact checked proposition: The following universally quantified real
+ covariance or Gaussian Laplace-kernel result, with explicitly stated
+ nonnegativity, invertibility and normal-equation hypotheses.
+ Premises and side conditions: Parameters range over real covariance
+ coefficients; every division requires an explicit positive denominator.
+ Proof/definition method: Apply the verified regression block diagonalization and the standard exponential addition identity; this is a Laplace-kernel algebra statement, not independence of probability measures.
+ Library reuse: Earlier kernel-checked [gcd_binary_*] covariance
+ lemmas, [gcd_psd_scalar_regression_explicit_strict], and Rocq Stdlib
+ Reals, Ring, Field, Lra, Psatz and exponential identities.
+ Boundary: No Gaussian probability law, sigma-algebra independence,
+ or conditional expectation is constructed by this algebraic theorem.
+*)
+Theorem gcd_binary_gaussian_laplace_regression_factor :
+  forall a b c beta t s : R, b=a*beta ->
+    exp (gcd_binary_covariance_form a b c (t-beta*s) s /2) =
+    exp (a*t*t/2)*exp ((c-a*beta*beta)*s*s/2).
+Proof.
+  intros a b c beta t s Hcross.
+  rewrite (gcd_binary_form_regression_decorrelation a b c beta t s Hcross).
+  replace ((a*t*t+(c-a*beta*beta)*s*s)/2)
+    with (a*t*t/2+(c-a*beta*beta)*s*s/2) by field.
+  rewrite exp_plus; reflexivity.
+Qed.
