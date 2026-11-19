@@ -1124,6 +1124,8 @@ awk -v first="$charac_reverse" -v last="$charac_last" -v proof="$charac_proof" '
 mv "$charac_rewrite" rocq/CertRL/LM/hilbert.v
 rm "$charac_proof"
 
+# D174 temporary trace (remove after exact source guard is validated).
+set -x
 # D174: The negative-infinity reciprocal-limit case is dual to the
 # already proved positive-infinity case. Replace only this obsolete
 # proof branch using Stdlib real absolute value, reciprocal and
@@ -1189,3 +1191,5 @@ sed -i "${hilbert_small2},$((hilbert_small2 + 3))c\\     nra." rocq/CertRL/LM/hi
 for_rewrite_next=$((hilbert_small1 + 1))
 sed -n "${for_rewrite_next}p" rocq/CertRL/LM/hilbert.v | grep -Fq 'absurd (0 = 0). rewrite H4 in H2.'
 sed -i "${hilbert_small1},$((hilbert_small1 + 3))c\\     nra." rocq/CertRL/LM/hilbert.v
+
+set +x
