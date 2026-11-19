@@ -1134,11 +1134,11 @@ elim_neg_start=$(grep -n '^Lemma is_Elim_seq_inv_neg ' rocq/utils/ELim_Seq.v | h
 test -n "$elim_neg_start"
 elim_neg_branch=$(awk -v first="$elim_neg_start" 'NR > first && /^  - red[.]$/ {print NR; exit}' rocq/utils/ELim_Seq.v)
 test -n "$elim_neg_branch"
-elim_neg_end=$(awk -v first="$elim_neg_branch" 'NR > first && /^[[:space:]]*Qed[.]$/ {print NR; exit}' rocq/utils/ELim_Seq.v)
+elim_neg_end=$(awk -v first="$elim_neg_branch" 'NR > first && /^[[:space:]]*Qed[.][[:space:]]*$/ {print NR; exit}' rocq/utils/ELim_Seq.v)
 test -n "$elim_neg_end"
 elim_neg_last=$((elim_neg_end - 1))
 test "$(sed -n "${elim_neg_branch}p" rocq/utils/ELim_Seq.v)" = "  - red."
-test "$(sed -n "${elim_neg_end}p" rocq/utils/ELim_Seq.v)" = "Qed."
+sed -n "${elim_neg_end}p" rocq/utils/ELim_Seq.v | grep -Eq "^[[:space:]]*Qed[.][[:space:]]*$"
 sed -n "${elim_neg_branch},${elim_neg_last}p" rocq/utils/ELim_Seq.v | grep -Fq 'specialize (limu (- / eps)).'
 elim_neg_proof=$(mktemp)
 cat > "$elim_neg_proof" <<'ROCQ_NEG_INFINITE_RECIPROCAL'
