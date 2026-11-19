@@ -3527,7 +3527,10 @@ Proof.
   assert (Hid :
     a*(a+e)*((c-b*b/(a+e))-(c-b*b/a))=b*b*e)
     by (field; lra).
-  nra.
+  assert (Hprod : 0 < a*(a+e)) by nra.
+  set (delta := (c-b*b/(a+e))-(c-b*b/a)).
+  assert (Hdelta : 0 <= delta) by nra.
+  unfold delta in Hdelta; lra.
 Qed.
 
 (** [gcd_binary_schur_strictly_increasing_observed_noise] (theorem).
@@ -3554,7 +3557,10 @@ Proof.
   assert (Hid :
     a*(a+e)*((c-b*b/(a+e))-(c-b*b/a))=b*b*e)
     by (field; lra).
-  nra.
+  assert (Hprod : 0 < a*(a+e)) by nra.
+  set (delta := (c-b*b/(a+e))-(c-b*b/a)).
+  assert (Hdelta : 0 < delta) by nra.
+  unfold delta in Hdelta; lra.
 Qed.
 
 (** [gcd_binary_regression_residual_psd_any_coefficient] (theorem).
