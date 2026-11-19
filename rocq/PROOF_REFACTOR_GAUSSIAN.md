@@ -6,6 +6,20 @@
 
 This register tracks D050's 56, D051's 101, D052's 30, and D053–D056's 105 source-ordered Rocq proofs about Gaussian prior-plus-likelihood *pointwise densities*: quadratic completion, model precision and variance, dependence on arbitrary unequal observed scores, evidence cancellation and posterior symmetry. Its scope deliberately excludes the stronger measurable conditional-expectation assertion unless a separate formally verified probability library supplies integral normalization, integrability and disintegration.
 
+**Verified November 19, 2026 singular Gaussian Laplace-factor extension (draft PR #57).**
+The [exact-source Rocq 9.2 kernel run](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44513601003)
+accepted `gcd_psd_scalar_gaussian_laplace_factor_exists` as the
+**299th Gaussian-specific mathematical declaration** in the five-module
+register (35 conditional-kernel, 159 covariance-domain, 43 innovation-bound,
+30 batch-balance, 32 finite-history). The theorem reuses two earlier checked
+results to construct an existential scalar regression coefficient that
+factorizes the formal Gaussian real Laplace kernel for every PSD
+2-by-2 covariance block, including a zero observed variance. This does
+**not** establish a joint Gaussian probability law, uniqueness of its
+Laplace transform, independence of sigma-algebras, or the event-integral
+conditional-expectation formula. **AI disclosure:** The source, proof and
+verification integration were AI-assisted for Anders Hellström.
+
 **Verified November 18, 2026 singular scalar regression extension (draft PR #57).**
 The [Rocq 9.2 kernel workflow](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44386292225)
 checked `gcd_psd_scalar_regression_residual_exists` in
