@@ -1124,8 +1124,6 @@ awk -v first="$charac_reverse" -v last="$charac_last" -v proof="$charac_proof" '
 mv "$charac_rewrite" rocq/CertRL/LM/hilbert.v
 rm "$charac_proof"
 
-# D174 temporary trace (remove after exact source guard is validated).
-set -x
 # D174: The negative-infinity reciprocal-limit case is dual to the
 # already proved positive-infinity case. Replace only this obsolete
 # proof branch using Stdlib real absolute value, reciprocal and
@@ -1174,22 +1172,14 @@ awk -v first="$elim_neg_branch" -v last="$elim_neg_last" -v proof="$elim_neg_pro
 mv "$elim_neg_rewritten" rocq/utils/ELim_Seq.v
 rm "$elim_neg_proof"
 
-# D175: In the forward Hilbert projection implication, strict
-# positivity of the squared distance already implies its norm is
-# nonzero. Replace two stale [Req_dec] branches that mistakenly
-# reference a shadowed H4 of type False. Stdlib [nra] proves the
-# required inequality/nonzero side condition directly from H2.
+# D175: In the forward Hilbert projection implication, the existing
+# squared-distance H2 > 0 already proves the remaining norm nonzero
+# obligation. The old Req_dec step refers to a shadowed H4 : False;
+# replace the single remaining invalid decision branch with Stdlib nra.
 hilbert_req_count=$(grep -Fc 'destruct (Req_dec (norm (minus v w)) 0).' rocq/CertRL/LM/hilbert.v)
-test "$hilbert_req_count" -ge 3
-hilbert_small2=$(grep -nF 'destruct (Req_dec (norm (minus v w)) 0).' rocq/CertRL/LM/hilbert.v | tail -n 1 | cut -d: -f1)
-hilbert_small1=$(grep -nF 'destruct (Req_dec (norm (minus v w)) 0).' rocq/CertRL/LM/hilbert.v | tail -n 2 | head -n 1 | cut -d: -f1)
-test -n "$hilbert_small1"
-test -n "$hilbert_small2"
-for_rewrite_next=$((hilbert_small2 + 1))
-sed -n "${for_rewrite_next}p" rocq/CertRL/LM/hilbert.v | grep -Fq 'absurd (0 = 0). rewrite H4 in H2.'
-sed -i "${hilbert_small2},$((hilbert_small2 + 3))c\\     nra." rocq/CertRL/LM/hilbert.v
-for_rewrite_next=$((hilbert_small1 + 1))
-sed -n "${for_rewrite_next}p" rocq/CertRL/LM/hilbert.v | grep -Fq 'absurd (0 = 0). rewrite H4 in H2.'
-sed -i "${hilbert_small1},$((hilbert_small1 + 3))c\\     nra." rocq/CertRL/LM/hilbert.v
-
-set +x
+test "$hilbert_req_count" -ge 2
+hilbert_small=$(grep -nF 'destruct (Req_dec (norm (minus v w)) 0).' rocq/CertRL/LM/hilbert.v | tail -n 1 | cut -d: -f1)
+test -n "$hilbert_small"
+hilbert_small_next=$((hilbert_small + 1))
+sed -n "${hilbert_small_next}p" rocq/CertRL/LM/hilbert.v | grep -Fq 'absurd (0 = 0). rewrite H4 in H2.'
+sed -i "${hilbert_small},$((hilbert_small + 3))c\\     nra." rocq/CertRL/LM/hilbert.v
