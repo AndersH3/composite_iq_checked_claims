@@ -2955,3 +2955,406 @@ Proof.
   - rewrite Hcross.
     field; lra.
 Qed.
+
+(** [gcd_binary_covariance_form] (definition).
+ Mathematical meaning: The two-coordinate symmetric covariance quadratic
+ evaluated at arbitrary real contrast weights [t] and [s], retaining negative
+ correlation and all zero-eigenvalue cases.
+ Exact definition: [a*t*t + 2*b*t*s + c*s*s] with observed variance [a],
+ cross covariance [b], and future variance [c].
+ Premises and side conditions: All five arguments are real; PSD is imposed
+ separately when used and no inverse or probability law is assumed.
+ Proof/definition method: Reuse the Rocq real polynomial ring operation.
+ Library reuse: Stdlib Reals and Ring; no custom matrix implementation.
+ Boundary: Covariance algebra alone is not a Gaussian distribution,
+ a sigma-algebra independence certificate, or conditional expectation.
+*)
+Definition gcd_binary_covariance_form (a b c t s : R) : R :=
+  a*t*t + 2*b*t*s + c*s*s.
+
+(** [gcd_binary_form_congruence] (theorem).
+ Mathematical meaning: The covariance quadratic of any two linear combinations is obtained by the exact congruence-transformed two-by-two covariance matrix.
+ Exact checked proposition: As stated in the following Rocq [Theorem] with
+ explicit real parameters and covariance weights; this result has
+ a reusable universal quantifier rather than a numerical special case.
+ Premises and side conditions: Arbitrary real covariance entries and arbitrary real transformation coefficients; PSD is not assumed for this algebraic identity.
+ Proof/definition method: Expand the two-coordinate linear map and normalize polynomial terms by Stdlib Ring.
+ Library reuse: Rocq Stdlib Reals, Ring, Field, Lra and Psatz; existing
+ [gcd_psd_covariance_cauchy_schwarz] and derived covariance results,
+ as appropriate to the checked proof; no new assumed matrix axiom.
+ Boundary: These are algebraic covariance and linear-regression results,
+ not a proof of a Gaussian law, independence of sigma-algebras, or
+ universal measure-theoretic conditional expectation.
+*)
+Theorem gcd_binary_form_congruence :
+  forall a b c u v w z t s : R,
+    gcd_binary_covariance_form a b c (u*t+v*s) (w*t+z*s) =
+    gcd_binary_covariance_form
+      (gcd_binary_covariance_form a b c u w)
+      (a*u*v+b*(u*z+v*w)+c*w*z)
+      (gcd_binary_covariance_form a b c v z) t s.
+Proof.
+  intros; unfold gcd_binary_covariance_form; ring.
+Qed.
+
+(** [gcd_binary_form_parallelogram] (theorem).
+ Mathematical meaning: The quadratic covariance energy of the sum and difference of two vectors obeys the parallelogram identity, central to Gaussian Hilbert-space geometry.
+ Exact checked proposition: As stated in the following Rocq [Theorem] with
+ explicit real parameters and covariance weights; this result has
+ a reusable universal quantifier rather than a numerical special case.
+ Premises and side conditions: No sign or invertibility restriction on the symmetric bilinear coefficients; all four vector components are arbitrary reals.
+ Proof/definition method: Expand the polarized quadratic expression and collect exact polynomial terms using Ring.
+ Library reuse: Rocq Stdlib Reals, Ring, Field, Lra and Psatz; existing
+ [gcd_psd_covariance_cauchy_schwarz] and derived covariance results,
+ as appropriate to the checked proof; no new assumed matrix axiom.
+ Boundary: These are algebraic covariance and linear-regression results,
+ not a proof of a Gaussian law, independence of sigma-algebras, or
+ universal measure-theoretic conditional expectation.
+*)
+Theorem gcd_binary_form_parallelogram :
+  forall a b c t s u v : R,
+    gcd_binary_covariance_form a b c (t+u) (s+v) +
+    gcd_binary_covariance_form a b c (t-u) (s-v) =
+    2*gcd_binary_covariance_form a b c t s +
+    2*gcd_binary_covariance_form a b c u v.
+Proof.
+  intros; unfold gcd_binary_covariance_form; ring.
+Qed.
+
+(** [gcd_binary_form_polarization] (theorem).
+ Mathematical meaning: The full covariance bilinear form is recoverable by subtracting the quadratic energies of the sum and difference of two score vectors.
+ Exact checked proposition: As stated in the following Rocq [Theorem] with
+ explicit real parameters and covariance weights; this result has
+ a reusable universal quantifier rather than a numerical special case.
+ Premises and side conditions: Symmetric scalar covariance block, with all real components; PSD and nonzero determinant are unnecessary.
+ Proof/definition method: Use the standard polarization identity and Stdlib Ring normalization rather than a parallel bespoke bilinear-form library.
+ Library reuse: Rocq Stdlib Reals, Ring, Field, Lra and Psatz; existing
+ [gcd_psd_covariance_cauchy_schwarz] and derived covariance results,
+ as appropriate to the checked proof; no new assumed matrix axiom.
+ Boundary: These are algebraic covariance and linear-regression results,
+ not a proof of a Gaussian law, independence of sigma-algebras, or
+ universal measure-theoretic conditional expectation.
+*)
+Theorem gcd_binary_form_polarization :
+  forall a b c t s u v : R,
+    gcd_binary_covariance_form a b c (t+u) (s+v) -
+    gcd_binary_covariance_form a b c (t-u) (s-v) =
+    4*(a*t*u + b*(t*v+s*u) + c*s*v).
+Proof.
+  intros; unfold gcd_binary_covariance_form; ring.
+Qed.
+
+(** [gcd_binary_form_signed_reflection] (theorem).
+ Mathematical meaning: Reflecting the observed coordinate changes the sign of the cross covariance and leaves both marginal variances invariant.
+ Exact checked proposition: As stated in the following Rocq [Theorem] with
+ explicit real parameters and covariance weights; this result has
+ a reusable universal quantifier rather than a numerical special case.
+ Premises and side conditions: Any real symmetric covariance coefficients and two arbitrary contrast components; this identity also covers negative correlations.
+ Proof/definition method: Use sign normalization of the canonical quadratic representation through Ring.
+ Library reuse: Rocq Stdlib Reals, Ring, Field, Lra and Psatz; existing
+ [gcd_psd_covariance_cauchy_schwarz] and derived covariance results,
+ as appropriate to the checked proof; no new assumed matrix axiom.
+ Boundary: These are algebraic covariance and linear-regression results,
+ not a proof of a Gaussian law, independence of sigma-algebras, or
+ universal measure-theoretic conditional expectation.
+*)
+Theorem gcd_binary_form_signed_reflection :
+  forall a b c t s : R,
+    gcd_binary_covariance_form a b c (-t) s =
+    gcd_binary_covariance_form a (-b) c t s.
+Proof.
+  intros; unfold gcd_binary_covariance_form; ring.
+Qed.
+
+(** [gcd_binary_psd_marginal_variances] (theorem).
+ Mathematical meaning: Nonnegativity of a full two-variable covariance quadratic forces both marginal variances to be nonnegative, even in singular cases.
+ Exact checked proposition: As stated in the following Rocq [Theorem] with
+ explicit real parameters and covariance weights; this result has
+ a reusable universal quantifier rather than a numerical special case.
+ Premises and side conditions: Nonnegative covariance energy is required for every real two-vector, not only along the unit diagonal.
+ Proof/definition method: Test the quadratic form at the two canonical basis vectors and normalize with Psatz.
+ Library reuse: Rocq Stdlib Reals, Ring, Field, Lra and Psatz; existing
+ [gcd_psd_covariance_cauchy_schwarz] and derived covariance results,
+ as appropriate to the checked proof; no new assumed matrix axiom.
+ Boundary: These are algebraic covariance and linear-regression results,
+ not a proof of a Gaussian law, independence of sigma-algebras, or
+ universal measure-theoretic conditional expectation.
+*)
+Theorem gcd_binary_psd_marginal_variances :
+  forall a b c : R,
+    (forall t s : R, 0 <= gcd_binary_covariance_form a b c t s) ->
+    0 <= a /\ 0 <= c.
+Proof.
+  intros a b c H; split.
+  - specialize (H 1 0); unfold gcd_binary_covariance_form in H; nra.
+  - specialize (H 0 1); unfold gcd_binary_covariance_form in H; nra.
+Qed.
+
+(** [gcd_binary_psd_determinant] (theorem).
+ Mathematical meaning: A full PSD covariance block satisfies the nonnegative determinant condition, the sharp covariance Cauchy-Schwarz bound.
+ Exact checked proposition: As stated in the following Rocq [Theorem] with
+ explicit real parameters and covariance weights; this result has
+ a reusable universal quantifier rather than a numerical special case.
+ Premises and side conditions: Universal nonnegativity of the complete symmetric quadratic; no strictly positive marginal variance is required.
+ Proof/definition method: Extract the two diagonal inequalities and apply the previously verified scalar covariance Cauchy-Schwarz theorem.
+ Library reuse: Rocq Stdlib Reals, Ring, Field, Lra and Psatz; existing
+ [gcd_psd_covariance_cauchy_schwarz] and derived covariance results,
+ as appropriate to the checked proof; no new assumed matrix axiom.
+ Boundary: These are algebraic covariance and linear-regression results,
+ not a proof of a Gaussian law, independence of sigma-algebras, or
+ universal measure-theoretic conditional expectation.
+*)
+Theorem gcd_binary_psd_determinant :
+  forall a b c : R,
+    (forall t s : R, 0 <= gcd_binary_covariance_form a b c t s) ->
+    b*b <= a*c.
+Proof.
+  intros a b c H.
+  destruct (gcd_binary_psd_marginal_variances a b c H) as [Ha Hc].
+  apply (gcd_psd_covariance_cauchy_schwarz a b c Ha Hc).
+  intro t.
+  specialize (H t 1).
+  unfold gcd_binary_covariance_form in H.
+  nra.
+Qed.
+
+(** [gcd_binary_psd_iff_principal_minors] (theorem).
+ Mathematical meaning: A symmetric two-by-two covariance is positive semidefinite if and only if its two diagonal variances and determinant are all nonnegative.
+ Exact checked proposition: As stated in the following Rocq [Theorem] with
+ explicit real parameters and covariance weights; this result has
+ a reusable universal quantifier rather than a numerical special case.
+ Premises and side conditions: Arbitrary signed cross covariance and possibly singular marginal variances; no division by a zero diagonal is allowed.
+ Proof/definition method: Necessity reuses proved PSD marginals/determinant; sufficiency uses a nonnegative completed-square numerator when a>0 and the forced zero cross term when a=0.
+ Library reuse: Rocq Stdlib Reals, Ring, Field, Lra and Psatz; existing
+ [gcd_psd_covariance_cauchy_schwarz] and derived covariance results,
+ as appropriate to the checked proof; no new assumed matrix axiom.
+ Boundary: These are algebraic covariance and linear-regression results,
+ not a proof of a Gaussian law, independence of sigma-algebras, or
+ universal measure-theoretic conditional expectation.
+*)
+Theorem gcd_binary_psd_iff_principal_minors :
+  forall a b c : R,
+    (forall t s : R, 0 <= gcd_binary_covariance_form a b c t s) <->
+    0 <= a /\ 0 <= c /\ b*b <= a*c.
+Proof.
+  intros a b c; split.
+  - intro H.
+    destruct (gcd_binary_psd_marginal_variances a b c H) as [Ha Hc].
+    repeat split; try assumption.
+    exact (gcd_binary_psd_determinant a b c H).
+  - intros [Ha [Hc Hdet]] t s.
+    destruct (Rle_lt_or_eq_dec 0 a Ha) as [Hapos | Hazero].
+    + assert (Hsquare : 0 <= (a*t+b*s)*(a*t+b*s)).
+      { change (0 <= Rsqr (a*t+b*s)); apply Rle_0_sqr. }
+      assert (Hrem : 0 <= (a*c-b*b)*(s*s)).
+      { apply Rmult_le_pos; [lra | apply Rle_0_sqr]. }
+      assert (Hid :
+        a*gcd_binary_covariance_form a b c t s =
+        (a*t+b*s)*(a*t+b*s)+(a*c-b*b)*(s*s)).
+      { unfold gcd_binary_covariance_form; ring. }
+      nra.
+    + subst a.
+      assert (Hb : b=0) by nra.
+      subst b; unfold gcd_binary_covariance_form; nra.
+Qed.
+
+(** [gcd_binary_psd_congruence_closed] (theorem).
+ Mathematical meaning: Every linear image of a two-variable PSD covariance remains PSD, including degenerate linear maps and negative coefficients.
+ Exact checked proposition: As stated in the following Rocq [Theorem] with
+ explicit real parameters and covariance weights; this result has
+ a reusable universal quantifier rather than a numerical special case.
+ Premises and side conditions: Universal PSD of the source form; linear transformation coefficients may be singular or invertible, with no determinant restriction.
+ Proof/definition method: Rewrite by the generalized two-coordinate congruence identity and reuse source PSD directly.
+ Library reuse: Rocq Stdlib Reals, Ring, Field, Lra and Psatz; existing
+ [gcd_psd_covariance_cauchy_schwarz] and derived covariance results,
+ as appropriate to the checked proof; no new assumed matrix axiom.
+ Boundary: These are algebraic covariance and linear-regression results,
+ not a proof of a Gaussian law, independence of sigma-algebras, or
+ universal measure-theoretic conditional expectation.
+*)
+Theorem gcd_binary_psd_congruence_closed :
+  forall a b c : R,
+    (forall t s : R, 0 <= gcd_binary_covariance_form a b c t s) ->
+    forall u v w z t s : R,
+      0 <= gcd_binary_covariance_form
+        (gcd_binary_covariance_form a b c u w)
+        (a*u*v+b*(u*z+v*w)+c*w*z)
+        (gcd_binary_covariance_form a b c v z) t s.
+Proof.
+  intros a b c H u v w z t s.
+  rewrite <- (gcd_binary_form_congruence a b c u v w z t s).
+  apply H.
+Qed.
+
+(** [gcd_binary_psd_null_observed_direction] (theorem).
+ Mathematical meaning: If the observed marginal variance vanishes in a PSD block, its cross covariance vanishes and every transformed covariance residual is unaffected by that direction.
+ Exact checked proposition: As stated in the following Rocq [Theorem] with
+ explicit real parameters and covariance weights; this result has
+ a reusable universal quantifier rather than a numerical special case.
+ Premises and side conditions: Full PSD quadratic for every real vector and exactly zero observed marginal variance.
+ Proof/definition method: Apply the nonnegative-determinant theorem and derive equality of the cross term from the square bound with Psatz.
+ Library reuse: Rocq Stdlib Reals, Ring, Field, Lra and Psatz; existing
+ [gcd_psd_covariance_cauchy_schwarz] and derived covariance results,
+ as appropriate to the checked proof; no new assumed matrix axiom.
+ Boundary: These are algebraic covariance and linear-regression results,
+ not a proof of a Gaussian law, independence of sigma-algebras, or
+ universal measure-theoretic conditional expectation.
+*)
+Theorem gcd_binary_psd_null_observed_direction :
+  forall a b c : R,
+    (forall t s : R, 0 <= gcd_binary_covariance_form a b c t s) ->
+    a = 0 -> b = 0.
+Proof.
+  intros a b c H Ha.
+  pose proof (gcd_binary_psd_determinant a b c H) as Hdet.
+  subst a; nra.
+Qed.
+
+(** [gcd_binary_psd_null_future_direction] (theorem).
+ Mathematical meaning: If the future marginal variance vanishes in a PSD block, the future score is uncorrelated with every observed score contrast.
+ Exact checked proposition: As stated in the following Rocq [Theorem] with
+ explicit real parameters and covariance weights; this result has
+ a reusable universal quantifier rather than a numerical special case.
+ Premises and side conditions: Full two-variable PSD and zero future marginal variance; singular covariance is permitted.
+ Proof/definition method: Use the sharp determinant inequality to show the cross-covariance square is nonpositive, hence zero.
+ Library reuse: Rocq Stdlib Reals, Ring, Field, Lra and Psatz; existing
+ [gcd_psd_covariance_cauchy_schwarz] and derived covariance results,
+ as appropriate to the checked proof; no new assumed matrix axiom.
+ Boundary: These are algebraic covariance and linear-regression results,
+ not a proof of a Gaussian law, independence of sigma-algebras, or
+ universal measure-theoretic conditional expectation.
+*)
+Theorem gcd_binary_psd_null_future_direction :
+  forall a b c : R,
+    (forall t s : R, 0 <= gcd_binary_covariance_form a b c t s) ->
+    c = 0 -> b = 0.
+Proof.
+  intros a b c H Hc.
+  pose proof (gcd_binary_psd_determinant a b c H) as Hdet.
+  subst c; nra.
+Qed.
+
+(** [gcd_binary_form_regression_change] (theorem).
+ Mathematical meaning: Subtracting a linear predictor from the observed coordinate transforms the covariance into a residual covariance, residual cross covariance and unchanged future marginal.
+ Exact checked proposition: As stated in the following Rocq [Theorem] with
+ explicit real parameters and covariance weights; this result has
+ a reusable universal quantifier rather than a numerical special case.
+ Premises and side conditions: An arbitrary candidate regression coefficient, including nonoptimal coefficients, and arbitrary signed covariance entries.
+ Proof/definition method: Apply exact polynomial congruence (or Ring directly) to the triangular regression coordinate transformation.
+ Library reuse: Rocq Stdlib Reals, Ring, Field, Lra and Psatz; existing
+ [gcd_psd_covariance_cauchy_schwarz] and derived covariance results,
+ as appropriate to the checked proof; no new assumed matrix axiom.
+ Boundary: These are algebraic covariance and linear-regression results,
+ not a proof of a Gaussian law, independence of sigma-algebras, or
+ universal measure-theoretic conditional expectation.
+*)
+Theorem gcd_binary_form_regression_change :
+  forall a b c beta t s : R,
+    gcd_binary_covariance_form a b c (t-beta*s) s =
+    gcd_binary_covariance_form a (b-a*beta)
+      (c-2*b*beta+a*beta*beta) t s.
+Proof.
+  intros; unfold gcd_binary_covariance_form; ring.
+Qed.
+
+(** [gcd_binary_form_regression_decorrelation] (theorem).
+ Mathematical meaning: A regression coefficient satisfying the covariance normal equation makes the Gaussian residual quadratic block diagonal.
+ Exact checked proposition: As stated in the following Rocq [Theorem] with
+ explicit real parameters and covariance weights; this result has
+ a reusable universal quantifier rather than a numerical special case.
+ Premises and side conditions: An exact scalar normal equation b=a*beta, including a=0 when the cross term vanishes; no independence conclusion is inferred from covariance alone.
+ Proof/definition method: Apply the preceding regression congruence and simplify the cross and residual coefficients with Ring.
+ Library reuse: Rocq Stdlib Reals, Ring, Field, Lra and Psatz; existing
+ [gcd_psd_covariance_cauchy_schwarz] and derived covariance results,
+ as appropriate to the checked proof; no new assumed matrix axiom.
+ Boundary: These are algebraic covariance and linear-regression results,
+ not a proof of a Gaussian law, independence of sigma-algebras, or
+ universal measure-theoretic conditional expectation.
+*)
+Theorem gcd_binary_form_regression_decorrelation :
+  forall a b c beta t s : R,
+    b=a*beta ->
+    gcd_binary_covariance_form a b c (t-beta*s) s =
+    a*t*t+(c-a*beta*beta)*s*s.
+Proof.
+  intros a b c beta t s Hcross.
+  rewrite Hcross.
+  unfold gcd_binary_covariance_form; ring.
+Qed.
+
+(** [gcd_binary_schur_variance_psd] (theorem).
+ Mathematical meaning: The Schur residual variance in scalar regression is nonnegative for every PSD covariance with strictly positive observed variance.
+ Exact checked proposition: As stated in the following Rocq [Theorem] with
+ explicit real parameters and covariance weights; this result has
+ a reusable universal quantifier rather than a numerical special case.
+ Premises and side conditions: Universal two-variable PSD and positive observed variance; cross covariance may be positive or negative.
+ Proof/definition method: Apply the previously checked PSD determinant inequality, clear the nonzero denominator with Field and use Psatz.
+ Library reuse: Rocq Stdlib Reals, Ring, Field, Lra and Psatz; existing
+ [gcd_psd_covariance_cauchy_schwarz] and derived covariance results,
+ as appropriate to the checked proof; no new assumed matrix axiom.
+ Boundary: These are algebraic covariance and linear-regression results,
+ not a proof of a Gaussian law, independence of sigma-algebras, or
+ universal measure-theoretic conditional expectation.
+*)
+Theorem gcd_binary_schur_variance_psd :
+  forall a b c : R,
+    0<a ->
+    (forall t s : R, 0 <= gcd_binary_covariance_form a b c t s) ->
+    0 <= c-b*b/a.
+Proof.
+  intros a b c Ha H.
+  pose proof (gcd_binary_psd_determinant a b c H) as Hdet.
+  assert (Hid : a*(c-b*b/a)=a*c-b*b) by (field; lra).
+  nra.
+Qed.
+
+(** [gcd_binary_form_complete_square] (theorem).
+ Mathematical meaning: The full two-variable covariance splits into the observed regression square and a Schur-complement future variance without assuming invertibility of the entire matrix.
+ Exact checked proposition: As stated in the following Rocq [Theorem] with
+ explicit real parameters and covariance weights; this result has
+ a reusable universal quantifier rather than a numerical special case.
+ Premises and side conditions: Positive observed variance a, allowing a singular full covariance and negative cross-covariance.
+ Proof/definition method: Reuse real-field normalization to complete the square; nonzero observed variance justifies the only denominator.
+ Library reuse: Rocq Stdlib Reals, Ring, Field, Lra and Psatz; existing
+ [gcd_psd_covariance_cauchy_schwarz] and derived covariance results,
+ as appropriate to the checked proof; no new assumed matrix axiom.
+ Boundary: These are algebraic covariance and linear-regression results,
+ not a proof of a Gaussian law, independence of sigma-algebras, or
+ universal measure-theoretic conditional expectation.
+*)
+Theorem gcd_binary_form_complete_square :
+  forall a b c t s : R, 0<a ->
+    gcd_binary_covariance_form a b c t s =
+    a*(t+b/a*s)*(t+b/a*s) + (c-b*b/a)*s*s.
+Proof.
+  intros a b c t s Ha.
+  unfold gcd_binary_covariance_form.
+  field; lra.
+Qed.
+
+(** [gcd_binary_residual_variance_minimum] (theorem).
+ Mathematical meaning: The Gaussian linear regression coefficient b/a minimizes residual variance among all scalar linear predictors, with an exact square-gap identity.
+ Exact checked proposition: As stated in the following Rocq [Theorem] with
+ explicit real parameters and covariance weights; this result has
+ a reusable universal quantifier rather than a numerical special case.
+ Premises and side conditions: Strictly positive observed variance; the residual comparison holds even without PSD of the full covariance.
+ Proof/definition method: Multiply the residual variance gap by a, rewrite as a square, then use the standard nonnegativity of real squares.
+ Library reuse: Rocq Stdlib Reals, Ring, Field, Lra and Psatz; existing
+ [gcd_psd_covariance_cauchy_schwarz] and derived covariance results,
+ as appropriate to the checked proof; no new assumed matrix axiom.
+ Boundary: These are algebraic covariance and linear-regression results,
+ not a proof of a Gaussian law, independence of sigma-algebras, or
+ universal measure-theoretic conditional expectation.
+*)
+Theorem gcd_binary_residual_variance_minimum :
+  forall a b c beta : R, 0<a ->
+    c-b*b/a <= c-2*b*beta+a*beta*beta.
+Proof.
+  intros a b c beta Ha.
+  assert (Hsq : 0 <= (a*beta-b)*(a*beta-b)).
+  { change (0<=Rsqr (a*beta-b)); apply Rle_0_sqr. }
+  assert (Hid :
+    a*((c-2*b*beta+a*beta*beta)-(c-b*b/a)) =
+      (a*beta-b)*(a*beta-b)) by (field; lra).
+  nra.
+Qed.
