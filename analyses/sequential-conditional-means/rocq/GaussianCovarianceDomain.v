@@ -2797,3 +2797,56 @@ Proof.
     exists 0.
     split; nra.
 Qed.
+
+(** [gcd_psd_scalar_gaussian_laplace_factor_exists] (theorem).
+ Mathematical meaning: Any scalar positive-semidefinite observed/future
+ covariance block admits a regression residual whose formal joint
+ Gaussian Laplace kernel factors into observed and residual kernels.
+ This remains valid if the observed variance is zero and the regression
+ coefficient is therefore not identified uniquely.
+ Exact checked proposition: for nonnegative variances [a,c] and the
+ universally PSD quadratic [a*t*t + 2*b*t + c], there is a coefficient
+ [beta] such that [b=beta*a], the residual variance [c-beta*b] is
+ nonnegative, and the transformed joint Gaussian exponential kernel
+ equals the product of the two marginal exponential kernels for all
+ real transform arguments [t,s].
+ Proof method: Reuse the previously kernel-proved singular-robust scalar
+ regression existence lemma and the Gaussian zero-cross-covariance
+ Laplace-factor lemma, reducing the coordinate change to [ring].
+ Library reuse: [gcd_psd_scalar_regression_residual_exists],
+ [gcd_gaussian_uncorrelated_laplace_kernel_factor], Stdlib Ring.
+ Boundary: This is an algebraic moment-generating/Laplace KERNEL
+ factorization. It does not prove that a joint Gaussian probability
+ measure exists, uniqueness of its Laplace transform, independence of
+ generated sigma-algebras, or conditional expectation. Those
+ measure-theoretic implications still require separate Rocq theorems.
+*)
+Theorem gcd_psd_scalar_gaussian_laplace_factor_exists :
+  forall a b c : R,
+    0 <= a ->
+    0 <= c ->
+    (forall q : R, 0 <= a*q*q + 2*b*q + c) ->
+    exists beta : R,
+      b = beta*a /\
+      0 <= c - beta*b /\
+      forall t s : R,
+        exp ((a*(t-beta*s)*(t-beta*s) +
+              2*b*(t-beta*s)*s + c*s*s)/2) =
+        exp (a*t*t/2) * exp ((c-beta*b)*s*s/2).
+Proof.
+  intros a b c Ha Hc Hquad.
+  destruct
+    (gcd_psd_scalar_regression_residual_exists a b c Ha Hc Hquad)
+    as [beta [Hcross Hres]].
+  exists beta.
+  repeat split; try assumption.
+  intros t s.
+  replace
+    ((a*(t-beta*s)*(t-beta*s) +
+      2*b*(t-beta*s)*s + c*s*s)/2)
+    with ((a*t*t + 2*0*t*s + (c-beta*b)*s*s)/2).
+  - apply gcd_gaussian_uncorrelated_laplace_kernel_factor.
+    reflexivity.
+  - rewrite Hcross.
+    ring.
+Qed.
