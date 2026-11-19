@@ -6,6 +6,7 @@ on:
       - 'analyses/sequential-conditional-means/formalml/**'
       - '.github/workflows/gaussian-formalml.yml'
       - 'scripts/patch_formalml_9_2.sh'
+      - 'scripts/install_formalml_dependencies.sh'
   # A same-repository push already tests each new revision. Avoid an
   # independent PR synchronization run racing/cancelling the push build.
   pull_request:
@@ -14,6 +15,7 @@ on:
       - 'analyses/sequential-conditional-means/formalml/**'
       - '.github/workflows/gaussian-formalml.yml'
       - 'scripts/patch_formalml_9_2.sh'
+      - 'scripts/install_formalml_dependencies.sh'
   workflow_dispatch:
 
 concurrency:
@@ -27,6 +29,14 @@ jobs:
     steps:
       - name: Check out exact repository revision
         uses: actions/checkout@v4
+
+      # Shell scripts must be ShellCheck-clean before any invocation.
+      # The Ubuntu GitHub runner ships ShellCheck; fail closed if absent.
+      - name: ShellCheck FormalML compatibility script before execution
+        shell: bash
+        run: |
+          command -v shellcheck
+          git ls-files -z '*.sh' | xargs -0 -r shellcheck --severity=warning
 
       - name: Check no assumed Gaussian CE or unfinished proof
         shell: bash
@@ -49,7 +59,10 @@ jobs:
             cd /tmp/FormalML
             git fetch --depth 1 origin 8ee433dc802fca35f6bceb6dacb69d3c1315e886
             git checkout --detach 8ee433dc802fca35f6bceb6dacb69d3c1315e886
-            opam install -y -j 2 --deps-only .
+            # The script has been ShellCheck-validated by the earlier gate.
+            # Retry transient opam source-mirror 502 failures, never skip a
+            # required dependency or alter the pinned upstream revision.
+            sh /workspace/scripts/install_formalml_dependencies.sh
             sh /workspace/scripts/patch_formalml_9_2.sh
             # Compile only the probability modules required by this
             # result, not the unrelated FormalML RL/model-checking corpus.

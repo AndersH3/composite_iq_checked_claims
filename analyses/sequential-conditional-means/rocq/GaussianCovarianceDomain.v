@@ -2555,3 +2555,403 @@ Theorem d052_mean_nonnegative_gain : forall n c s:R, 0<=c -> 0<sequential_d n c 
 Proof.
   intros n c s Hc Hd Hs; unfold hp; unfold Rdiv; apply Rmult_le_pos; [nra|left; apply Rinv_0_lt_compat; nra].
 Qed.
+
+(** [gcd_psd_quadratic_zero_cross] (theorem).
+ Mathematical meaning: A nonnegative quadratic polynomial whose
+ constant term is zero cannot have a nonzero linear coefficient.
+ This is the scalar null-direction principle for a positive-semidefinite
+ covariance form: a zero-variance direction is uncorrelated with
+ every other square-integrable linear contrast.
+ Exact proposition: if a*t*t + 2*b*t is nonnegative for every real t,
+ then b=0, without assuming a strictly positive eigenvalue.
+ Premises and side conditions: Nonnegativity for all t, not simply for one value of t.
+ Proof/definition method: The values t=1 and t=-1 establish a>=0. Evaluate at
+ t=-b/(a+1), multiply by the positive square of the denominator,
+ and conclude that (a+2)*b*b=0 using field arithmetic and order.
+ Library reuse: Rocq Stdlib Rmult_le_pos, Rmult_integral, Field,
+ Lra and Psatz; no hand-built covariance, pseudoinverse or measure API.
+ Boundary: An exact PSD-nullspace lemma. It does not itself prove
+ Gaussian independence or any conditional-expectation identity.
+*)
+Theorem gcd_psd_quadratic_zero_cross :
+  forall a b : R,
+    (forall t : R, 0 <= a*t*t + 2*b*t) ->
+    b = 0.
+Proof.
+  intros a b Hquad.
+  assert (Ha : 0 <= a).
+  { pose proof (Hquad 1) as Hplus.
+    pose proof (Hquad (-1)) as Hminus.
+    nra. }
+  assert (Hd : a+1 <> 0) by lra.
+  assert (Hd2 : 0 <= (a+1)*(a+1)) by nra.
+  pose proof (Hquad (-b/(a+1))) as Hmin.
+  assert (Hidentity :
+    (a*(-b/(a+1))*(-b/(a+1)) + 2*b*(-b/(a+1))) *
+      ((a+1)*(a+1)) = -(a+2)*(b*b)).
+  { field; lra. }
+  assert (Hnonneg :
+    0 <= (a*(-b/(a+1))*(-b/(a+1)) + 2*b*(-b/(a+1))) *
+      ((a+1)*(a+1))).
+  { apply Rmult_le_pos; assumption. }
+  rewrite Hidentity in Hnonneg.
+  assert (Hproduct_nonnegative : 0 <= (a+2)*(b*b)).
+  { apply Rmult_le_pos; nra. }
+  assert (Hproduct_zero : (a+2)*(b*b) = 0) by nra.
+  apply Rmult_integral in Hproduct_zero as [Hcoefficient | Hsquare].
+  - lra.
+  - nra.
+Qed.
+
+(** [gcd_psd_null_covariance] (theorem).
+ Mathematical meaning: If the quadratic form associated with a real
+ symmetric two-by-two covariance block is PSD and the second diagonal
+ variance is zero, then its cross covariance is zero.
+ Exact proposition: universal nonnegativity of a*t*t+2*b*t+c and
+ c=0 together imply b=0; the leading variance need not be positive.
+ Premises and side conditions: Full PSD polynomial inequality for all real contrasts and
+ an exact zero diagonal element, including singular covariance cases.
+ Proof/definition method: Substitute the zero constant and reuse the previous checked
+ scalar null-direction theorem; no independent PSD algorithm is added.
+ Library reuse: [gcd_psd_quadratic_zero_cross] and Rocq Stdlib Psatz.
+ Boundary: This algebraic fact supports the singular Gaussian residual
+ covariance calculation, but cannot substitute for sigma-algebra
+ independence or an event-integral conditional-expectation proof.
+*)
+Theorem gcd_psd_null_covariance :
+  forall a b c : R,
+    (forall t : R, 0 <= a*t*t + 2*b*t + c) ->
+    c = 0 ->
+    b = 0.
+Proof.
+  intros a b c Hquad Hzero.
+  subst c.
+  apply (gcd_psd_quadratic_zero_cross a b).
+  intro t.
+  specialize (Hquad t).
+  nra.
+Qed.
+
+
+(** [gcd_psd_covariance_cauchy_schwarz] (theorem).
+ Mathematical meaning: Every positive-semidefinite two-by-two covariance
+ block satisfies the complete Cauchy--Schwarz inequality b^2 <= a*c.
+ This remains valid when a=0 or c=0 and when b is negative.
+ Exact proposition: for nonnegative diagonal variances a,c, nonnegativity
+ of the quadratic form a*t^2+2*b*t+c for all real t entails b*b<=a*c.
+ Premises and side conditions: Both diagonal entries are nonnegative;
+ the entire quadratic form must be nonnegative for every real t.
+ Proof/definition method: For a>0 evaluate the form at t=-b/a and
+ multiply by the positive denominator. For a=0, a nonzero cross term
+ makes the form negative at t=-(c+1)/(2*b), a contradiction.
+ Library reuse: Stdlib Rle_lt_or_eq_dec, Req_EM_T, Field, Ring, Psatz.
+ No Gaussian measure, new matrix structure, assumed independence or axiom.
+ Boundary: This is a covariance inequality, not an assertion of
+ conditional expectation or probabilistic independence.
+*)
+Theorem gcd_psd_covariance_cauchy_schwarz :
+  forall a b c : R,
+    0 <= a ->
+    0 <= c ->
+    (forall t : R, 0 <= a*t*t + 2*b*t + c) ->
+    b*b <= a*c.
+Proof.
+  intros a b c Ha Hc Hquad.
+  destruct (Rle_lt_or_eq_dec 0 a Ha) as [Hapos | Hazero].
+  - pose proof (Hquad (-b/a)) as Hmin.
+    assert (Hscaled :
+      a*(a*(-b/a)*(-b/a) + 2*b*(-b/a) + c) = a*c-b*b).
+    { field; lra. }
+    assert (Hnonneg :
+      0 <= a*(a*(-b/a)*(-b/a) + 2*b*(-b/a) + c)).
+    { apply Rmult_le_pos; lra. }
+    nra.
+  - subst a.
+    destruct (Req_EM_T b 0) as [Hbzero | Hbnonzero].
+    + subst b; nra.
+    + pose proof (Hquad (-(c+1)/(2*b))) as Hbad.
+      assert (Hcancellation : 2*b*(-(c+1)/(2*b)) = -(c+1)).
+      { field; lra. }
+      nra.
+Qed.
+
+(** [gcd_psd_covariance_characterization] (theorem).
+ Mathematical meaning: For nonnegative marginal variances, an arbitrary
+ symmetric two-by-two covariance block is positive semidefinite exactly
+ when its cross covariance satisfies b^2 <= a*c.
+ Exact proposition: universal nonnegativity of a*t*t+2*b*t+c
+ is equivalent to b*b<=a*c, with explicit a>=0, c>=0 premises.
+ Premises and side conditions: Both diagonal entries must be
+ nonnegative; no strict positivity or invertibility is required.
+ Proof/definition method: Necessity reuses the preceding
+ Cauchy--Schwarz theorem; sufficiency completes the square after
+ multiplying by strictly positive a.
+ When a=0 the squared bound implies b=0, so the form is c>=0.
+ Library reuse: [gcd_psd_covariance_cauchy_schwarz] and Stdlib
+ Ring, Rle_0_sqr, Lra and Psatz. No custom PSD matrix implementation is introduced.
+ Boundary: Handles signed and singular covariance algebra, but cannot
+ establish the Gaussian characteristic-function factorization or the
+ defining event-integral conditional-expectation identity by itself.
+*)
+Theorem gcd_psd_covariance_characterization :
+  forall a b c : R,
+    0 <= a ->
+    0 <= c ->
+    ((forall t : R, 0 <= a*t*t + 2*b*t + c) <-> b*b <= a*c).
+Proof.
+  intros a b c Ha Hc.
+  split.
+  - intro Hquad.
+    apply (gcd_psd_covariance_cauchy_schwarz a b c Ha Hc Hquad).
+  - intros Hbound t.
+    destruct (Rle_lt_or_eq_dec 0 a Ha) as [Hapos | Hazero].
+    + assert (Hsquared : 0 <= (a*t+b)*(a*t+b)).
+      { change (0 <= Rsqr (a*t+b)); apply Rle_0_sqr. }
+      assert (Hidentity :
+        a*(a*t*t + 2*b*t+c) =
+          (a*t+b)*(a*t+b)+(a*c-b*b)) by ring.
+      nra.
+    + subst a.
+      assert (Hbzero : b=0) by nra.
+      subst b; nra.
+Qed.
+
+
+(** [gcd_gaussian_uncorrelated_laplace_kernel_factor] (theorem).
+ Mathematical meaning: The Gaussian joint Laplace kernel separates into
+ its two marginal kernels when the cross-covariance vanishes.
+ Exact proposition: for arbitrary real variances a and b, covariance c,
+ and transform coordinates t and s, c=0 implies factorization of the
+ exponential of the bivariate covariance quadratic form.
+ Premises and side conditions: Only c=0 is required for this algebraic
+ statement; actual Gaussian probability laws additionally require the
+ covariance matrix to be positive semidefinite and appropriate moments.
+ Proof/definition method: Substitute the cross-covariance, normalize the
+ real quadratic form with the maintained field tactic, and use Stdlib's
+ existing exponential addition theorem [exp_plus].
+ Library reuse: Stdlib Reals, Field, Lra and [exp_plus]; no hand-written
+ exponential function, Gaussian measure, transform or independence axiom.
+ Boundary: This checks the factorization of a REAL Laplace kernel,
+ not the uniqueness of a probability law from its Laplace transform.
+ It does not by itself prove independence of sigma-algebras or the
+ universal Gaussian conditional expectation.
+*)
+Theorem gcd_gaussian_uncorrelated_laplace_kernel_factor :
+  forall a b c t s : R,
+    c = 0 ->
+    exp ((a*t*t + 2*c*t*s + b*s*s)/2) =
+    exp (a*t*t/2) * exp (b*s*s/2).
+Proof.
+  intros a b c t s Hcross.
+  subst c.
+  replace ((a*t*t + 2*0*t*s + b*s*s)/2)
+    with (a*t*t/2 + b*s*s/2) by (field; lra).
+  apply exp_plus.
+Qed.
+
+(** [gcd_psd_zero_observed_variance_forces_zero_cross] (theorem).
+ Mathematical meaning: A zero-variance observed Gaussian direction
+ cannot have nonzero cross covariance with a future score.
+ Exact checked proposition: A positive-semidefinite scalar covariance
+ block with observed variance a=0 necessarily has b=0.
+ Premises and side conditions: Both diagonal variances are nonnegative, the joint covariance
+ quadratic is nonnegative for every real contrast, and a=0.
+ Proof/definition method: Reuse the proven two-by-two covariance Cauchy--Schwarz bound.
+ Library reuse: [gcd_psd_covariance_cauchy_schwarz] and Stdlib Psatz.
+ Boundary: An algebraic covariance conclusion, not almost-sure
+ constancy or sigma-algebra independence of a Gaussian observation.
+*)
+Theorem gcd_psd_zero_observed_variance_forces_zero_cross :
+  forall a b c : R,
+    0 <= a ->
+    0 <= c ->
+    (forall t : R, 0 <= a*t*t + 2*b*t + c) ->
+    a = 0 ->
+    b = 0.
+Proof.
+  intros a b c Ha Hc Hquad Ha0.
+  pose proof
+    (gcd_psd_covariance_cauchy_schwarz a b c Ha Hc Hquad) as Hcs.
+  rewrite Ha0 in Hcs.
+  nra.
+Qed.
+
+(** [gcd_psd_scalar_regression_residual_exists] (theorem).
+ Mathematical meaning: A scalar observed variable with variance [a],
+ cross covariance [b] with the future score, and future variance [c]
+ admits a linear residual-orthogonalizing regression coefficient, even
+ when the observed variance [a] vanishes.
+ Exact proposition: Every positive-semidefinite quadratic covariance
+ block has some [beta] satisfying [b = beta*a] and
+ [0 <= c-beta*b]. The first identity is zero residual cross covariance;
+ the second is nonnegative variance of the residual.
+ Premises and side conditions: Both marginal variances are nonnegative
+ and [a*t*t + 2*b*t + c] is nonnegative at every real [t].
+ The degenerate case [a=0] forces [b=0], and [beta=0] is admissible.
+ Proof/definition method: Reuse the existing, kernel-checked two-by-two covariance
+ Cauchy--Schwarz bound, then use [field] and [nra] from Stdlib.
+ Library reuse: [gcd_psd_covariance_cauchy_schwarz], Stdlib
+ [Rle_lt_or_eq_dec], [field], [lra] and [nra]; no custom inverse.
+ This does not reimplement a pseudoinverse, matrix library, Gaussian
+ probability measure, or conditional expectation.
+ Boundary: This is the exact algebraic residual existence statement
+ for one observed coordinate; the implication from joint Gaussianity
+ to independence of the residual and the observed sigma-algebra, and
+ the event-integral conditional-expectation theorem, are separate.
+*)
+Theorem gcd_psd_scalar_regression_residual_exists :
+  forall a b c : R,
+    0 <= a ->
+    0 <= c ->
+    (forall t : R, 0 <= a*t*t + 2*b*t + c) ->
+    exists beta : R,
+      b = beta*a /\ 0 <= c - beta*b.
+Proof.
+  intros a b c Ha Hc Hquad.
+  pose proof (gcd_psd_covariance_cauchy_schwarz a b c Ha Hc Hquad)
+    as Hcs.
+  destruct (Rle_lt_or_eq_dec 0 a Ha) as [Hapos | Hazero].
+  - exists (b/a).
+    split.
+    + field; lra.
+    + assert (Hfactor :
+        a*(c - (b/a)*b) = a*c - b*b).
+      { field; lra. }
+      nra.
+  - assert (Ha0 : a = 0) by lra.
+    pose proof
+      (gcd_psd_zero_observed_variance_forces_zero_cross
+         a b c Ha Hc Hquad Ha0) as Hbzero.
+    subst a b.
+    exists 0.
+    split; nra.
+Qed.
+
+(** [gcd_psd_scalar_regression_coefficient_unique_strict] (theorem).
+ Mathematical meaning: The regression slope is uniquely determined
+ whenever the observed variance is strictly positive.
+ Exact checked proposition: If a>0 and b=beta1*a=beta2*a,
+ then beta1=beta2.
+ Premises and side conditions: Strictly positive observed variance and both normal equations.
+ Proof/definition method: Subtract the equations and use the real integral domain.
+ Library reuse: Stdlib Reals [Rmult_integral], Psatz and Lra.
+ Boundary: Does not assert the existence of a Gaussian probability law,
+ independent regression residual or conditional expectation.
+*)
+Theorem gcd_psd_scalar_regression_coefficient_unique_strict :
+  forall a b beta1 beta2 : R,
+    0 < a ->
+    b = beta1*a ->
+    b = beta2*a ->
+    beta1 = beta2.
+Proof.
+  intros a b beta1 beta2 Ha Hbeta1 Hbeta2.
+  assert (Hzero : (beta1-beta2)*a = 0) by nra.
+  apply Rmult_integral in Hzero.
+  destruct Hzero as [Hcoeff | Hvariance]; lra.
+Qed.
+
+(** [gcd_psd_scalar_regression_explicit_strict] (theorem).
+ Mathematical meaning: In the nonsingular scalar case, the only
+ residual-orthogonal regression coefficient is b/a.
+ Exact checked proposition: For 0<a and b=beta*a, beta=b/a.
+ Premises and side conditions: Positive observed variance and a residual normal equation.
+ Proof/definition method: Rewrite and normalize rational expressions with Field.
+ Library reuse: Reals, Field and Lra; no custom inverse operation.
+ Boundary: The singular a=0 case is excluded, as it must be.
+*)
+Theorem gcd_psd_scalar_regression_explicit_strict :
+  forall a b beta : R,
+    0 < a ->
+    b = beta*a ->
+    beta = b/a.
+Proof.
+  intros a b beta Ha Hcross.
+  rewrite Hcross.
+  field; lra.
+Qed.
+
+(** [gcd_psd_scalar_regression_singular_coefficient_free] (theorem).
+ Mathematical meaning: With zero observed variance every coefficient
+ yields the same residual covariance because the cross term vanishes.
+ Exact checked proposition: Under PSD and a=0, every beta satisfies
+ both b=beta*a and c-beta*b=c.
+ Premises and side conditions: PSD scalar covariance and zero observed variance.
+ Proof/definition method: Reuse the proved singular zero-cross lemma.
+ Library reuse: [gcd_psd_zero_observed_variance_forces_zero_cross]
+ and Stdlib Ring; no independent matrix or measure implementation.
+ Boundary: Algebraic nonidentifiability does not by itself identify
+ conditional expectations outside the Gaussian law's support.
+*)
+Theorem gcd_psd_scalar_regression_singular_coefficient_free :
+  forall a b c beta : R,
+    0 <= a ->
+    0 <= c ->
+    (forall t : R, 0 <= a*t*t + 2*b*t + c) ->
+    a = 0 ->
+    b = beta*a /\ c-beta*b = c.
+Proof.
+  intros a b c beta Ha Hc Hquad Ha0.
+  pose proof
+    (gcd_psd_zero_observed_variance_forces_zero_cross
+       a b c Ha Hc Hquad Ha0) as Hb0.
+  subst a b.
+  split; ring.
+Qed.
+
+(** [gcd_psd_scalar_gaussian_laplace_factor_exists] (theorem).
+ Mathematical meaning: Any scalar positive-semidefinite observed/future
+ covariance block admits a regression residual whose formal joint
+ Gaussian Laplace kernel factors into observed and residual kernels.
+ This remains valid if the observed variance is zero and the regression
+ coefficient is therefore not identified uniquely.
+ Exact checked proposition: for nonnegative variances [a,c] and the
+ universally PSD quadratic [a*t*t + 2*b*t + c], there is a coefficient
+ [beta] such that [b=beta*a], the residual variance [c-beta*b] is
+ nonnegative, and the transformed joint Gaussian exponential kernel
+ equals the product of the two marginal exponential kernels for all
+ real transform arguments [t,s].
+ Premises and side conditions: The observed/future covariance quadratic
+ must be nonnegative for every real contrast, with nonnegative marginal
+ variances. Neither invertibility nor positive-definiteness is assumed;
+ the scalar coefficient is existential rather than uniquely specified.
+ Proof/definition method: Reuse the previously kernel-proved singular-robust
+ scalar regression existence lemma and the Gaussian zero-cross-covariance
+ Laplace-factor lemma, reducing the coordinate change to [field] and [lra].
+ Library reuse: [gcd_psd_scalar_regression_residual_exists],
+ [gcd_gaussian_uncorrelated_laplace_kernel_factor], Stdlib Field/Lra.
+ Boundary: This is an algebraic moment-generating/Laplace KERNEL
+ factorization. It does not prove that a joint Gaussian probability
+ measure exists, uniqueness of its Laplace transform, independence of
+ generated sigma-algebras, or conditional expectation. Those
+ measure-theoretic implications still require separate Rocq theorems.
+*)
+Theorem gcd_psd_scalar_gaussian_laplace_factor_exists :
+  forall a b c : R,
+    0 <= a ->
+    0 <= c ->
+    (forall q : R, 0 <= a*q*q + 2*b*q + c) ->
+    exists beta : R,
+      b = beta*a /\
+      0 <= c - beta*b /\
+      forall t s : R,
+        exp ((a*(t-beta*s)*(t-beta*s) +
+              2*b*(t-beta*s)*s + c*s*s)/2) =
+        exp (a*t*t/2) * exp ((c-beta*b)*s*s/2).
+Proof.
+  intros a b c Ha Hc Hquad.
+  destruct
+    (gcd_psd_scalar_regression_residual_exists a b c Ha Hc Hquad)
+    as [beta [Hcross Hres]].
+  exists beta.
+  repeat split; try assumption.
+  intros t s.
+  replace
+    ((a*(t-beta*s)*(t-beta*s) +
+      2*b*(t-beta*s)*s + c*s*s)/2)
+    with ((a*t*t + 2*0*t*s + (c-beta*b)*s*s)/2).
+  - apply gcd_gaussian_uncorrelated_laplace_kernel_factor.
+    reflexivity.
+  - rewrite Hcross.
+    field; lra.
+Qed.

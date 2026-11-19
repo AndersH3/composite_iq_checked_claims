@@ -6,6 +6,60 @@
 
 This register tracks D050's 56, D051's 101, D052's 30, and D053–D056's 105 source-ordered Rocq proofs about Gaussian prior-plus-likelihood *pointwise densities*: quadratic completion, model precision and variance, dependence on arbitrary unequal observed scores, evidence cancellation and posterior symmetry. Its scope deliberately excludes the stronger measurable conditional-expectation assertion unless a separate formally verified probability library supplies integral normalization, integrability and disintegration.
 
+**Verified November 19, 2026 singular Gaussian Laplace-factor extension (draft PR #57).**
+The [exact-source Rocq 9.2 kernel run](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44513601003)
+accepted `gcd_psd_scalar_gaussian_laplace_factor_exists` as the
+**299th Gaussian-specific mathematical declaration** in the five-module
+register (35 conditional-kernel, 159 covariance-domain, 43 innovation-bound,
+30 batch-balance, 32 finite-history). The theorem reuses two earlier checked
+results to construct an existential scalar regression coefficient that
+factorizes the formal Gaussian real Laplace kernel for every PSD
+2-by-2 covariance block, including a zero observed variance. This does
+**not** establish a joint Gaussian probability law, uniqueness of its
+Laplace transform, independence of sigma-algebras, or the event-integral
+conditional-expectation formula. **AI disclosure:** The source, proof and
+verification integration were AI-assisted for Anders Hellström.
+
+**Verified November 18, 2026 singular scalar regression extension (draft PR #57).**
+The [Rocq 9.2 kernel workflow](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44386292225)
+checked `gcd_psd_scalar_regression_residual_exists` in
+`GaussianCovarianceDomain.v`, yielding **298** Gaussian-specific
+kernel-accepted declarations (35 conditional-kernel, 158
+covariance-domain, 43 innovation-bound, 30 batch-balance, 32
+finite-history). This new theorem constructs a coefficient `beta`
+with `b = beta*a` and `c - beta*b >= 0` for any PSD scalar
+two-by-two covariance, even when `a = 0`. This is an algebraic
+regression statement, **not** a proof of jointly Gaussian residual
+independence or the universal measure-theoretic conditional
+expectation. **AI disclosure:** Proof engineering, drafting and
+verification checks were AI-assisted for Anders Hellström.
+
+**Verified November 18, 2026 Gaussian Laplace-kernel algebra (draft PR #57).**
+The [Rocq 9.2 kernel workflow](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44375980346)
+at source revision `e6191f9cacf2648f28914b928e2f5da62beadd93`
+accepted `gcd_gaussian_uncorrelated_laplace_kernel_factor`.
+The five-module register now contains **298 kernel-checked mathematical
+declarations** (35 conditional-kernel, 158 covariance-domain,
+43 innovation-bound, 30 batch-balance, 32 finite-history).
+The new equality is the algebraic factorization of a Gaussian
+*real Laplace kernel*, not a probability-law identification,
+distributional uniqueness result, jointly Gaussian residual
+independence theorem, or measure-theoretic conditional expectation.
+
+**Verified November 18, 2026 singular-PSD extension (draft PR #57).**
+The [Rocq 9.2 kernel run at revision `356e7c8ba5a9`](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44298839114)
+accepted `gcd_psd_covariance_cauchy_schwarz` and
+`gcd_psd_covariance_characterization`. Together with the two earlier
+null-direction lemmas, this raises the five-module Gaussian-specific
+declaration count from the historical 292 to **296** (35 Gaussian kernel,
+156 covariance-domain, 43 innovation-bound, 30 batch-balance and
+32 finite-history). This is a count of kernel-checked mathematical
+declarations, not a count of independent distributional Gaussian theorems.
+Neither the generic joint-Gaussian residual-independence theorem nor
+the unrestricted measure-theoretic Gaussian conditional expectation
+has been proved in the Rocq kernel; the FormalML CE source and
+version-compatibility build remain distinct uncompleted obligations.
+
 **Verified D053–D056 checkpoint (November 17, 2026).** The
 [Rocq 9.2 kernel workflow for D056](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44153123270)
 passed at commit `a4cb5346b25566687539556bf2de2fb57d5798f9`, following
@@ -79,7 +133,7 @@ The [Rocq 9.2 kernel run](https://github.com/AndersH3/composite_iq_checked_claim
 | `gk_posterior_shape_sufficient_statistic` (theorem) | forall xs ys c theta, length xs=length ys -> gk_sum xs=gk_sum ys -> gk_posterior_kernel xs c theta=gk_posterior_kernel ys c theta | EquicorrelationVectors centered-energy mean, GaussianConditionalKernel ratio and Stdlib Ring/Field | Exact pointwise finite-vector likelihood sufficiency, not a normalized Gaussian conditional expectation |
 | `gk_history_likelihood_ratio_sufficient_statistic` (theorem) | forall xs ys c theta, length xs=length ys -> gk_sum xs=gk_sum ys -> c<>0 -> 1-c<>0 -> gk_d xs c<>0 -> gk_joint_kernel xs c theta/gk_evidence_kernel xs c = gk_joint_kernel ys c theta/gk_evidence_kernel ys c | EquicorrelationVectors centered-energy mean, GaussianConditionalKernel ratio and Stdlib Ring/Field | Exact pointwise finite-vector likelihood sufficiency, not a normalized Gaussian conditional expectation |
 
-## GaussianCovarianceDomain.v — 152 proof scripts
+## GaussianCovarianceDomain.v — 159 proof scripts
 
 | Proof script (kind) | Mathematical scope | Library reuse | Boundaries |
 |---|---|---|---|
@@ -246,9 +300,23 @@ The [Rocq 9.2 kernel run](https://github.com/AndersH3/composite_iq_checked_claim
 | `d052_mean_positive_gain` (theorem) | A strictly positive observed-score sum yields a positive Gaussian predictor under positive common correlation. | Existing signed Schur identities and Stdlib order/division lemmas | Conditional covariance feasibility, not Gaussian probability construction |
 | `d052_mean_nonnegative_gain` (theorem) | The Gaussian sufficient-history predictor preserves nonnegative score sums when the regression gain is nonnegative. | Existing signed Schur identities and Stdlib order/division lemmas | Conditional covariance feasibility, not Gaussian probability construction |
 
+| `gcd_psd_quadratic_zero_cross` (theorem) | Nonnegative quadratic with zero constant coefficient has zero linear cross term, the PSD null-direction identity. | Rocq Stdlib Reals, Lra, Psatz, Field, Rmult_le_pos and Rmult_integral | Singular covariance algebra only; not sigma-algebra independence or conditional expectation |
+| `gcd_psd_null_covariance` (theorem) | Any positive-semidefinite two-dimensional covariance block with one zero variance has zero cross covariance in that direction. | `gcd_psd_quadratic_zero_cross`, Rocq Stdlib real arithmetic | Necessary Gaussian covariance result; cannot by itself imply an event-integral conditional expectation |
+| `gcd_psd_covariance_cauchy_schwarz` (theorem) | Universal quadratic-form nonnegativity for a 2×2 covariance block implies the sharp cross-covariance bound b² ≤ ac even when a=0. | Stdlib Field, Psatz and order splitting | Algebraic Cauchy–Schwarz; not a Gaussian distributional independence proof |
+| `gcd_psd_covariance_characterization` (theorem) | With nonnegative diagonal variances, b² ≤ ac is necessary and sufficient for the entire 2×2 quadratic form to be nonnegative. | `gcd_psd_covariance_cauchy_schwarz`, Stdlib Ring and Psatz | Singular-safe PSD characterization, not a measure-theoretic conditional expectation |
+
+| `gcd_gaussian_uncorrelated_laplace_kernel_factor` (theorem) | A bivariate Gaussian Laplace quadratic with zero cross-covariance factors exactly into the two marginal exponential kernels for all real transform arguments. | Stdlib Reals, Ring, `exp_plus`; no custom Gaussian transform | Algebraic factorization only: does not establish transform uniqueness, sigma-algebra independence, or universal Gaussian conditional expectation |
+| `gcd_psd_zero_observed_variance_forces_zero_cross` (theorem) | Any PSD observed/future covariance block with zero observed marginal variance has zero cross covariance, a necessary singular-regression fact. | `gcd_psd_covariance_cauchy_schwarz`, Stdlib Psatz | Pure covariance algebra; not Gaussian independence or CE |
+| `gcd_psd_scalar_regression_residual_exists` (theorem) | Every PSD scalar two-variable covariance block has some regression coefficient with exactly zero residual cross covariance and nonnegative residual variance, including a zero observed variance. | `gcd_psd_covariance_cauchy_schwarz`, Stdlib `field`, `nra` and real-order splitting | Singular-safe scalar covariance regression algebra only; Gaussian independence and the event-integral CE identity remain separate proof obligations |
+| `gcd_psd_scalar_regression_coefficient_unique_strict` (theorem) | A strictly positive observed variance forces uniqueness of any coefficient satisfying the zero-residual-cross-covariance normal equation. | Stdlib `Rmult_integral`, Psatz | Nonsingular scalar regression algebra only |
+| `gcd_psd_scalar_regression_explicit_strict` (theorem) | A positive observed variance identifies the unique normal-equation coefficient as cross covariance divided by observed variance. | Stdlib Field and Lra | No division by singular covariance; not a CE theorem |
+| `gcd_psd_scalar_regression_singular_coefficient_free` (theorem) | In a PSD zero-variance observed direction every coefficient gives the same cross covariance and residual variance. | `gcd_psd_zero_observed_variance_forces_zero_cross`, Stdlib Ring | Singular nonidentifiability; independence and sigma-algebra CE remain unproved |
+| `gcd_psd_scalar_gaussian_laplace_factor_exists` (theorem) | Every PSD scalar observed/future covariance admits a regression coefficient that makes the formal joint Gaussian Laplace quadratic factor into observed and residual kernels, including zero observed variance. | `gcd_psd_scalar_regression_residual_exists`, `gcd_gaussian_uncorrelated_laplace_kernel_factor`, Stdlib Ring | Algebraic transform-kernel identity only; existence and uniqueness of Gaussian probability laws, independence of sigma-algebras, and event-integral CE remain unproved |
+
 ## Full AI disclosure
 
 The research scope was directed by Anders Hellström. OpenAI ChatGPT authored candidate propositions, attempted kernel proofs, and documented their dependencies and limitations. The Rocq kernel is the authoritative checker; these statements do not verify actual Gaussian random variables, regular conditional expectations, IQ-score populations or confidence intervals.
+
 
 ## GaussianInnovationBounds.v — 43 proof scripts
 

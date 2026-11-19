@@ -115,6 +115,11 @@ def conditional_probability(joint: float, marginal: float) -> float:
 @deal.pre(lambda *args, **kwargs: len(GRID_FIELDS) == 11 and len(set(GRID_FIELDS)) == 11)
 def close(actual: float, expected: float, label: str, *, atol: float = 5e-14,
           rtol: float = 2e-12) -> None:
+    """Check that a recomputed Towers reference agrees within declared tolerances.
+    
+    Use both the absolute and relative bounds appropriate to small joint-tail masses.
+    Raise a labeled error on mismatches rather than replacing the published evidence.
+    """
     if not math.isclose(actual, expected, abs_tol=atol, rel_tol=rtol):
         raise ValueError(f"{label}: got {actual!r}, expected {expected!r}")
 
@@ -162,6 +167,11 @@ def joint_tail(a: float, b: float, rho: float = RHO) -> float:
     @deal.pre(lambda r: abs(r) <= 0.95)
     @deal.post(lambda result: result < 1)
     def density_at_cutoffs(r: float) -> float:
+        """Evaluate the correlation derivative of the bivariate Gaussian upper tail.
+        
+        The Plackett integrand is evaluated at fixed cutoff coordinates and variable rho.
+        Guard its positive covariance determinant to avoid a singular density.
+        """
         s = 1 - r * r
         return math.exp(-(a*a - 2*r*a*b + b*b) / (2*s)) / (2*math.pi*math.sqrt(s))
     increment, rho_error = quad(
@@ -197,6 +207,11 @@ def joint_tail(a: float, b: float, rho: float = RHO) -> float:
 @deal.ensure(lambda fields, rows, result: not result or all(type(key) is str for row in rows for key in row))
 @deal.ensure(lambda fields, rows, result: not result or all(not isinstance(value, bool) for row in rows for value in row.values()))
 def _valid_fields_rows(fields, rows) -> bool:
+    """Validate column names and row dictionaries before Towers CSV serialization.
+    
+    Reject empty or duplicate schemas and records missing their required numeric fields.
+    The predicate is shared by admission and BASIC-grid reference table checks.
+    """
     if not isinstance(fields, (tuple, list)) or not fields:
         return False
     if not all(isinstance(field, str) and field for field in fields):
@@ -246,6 +261,11 @@ def _valid_fields_rows(fields, rows) -> bool:
 @deal.ensure(lambda rows, result: not result or all(math.isclose(row["conditional_b_given_a"] * row["p_a"], row["joint"], rel_tol=1e-12, abs_tol=1e-14) for row in rows))
 @deal.ensure(lambda rows, result: not result or all(math.isclose(row["conditional_a_given_b"] * row["p_b"], row["joint"], rel_tol=1e-12, abs_tol=1e-14) for row in rows))
 def _valid_admissions(rows) -> bool:
+    """Validate every expected admission-case record and its probability domain.
+    
+    Enforce the maintained case order, marginal probabilities, and joint/union relations.
+    Reject inconsistent conditional admissions or nonfinite numerical evidence.
+    """
     if not _valid_fields_rows(ADMISSION_FIELDS, rows) or len(rows) != len(CASES):
         return False
     for row, (label, p_a, p_b) in zip(rows, CASES):
@@ -297,6 +317,11 @@ def _valid_admissions(rows) -> bool:
 @deal.ensure(lambda rows, result: not result or all(_finite(row["published_joint"]) for row in rows))
 @deal.ensure(lambda rows, result: not result or all(_finite(row["published_rounded_denominator"]) for row in rows))
 def _valid_grid(rows) -> bool:
+    """Check the independently reproduced historical BASIC integration grid.
+    
+    Require the three IQ cutoffs and all reported proportions to lie in valid ranges.
+    Keep this approximate quadrature distinct from the analytic Gaussian result.
+    """
     return (_valid_fields_rows(GRID_FIELDS, rows) and len(rows) == 3
             and tuple(row["cutoff_iq"] for row in rows) == (133, 150, 164)
             and all(_finite(row[field]) and 0 <= row[field] <= 1 for row in rows for field in (
@@ -331,6 +356,11 @@ def _valid_grid(rows) -> bool:
 @deal.post(lambda result: all(row["conditional_b_given_a"] <= 1 + 5e-14 for row in result))
 @deal.post(lambda result: all(row["conditional_a_given_b"] <= 1 + 5e-14 for row in result))
 def admission_rows() -> list[dict]:
+    """Recompute the Towers admission table from the Gaussian joint upper tail.
+    
+    Translate marginal selection fractions into SciPy inverse-survival cutoffs.
+    Retain joint, union, and conditional masses for independent source verification.
+    """
     rows = []
     for label, p_a, p_b in CASES:
         a, b = float(norm.isf(p_a)), float(norm.isf(p_b))
@@ -443,6 +473,11 @@ def basic_grid() -> list[dict]:
 @deal.pre(lambda *args, **kwargs: len({row[0] for row in CASES}) == len(CASES))
 @deal.pre(lambda *args, **kwargs: all(isinstance(row[0], str) and bool(row[0]) for row in CASES))
 def write_csv(path: Path, fields: tuple[str, ...], rows: list[dict]) -> None:
+    """Serialize Towers reference rows using an explicit field-order contract.
+    
+    Create the data directory and write UTF-8 CSV with a reproducible canonical header.
+    Never infer the schema from a potentially malformed first record.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as stream:
         writer = csv.DictWriter(stream, fieldnames=fields)
@@ -467,6 +502,11 @@ def write_csv(path: Path, fields: tuple[str, ...], rows: list[dict]) -> None:
 @deal.pre(lambda *args, **kwargs: len(ADMISSION_FIELDS) == 11 and len(set(ADMISSION_FIELDS)) == 11)
 @deal.pre(lambda *args, **kwargs: len(GRID_FIELDS) == 11 and len(set(GRID_FIELDS)) == 11)
 def verify_csv(path: Path, fields: tuple[str, ...], expected: list[dict]) -> None:
+    """Compare a published Towers CSV with independently computed reference rows.
+    
+    Check field order and numerical values for every admissions or grid record.
+    Reject stale publication artifacts while preserving the original model assumptions.
+    """
     with path.open(newline="", encoding="utf-8") as stream:
         reader = csv.DictReader(stream)
         if tuple(reader.fieldnames or ()) != fields:
@@ -507,6 +547,11 @@ def verify_csv(path: Path, fields: tuple[str, ...], expected: list[dict]) -> Non
 @deal.pre(lambda *args, **kwargs: len(ADMISSION_FIELDS) == 11 and len(set(ADMISSION_FIELDS)) == 11)
 @deal.pre(lambda *args, **kwargs: len(GRID_FIELDS) == 11 and len(set(GRID_FIELDS)) == 11)
 def verify_known_results(admissions: list[dict], grid: list[dict]) -> None:
+    """Check published joint-tail benchmarks and historical BASIC-grid outputs.
+    
+    Verify the reference admission numbers rather than trusting a self-consistent CSV.
+    Keep analytic Gaussian quadrature separate from the documented discrete approximation.
+    """
     expected_joint = (
         0.006276274020528095, 0.00015958919471554256,
         0.000002312497921350349, 0.0006585888039150674,
@@ -558,6 +603,11 @@ def verify_known_results(admissions: list[dict], grid: list[dict]) -> None:
 @deal.pre(lambda *args, **kwargs: len(ADMISSION_FIELDS) == 11 and len(set(ADMISSION_FIELDS)) == 11)
 @deal.pre(lambda *args, **kwargs: len(GRID_FIELDS) == 11 and len(set(GRID_FIELDS)) == 11)
 def main() -> None:
+    """Execute deterministic Towers recomputation, checks, and optional CSV updates.
+    
+    The command-line write mode is explicit so verification does not silently rewrite data.
+    Exit unsuccessfully when a numerical benchmark or publication artifact is inconsistent.
+    """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--write", action="store_true", help="regenerate CSVs before checking")
     args = parser.parse_args()

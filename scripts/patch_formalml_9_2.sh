@@ -374,3 +374,812 @@ test "$(sed -n "${fresh_start}p" rocq/lib_utils/LibUtilsSublist.v)" = "  Proof."
 test "$(sed -n "${fresh_end}p" rocq/lib_utils/LibUtilsSublist.v)" = "  Defined."
 sed -i "${fresh_start},${fresh_end}c\\  Proof.\\n    intros Hlength Hnodup.\\n    rewrite find_filter.\\n    unfold hd_error.\\n    destruct (filter (fun x : A =>\\n              if in_dec equiv_dec x bad then false else true) l)\\n      as [|fresh tail] eqn:Hfilter.\\n    - exfalso.\\n      assert (Hincl : incl l bad).\\n      { intros x Hx.\\n        destruct (in_dec equiv_dec x bad) as [Hin | Hnin].\\n        - exact Hin.\\n        - exfalso.\\n          assert (Hfiltered : In x (filter (fun z : A =>\\n                   if in_dec equiv_dec z bad then false else true) l)).\\n          { apply filter_In; split; [exact Hx |].\\n            destruct (in_dec equiv_dec x bad) as [Hin2 | Hnin2].\\n            - contradiction.\\n            - reflexivity. }\\n          rewrite Hfilter in Hfiltered; contradiction. }\\n      pose proof (incl_NoDup_length_le Hnodup Hincl) as Hbound.\\n      lia.\\n    - exists fresh; reflexivity.\\n  Defined." \
   rocq/lib_utils/LibUtilsSublist.v
+
+# D097: Prove right-cons compatibility using the maintained right-biased
+# association lookup and its NoDup completeness theorem, instead of the
+# brittle nested dest_eqdec / intuition script in IBM FormalML.
+# We inspect the exact upstream proof delimiters before replacement.
+# The theorem's original inputs, conclusion and independence from any
+# probability assumption remain unchanged.
+compat_line=$(grep -n "^  Lemma compatible_cons_r " rocq/lib_utils/LibUtilsCompat.v | cut -d: -f1)
+test -n "$compat_line"
+compat_start=$((compat_line + 5))
+compat_end=$((compat_line + 32))
+test "$(sed -n "${compat_start}p" rocq/lib_utils/LibUtilsCompat.v)" = "  Proof."
+test "$(sed -n "${compat_end}p" rocq/lib_utils/LibUtilsCompat.v)" = "  Qed."
+sed -i "${compat_start},${compat_end}c\\  Proof.\n    intros Hnodup Hcompatible Hnew.\n    destruct a as [y yv].\n    unfold compatible in *.\n    apply forallb_forall.\n    intros [x xv] Hin.\n    rewrite forallb_forall in Hcompatible.\n    specialize (Hcompatible (x, xv) Hin).\n    unfold compatible_with in *.\n    simpl in *.\n    destruct (assoc_lookupr equiv_dec l' x) eqn:Hold.\n    - exact Hcompatible.\n    - destruct (equiv_dec x y) as [Hxy | Hxy].\n      + unfold equiv in Hxy.\n        change (x = y) in Hxy.\n        subst y.\n        assert (Hown : assoc_lookupr equiv_dec l x = Some xv).\n        { eapply in_assoc_lookupr_nodup; eauto. }\n        rewrite Hown in Hnew.\n        destruct (equiv_dec yv xv) as [Hsame | Hdiff];\n          [|discriminate Hnew].\n        destruct (equiv_dec xv yv) as [Hsame' | Hdiff'];\n          [reflexivity |].\n        unfold equiv, complement in *; congruence.\n      + reflexivity.\n  Qed." \
+  rocq/lib_utils/LibUtilsCompat.v
+
+# D098-D099: The upstream Hilbert convexity calculation combines a
+# 2 <> 0 side condition with a 0 <= 1 inequality. Older sequential
+# tactics assume the wrong subgoal order under Rocq 9.2. Rewrite this
+# four-line *proof fragment only*, retaining the surrounding theorem,
+# existing Rinv_r and standard algebraic normalization. Fail closed on
+# the pinned upstream proof shape; never change theorem statements.
+test "$(sed -n 742p rocq/CertRL/LM/hilbert.v)" = "rewrite Rinv_r; [|lra]."
+test "$(sed -n 743p rocq/CertRL/LM/hilbert.v)" = "try rewrite Rmult_1_r."
+test "$(sed -n 744p rocq/CertRL/LM/hilbert.v)" = "apply Rplus_le_reg_l with (-1); ring_simplify."
+test "$(sed -n 745p rocq/CertRL/LM/hilbert.v)" = "apply Rle_0_1."
+sed -i '742,745c\
+rewrite Rinv_r; [lra | lra].' rocq/CertRL/LM/hilbert.v
+
+# D100: Insertion sort does not change the lookup of a *different*
+# key. A fresh key appended to the original association list therefore
+# retains its unique value after sorting. Replace upstream intuition
+# with explicit induction, the maintained lookup-insertion lemma, and
+# the standard list-membership cases. No new lookup abstraction.
+bindings_line=$(grep -n "^  Lemma assoc_lookupr_insertion_sort_fresh " rocq/lib_utils/LibUtilsBindings.v | cut -d: -f1)
+test -n "$bindings_line"
+bindings_start=$((bindings_line + 5))
+bindings_end=$((bindings_line + 10))
+test "$(sed -n "${bindings_start}p" rocq/lib_utils/LibUtilsBindings.v)" = "  Proof."
+test "$(sed -n "${bindings_end}p" rocq/lib_utils/LibUtilsBindings.v)" = "  Qed."
+sed -i "${bindings_start},${bindings_end}c\\  Proof.\\n    revert x d.\\n    induction b as [|[key value] tail IH]; intros x d Hfresh; simpl in *.\\n    - destruct (ODT_eqdec x x) as [_ | Hneq].\\n      + reflexivity.\\n      + exfalso; apply Hneq; reflexivity.\\n    - assert (Hkey : x <> key).\\n      { intro Hx; apply Hfresh; left; symmetry; exact Hx. }\\n      assert (Htail : ~ In x (domain tail)).\\n      { intro Hx; apply Hfresh; right; exact Hx. }\\n      rewrite assoc_lookupr_insertion_sort_insert_neq by exact Hkey.\\n      apply IH; exact Htail.\\n  Qed." \
+  rocq/lib_utils/LibUtilsBindings.v
+
+# D101: If an existing key occurs in a strictly sorted domain, sorted
+# insertion cannot replace its binding. Reuse the library's finite
+# StronglySorted characterization and StrictOrder instance, rather than
+# the fragile nested match_destr/intuition bullets.
+# This source patch changes the proof only, not the original theorem.
+sortdom_line=$(grep -n "^  Lemma rec_sort_insert_in_dom " rocq/lib_utils/LibUtilsBindings.v | cut -d: -f1)
+test -n "$sortdom_line"
+sortdom_start=$((sortdom_line + 4))
+sortdom_end=$((sortdom_line + 24))
+test "$(sed -n "${sortdom_start}p" rocq/lib_utils/LibUtilsBindings.v)" = "  Proof."
+test "$(sed -n "${sortdom_end}p" rocq/lib_utils/LibUtilsBindings.v)" = "  Qed."
+sed -i "${sortdom_start},${sortdom_end}c\  Proof.\n    destruct a as [target value].\n    induction l as [|[head old] tail IH]; intros Hin Hsorted; simpl in *.\n    - contradiction.\n    - destruct Hin as [Heq | Htail].\n      + subst head.\n        unfold rec_field_lt_dec; simpl.\n        destruct (ODT_lt_dec target target) as [Hbad | _].\n        * exfalso; apply (ODT_lt_irr target); exact Hbad.\n        * destruct (ODT_lt_dec target target) as [Hbad | _].\n          -- exfalso; apply (ODT_lt_irr target); exact Hbad.\n          -- reflexivity.\n      + assert (Hsorted_tail :\n           is_list_sorted ODT_lt_dec (domain tail) = true).\n        { eapply is_list_sorted_cons_inv; eauto. }\n        assert (Hhead_lt : ODT_lt head target).\n        { apply (proj1 (sorted_StronglySorted ODT_lt_dec (head :: domain tail))) in Hsorted.\n          eapply StronglySorted_cons_in; eauto. }\n        unfold rec_field_lt_dec; simpl.\n        destruct (ODT_lt_dec target head) as [Hbad | _].\n        * exfalso; apply (ODT_lt_irr head).\n          eapply transitivity; eauto.\n        * destruct (ODT_lt_dec head target) as [_ | Hbad].\n          -- f_equal; apply IH; assumption.\n          -- exfalso; apply Hbad; exact Hhead_lt.\n  Qed." \
+  rocq/lib_utils/LibUtilsBindings.v
+
+# D102: The upstream nonempty-sequence lemma relies on the old shape
+# of intuition's generated hypothesis H0. Eliminate the impossible
+# zero-length case by Presburger arithmetic, and the successor-length
+# case by constructor discrimination. Reuse Stdlib Lia.
+test "$(sed -n 246p rocq/utils/ListAdd.v)" = "  Proof."
+test "$(sed -n 249p rocq/utils/ListAdd.v)" = "  Qed."
+sed -i '246,249c\
+  Proof.\
+    intros m [|n] Hpositive.\
+    - lia.\
+    - discriminate.\
+  Qed.' rocq/utils/ListAdd.v
+
+# D103: Coquelicot's generalized Chasles rewrite exposes existence
+# subgoals before the integral equality under Rocq 9.2. Resolve the
+# existence subgoals by their original hypotheses, and the equality
+# using Coquelicot's independently proved integral uniqueness.
+test "$(sed -n 291p rocq/utils/CoquelicotAdd.v)" = "  rewrite RInt_gen_Chasles."
+test "$(sed -n 292p rocq/utils/CoquelicotAdd.v)" = "  now apply is_RInt_gen_unique."
+test "$(sed -n 293p rocq/utils/CoquelicotAdd.v)" = "  trivial."
+test "$(sed -n 294p rocq/utils/CoquelicotAdd.v)" = "  trivial."
+sed -i '291,294c\
+  rewrite RInt_gen_Chasles.\
+  all: first [assumption | now apply is_RInt_gen_unique | symmetry; now apply is_RInt_gen_unique].' \
+  rocq/utils/CoquelicotAdd.v
+
+# D104: The equal-length sequential-list inclusion follows from
+# Stdlib seq_app and the already established sublist_app_l theorem.
+# Avoid recursion over a <= proof whose induction-variable name is no
+# longer stable in Rocq 9.2. This is the original theorem, strengthened
+# neither by an axiom nor by a replacement definition.
+seqsub_line=$(grep -n "^  Lemma sublist_seq_le :" rocq/utils/ListAdd.v | cut -d: -f1)
+test -n "$seqsub_line"
+seqsub_start=$((seqsub_line + 2))
+seqsub_end=$((seqsub_line + 12))
+test "$(sed -n "${seqsub_start}p" rocq/utils/ListAdd.v)" = "  Proof."
+test "$(sed -n "${seqsub_end}p" rocq/utils/ListAdd.v)" = "  Qed."
+sed -i "${seqsub_start},${seqsub_end}c\  Proof.\n    intros n k Hnk.\n    replace k with (n + (k - n))%nat by lia.\n    rewrite seq_app.\n    apply sublist_app_l.\n  Qed." \
+  rocq/utils/ListAdd.v
+
+# D105: The lub-witness set difference is an inequality witness:
+# x in S1 and x not in {y in S1 | y <= L2} imply x > L2.
+# Eliminate the conjunction explicitly and reuse Stdlib Lra.
+lub_line=$(grep -n "^Lemma lub_witness " rocq/utils/CoquelicotAdd.v | cut -d: -f1)
+test -n "$lub_line"
+lub_start=$((lub_line + 13))
+lub_end=$((lub_line + 18))
+test "$(sed -n "${lub_start}p" rocq/utils/CoquelicotAdd.v)" = "  - destruct H1."
+test "$(sed -n "${lub_end}p" rocq/utils/CoquelicotAdd.v)" = "    intuition."
+sed -i "${lub_start},${lub_end}c\  - destruct H1 as [x [Hin Hout]].\n    exists x; split; [exact Hin |].\n    unfold S2, In in Hout.\n    assert (Hnot_le : ~ x <= L2).\n    { intro Hle; apply Hout; split; [exact Hin | exact Hle]. }\n    lra." \
+  rocq/utils/CoquelicotAdd.v
+
+# D106: Reuse Stdlib's in_app_iff and Forall_forall in both directions.
+# Upstream intuition had selected a universally quantified hypothesis
+# instead of the membership goal. The theorem statement is unchanged.
+forall_app_line=$(grep -n '^Lemma Forall_app_iff ' rocq/utils/ListAdd.v | cut -d: -f1)
+test -n "$forall_app_line"
+forall_app_start=$((forall_app_line + 3))
+forall_app_end=$((forall_app_line + 8))
+test "$(sed -n "${forall_app_start}p" rocq/utils/ListAdd.v)" = "Proof."
+test "$(sed -n "${forall_app_end}p" rocq/utils/ListAdd.v)" = "Qed."
+sed -i "${forall_app_start},${forall_app_end}c\Proof.\n  repeat rewrite Forall_forall.\n  split.\n  - intros Hall; split; intros x Hx; apply Hall; apply in_app_iff.\n    + left; exact Hx.\n    + right; exact Hx.\n  - intros [Hl Hr] x Hx.\n    apply in_app_iff in Hx.\n    destruct Hx as [Hx | Hx]; [apply Hl | apply Hr]; exact Hx.\nQed." \
+  rocq/utils/ListAdd.v
+
+# D107: Retain the original upstream monotonicity application; the
+# later limit inequality is the actual unresolved Rocq 9.2 subgoal.
+
+# D108/D111: The field equality has a nonzero sqrt(2) denominator.
+# Supply its positivity to Rocq's field tactic, without new assumptions.
+hilbert_sqrt_line=$(grep -nF 'apply Rle_trans with (eps²/((sqrt 2)²)).' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
+test -n "$hilbert_sqrt_line"
+hilbert_sqrt_proof=$((hilbert_sqrt_line + 1))
+hilbert_sqrt_next=$((hilbert_sqrt_line + 2))
+test "$(sed -n "${hilbert_sqrt_proof}p" rocq/CertRL/LM/hilbert.v)" = "right; unfold Rsqr; field."
+test "$(sed -n "${hilbert_sqrt_next}p" rocq/CertRL/LM/hilbert.v)" = "apply Rgt_not_eq; apply Rlt_sqrt2_0."
+sed -i "${hilbert_sqrt_proof},${hilbert_sqrt_next}c\right; unfold Rsqr.\nassert (Hsqrt2pos : 0 < sqrt 2) by apply Rlt_sqrt2_0.\nfield; nra." \
+  rocq/CertRL/LM/hilbert.v
+
+# D109: The existing StronglySorted/Forall constructors and the Stdlib
+# in_map_iff membership equivalence prove functional composition without
+# brittle intuition or inversion-generated hypothesis names.
+compose_line=$(grep -n '^Lemma StronglySorted_compose ' rocq/utils/ListAdd.v | cut -d: -f1)
+test -n "$compose_line"
+compose_start=$((compose_line + 3))
+compose_end=$((compose_line + 9))
+test "$(sed -n "${compose_start}p" rocq/utils/ListAdd.v)" = "Proof."
+test "$(sed -n "${compose_end}p" rocq/utils/ListAdd.v)" = "Qed."
+sed -i "${compose_start},${compose_end}c\Proof.\n  induction l as [|a l IH]; simpl.\n  - split; intro H; constructor.\n  - split; intro H.\n    + inversion H as [|b bs Htail Hforall]; subst.\n      constructor.\n      * apply (proj1 IH); exact Htail.\n      * apply Forall_forall; intros x Hx.\n        rewrite Forall_forall in Hforall.\n        apply Hforall; apply in_map; exact Hx.\n    + inversion H as [|b bs Htail Hforall]; subst.\n      constructor.\n      * apply (proj2 IH); exact Htail.\n      * apply Forall_forall; intros y Hy.\n        apply in_map_iff in Hy as [x [Heq Hx]].\n        subst y.\n        rewrite Forall_forall in Hforall.\n        apply Hforall; exact Hx.\nQed." \
+  rocq/utils/ListAdd.v
+
+# D110/D112: Treat the upper-bound side condition of Rabs_pos_eq
+# separately from the monotonicity inequality. Reuse is_upper_bound
+# and Stdlib Lra, retaining the source proposition unchanged.
+# Earlier CoquelicotAdd replacements shorten this file by two lines.
+# Compute the exact range relative to the unchanged lemma declaration.
+limit_base=$(grep -n '^Lemma increasing_bounded_limit ' rocq/utils/CoquelicotAdd.v | cut -d: -f1)
+test -n "$limit_base"
+limit_start=$((limit_base + 39))
+limit_end=$((limit_base + 49))
+limit_first=$(sed -n "${limit_start}p" rocq/utils/CoquelicotAdd.v | sed 's/^[[:space:]]*//')
+limit_last=$(sed -n "${limit_end}p" rocq/utils/CoquelicotAdd.v | sed 's/^[[:space:]]*//')
+test "$limit_first" = "rewrite Rabs_pos_eq."
+test "$limit_last" = "now exists x1."
+sed -i "${limit_start},${limit_end}c\       assert (Hupper : f x1 <= L).\n       { unfold is_upper_bound in H1; apply H1; now exists x1. }\n       rewrite Rabs_pos_eq; try lra.\n       assert (Hmono : f x0 <= f x1).\n       { apply H; now left. }\n       lra." rocq/utils/CoquelicotAdd.v
+
+# D113: Replace an obsolete intuition proof of a fresh-key list removal
+# with direct contradiction and the existing induction hypothesis.
+# The original remove_one and permutation/list definitions are reused.
+rem_line=$(grep -n '^Lemma remove_one_app_nin ' rocq/utils/ListAdd.v | cut -d: -f1)
+test -n "$rem_line"
+rem_start=$((rem_line + 3))
+rem_end=$((rem_line + 11))
+test "$(sed -n "${rem_start}p" rocq/utils/ListAdd.v)" = "Proof."
+test "$(sed -n "${rem_end}p" rocq/utils/ListAdd.v)" = "Qed."
+sed -i "${rem_start},${rem_end}c\Proof.\n  induction l1 as [|x xs IH]; simpl; intros Hfresh.\n  - reflexivity.\n  - match_destr.\n    + exfalso; apply Hfresh; simpl; left.\n      unfold equiv in e; congruence.\n    + f_equal; apply IH.\n      intro Hin; apply Hfresh; simpl; right; exact Hin.\nQed." rocq/utils/ListAdd.v
+
+# D114: A key absent from a list survives removal from that list.
+# Replace intuition's unclosed branch with the maintained EqDec
+# decider and direct structural induction; original lemma unchanged.
+single_line=$(grep -n '^Lemma remove_one_nin ' rocq/utils/ListAdd.v | cut -d: -f1)
+test -n "$single_line"
+single_start=$((single_line + 3))
+single_end=$((single_line + 9))
+test "$(sed -n "${single_start}p" rocq/utils/ListAdd.v)" = "Proof."
+test "$(sed -n "${single_end}p" rocq/utils/ListAdd.v)" = "Qed."
+sed -i "${single_start},${single_end}c\Proof.\n  induction l as [|x xs IH]; simpl; intros Habsent.\n  - reflexivity.\n  - match_destr.\n    + exfalso; apply Habsent; simpl; left.\n      unfold equiv in e; congruence.\n    + f_equal; apply IH.\n      intro Hin; apply Habsent; simpl; right; exact Hin.\nQed." rocq/utils/ListAdd.v
+
+# D115: The constructor for a removable member is a permutation,
+# using only Stdlib Permutation's swap and cons-congruence plus the
+# original remove_one definition. Explicitly eliminate an impossible
+# membership of a removed head in the negative EqDec branch.
+perm_line=$(grep -n '^Lemma remove_one_in_perm ' rocq/utils/ListAdd.v | cut -d: -f1)
+test -n "$perm_line"
+perm_start=$((perm_line + 3))
+perm_end=$((perm_line + 12))
+test "$(sed -n "${perm_start}p" rocq/utils/ListAdd.v)" = "Proof."
+test "$(sed -n "${perm_end}p" rocq/utils/ListAdd.v)" = "Qed."
+sed -i "${perm_start},${perm_end}c\Proof.\n  induction l as [|b tail IH]; simpl; intros Hin.\n  - contradiction.\n  - match_destr.\n    + red in e; subst; reflexivity.\n    + destruct Hin as [Heq | Htail].\n      * subst b; try unfold equiv in *; congruence.\n      * rewrite perm_swap; apply perm_skip; apply IH; exact Htail.\nQed." rocq/utils/ListAdd.v
+
+# D116: The Hilbert sqrt2 rewrite leaves a rational equality that
+# old 'now right' does not normalize under Rocq 9.2. Reuse the original
+# Rsqr_sqrt lemma with standard Field/Lra tactics and unchanged premises.
+sqrt2_rewrite_start=$((hilbert_sqrt_line + 4))
+sqrt2_rewrite_end=$((hilbert_sqrt_line + 6))
+test "$(sed -n "${sqrt2_rewrite_start}p" rocq/CertRL/LM/hilbert.v)" = "rewrite Rsqr_sqrt."
+test "$(sed -n "${sqrt2_rewrite_end}p" rocq/CertRL/LM/hilbert.v)" = "left; apply Rlt_0_2."
+sed -i "${sqrt2_rewrite_start},${sqrt2_rewrite_end}c\rewrite Rsqr_sqrt; [nra | lra]." rocq/CertRL/LM/hilbert.v
+
+# D117: A permutation preserves the list obtained by removing a key.
+# Express Stdlib List.remove as Stdlib List.filter, then reuse the
+# already verified LibUtilsSublist.Permutation_filter theorem instead
+# of a brittle case split over the constructors of Permutation.
+proper_line=$(grep -n '^  Global Instance Permutation_remove ' rocq/utils/ListAdd.v | cut -d: -f1)
+test -n "$proper_line"
+proper_start=$((proper_line + 1))
+proper_end=$((proper_line + 9))
+test "$(sed -n "${proper_start}p" rocq/utils/ListAdd.v)" = "  Proof."
+test "$(sed -n "${proper_end}p" rocq/utils/ListAdd.v)" = "  Qed."
+sed -i "${proper_start},${proper_end}c\  Proof.\n    intros xs ys Hperm.\n    assert (Hremove_filter : forall l : list A,\n      remove eq_dec a l =\n      filter (fun x => if eq_dec a x then false else true) l).\n    { induction l as [|x l IH]; simpl; [reflexivity |].\n      destruct (eq_dec a x); simpl; rewrite IH; reflexivity. }\n    repeat rewrite Hremove_filter.\n    apply Permutation_filter; exact Hperm.\n  Qed." rocq/utils/ListAdd.v
+
+# D118: A list element other than the removed head has the same
+# membership before and after the first occurrence is removed.
+# The existing EqDec split and structural induction suffice; avoid
+# upstream intuition, which leaves one branch unfinished in 9.2.
+other_line=$(grep -n '^Lemma remove_other_in ' rocq/utils/ListAdd.v | cut -d: -f1)
+test -n "$other_line"
+other_start=$((other_line + 3))
+other_end=$((other_line + 12))
+test "$(sed -n "${other_start}p" rocq/utils/ListAdd.v)" = "Proof."
+test "$(sed -n "${other_end}p" rocq/utils/ListAdd.v)" = "Qed."
+sed -i "${other_start},${other_end}c\Proof.\n  intros Hneq.\n  induction l as [|b tl IH]; simpl.\n  - tauto.\n  - match_destr.\n    + simpl; split.\n      * intros [Hbad | Hin].\n        -- exfalso; apply Hneq.\n           change (a2 = b) in e; congruence.\n        -- exact Hin.\n      * intro Hin; right; exact Hin.\n    + simpl; rewrite IH; tauto.\nQed." rocq/utils/ListAdd.v
+
+# D119: In the projection limit proof, Rocq 9.2 exposes the
+# Rabs_right sign condition ahead of the strict ball inequality.
+# Establish the glb-derived lower bound *before* rewriting abs, then
+# discharge both resulting arithmetic goals by Stdlib Lra. The
+# projection theorem, its hypotheses and its conclusion stay intact.
+rabs_line=$(grep -nF 'rewrite Rabs_right.' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
+test -n "$rabs_line"
+rabs_end=$((rabs_line + 11))
+test "$(sed -n "${rabs_line}p" rocq/CertRL/LM/hilbert.v)" = "rewrite Rabs_right."
+test "$(sed -n "${rabs_end}p" rocq/CertRL/LM/hilbert.v)" = "rewrite <- ortho_projection_aux in H2; easy."
+sed -i "${rabs_line},${rabs_end}c\assert (Habs_sign : Rge (norm (minus u w) + - delta) 0).\n{ apply Rle_ge.\n  apply Rplus_le_reg_l with delta; ring_simplify.\n  assert (H2 : Rbar_le (Glb_Rbar (fun r : R =>\n    exists w0 : E, phi w0 /\\\\ r = norm (minus u w0)))\n    (norm (minus u w))).\n  { apply Glb_Rbar_correct; exists w; now split. }\n  rewrite <- ortho_projection_aux in H2; easy. }\nrewrite (Rabs_right _ Habs_sign).\nunfold minus at 1; unfold plus, opp; simpl.\napply Rplus_lt_reg_l with delta; ring_simplify; exact Hw2." rocq/CertRL/LM/hilbert.v
+
+# D121: The finite-type strong membership equivalence uses a decidable
+# element comparison. Explicit induction avoids autogenerated induction
+# variable a0 in Rocq 9.2. Reuse EqDec and List.In with no new axioms.
+strong_line=$(grep -n '^Lemma In_strong_In ' rocq/utils/FiniteType.v | cut -d: -f1)
+test -n "$strong_line"
+strong_start=$((strong_line + 1))
+strong_end=$((strong_line + 5))
+test "$(sed -n "${strong_start}p" rocq/utils/FiniteType.v)" = "Proof."
+test "$(sed -n "${strong_end}p" rocq/utils/FiniteType.v)" = "Qed."
+sed -i "${strong_start},${strong_end}c\Proof.\n  unfold In_strong.\n  induction l as [|b tl IH]; simpl.\n  - discriminate.\n  - destruct (equiv_dec b a) as [Heq | Hneq].\n    + intro Htrue; left; change (b = a) in Heq; exact Heq.\n    + intro H; right; apply IH; exact H.\nQed." rocq/utils/FiniteType.v
+
+# D122: The converse boolean strong-membership lemma is obtained from
+# the same EqDec and the existing structural induction on lists.
+# The only impossible branch is refuted by the negative equality proof.
+in_strong_line=$(grep -n '^Lemma In_In_strong ' rocq/utils/FiniteType.v | cut -d: -f1)
+test -n "$in_strong_line"
+in_strong_start=$((in_strong_line + 1))
+in_strong_end=$((in_strong_line + 6))
+test "$(sed -n "${in_strong_start}p" rocq/utils/FiniteType.v)" = "Proof."
+test "$(sed -n "${in_strong_end}p" rocq/utils/FiniteType.v)" = "Qed."
+sed -i "${in_strong_start},${in_strong_end}c\Proof.\n  unfold In_strong.\n  induction l as [|b tl IH]; simpl.\n  - contradiction.\n  - destruct (equiv_dec b a) as [Heq | Hneq].\n    + intros Hin; reflexivity.\n    + intros [Hhead | Htail].\n      * unfold equiv in Hneq; congruence.\n      * apply IH; exact Htail.\nQed." rocq/utils/FiniteType.v
+
+# D123: The last element of a nonempty constant list is that constant.
+# An explicit positive-length induction solves the successor subgoal
+# left open by upstream intuition under Rocq 9.2.
+repeat_line=$(grep -n '^Lemma last_repeat_nzero ' rocq/utils/PairEncoding.v | cut -d: -f1)
+test -n "$repeat_line"
+repeat_start=$((repeat_line + 1))
+repeat_end=$((repeat_line + 6))
+test "$(sed -n "${repeat_start}p" rocq/utils/PairEncoding.v)" = "Proof."
+test "$(sed -n "${repeat_end}p" rocq/utils/PairEncoding.v)" = "Qed."
+sed -i "${repeat_start},${repeat_end}c\Proof.\n  induction n as [|n IH]; intros Hpositive; [lia |].\n  destruct n as [|n].\n  - reflexivity.\n  - simpl; apply IH; lia.\nQed." rocq/utils/PairEncoding.v
+
+# D125: Excluded quotient buckets are disjoint: a =/= x0 and
+# R x0 a imply False by symmetry of the inherited equivalence.
+# Upstream intuition introduces H6 : R x0 a; finish its remaining goal
+# with the existing EqDec negative branch and Equivalence symmetry.
+sed -n '163p' rocq/utils/Quotient.v | grep -Eq '^[[:space:]]*intuition[.]$'
+sed -i '163c\
+              intuition; apply c; symmetry; exact H6.' rocq/utils/Quotient.v
+
+# D126: An empty finite index has no proof of strong membership.
+# Use the library-defined boolean In_strong nil = false instead of intuition.
+dep_line=$(grep -n '^Lemma FiniteType_fun_dep_elems_aux_all' rocq/utils/FiniteType.v | cut -d: -f1)
+test -n "$dep_line"
+dep_false_line=$((dep_line + 11))
+test "$(sed -n "${dep_false_line}p" rocq/utils/FiniteType.v)" = "    intuition."
+sed -i "${dep_false_line}c\     unfold In_strong in ina; simpl in ina; discriminate." rocq/utils/FiniteType.v
+
+# D127: The positive numeral 2 satisfies Rabs 2 = 2; eliminate
+# both obsolete absurd/intuition scripts with Stdlib real arithmetic.
+abs2_line=$(grep -nF 'replace 2 with (Rabs 2) at 1.' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
+test -n "$abs2_line"
+abs2_start=$((abs2_line + 13))
+abs2_second=$((abs2_line + 20))
+abs2_end=$((abs2_line + 26))
+test "$(sed -n "${abs2_start}p" rocq/CertRL/LM/hilbert.v)" = "unfold Rabs."
+test "$(sed -n "${abs2_second}p" rocq/CertRL/LM/hilbert.v)" = "unfold Rabs."
+test "$(sed -n "${abs2_end}p" rocq/CertRL/LM/hilbert.v)" = "reflexivity."
+sed -i "${abs2_start},${abs2_end}c\unfold Rabs; destruct (Rcase_abs 2); lra.\n  unfold Rabs; destruct (Rcase_abs 2); lra." rocq/CertRL/LM/hilbert.v
+
+# D128: The Hilbert midpoint factor 1/2 is positive.
+# Upstream intuition applies a nonmatching order lemma in Rocq 9.2.
+# Preserve the denominator's original strict-positivity obligation.
+half_line=$(grep -nF 'assert (Hs : 0 < 1 / 2).' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
+test -n "$half_line"
+half_proof=$((half_line + 1))
+test "$(sed -n "${half_proof}p" rocq/CertRL/LM/hilbert.v)" = "apply Rdiv_lt_0_compat; intuition."
+sed -i "${half_proof}c\apply Rdiv_lt_0_compat; lra." rocq/CertRL/LM/hilbert.v
+
+# D130: The two closed min/max notation forms retain their meanings
+# but must be defined at level 0 under Rocq 9.2's parser check.
+sed -n '3341p' rocq/utils/RealAdd.v | grep -Fq 'Notation "Max_{ l } ( f )"'
+sed -n '3342p' rocq/utils/RealAdd.v | grep -Fq 'Notation "Min_{ l } ( f )"'
+sed -n '3341,3342p' rocq/utils/RealAdd.v | grep -Fq '(at level 50)'
+sed -i '3341,3342s/(at level 50)/(at level 0)/' rocq/utils/RealAdd.v
+
+# D131: After proving 0 < 1/2, the following midpoint normalization
+# uses a positive multiplier 2. A direct lra proof avoids a Rocq 9.2
+# misapplication by the old broad intuition tactic.
+mult2_line=$(grep -nF 'apply Rmult_le_reg_r with 2.' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
+test -n "$mult2_line"
+mult2_side=$((mult2_line + 1))
+test "$(sed -n "${mult2_side}p" rocq/CertRL/LM/hilbert.v)" = "intuition."
+sed -i "${mult2_side}c\lra." rocq/CertRL/LM/hilbert.v
+
+# D132: The upstream RealAdd repeats the two closed Max/Min notations
+# outside the section. Keep their exact definitions with parser level 0.
+sed -n '4239p' rocq/utils/RealAdd.v | grep -Fq 'Notation "Max_{ l } ( f )"'
+sed -n '4240p' rocq/utils/RealAdd.v | grep -Fq 'Notation "Min_{ l } ( f )"'
+sed -n '4239,4240p' rocq/utils/RealAdd.v | grep -Fq '(at level 50)'
+sed -i '4239,4240s/(at level 50)/(at level 0)/' rocq/utils/RealAdd.v
+
+# D133: In the second quotient exclusion branch, the equivalence
+# class gives R a0 a, contradicting the EqDec negative decision.
+# Discharge the residual goal explicitly using Equivalence symmetry.
+sed -n '165p' rocq/utils/Quotient.v | grep -Fq 'rewrite (H1 x0 a0); simpl; intuition.'
+sed -i '165c\
+             rewrite (H1 x0 a0); simpl; intuition; apply c; symmetry; exact H8.' rocq/utils/Quotient.v
+
+# D134: Rocq has already reduced the Hilbert scalar distribution
+# expression at this point. Attempt the old rewrite only when present.
+scald_line=$((half_line + 11))
+test "$(sed -n "${scald_line}p" rocq/CertRL/LM/hilbert.v)" = "rewrite scal_distr_l."
+test -n "$scald_line"
+scald_next=$((scald_line + 1))
+test "$(sed -n "${scald_next}p" rocq/CertRL/LM/hilbert.v)" = "reflexivity."
+sed -i "${scald_line}c\try rewrite scal_distr_l." rocq/CertRL/LM/hilbert.v
+
+# D135: The constant-one Rbar multiplication has a strictly-positive
+# branch and an impossible zero branch. Avoid brittle intuition that
+# leaves the strict branch open when Rocq 9.2 changes hint search.
+test "$(sed -n 4299p rocq/utils/RealAdd.v)" = "    destruct (Rle_lt_or_eq_dec 0 1 r); intuition."
+test "$(sed -n 4301p rocq/utils/RealAdd.v)" = "    destruct (Rle_lt_or_eq_dec 0 1 r); intuition."
+sed -i '4299s/; intuition\./; [reflexivity | lra]./' rocq/utils/RealAdd.v
+sed -i '4301s/; intuition\./; [reflexivity | lra]./' rocq/utils/RealAdd.v
+
+# D136: Finite dimensional Hilbert convex interpolation requires only the
+# ordinary midpoint bound 0 <= 1/2 <= 1.  Avoid the old chain of
+# arithmetic side conditions and use the existing scal_distr_l lemma.
+mid_start=$((half_line - 1))
+mid_end=$((half_line + 12))
+test "$(sed -n "${mid_start}p" rocq/CertRL/LM/hilbert.v)" = "split."
+test "$(sed -n "${mid_end}p" rocq/CertRL/LM/hilbert.v)" = "reflexivity."
+sed -i "${mid_start},${mid_end}c\split; lra.\nrewrite scal_distr_l.\nreflexivity." rocq/CertRL/LM/hilbert.v
+
+# D137: The quotient of a finite list contains no empty bucket.
+# In the empty-head branch, instantiate the library-proved Forall
+# nonemptiness at the head to obtain false = true directly.
+test "$(sed -n 1304p rocq/utils/Quotient.v)" = "        * specialize (nnil []); simpl in nnil; intuition."
+sed -i '1304c\
+        * specialize (nnil [] (or_introl eq_refl)); simpl in nnil; discriminate.' rocq/utils/Quotient.v
+
+# D138: The upstream shift lemma leaves (0 < N)%nat under the
+# decidable disequality H : N = 0 -> False. The maintained Lia
+# library proves this directly; no change to the convergence theorem.
+test "$(sed -n 4785p rocq/utils/RealAdd.v)" = "Qed."
+sed -i '4785i\
+  lia.' rocq/utils/RealAdd.v
+
+# D139: In the Hilbert projection existence proof, the extended-real
+# decomposition generates either a norm-nonnegative branch or a
+# numerically trivial 0 <= 1+1 branch. Solve with Stdlib Lra or
+# the existing Hilbert norm_ge_0 lemma without assuming positivity.
+hrx_line=$(grep -nF 'assert (Hrx : real x <= norm (minus u v' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
+test -n "$hrx_line"
+hrx_nonneg=$((hrx_line + 6))
+test "$(sed -n "${hrx_nonneg}p" rocq/CertRL/LM/hilbert.v)" = "apply norm_ge_0."
+sed -i "${hrx_nonneg}c\first [solve [left; lra] | solve [right; lra] | solve [apply norm_ge_0]]." rocq/CertRL/LM/hilbert.v
+
+# D140: The zero-count branch in an excluded finite-sum shift
+# contradicts the negative EqDec certificate c : n =/= 0.
+# Reuse the existing decision evidence instead of intuition.
+test "$(sed -n 1850p rocq/utils/Sums.v)" = "         + intuition."
+sed -i '1850c\
+         + exfalso; apply c; reflexivity.' rocq/utils/Sums.v
+
+# D141: Rocq 9.2 exposes the negative-sequence existence
+# obligation first, before the algebraic ELim_seq_opp equalities.
+# Reuse the library's ex_Elim_seq_opp and ELim_seq_opp in whichever
+# order rewrite ELim_seq_plus generates its subgoals.
+test "$(sed -n 2001p rocq/utils/ELim_Seq.v)" = "  - now rewrite ELim_seq_opp."
+test "$(sed -n 2002p rocq/utils/ELim_Seq.v)" = "  - now apply ex_Elim_seq_opp in H0."
+test "$(sed -n 2003p rocq/utils/ELim_Seq.v)" = "  - now rewrite ELim_seq_opp."
+sed -i '2001,2003c\
+  all: first [now apply ex_Elim_seq_opp in H0 | now rewrite ELim_seq_opp].' rocq/utils/ELim_Seq.v
+
+# D142: Under the positive-real hypothesis on eps the reciprocal
+# denominator is nonzero. The old dependent record destruct combined
+# with lra fails after Rocq 9.2 proof-state simplification; retain
+# the positive-real witness and discharge nonzero directly.
+# D141 has already replaced three lines with one (a net -2 shift).
+# Guard and edit the resulting physical source line, not the original index.
+elim_inv_line=$((2089 - 2))
+test "$(sed -n "${elim_inv_line}p" rocq/utils/ELim_Seq.v)" = "      rewrite Rinv_l in H; [| destruct eps; simpl; lra]."
+sed -i "${elim_inv_line}c\\      rewrite Rinv_l in H." rocq/utils/ELim_Seq.v
+
+# D143: The follow-up Hilbert positivity branch is for the numeric
+# sum 1+1, not the norm of a vector.  The old norm_ge_0 tactic
+# therefore cannot unify.  Prove the concrete positive sum with Lra.
+hilbert_inner_line=$((hrx_line + 12))
+test "$(sed -n "${hilbert_inner_line}p" rocq/CertRL/LM/hilbert.v)" = "apply norm_ge_0."
+sed -i "${hilbert_inner_line}c\left; lra." rocq/CertRL/LM/hilbert.v
+
+# D144: The remaining Hilbert quadratic-factor proof needs
+# nonnegativity of d*d, not the four-variable monotonicity theorem.
+# Reuse Stdlib Rmult_le_pos and the two existing norm_ge_0 lines;
+# D143 already discharged the separate constant-one-plus-one branch.
+hilbert_square_line=$((hrx_line + 13))
+test "$(sed -n "${hilbert_square_line}p" rocq/CertRL/LM/hilbert.v)" = "apply Rmult_le_compat; trivial."
+sed -i "${hilbert_square_line}c\apply Rmult_le_pos." rocq/CertRL/LM/hilbert.v
+# D145: Rocq 9.2 may normalize the scalar negation on the Hilbert
+# projection uniqueness branch before the legacy rewrite. Preserve the
+# original reflexivity step; rewrite only if its left side occurs.
+hilbert_opp_line=$(grep -n '^rewrite <- scal_opp_l\.$' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$hilbert_opp_line"
+test "$(sed -n "${hilbert_opp_line}p" rocq/CertRL/LM/hilbert.v)" = "rewrite <- scal_opp_l."
+sed -i "${hilbert_opp_line}c\try rewrite <- scal_opp_l." rocq/CertRL/LM/hilbert.v
+
+# D147 diagnostic/proof stabilization: the Hilbert projection proof
+# has already normalized the quadratic factor on a preceding branch.
+# Discharge the independent squared-norm monotonicity and negation
+# subgoals by maintained Rmult_le_compat before substituting E1.\n# Show the remaining goal until the compatibility proof is kernel-checked.
+hilbert_e1_line=$(grep -n '^rewrite <- E1\.$' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$hilbert_e1_line"
+test "$(sed -n "${hilbert_e1_line}p" rocq/CertRL/LM/hilbert.v)" = "rewrite <- E1."
+sed -i "${hilbert_e1_line}c\all: try solve [unfold minus in Hd; assert (Hd0 : 0 <= d) by (unfold d; apply norm_ge_0); apply Rmult_le_compat; try assumption; try apply norm_ge_0 | reflexivity].\nShow.\nrewrite <- E1." rocq/CertRL/LM/hilbert.v
+
+# D149 diagnostic: Rocq's legacy rbar_prover may lose hypotheses in
+# the infinite-limit reciprocal branch. Preserve and display the goal
+# state before invoking it on each real-extended constructor case.
+test "$(sed -n 2085p rocq/utils/ELim_Seq.v)" = "    destruct (u x); simpl in *; rbar_prover."
+sed -i '2085c\
+    destruct (u x); simpl in *.\
+    Show.\
+    all: try rbar_prover.' rocq/utils/ELim_Seq.v
+
+# D150: The Hilbert proof's first residual side goal is a scalar
+# real-ring negation identity. Discharge these algebraic side goals
+# before the existing E1-based parallelogram rearrangement; otherwise
+# Rocq tries the group-associativity rewrite on the scalar subgoal.
+# Keep the real proof obligation and subsequent unique-projection proof.
+hilbert_e1_now=$(grep -n '^rewrite <- E1\.$' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$hilbert_e1_now"
+test "$(sed -n "${hilbert_e1_now}p" rocq/CertRL/LM/hilbert.v)" = "rewrite <- E1."
+sed -i "${hilbert_e1_now}i\all: try solve [reflexivity | ring | (unfold opp; simpl; ring) | (unfold plus, opp; simpl; ring)]." rocq/CertRL/LM/hilbert.v
+
+# D151: Rocq 9.2 retains the nonzero denominator proof obligation
+# after rewriting eps*(/eps)=1. Solve it *before* the subsequent
+# `assert (r <> 0)` branch; leaving it unsolved switches the target
+# and makes the real-branch hypothesis H apparently disappear.
+elim_rewrite_now=$((elim_inv_line + 2))
+test "$(sed -n "${elim_rewrite_now}p" rocq/utils/ELim_Seq.v)" = "      rewrite Rinv_l in H."
+sed -i "${elim_rewrite_now}c\      rewrite Rinv_l in H; [| apply Rgt_not_eq; apply cond_pos]." rocq/utils/ELim_Seq.v
+
+# D152: The first plus_opp_r simplification after the Hilbert E1
+# parallelogram rewrite is occasionally already discharged by Rocq 9.2.
+# Keep its original group identity; avoid failing on a normalized term.
+first_opp_r=$(grep -n '^rewrite plus_opp_r\.$' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$first_opp_r"
+first_opp_next=$((first_opp_r + 1))
+test "$(sed -n "${first_opp_next}p" rocq/CertRL/LM/hilbert.v)" = "reflexivity."
+sed -i "${first_opp_r}c\try rewrite plus_opp_r." rocq/CertRL/LM/hilbert.v
+sed -i "${first_opp_next}c\try reflexivity." rocq/CertRL/LM/hilbert.v
+
+# D153: The second Hilbert scalar-negation normalization can be
+# definitionally solved before the maintained scalar-opp rewrite.
+# Preserve the theorem statement and all other projection obligations.
+hilbert_second_scal_opp=$(grep -n '^rewrite <- scal_opp_l\.$' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$hilbert_second_scal_opp"
+hilbert_second_next=$((hilbert_second_scal_opp + 1))
+test "$(sed -n "${hilbert_second_next}p" rocq/CertRL/LM/hilbert.v)" = "reflexivity."
+sed -i "${hilbert_second_scal_opp}c\\try rewrite <- scal_opp_l." rocq/CertRL/LM/hilbert.v
+
+# D154: The remaining finite real sequence subgoal is |1/r| < eps,
+# using H : 1 < r*eps and the positive-real certificate eps > 0.
+# Derive r > 0 and multiply both sides by r, reusing Stdlib lemmas
+# instead of an unstable rbar_prover tactic combination.
+elim_recip_start=$(grep -nF '+ apply (Rmult_lt_compat_r eps _ _ (cond_pos eps)) in H.' rocq/utils/ELim_Seq.v | head -n 1 | cut -d: -f1)
+elim_recip_next=$(grep -nF '+ rewrite Rabs_R0.' rocq/utils/ELim_Seq.v | head -n 1 | cut -d: -f1)
+test -n "$elim_recip_start"
+test -n "$elim_recip_next"
+test "$elim_recip_start" -lt "$elim_recip_next"
+elim_recip_end=$((elim_recip_next - 1))
+sed -i "${elim_recip_start},${elim_recip_end}c\\    + assert (Hrpos : 0 < r) by (eapply Rlt_trans; [apply Rinv_0_lt_compat; apply cond_pos | exact H]).\\n      apply (Rmult_lt_compat_r eps _ _ (cond_pos eps)) in H.\\n      assert (Heps_nonzero : pos eps <> 0) by (apply Rgt_not_eq; apply cond_pos).\\n      rewrite (Rinv_l (pos eps) Heps_nonzero) in H.\\n      assert (Hinvpos : 0 < / r) by (apply Rinv_0_lt_compat; exact Hrpos).\\n      rewrite Rabs_right.\\n      all: try (left; exact Hinvpos).\\n      apply (Rmult_lt_reg_l r); [exact Hrpos |].\\n      replace (r * / r) with 1 by (symmetry; apply Rinv_r; lra).\\n      exact H." rocq/utils/ELim_Seq.v
+
+# D155: In the second Hilbert scalar-negation case, the proof has
+# already advanced from the numerical identity to the final uniqueness
+# goal v = v'. Reflexivity is only applicable to the former; the
+# subsequent existing squared-norm argument proves the latter.
+test "$(sed -n "${hilbert_second_next}p" rocq/CertRL/LM/hilbert.v)" = "reflexivity."
+sed -i "${hilbert_second_next}c\\try reflexivity." rocq/CertRL/LM/hilbert.v
+
+# D156: Both zero-extended-real constructors require Rabs 0 < eps.
+# Derive this from the positive-real certificate, not an intuition hint.
+elim_zero_line=$(grep -nF '    + rewrite Rabs_R0.' rocq/utils/ELim_Seq.v | awk -F: -v start="$elim_recip_start" '$1 > start {print $1; exit}')
+test -n "$elim_zero_line"
+elim_zero_next=$((elim_zero_line + 1))
+test "$(sed -n "${elim_zero_line}p" rocq/utils/ELim_Seq.v)" = "    + rewrite Rabs_R0."
+test "$(sed -n "${elim_zero_next}p" rocq/utils/ELim_Seq.v)" = "      now destruct eps."
+sed -i "${elim_zero_line},${elim_zero_next}c\\    + rewrite Rabs_R0; apply cond_pos." rocq/utils/ELim_Seq.v
+
+# D157: Refactor the completion of the Hilbert projection-uniqueness
+# theorem. Earlier upstream replace commands left three real-ring
+# side conditions unresolved, then targeted the wrong focused goal.
+# Reuse the already proved parallelogram identity E1, the library's
+# convex predicate, Glb_Rbar_correct, norm_ge_0 and norm_eq_zero.
+# Real closed-field arithmetic is discharged by Stdlib nra; no axiom
+# or change to the theorem proposition is introduced.
+hilbert_tail_start=$(grep -nF "assert (Hmin : norm (minus v v') * norm (minus v v') <= 0)." rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+hilbert_next_theorem=$(grep -n '^Theorem ortho_projection_convex:' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$hilbert_tail_start"
+test -n "$hilbert_next_theorem"
+hilbert_tail_end=$((hilbert_next_theorem - 2))
+test "$hilbert_tail_start" -lt "$hilbert_tail_end"
+test "$(sed -n "${hilbert_tail_end}p" rocq/CertRL/LM/hilbert.v)" = "Qed."
+hilbert_replacement=$(mktemp)
+cat > "$hilbert_replacement" <<'ROCQ_HILBERT_UNIQUENESS'
+(* The midpoint of two minimizers belongs to the convex set. *)
+assert (Hmid : phi v'').
+{
+  unfold v''.
+  replace (scal (1 / 2) (@plus E v v'))
+    with (plus (scal (1 / 2) v) (scal (1 - (1 / 2)) v')).
+  - unfold convex in phi_convex.
+    apply phi_convex; try assumption; split; lra.
+  - replace (1 - (1 / 2)) with (1 / 2) by field.
+    rewrite scal_distr_l; reflexivity.
+}
+(* The greatest lower bound is no greater than a midpoint norm. *)
+assert (Hglb : Rbar_le
+  (Glb_Rbar (fun r : R => exists w : E,
+                 phi w /\ r = norm (minus u w)))
+  (norm (minus u v''))).
+{
+  apply Glb_Rbar_correct.
+  exists v''; split; [exact Hmid | reflexivity].
+}
+assert (HdGlb : d = Glb_Rbar
+  (fun r : R => exists w : E, phi w /\ r = norm (minus u w))).
+{
+  unfold d; rewrite H1; exact H3.
+}
+rewrite <- (ortho_projection_aux u) in Hglb.
+simpl in Hglb.
+rewrite <- HdGlb in Hglb.
+assert (Hd : d <= norm (minus u v'')) by exact Hglb.
+assert (Hd0 : 0 <= d) by (unfold d; apply norm_ge_0).
+(* The parallelogram identity and minimality imply a zero difference. *)
+assert (Hdiff0 : norm (minus v v') = 0).
+{
+  change
+    (4 * (norm (minus u v'') * norm (minus u v'')) +
+     norm (minus v v') * norm (minus v v') = 4 * (d * d)) in E1.
+  pose proof (norm_ge_0 (minus u v'')) as Hmid0.
+  nra.
+}
+(* A Hilbert-space vector of zero norm is the zero vector. *)
+apply norm_eq_zero in Hdiff0.
+unfold minus in Hdiff0.
+apply plus_reg_r with (opp v').
+rewrite plus_opp_r.
+exact Hdiff0.
+Qed.
+ROCQ_HILBERT_UNIQUENESS
+hilbert_rewritten=$(mktemp)
+awk -v first="$hilbert_tail_start" -v last="$hilbert_tail_end" -v proof="$hilbert_replacement" 'NR == first { while ((getline line < proof) > 0) print line } NR < first || NR > last { print }' rocq/CertRL/LM/hilbert.v > "$hilbert_rewritten"
+mv "$hilbert_rewritten" rocq/CertRL/LM/hilbert.v
+rm "$hilbert_replacement"
+
+# D159: FormalML's auxiliary orthogonal-projection bound uses
+# its existing convexity hypothesis; intuition alone leaves the
+# membership of the convex midpoint in phi unproved on Rocq 9.2.
+# Discharge that event with the established convex predicate.
+hilbert_convex_line=$(grep -nF 'exists ((plus (scal t w) (scal (1 - t) v))); intuition.' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$hilbert_convex_line"
+test "$(sed -n "${hilbert_convex_line}p" rocq/CertRL/LM/hilbert.v)" = "exists ((plus (scal t w) (scal (1 - t) v))); intuition."
+sed -i "${hilbert_convex_line}c\exists ((plus (scal t w) (scal (1 - t) v))); split.\n  - apply phi_convex; try assumption; lra.\n  - reflexivity." rocq/CertRL/LM/hilbert.v
+
+# D160–D161: The old blanket intuition in the Hilbert squared-norm
+# lower-bound proof leaves three obligations: negation of a nonpositive
+# scalar, 0 <= 2, and positivity of an inner product with itself.
+# Prove the arithmetic obligations explicitly, leaving the original
+# squared_norm/Rle_0_sqr argument to discharge the final positivity.
+# The exact original theorem statement and all library definitions stay.
+hilbert_rchar_line=$(grep -nF 'rewrite Hscal in H1. intuition.' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$hilbert_rchar_line"
+test "$(sed -n "${hilbert_rchar_line}p" rocq/CertRL/LM/hilbert.v)" = "rewrite Hscal in H1. intuition."
+sed -i "${hilbert_rchar_line}c\\rewrite Hscal in H1.\\nall: try (change (0 <= - (2 * inner (minus u v) (minus w v)));\\n          change (2 * inner (minus u v) (minus w v) <= 0) in H1; lra).\\nall: try lra." rocq/CertRL/LM/hilbert.v
+
+# D162: The Hilbert zero-distance case requires positivity of the
+# multiplier 2 and the existing orthogonal-projection auxiliary bound.
+# Patch exactly the two pinned tactics without relying on indentation.
+hilbert_zero_step=$(grep -nF 'apply Rmult_le_reg_l with 2%R. intuition.' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$hilbert_zero_step"
+hilbert_zero_tail=$((hilbert_zero_step + 2))
+sed -n "${hilbert_zero_step}p" rocq/CertRL/LM/hilbert.v | grep -Fq 'apply Rmult_le_reg_l with 2%R. intuition.'
+sed -n "${hilbert_zero_tail}p" rocq/CertRL/LM/hilbert.v | grep -Fq 'apply charac_ortho_projection_convex_aux5; intuition.'
+sed -i "${hilbert_zero_step}c\    apply Rmult_le_reg_l with 2%R; [lra |]." rocq/CertRL/LM/hilbert.v
+sed -i "${hilbert_zero_tail}c\    apply charac_ortho_projection_convex_aux5; try assumption; lra." rocq/CertRL/LM/hilbert.v
+
+# D163: In the positive-ratio branch of Hilbert projection
+# characterization, the remaining obligation is 0 < 1, not the
+# positivity of a quotient. Preserve the original hypotheses and
+# use the maintained real-division positivity lemma for the actual
+# quotient goal, and linear arithmetic for the remaining branches.
+hilbert_ratio_line=$(grep -nF 'intuition. apply Rdiv_lt_0_compat; intuition.' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$hilbert_ratio_line"
+sed -n "${hilbert_ratio_line}p" rocq/CertRL/LM/hilbert.v | grep -Fq 'intuition. apply Rdiv_lt_0_compat; intuition.'
+sed -i "${hilbert_ratio_line}c\     intuition; try (apply Rdiv_lt_0_compat; lra); try lra." rocq/CertRL/LM/hilbert.v
+hilbert_recip_line=$(grep -nF '     apply Rdiv_lt_0_compat; intuition.' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$hilbert_recip_line"
+sed -n "${hilbert_recip_line}p" rocq/CertRL/LM/hilbert.v | grep -Fq 'apply Rdiv_lt_0_compat; intuition.'
+sed -i "${hilbert_recip_line}c\     apply Rdiv_lt_0_compat; lra." rocq/CertRL/LM/hilbert.v
+
+# D164: Rocq 9.2 may leave the positive quotient side condition
+# behind after the decision by Rmin; both cases are directly proved
+# by the existing positivity hypotheses and library lemmas.
+hilbert_rmin_line=$((hilbert_ratio_line + 1))
+test "$(sed -n "${hilbert_rmin_line}p" rocq/CertRL/LM/hilbert.v)" = "     apply Rmin_l."
+sed -i "${hilbert_rmin_line}c\      all: try solve [unfold th; apply Rmin_l | apply Rdiv_lt_0_compat; assumption | lra | assumption].\n      Show." rocq/CertRL/LM/hilbert.v
+
+# D165: The side condition of [replace (r * / r) with 1] is
+# 1 = r * / r. Stdlib [Rinv_r] is oriented in the reverse direction.
+# D154 uses symmetry before applying the library result; no new lemma
+# or assumption is introduced.
+# D166: [Rmin_l] needs the local abbreviation [th] exposed. Solve
+# existing strict-positivity and Rmin bounds independently so that
+# an unrelated unsolved subgoal does not make the whole step fail.
+
+# D167: After reducing the Rmin bound, Rocq 9.2 may have already
+# normalized the reciprocal of 1. Preserve the original Rmin bound
+# and the theorem statement; make the optional canonical rewrite safe.
+hilbert_invone_line=$(grep -n '^     rewrite Rinv_1[.]$' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$hilbert_invone_line"
+test "$(sed -n "${hilbert_invone_line}p" rocq/CertRL/LM/hilbert.v)" = "     rewrite Rinv_1."
+sed -i "${hilbert_invone_line}c\     try rewrite Rinv_1." rocq/CertRL/LM/hilbert.v
+
+# D168: A strictly positive real limit at +infinity has a zero
+# reciprocal limit. In the pinned FormalML proof, the remaining
+# finite branch is Rabs (/r) < eps with H : /eps < r, while the two
+# infinite branches are Rabs 0 < eps. Discharge all three using
+# the existing posreal certificate and Stdlib real-inverse lemmas;
+# no new axiom, Gaussian distribution or CE definition is introduced.
+elim_pos_start=$(grep -n '^Lemma is_Elim_seq_inv_pos ' rocq/utils/ELim_Seq.v | head -n 1 | cut -d: -f1)
+test -n "$elim_pos_start"
+elim_pos_end=$(awk -v start="$elim_pos_start" 'NR > start && /^[[:space:]]*Qed[.]/ {print NR; exit}' rocq/utils/ELim_Seq.v)
+test -n "$elim_pos_end"
+sed -i "${elim_pos_end}i\  all: try solve [rewrite Rabs_R0; apply cond_pos].\n  all: try solve [\n    assert (Hepspos : 0 < eps) by apply cond_pos;\n    assert (Hrpos : 0 < r) by\n      (eapply Rlt_trans; [apply Rinv_0_lt_compat; exact Hepspos | exact H]);\n    assert (Heps_nonzero : eps <> 0) by\n      (apply Rgt_not_eq; exact Hepspos);\n    rewrite Rabs_right; [| left; apply Rinv_0_lt_compat; exact Hrpos];\n    apply (Rmult_lt_reg_l r); [exact Hrpos |];\n    replace (r * / r) with 1 by (symmetry; apply Rinv_r; lra);\n    apply (Rmult_lt_compat_r eps) in H; [| exact Hepspos];\n    rewrite (Rinv_l (pos eps) Heps_nonzero) in H;\n    exact H]." rocq/utils/ELim_Seq.v
+
+# D169: After Rocq 9.2 reduces multiplication by 1, retain only
+# the applicable Stdlib normalization; the mathematical goal is
+# unchanged. Locate this step relative to the D167 reciprocal proof.
+hilbert_multone_line=$((hilbert_invone_line + 1))
+test "$(sed -n "${hilbert_multone_line}p" rocq/CertRL/LM/hilbert.v)" = "     rewrite Rmult_1_r."
+sed -i "${hilbert_multone_line}c\     try rewrite Rmult_1_r." rocq/CertRL/LM/hilbert.v
+
+# D170 temporary Rocq proof-state diagnostic: the previous ELim
+# Show occurs before D168's remaining-goal tactics. Show the exact
+# state after applying the Stdlib reciprocal/zero branches.
+elim_pos_end=$(awk -v start="$elim_pos_start" 'NR > start && /^[[:space:]]*Qed[.]/ {print NR; exit}' rocq/utils/ELim_Seq.v)
+test -n "$elim_pos_end"
+sed -i "${elim_pos_end}i\  Show." rocq/utils/ELim_Seq.v
+
+# D171: The positive-inner-product branch has an additional old
+# `now rewrite Rmult_1_r` step. Rocq 9.2 already normalizes the unit
+# factor on an unfocused arithmetic goal; do not demand that rewrite.
+hilbert_multone_final=$(grep -n '^     now rewrite Rmult_1_r[.]$' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$hilbert_multone_final"
+test "$(sed -n "${hilbert_multone_final}p" rocq/CertRL/LM/hilbert.v)" = "     now rewrite Rmult_1_r."
+sed -i "${hilbert_multone_final}c\\     try rewrite Rmult_1_r." rocq/CertRL/LM/hilbert.v
+
+# D172: The original limit proof has only one unsolved extended-real
+# zero case after rbar_prover; an additional bullet produces 'No more
+# goals'. The D156 replacement above now closes exactly that case.
+
+# D173: Replace the brittle reverse direction of Hilbert's convex
+# projection characterization by reuse of its already-proved squared-
+# norm estimate [charac_ortho_projection_convex_aux1_r] and FormalML's
+# [is_glb_Rbar]/[is_lb_Rbar] greatest-lower-bound API. No statement,
+# typeclass, axiom or forward-direction proof is changed.
+charac_start=$(grep -n '^Lemma charac_ortho_projection_convex:' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$charac_start"
+charac_reverse=$(awk -v first="$charac_start" 'NR > first && /^\+intros[.]$/ {n++; if (n == 2) {print NR; exit}}' rocq/CertRL/LM/hilbert.v)
+test -n "$charac_reverse"
+charac_end=$(awk -v first="$charac_reverse" 'NR > first && /^Qed[.]$/ {print NR; exit}' rocq/CertRL/LM/hilbert.v)
+test -n "$charac_end"
+charac_last=$((charac_end - 1))
+test "$(sed -n "${charac_reverse}p" rocq/CertRL/LM/hilbert.v)" = "+intros."
+test "$(sed -n "${charac_end}p" rocq/CertRL/LM/hilbert.v)" = "Qed."
+sed -n "${charac_reverse},${charac_last}p" rocq/CertRL/LM/hilbert.v | grep -Fq 'rewrite <- H4.'
+charac_proof=$(mktemp)
+cat > "$charac_proof" <<'ROCQ_HILBERT_CONVEX_REVERSE'
++ intros Horth.
+  (* The existing squared-norm characterization gives the minimizer
+     inequality without re-expanding the parallelogram identity. *)
+  assert (Hbound : forall w : E, phi w ->
+      norm (minus u v) <= norm (minus u w)).
+  {
+    intros w Hw.
+    pose proof (charac_ortho_projection_convex_aux1_r
+      u v w H Hw (Horth w Hw)) as Hsq.
+    pose proof (norm_ge_0 (minus u v)) as Hnv.
+    pose proof (norm_ge_0 (minus u w)) as Hnw.
+    nra.
+  }
+  (* Reuse FormalML's infimum representation. Every candidate norm
+     dominates the projected norm, and the candidate at v attains it. *)
+  unfold Glb_Rbar.
+  destruct (ex_glb_Rbar
+    (fun r : R => exists w : E,
+       phi w /\ r = norm (minus u w))) as [bound Hglb].
+  simpl.
+  unfold is_glb_Rbar, is_lb_Rbar in Hglb.
+  destruct Hglb as [Hlower Hgreat].
+  apply Rbar_finite_eq.
+  apply Rbar_le_antisym.
+  - apply Hgreat.
+    intros candidate [w [Hw Hcandidate]].
+    subst candidate.
+    simpl; apply Hbound; exact Hw.
+  - apply Hlower.
+    exists v; split; [exact H | reflexivity].
+ROCQ_HILBERT_CONVEX_REVERSE
+charac_rewrite=$(mktemp)
+awk -v first="$charac_reverse" -v last="$charac_last" -v proof="$charac_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR > last {print}' rocq/CertRL/LM/hilbert.v > "$charac_rewrite"
+mv "$charac_rewrite" rocq/CertRL/LM/hilbert.v
+rm "$charac_proof"
+
+# D174: The negative-infinity reciprocal-limit case is dual to the
+# already proved positive-infinity case. Replace only this obsolete
+# proof branch using Stdlib real absolute value, reciprocal and
+# strict-inequality lemmas; keep the pinned lemma statement intact.
+# In particular, the finite subgoal r < -/eps entails
+# /(-r) < eps; infinite Rbar cases have reciprocal zero.
+elim_neg_start=$(grep -n '^Lemma is_Elim_seq_inv_neg ' rocq/utils/ELim_Seq.v | head -n 1 | cut -d: -f1)
+test -n "$elim_neg_start"
+elim_neg_branch=$(awk -v first="$elim_neg_start" 'NR > first && /^  - red[.]$/ {print NR; exit}' rocq/utils/ELim_Seq.v)
+test -n "$elim_neg_branch"
+elim_neg_end=$(awk -v first="$elim_neg_branch" 'NR > first && /^[[:space:]]*Qed[.][[:space:]]*$/ {print NR; exit}' rocq/utils/ELim_Seq.v)
+test -n "$elim_neg_end"
+elim_neg_last=$((elim_neg_end - 1))
+test "$(sed -n "${elim_neg_branch}p" rocq/utils/ELim_Seq.v)" = "  - red."
+sed -n "${elim_neg_end}p" rocq/utils/ELim_Seq.v | grep -Eq "^[[:space:]]*Qed[.][[:space:]]*$"
+sed -n "${elim_neg_branch},${elim_neg_last}p" rocq/utils/ELim_Seq.v | grep -Fq 'specialize (limu (- / eps)).'
+elim_neg_proof=$(mktemp)
+cat > "$elim_neg_proof" <<'ROCQ_NEG_INFINITE_RECIPROCAL'
+  - red.
+    intros eps.
+    specialize (limu (- / eps)).
+    revert limu.
+    apply filter_imp; intros.
+    unfold Rbar_minus; simpl.
+    rewrite Ropp_0 Rbar_plus_0_r.
+    destruct (u x) as [r| |]; simpl in *.
+    + (* Finite negative tail: multiplying by eps and -r reduces
+         reciprocal convergence to the already-known strict bound. *)
+      assert (Hepspos : 0 < eps) by apply cond_pos.
+      assert (Hepsnonzero : eps <> 0) by lra.
+      assert (Hinvpos : 0 < / eps)
+        by (apply Rinv_0_lt_compat; exact Hepspos).
+      assert (Hrneg : r < 0) by lra.
+      rewrite Rabs_Rinv.
+      rewrite (Rabs_left r) by exact Hrneg.
+      apply (Rmult_lt_reg_r (-r)); [lra |].
+      replace ((/ (-r))*(-r)) with 1 by (field; lra).
+      apply (Rmult_lt_compat_r eps _ _ Hepspos) in H.
+      replace ((- / eps)*eps) with (-1) in H by (field; lra).
+      nra.
+    + rewrite Rabs_R0; apply cond_pos.
+    + rewrite Rabs_R0; apply cond_pos.
+ROCQ_NEG_INFINITE_RECIPROCAL
+elim_neg_rewritten=$(mktemp)
+awk -v first="$elim_neg_branch" -v last="$elim_neg_last" -v proof="$elim_neg_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR > last {print}' rocq/utils/ELim_Seq.v > "$elim_neg_rewritten"
+mv "$elim_neg_rewritten" rocq/utils/ELim_Seq.v
+rm "$elim_neg_proof"
+
+# D175: In the forward Hilbert projection implication, the existing
+# squared-distance H2 > 0 already proves the remaining norm nonzero
+# obligation. The old Req_dec step refers to a shadowed H4 : False;
+# replace the single remaining invalid decision branch with Stdlib nra.
+hilbert_req_count=$(grep -Fc 'destruct (Req_dec (norm (minus v w)) 0).' rocq/CertRL/LM/hilbert.v)
+test "$hilbert_req_count" -ge 2
+hilbert_small=$(grep -nF 'destruct (Req_dec (norm (minus v w)) 0).' rocq/CertRL/LM/hilbert.v | tail -n 1 | cut -d: -f1)
+test -n "$hilbert_small"
+hilbert_small_next=$((hilbert_small + 1))
+sed -n "${hilbert_small_next}p" rocq/CertRL/LM/hilbert.v | grep -Fq 'absurd (0 = 0). rewrite H4 in H2.'
+sed -i "${hilbert_small},$((hilbert_small + 3))c\\     nra." rocq/CertRL/LM/hilbert.v

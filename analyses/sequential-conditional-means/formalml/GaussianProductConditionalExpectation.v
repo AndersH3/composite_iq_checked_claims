@@ -154,18 +154,12 @@ Section ProductGaussianRegression.
     - exact innovation_centered.
   Qed.
 
-  (** [product_gaussian_future_integrable] (instance).
-   The observed-history predictor and product-coordinate innovation are
-   L1 by the explicit section hypotheses. FormalML's maintained
-   IsFiniteExpectation_plus constructs the required L1 witness for
-   their sum; this is not a new assumption of integrability.
+  (** Integrability of the future score is established centrally:
+   [gaussian_regression_future_integrable] in the residual module
+   reuses FormalML's [IsFiniteExpectation_plus] lemma, avoiding an
+   identical instance here. The independent product probability
+   space supplies the stronger regression premise instead.
   *)
-  Local Instance product_gaussian_future_integrable :
-    IsFiniteExpectation full_probability
-      (rvplus product_gaussian_predictor product_gaussian_innovation).
-  Proof.
-    apply IsFiniteExpectation_plus; typeclasses eauto.
-  Qed.
 
   (** [product_gaussian_conditional_mean_almost_sure] (theorem).
    This supplies the report's characteristic almost-sure form of the
@@ -191,8 +185,8 @@ Section ProductGaussianRegression.
          (rvplus product_gaussian_predictor product_gaussian_innovation))
       (fun w => Finite (product_gaussian_predictor w)).
   Proof.
-    eapply is_conditional_expectation_unique.
-    - apply Condexp_cond_exp.
-    - apply product_gaussian_regression_conditional_expectation; assumption.
+    apply gaussian_regression_conditional_mean_almost_sure.
+    - apply product_gaussian_innovation_independent.
+    - exact innovation_centered.
   Qed.
 End ProductGaussianRegression.

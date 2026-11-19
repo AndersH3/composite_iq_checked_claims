@@ -28,6 +28,14 @@ jobs:
     steps:
       - name: Check out pinned patch source
         uses: actions/checkout@v4
+      # Shell scripts must be ShellCheck-clean before any invocation.
+      # The Ubuntu GitHub runner ships ShellCheck; fail closed if absent.
+      - name: ShellCheck FormalML compatibility script before execution
+        shell: bash
+        run: |
+          command -v shellcheck
+          git ls-files -z '*.sh' | xargs -0 -r shellcheck --severity=warning
+
       - name: Check exact upstream utility modules without full probability dependency build
         shell: bash
         run: |
@@ -46,4 +54,6 @@ jobs:
             rocq compile LibUtilsAssoc.v
             rocq compile LibUtilsSublist.v
             rocq compile LibUtilsCompat.v
+            # Lookup correctness is a dependency of the Gaussian CE build.
+            rocq compile LibUtilsBindings.v
           '

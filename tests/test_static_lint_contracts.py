@@ -33,6 +33,11 @@ from conftest import ROOT, load_script
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","provenance.py").is_file())
 def lint_checker():
+    """Import the maintained Deal static-lint verification utility into pytest.
+    
+    Use the real source module so lint regressions cannot hide behind mocks.
+    Fixture identity is distinct from the two numerical report verifiers.
+    """
     return load_script("checked_static_lint", "verification/check_static_lint.py")
 
 
@@ -58,6 +63,11 @@ def lint_checker():
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","provenance.py").is_file())
 def division_probe():
+    """Import the positive contracted-division control into pytest.
+    
+    Use the original arithmetic source rather than duplicating its calculation.
+    This fixture verifies that a safe denominator remains lint-accepted.
+    """
     return load_script("checked_lint_positive", "tests/fixtures/nonzero_division_lint_probe.py")
 
 
@@ -83,6 +93,11 @@ def division_probe():
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","provenance.py").is_file())
 def control_reports(lint_checker):
+    """Run the real Deal linter on positive and deliberately negative controls.
+    
+    Return complete exit status and diagnostic JSON for both source files.
+    The negative control is required to fail for the specified contract reason.
+    """
     positive = lint_checker.lint_paths(ROOT, [ROOT.joinpath("tests/fixtures/nonzero_division_lint_probe.py")])
     negative = lint_checker.lint_paths(ROOT, [ROOT.joinpath(lint_checker.NEGATIVE_CONTROL)])
     return positive, negative
@@ -109,6 +124,11 @@ def control_reports(lint_checker):
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","provenance.py").is_file())
 def test_real_positive_and_negative_lint_controls_are_accepted(lint_checker, control_reports):
+    """Verify the linter's complete positive/negative control acceptance rule.
+    
+    A safe quotient must pass, while the intentionally bad probability must fail.
+    Do not accept missing, malformed, or ambiguous failure diagnostics.
+    """
     positive, negative = control_reports
     assert positive["returncode"] == 0 and positive["diagnostics"] == []
     assert negative["returncode"] == 1
@@ -138,6 +158,11 @@ def test_real_positive_and_negative_lint_controls_are_accepted(lint_checker, con
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","provenance.py").is_file())
 def test_missing_or_broken_negative_diagnostic_cannot_pass(lint_checker, control_reports, field, value):
+    """Reject a diagnostic record with a missing or corrupted expected violation.
+    
+    Mutate isolated control reports without altering the real negative fixture.
+    The overall acceptance predicate must fail closed on every changed field.
+    """
     positive, negative = deepcopy(control_reports)
     negative[field] = value
     assert not lint_checker.accepted(positive, negative)
@@ -164,6 +189,11 @@ def test_missing_or_broken_negative_diagnostic_cannot_pass(lint_checker, control
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","provenance.py").is_file())
 def test_new_unsafe_implementation_is_reported_by_the_real_linter(lint_checker, tmp_path, control_reports):
+    """Ensure newly introduced unsafe source is detected by the actual Deal linter.
+    
+    Construct a disposable example and inspect the returned error diagnostics.
+    The positive fixture must not grant a blanket exemption to other code.
+    """
     broken = tmp_path.joinpath("broken.py")
     broken.write_text("import deal\n\n@deal.raises()\n@deal.has()\n"
                       "def reciprocal():\n    return 1.0 / 0.0\n")
@@ -195,6 +225,11 @@ def test_new_unsafe_implementation_is_reported_by_the_real_linter(lint_checker, 
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","provenance.py").is_file())
 def test_missing_negative_control_cannot_pass(lint_checker, tmp_path, monkeypatch):
+    """Fail the static-lint acceptance gate when its required negative control is absent.
+    
+    A passing positive file alone is insufficient to certify the checker.
+    This guards against silently disabling the intentional failure assertion.
+    """
     tmp_path.joinpath("only.py").write_text("import deal\n\n@deal.has()\ndef okay():\n    return None\n")
     monkeypatch.setattr(sys, "argv", ["check_static_lint.py", "--root", str(tmp_path)])
     with pytest.raises(ValueError, match="negative control is missing"):
@@ -222,6 +257,11 @@ def test_missing_negative_control_cannot_pass(lint_checker, tmp_path, monkeypatc
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
 @deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","provenance.py").is_file())
 def test_division_control_checks_its_domain_without_changing_arithmetic(division_probe):
+    """Check the validated positive quotient keeps its exact arithmetic result.
+    
+    The probe returns one half and must reject invalid denominator inputs.
+    Contract refactoring must never change numerical meaning to satisfy lint.
+    """
     assert division_probe.safe_half() == 0.5
     assert division_probe.positive_ratio(1.0, 1.5) == 1.0 / 1.5
     with pytest.raises(deal.PreContractError):
