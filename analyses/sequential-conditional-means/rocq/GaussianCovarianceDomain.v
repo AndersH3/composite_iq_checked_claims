@@ -3752,3 +3752,467 @@ Proof.
     with (a*t*t/2+(c-a*beta*beta)*s*s/2) by field.
   rewrite exp_plus; reflexivity.
 Qed.
+
+(** [gcd_binary_form_covariance_additivity] (theorem).
+ Mathematical meaning: The quadratic covariance energy of two summed covariance blocks is exactly the sum of their individual quadratic energies, matching covariance additivity for independent random vectors.
+ Exact checked proposition: The following quantified symmetric-covariance
+ quadratic identity, PSD-preservation theorem, or strict determinant bound,
+ with explicit scalar noise, transformation and positivity assumptions.
+ Premises and side conditions: Signed cross covariance is supported;
+ positivity and nonnegativity of noise and prior covariance are never inferred
+ from a Gaussian-density formula and are stated explicitly when required.
+ Proof/definition method: Reuse the existing binary covariance form,
+ PSD cone characterizations and congruence lemmas with canonical Rocq
+ ring/order identities, not a duplicated custom matrix implementation.
+ Library reuse: [gcd_binary_covariance_form], the previously kernel-checked
+ binary PSD theorems, Rocq Stdlib Ring, Lra, Psatz, and Reals.
+ Boundary: These are finite covariance feasibility statements; PSD cone
+ closure alone never proves Gaussian distributional independence,
+ sigma-algebra conditional expectation or a normalized density.
+*)
+Theorem gcd_binary_form_covariance_additivity :
+  forall a b c d e f t s : R,
+    gcd_binary_covariance_form (a+d) (b+e) (c+f) t s =
+    gcd_binary_covariance_form a b c t s +
+    gcd_binary_covariance_form d e f t s.
+Proof.
+  intros; unfold gcd_binary_covariance_form; ring.
+Qed.
+
+(** [gcd_binary_form_covariance_linear_combination] (theorem).
+ Mathematical meaning: The two-by-two covariance form is linear in its covariance matrix, so arbitrary real weighted sums of covariance blocks produce the corresponding weighted energy.
+ Exact checked proposition: The following quantified symmetric-covariance
+ quadratic identity, PSD-preservation theorem, or strict determinant bound,
+ with explicit scalar noise, transformation and positivity assumptions.
+ Premises and side conditions: Signed cross covariance is supported;
+ positivity and nonnegativity of noise and prior covariance are never inferred
+ from a Gaussian-density formula and are stated explicitly when required.
+ Proof/definition method: Reuse the existing binary covariance form,
+ PSD cone characterizations and congruence lemmas with canonical Rocq
+ ring/order identities, not a duplicated custom matrix implementation.
+ Library reuse: [gcd_binary_covariance_form], the previously kernel-checked
+ binary PSD theorems, Rocq Stdlib Ring, Lra, Psatz, and Reals.
+ Boundary: These are finite covariance feasibility statements; PSD cone
+ closure alone never proves Gaussian distributional independence,
+ sigma-algebra conditional expectation or a normalized density.
+*)
+Theorem gcd_binary_form_covariance_linear_combination :
+  forall a b c d e f alpha beta t s : R,
+    gcd_binary_covariance_form
+      (alpha*a+beta*d) (alpha*b+beta*e) (alpha*c+beta*f) t s =
+    alpha*gcd_binary_covariance_form a b c t s +
+    beta*gcd_binary_covariance_form d e f t s.
+Proof.
+  intros; unfold gcd_binary_covariance_form; ring.
+Qed.
+
+(** [gcd_binary_psd_closed_under_covariance_addition] (theorem).
+ Mathematical meaning: The sum of two positive-semidefinite covariance blocks remains PSD, allowing covariance decomposition of independent Gaussian signal and noise.
+ Exact checked proposition: The following quantified symmetric-covariance
+ quadratic identity, PSD-preservation theorem, or strict determinant bound,
+ with explicit scalar noise, transformation and positivity assumptions.
+ Premises and side conditions: Signed cross covariance is supported;
+ positivity and nonnegativity of noise and prior covariance are never inferred
+ from a Gaussian-density formula and are stated explicitly when required.
+ Proof/definition method: Reuse the existing binary covariance form,
+ PSD cone characterizations and congruence lemmas with canonical Rocq
+ ring/order identities, not a duplicated custom matrix implementation.
+ Library reuse: [gcd_binary_covariance_form], the previously kernel-checked
+ binary PSD theorems, Rocq Stdlib Ring, Lra, Psatz, and Reals.
+ Boundary: These are finite covariance feasibility statements; PSD cone
+ closure alone never proves Gaussian distributional independence,
+ sigma-algebra conditional expectation or a normalized density.
+*)
+Theorem gcd_binary_psd_closed_under_covariance_addition :
+  forall a b c d e f : R,
+    (forall t s, 0<=gcd_binary_covariance_form a b c t s) ->
+    (forall t s, 0<=gcd_binary_covariance_form d e f t s) ->
+    forall t s, 0<=gcd_binary_covariance_form (a+d) (b+e) (c+f) t s.
+Proof.
+  intros a b c d e f H1 H2 t s.
+  rewrite gcd_binary_form_covariance_additivity.
+  apply Rplus_le_le_0_compat; [apply H1|apply H2].
+Qed.
+
+(** [gcd_binary_psd_closed_under_nonnegative_scaling] (theorem).
+ Mathematical meaning: Scaling every variance and covariance of a PSD Gaussian block by a nonnegative factor preserves PSD, including degenerate zero scaling.
+ Exact checked proposition: The following quantified symmetric-covariance
+ quadratic identity, PSD-preservation theorem, or strict determinant bound,
+ with explicit scalar noise, transformation and positivity assumptions.
+ Premises and side conditions: Signed cross covariance is supported;
+ positivity and nonnegativity of noise and prior covariance are never inferred
+ from a Gaussian-density formula and are stated explicitly when required.
+ Proof/definition method: Reuse the existing binary covariance form,
+ PSD cone characterizations and congruence lemmas with canonical Rocq
+ ring/order identities, not a duplicated custom matrix implementation.
+ Library reuse: [gcd_binary_covariance_form], the previously kernel-checked
+ binary PSD theorems, Rocq Stdlib Ring, Lra, Psatz, and Reals.
+ Boundary: These are finite covariance feasibility statements; PSD cone
+ closure alone never proves Gaussian distributional independence,
+ sigma-algebra conditional expectation or a normalized density.
+*)
+Theorem gcd_binary_psd_closed_under_nonnegative_scaling :
+  forall a b c alpha : R,
+    0<=alpha ->
+    (forall t s, 0<=gcd_binary_covariance_form a b c t s) ->
+    forall t s, 0<=gcd_binary_covariance_form
+      (alpha*a) (alpha*b) (alpha*c) t s.
+Proof.
+  intros a b c alpha Halpha Hpsd t s.
+  replace (gcd_binary_covariance_form
+      (alpha*a) (alpha*b) (alpha*c) t s)
+    with (alpha*gcd_binary_covariance_form a b c t s).
+  - apply Rmult_le_pos; [exact Halpha|apply Hpsd].
+  - unfold gcd_binary_covariance_form; ring.
+Qed.
+
+(** [gcd_binary_psd_closed_under_nonnegative_mixtures] (theorem).
+ Mathematical meaning: Any two independently weighted PSD covariance blocks form another PSD block when the weights are nonnegative, the cone closure needed for Gaussian mixture components.
+ Exact checked proposition: The following quantified symmetric-covariance
+ quadratic identity, PSD-preservation theorem, or strict determinant bound,
+ with explicit scalar noise, transformation and positivity assumptions.
+ Premises and side conditions: Signed cross covariance is supported;
+ positivity and nonnegativity of noise and prior covariance are never inferred
+ from a Gaussian-density formula and are stated explicitly when required.
+ Proof/definition method: Reuse the existing binary covariance form,
+ PSD cone characterizations and congruence lemmas with canonical Rocq
+ ring/order identities, not a duplicated custom matrix implementation.
+ Library reuse: [gcd_binary_covariance_form], the previously kernel-checked
+ binary PSD theorems, Rocq Stdlib Ring, Lra, Psatz, and Reals.
+ Boundary: These are finite covariance feasibility statements; PSD cone
+ closure alone never proves Gaussian distributional independence,
+ sigma-algebra conditional expectation or a normalized density.
+*)
+Theorem gcd_binary_psd_closed_under_nonnegative_mixtures :
+  forall a b c d e f alpha beta : R,
+    0<=alpha -> 0<=beta ->
+    (forall t s, 0<=gcd_binary_covariance_form a b c t s) ->
+    (forall t s, 0<=gcd_binary_covariance_form d e f t s) ->
+    forall t s, 0<=gcd_binary_covariance_form
+      (alpha*a+beta*d) (alpha*b+beta*e) (alpha*c+beta*f) t s.
+Proof.
+  intros a b c d e f alpha beta Halpha Hbeta H1 H2 t s.
+  rewrite gcd_binary_form_covariance_linear_combination.
+  apply Rplus_le_le_0_compat.
+  - apply Rmult_le_pos; [exact Halpha|apply H1].
+  - apply Rmult_le_pos; [exact Hbeta|apply H2].
+Qed.
+
+(** [gcd_binary_psd_closed_under_convex_combinations] (theorem).
+ Mathematical meaning: PSD covariance matrices form a convex feasible domain, supporting interpolation of two empirically estimated Gaussian covariance structures.
+ Exact checked proposition: The following quantified symmetric-covariance
+ quadratic identity, PSD-preservation theorem, or strict determinant bound,
+ with explicit scalar noise, transformation and positivity assumptions.
+ Premises and side conditions: Signed cross covariance is supported;
+ positivity and nonnegativity of noise and prior covariance are never inferred
+ from a Gaussian-density formula and are stated explicitly when required.
+ Proof/definition method: Reuse the existing binary covariance form,
+ PSD cone characterizations and congruence lemmas with canonical Rocq
+ ring/order identities, not a duplicated custom matrix implementation.
+ Library reuse: [gcd_binary_covariance_form], the previously kernel-checked
+ binary PSD theorems, Rocq Stdlib Ring, Lra, Psatz, and Reals.
+ Boundary: These are finite covariance feasibility statements; PSD cone
+ closure alone never proves Gaussian distributional independence,
+ sigma-algebra conditional expectation or a normalized density.
+*)
+Theorem gcd_binary_psd_closed_under_convex_combinations :
+  forall a b c d e f theta : R,
+    0<=theta<=1 ->
+    (forall t s, 0<=gcd_binary_covariance_form a b c t s) ->
+    (forall t s, 0<=gcd_binary_covariance_form d e f t s) ->
+    forall t s, 0<=gcd_binary_covariance_form
+      (theta*a+(1-theta)*d)
+      (theta*b+(1-theta)*e)
+      (theta*c+(1-theta)*f) t s.
+Proof.
+  intros a b c d e f theta Htheta H1 H2 t s.
+  apply (gcd_binary_psd_closed_under_nonnegative_mixtures
+    a b c d e f theta (1-theta)); try lra; assumption.
+Qed.
+
+(** [gcd_binary_psd_observed_noise_regularization] (theorem).
+ Mathematical meaning: Adding independent nonnegative observation noise to the observed variance keeps the full covariance positive semidefinite and cannot create an inadmissible Gaussian covariance.
+ Exact checked proposition: The following quantified symmetric-covariance
+ quadratic identity, PSD-preservation theorem, or strict determinant bound,
+ with explicit scalar noise, transformation and positivity assumptions.
+ Premises and side conditions: Signed cross covariance is supported;
+ positivity and nonnegativity of noise and prior covariance are never inferred
+ from a Gaussian-density formula and are stated explicitly when required.
+ Proof/definition method: Reuse the existing binary covariance form,
+ PSD cone characterizations and congruence lemmas with canonical Rocq
+ ring/order identities, not a duplicated custom matrix implementation.
+ Library reuse: [gcd_binary_covariance_form], the previously kernel-checked
+ binary PSD theorems, Rocq Stdlib Ring, Lra, Psatz, and Reals.
+ Boundary: These are finite covariance feasibility statements; PSD cone
+ closure alone never proves Gaussian distributional independence,
+ sigma-algebra conditional expectation or a normalized density.
+*)
+Theorem gcd_binary_psd_observed_noise_regularization :
+  forall a b c e : R, 0<=e ->
+    (forall t s, 0<=gcd_binary_covariance_form a b c t s) ->
+    forall t s, 0<=gcd_binary_covariance_form (a+e) b c t s.
+Proof.
+  intros a b c e He Hpsd t s.
+  replace (gcd_binary_covariance_form (a+e) b c t s)
+    with (gcd_binary_covariance_form a b c t s + e*(t*t))
+    by (unfold gcd_binary_covariance_form; ring).
+  apply Rplus_le_le_0_compat; [apply Hpsd|].
+  apply Rmult_le_pos; [exact He|apply Rle_0_sqr].
+Qed.
+
+(** [gcd_binary_psd_future_noise_regularization] (theorem).
+ Mathematical meaning: Adding independent nonnegative future-score noise keeps the full observed-future covariance PSD, an essential operation in measurement-error models.
+ Exact checked proposition: The following quantified symmetric-covariance
+ quadratic identity, PSD-preservation theorem, or strict determinant bound,
+ with explicit scalar noise, transformation and positivity assumptions.
+ Premises and side conditions: Signed cross covariance is supported;
+ positivity and nonnegativity of noise and prior covariance are never inferred
+ from a Gaussian-density formula and are stated explicitly when required.
+ Proof/definition method: Reuse the existing binary covariance form,
+ PSD cone characterizations and congruence lemmas with canonical Rocq
+ ring/order identities, not a duplicated custom matrix implementation.
+ Library reuse: [gcd_binary_covariance_form], the previously kernel-checked
+ binary PSD theorems, Rocq Stdlib Ring, Lra, Psatz, and Reals.
+ Boundary: These are finite covariance feasibility statements; PSD cone
+ closure alone never proves Gaussian distributional independence,
+ sigma-algebra conditional expectation or a normalized density.
+*)
+Theorem gcd_binary_psd_future_noise_regularization :
+  forall a b c e : R, 0<=e ->
+    (forall t s, 0<=gcd_binary_covariance_form a b c t s) ->
+    forall t s, 0<=gcd_binary_covariance_form a b (c+e) t s.
+Proof.
+  intros a b c e He Hpsd t s.
+  replace (gcd_binary_covariance_form a b (c+e) t s)
+    with (gcd_binary_covariance_form a b c t s + e*(s*s))
+    by (unfold gcd_binary_covariance_form; ring).
+  apply Rplus_le_le_0_compat; [apply Hpsd|].
+  apply Rmult_le_pos; [exact He|apply Rle_0_sqr].
+Qed.
+
+(** [gcd_binary_psd_two_sided_noise_regularization] (theorem).
+ Mathematical meaning: Independently inflating both marginal variances by nonnegative noise levels preserves the entire two-variable PSD covariance cone.
+ Exact checked proposition: The following quantified symmetric-covariance
+ quadratic identity, PSD-preservation theorem, or strict determinant bound,
+ with explicit scalar noise, transformation and positivity assumptions.
+ Premises and side conditions: Signed cross covariance is supported;
+ positivity and nonnegativity of noise and prior covariance are never inferred
+ from a Gaussian-density formula and are stated explicitly when required.
+ Proof/definition method: Reuse the existing binary covariance form,
+ PSD cone characterizations and congruence lemmas with canonical Rocq
+ ring/order identities, not a duplicated custom matrix implementation.
+ Library reuse: [gcd_binary_covariance_form], the previously kernel-checked
+ binary PSD theorems, Rocq Stdlib Ring, Lra, Psatz, and Reals.
+ Boundary: These are finite covariance feasibility statements; PSD cone
+ closure alone never proves Gaussian distributional independence,
+ sigma-algebra conditional expectation or a normalized density.
+*)
+Theorem gcd_binary_psd_two_sided_noise_regularization :
+  forall a b c e f : R, 0<=e -> 0<=f ->
+    (forall t s, 0<=gcd_binary_covariance_form a b c t s) ->
+    forall t s, 0<=gcd_binary_covariance_form (a+e) b (c+f) t s.
+Proof.
+  intros a b c e f He Hf Hpsd.
+  apply gcd_binary_psd_future_noise_regularization; [exact Hf|].
+  apply gcd_binary_psd_observed_noise_regularization; assumption.
+Qed.
+
+(** [gcd_binary_positive_definite_from_diagonal_noise] (theorem).
+ Mathematical meaning: Strictly positive independent regularization of both marginal variances converts any PSD two-variable Gaussian covariance into a positive-definite covariance.
+ Exact checked proposition: The following quantified symmetric-covariance
+ quadratic identity, PSD-preservation theorem, or strict determinant bound,
+ with explicit scalar noise, transformation and positivity assumptions.
+ Premises and side conditions: Signed cross covariance is supported;
+ positivity and nonnegativity of noise and prior covariance are never inferred
+ from a Gaussian-density formula and are stated explicitly when required.
+ Proof/definition method: Reuse the existing binary covariance form,
+ PSD cone characterizations and congruence lemmas with canonical Rocq
+ ring/order identities, not a duplicated custom matrix implementation.
+ Library reuse: [gcd_binary_covariance_form], the previously kernel-checked
+ binary PSD theorems, Rocq Stdlib Ring, Lra, Psatz, and Reals.
+ Boundary: These are finite covariance feasibility statements; PSD cone
+ closure alone never proves Gaussian distributional independence,
+ sigma-algebra conditional expectation or a normalized density.
+*)
+Theorem gcd_binary_positive_definite_from_diagonal_noise :
+  forall a b c e f : R, 0<e -> 0<f ->
+    (forall t s, 0<=gcd_binary_covariance_form a b c t s) ->
+    forall t s, t<>0 \/ s<>0 ->
+      0<gcd_binary_covariance_form (a+e) b (c+f) t s.
+Proof.
+  intros a b c e f He Hf Hpsd t s Hnonzero.
+  replace (gcd_binary_covariance_form (a+e) b (c+f) t s)
+    with (gcd_binary_covariance_form a b c t s+
+          e*(t*t)+f*(s*s))
+    by (unfold gcd_binary_covariance_form; ring).
+  assert (Hq : 0<=gcd_binary_covariance_form a b c t s)
+    by apply Hpsd.
+  destruct Hnonzero as [Ht | Hs].
+  - assert (Ht2 : 0<t*t) by nra.
+    assert (Hextra : 0<e*(t*t)).
+    { apply Rmult_lt_0_compat; assumption. }
+    assert (Hfuture : 0<=f*(s*s)).
+    { apply Rmult_le_pos; [lra|apply Rle_0_sqr]. }
+    lra.
+  - assert (Hs2 : 0<s*s) by nra.
+    assert (Hextra : 0<f*(s*s)).
+    { apply Rmult_lt_0_compat; assumption. }
+    assert (Hobserved : 0<=e*(t*t)).
+    { apply Rmult_le_pos; [lra|apply Rle_0_sqr]. }
+    lra.
+Qed.
+
+(** [gcd_binary_psd_congruence_determinant_bound] (theorem).
+ Mathematical meaning: All linear combinations of two PSD Gaussian coordinates satisfy their own covariance Cauchy-Schwarz inequality, including rank-deficient transformations.
+ Exact checked proposition: The following quantified symmetric-covariance
+ quadratic identity, PSD-preservation theorem, or strict determinant bound,
+ with explicit scalar noise, transformation and positivity assumptions.
+ Premises and side conditions: Signed cross covariance is supported;
+ positivity and nonnegativity of noise and prior covariance are never inferred
+ from a Gaussian-density formula and are stated explicitly when required.
+ Proof/definition method: Reuse the existing binary covariance form,
+ PSD cone characterizations and congruence lemmas with canonical Rocq
+ ring/order identities, not a duplicated custom matrix implementation.
+ Library reuse: [gcd_binary_covariance_form], the previously kernel-checked
+ binary PSD theorems, Rocq Stdlib Ring, Lra, Psatz, and Reals.
+ Boundary: These are finite covariance feasibility statements; PSD cone
+ closure alone never proves Gaussian distributional independence,
+ sigma-algebra conditional expectation or a normalized density.
+*)
+Theorem gcd_binary_psd_congruence_determinant_bound :
+  forall a b c u v w z : R,
+    (forall t s, 0<=gcd_binary_covariance_form a b c t s) ->
+    (a*u*v+b*(u*z+v*w)+c*w*z)*
+    (a*u*v+b*(u*z+v*w)+c*w*z) <=
+      gcd_binary_covariance_form a b c u w *
+      gcd_binary_covariance_form a b c v z.
+Proof.
+  intros a b c u v w z Hpsd.
+  apply (gcd_binary_psd_determinant
+    (gcd_binary_covariance_form a b c u w)
+    (a*u*v+b*(u*z+v*w)+c*w*z)
+    (gcd_binary_covariance_form a b c v z)).
+  intros t s.
+  apply (gcd_binary_psd_congruence_closed a b c Hpsd u v w z t s).
+Qed.
+
+(** [gcd_binary_psd_sum_and_difference_variance_bounds] (theorem).
+ Mathematical meaning: PSD covariance makes the variances of the score sum and score contrast nonnegative, yielding sharp signed cross-covariance feasibility tests.
+ Exact checked proposition: The following quantified symmetric-covariance
+ quadratic identity, PSD-preservation theorem, or strict determinant bound,
+ with explicit scalar noise, transformation and positivity assumptions.
+ Premises and side conditions: Signed cross covariance is supported;
+ positivity and nonnegativity of noise and prior covariance are never inferred
+ from a Gaussian-density formula and are stated explicitly when required.
+ Proof/definition method: Reuse the existing binary covariance form,
+ PSD cone characterizations and congruence lemmas with canonical Rocq
+ ring/order identities, not a duplicated custom matrix implementation.
+ Library reuse: [gcd_binary_covariance_form], the previously kernel-checked
+ binary PSD theorems, Rocq Stdlib Ring, Lra, Psatz, and Reals.
+ Boundary: These are finite covariance feasibility statements; PSD cone
+ closure alone never proves Gaussian distributional independence,
+ sigma-algebra conditional expectation or a normalized density.
+*)
+Theorem gcd_binary_psd_sum_and_difference_variance_bounds :
+  forall a b c : R,
+    (forall t s, 0<=gcd_binary_covariance_form a b c t s) ->
+    0<=a+2*b+c /\ 0<=a-2*b+c.
+Proof.
+  intros a b c Hpsd.
+  pose proof (Hpsd 1 1) as Hsum.
+  pose proof (Hpsd 1 (-1)) as Hdiff.
+  unfold gcd_binary_covariance_form in *.
+  split; nra.
+Qed.
+
+(** [gcd_binary_psd_symmetric_cross_covariance_bounds] (theorem).
+ Mathematical meaning: In any PSD Gaussian pair, the cross covariance is bounded in magnitude by one half the sum of marginal variances, including negative admissible correlations.
+ Exact checked proposition: The following quantified symmetric-covariance
+ quadratic identity, PSD-preservation theorem, or strict determinant bound,
+ with explicit scalar noise, transformation and positivity assumptions.
+ Premises and side conditions: Signed cross covariance is supported;
+ positivity and nonnegativity of noise and prior covariance are never inferred
+ from a Gaussian-density formula and are stated explicitly when required.
+ Proof/definition method: Reuse the existing binary covariance form,
+ PSD cone characterizations and congruence lemmas with canonical Rocq
+ ring/order identities, not a duplicated custom matrix implementation.
+ Library reuse: [gcd_binary_covariance_form], the previously kernel-checked
+ binary PSD theorems, Rocq Stdlib Ring, Lra, Psatz, and Reals.
+ Boundary: These are finite covariance feasibility statements; PSD cone
+ closure alone never proves Gaussian distributional independence,
+ sigma-algebra conditional expectation or a normalized density.
+*)
+Theorem gcd_binary_psd_symmetric_cross_covariance_bounds :
+  forall a b c : R,
+    (forall t s, 0<=gcd_binary_covariance_form a b c t s) ->
+    2*b<=a+c /\ -2*b<=a+c.
+Proof.
+  intros a b c Hpsd.
+  destruct (gcd_binary_psd_sum_and_difference_variance_bounds
+    a b c Hpsd) as [Hsum Hdiff].
+  split; lra.
+Qed.
+
+(** [gcd_binary_psd_zero_trace_is_zero_block] (theorem).
+ Mathematical meaning: A PSD two-by-two covariance with vanishing total variance has both marginal variances and their cross covariance identically zero.
+ Exact checked proposition: The following quantified symmetric-covariance
+ quadratic identity, PSD-preservation theorem, or strict determinant bound,
+ with explicit scalar noise, transformation and positivity assumptions.
+ Premises and side conditions: Signed cross covariance is supported;
+ positivity and nonnegativity of noise and prior covariance are never inferred
+ from a Gaussian-density formula and are stated explicitly when required.
+ Proof/definition method: Reuse the existing binary covariance form,
+ PSD cone characterizations and congruence lemmas with canonical Rocq
+ ring/order identities, not a duplicated custom matrix implementation.
+ Library reuse: [gcd_binary_covariance_form], the previously kernel-checked
+ binary PSD theorems, Rocq Stdlib Ring, Lra, Psatz, and Reals.
+ Boundary: These are finite covariance feasibility statements; PSD cone
+ closure alone never proves Gaussian distributional independence,
+ sigma-algebra conditional expectation or a normalized density.
+*)
+Theorem gcd_binary_psd_zero_trace_is_zero_block :
+  forall a b c : R,
+    (forall t s, 0<=gcd_binary_covariance_form a b c t s) ->
+    a+c=0 -> a=0 /\ b=0 /\ c=0.
+Proof.
+  intros a b c Hpsd Htrace.
+  destruct (gcd_binary_psd_marginal_variances a b c Hpsd)
+    as [Ha Hc].
+  assert (Ha0 : a=0) by lra.
+  assert (Hc0 : c=0) by lra.
+  pose proof (gcd_binary_psd_determinant a b c Hpsd) as Hdet.
+  assert (Hb0 : b=0) by nra.
+  repeat split; assumption.
+Qed.
+
+(** [gcd_binary_psd_marginal_noise_strict_covariance_bound] (theorem).
+ Mathematical meaning: Strictly positive diagonal observation and future noise place the transformed covariance strictly inside the PSD determinant cone, even when the original covariance is singular.
+ Exact checked proposition: The following quantified symmetric-covariance
+ quadratic identity, PSD-preservation theorem, or strict determinant bound,
+ with explicit scalar noise, transformation and positivity assumptions.
+ Premises and side conditions: Signed cross covariance is supported;
+ positivity and nonnegativity of noise and prior covariance are never inferred
+ from a Gaussian-density formula and are stated explicitly when required.
+ Proof/definition method: Reuse the existing binary covariance form,
+ PSD cone characterizations and congruence lemmas with canonical Rocq
+ ring/order identities, not a duplicated custom matrix implementation.
+ Library reuse: [gcd_binary_covariance_form], the previously kernel-checked
+ binary PSD theorems, Rocq Stdlib Ring, Lra, Psatz, and Reals.
+ Boundary: These are finite covariance feasibility statements; PSD cone
+ closure alone never proves Gaussian distributional independence,
+ sigma-algebra conditional expectation or a normalized density.
+*)
+Theorem gcd_binary_psd_marginal_noise_strict_covariance_bound :
+  forall a b c e f : R, 0<e -> 0<f ->
+    (forall t s, 0<=gcd_binary_covariance_form a b c t s) ->
+    b*b < (a+e)*(c+f).
+Proof.
+  intros a b c e f He Hf Hpsd.
+  destruct (gcd_binary_psd_marginal_variances a b c Hpsd)
+    as [Ha Hc].
+  pose proof (gcd_binary_psd_determinant a b c Hpsd) as Hdet.
+  assert (Hae : 0<a+e) by lra.
+  assert (Hcf : 0<c+f) by lra.
+  assert (Hef : 0<e*f) by (apply Rmult_lt_0_compat; assumption).
+  nra.
+Qed.
