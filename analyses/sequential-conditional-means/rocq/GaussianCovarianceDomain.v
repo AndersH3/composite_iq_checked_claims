@@ -2810,8 +2810,8 @@ Qed.
  nonnegative, and the transformed joint Gaussian exponential kernel
  equals the product of the two marginal exponential kernels for all
  real transform arguments [t,s].
- Proof method: Reuse the previously kernel-proved singular-robust scalar
- regression existence lemma and the Gaussian zero-cross-covariance
+ Proof/definition method: Reuse the previously kernel-proved singular-robust
+ scalar regression existence lemma and the Gaussian zero-cross-covariance
  Laplace-factor lemma, reducing the coordinate change to [ring].
  Library reuse: [gcd_psd_scalar_regression_residual_exists],
  [gcd_gaussian_uncorrelated_laplace_kernel_factor], Stdlib Ring.
