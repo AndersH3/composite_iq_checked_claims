@@ -2810,6 +2810,10 @@ Qed.
  nonnegative, and the transformed joint Gaussian exponential kernel
  equals the product of the two marginal exponential kernels for all
  real transform arguments [t,s].
+ Premises and side conditions: The observed/future covariance quadratic
+ must be nonnegative for every real contrast, with nonnegative marginal
+ variances. Neither invertibility nor positive-definiteness is assumed;
+ the scalar coefficient is existential rather than uniquely specified.
  Proof/definition method: Reuse the previously kernel-proved singular-robust
  scalar regression existence lemma and the Gaussian zero-cross-covariance
  Laplace-factor lemma, reducing the coordinate change to [ring].
