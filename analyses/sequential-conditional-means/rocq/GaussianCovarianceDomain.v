@@ -3556,7 +3556,9 @@ Theorem gcd_binary_schur_strictly_increasing_observed_noise :
 Proof.
   intros a b c e Ha He Hb.
   assert (Hap : 0<a+e) by lra.
-  assert (Hsq : 0<b*b*e) by nra.
+  assert (Hbb : 0<b*b) by nra.
+  assert (Hsq : 0<b*b*e).
+  { apply Rmult_lt_0_compat; assumption. }
   assert (Hid :
     a*(a+e)*((c-b*b/(a+e))-(c-b*b/a))=b*b*e)
     by (field; lra).
