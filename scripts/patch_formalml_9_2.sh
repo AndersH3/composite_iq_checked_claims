@@ -1123,3 +1123,21 @@ charac_rewrite=$(mktemp)
 awk -v first="$charac_reverse" -v last="$charac_last" -v proof="$charac_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR > last {print}' rocq/CertRL/LM/hilbert.v > "$charac_rewrite"
 mv "$charac_rewrite" rocq/CertRL/LM/hilbert.v
 rm "$charac_proof"
+
+# D174 diagnostic and compatibility: Rocq 9.2's rbar_prover no longer
+# discharges all constructor cases in the negative-infinity reciprocal
+# lemma. Preserve the original proof, allowing the existing later
+# branches to address the finite case. Show the residual goals until a
+# complete stable proof is established and then remove this diagnostic.
+elim_neg_start=$(grep -n '^Lemma is_Elim_seq_inv_neg ' rocq/utils/ELim_Seq.v | head -n 1 | cut -d: -f1)
+test -n "$elim_neg_start"
+elim_neg_branch=$(awk -v start="$elim_neg_start" 'NR > start && /destruct [(]u x[)]; simpl in [*]; rbar_prover[.]/ {print NR; exit}' rocq/utils/ELim_Seq.v)
+test -n "$elim_neg_branch"
+sed -n "${elim_neg_branch}p" rocq/utils/ELim_Seq.v | grep -Fq 'destruct (u x); simpl in *; rbar_prover.'
+sed -i "${elim_neg_branch}c\\     destruct (u x); simpl in *; try rbar_prover; try lra.\\n     Show." rocq/utils/ELim_Seq.v
+
+# D175 diagnostic: state the actual patched Hilbert proof at the
+# failing line, to distinguish a transformed proof from a stale
+# upstream tactic without altering any declaration.
+printf 'D175 Hilbert patched source around legacy line 1242:\\n'
+sed -n '1238,1246p' rocq/CertRL/LM/hilbert.v
