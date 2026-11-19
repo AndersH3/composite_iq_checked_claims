@@ -1124,20 +1124,68 @@ awk -v first="$charac_reverse" -v last="$charac_last" -v proof="$charac_proof" '
 mv "$charac_rewrite" rocq/CertRL/LM/hilbert.v
 rm "$charac_proof"
 
-# D174 diagnostic and compatibility: Rocq 9.2's rbar_prover no longer
-# discharges all constructor cases in the negative-infinity reciprocal
-# lemma. Preserve the original proof, allowing the existing later
-# branches to address the finite case. Show the residual goals until a
-# complete stable proof is established and then remove this diagnostic.
+# D174: The negative-infinity reciprocal-limit case is dual to the
+# already proved positive-infinity case. Replace only this obsolete
+# proof branch using Stdlib real absolute value, reciprocal and
+# strict-inequality lemmas; keep the pinned lemma statement intact.
+# In particular, the finite subgoal r < -/eps entails
+# /(-r) < eps; infinite Rbar cases have reciprocal zero.
 elim_neg_start=$(grep -n '^Lemma is_Elim_seq_inv_neg ' rocq/utils/ELim_Seq.v | head -n 1 | cut -d: -f1)
 test -n "$elim_neg_start"
-elim_neg_branch=$(awk -v start="$elim_neg_start" 'NR > start && /destruct [(]u x[)]; simpl in [*]; rbar_prover[.]/ {print NR; exit}' rocq/utils/ELim_Seq.v)
+elim_neg_branch=$(awk -v first="$elim_neg_start" 'NR > first && /^  - red[.]$/ {print NR; exit}' rocq/utils/ELim_Seq.v)
 test -n "$elim_neg_branch"
-sed -n "${elim_neg_branch}p" rocq/utils/ELim_Seq.v | grep -Fq 'destruct (u x); simpl in *; rbar_prover.'
-sed -i "${elim_neg_branch}c\\     destruct (u x); simpl in *; try rbar_prover; try lra.\\n     Show." rocq/utils/ELim_Seq.v
+elim_neg_end=$(awk -v first="$elim_neg_branch" 'NR > first && /^[[:space:]]*Qed[.]$/ {print NR; exit}' rocq/utils/ELim_Seq.v)
+test -n "$elim_neg_end"
+elim_neg_last=$((elim_neg_end - 1))
+test "$(sed -n "${elim_neg_branch}p" rocq/utils/ELim_Seq.v)" = "  - red."
+test "$(sed -n "${elim_neg_end}p" rocq/utils/ELim_Seq.v)" = "Qed."
+sed -n "${elim_neg_branch},${elim_neg_last}p" rocq/utils/ELim_Seq.v | grep -Fq 'specialize (limu (- / eps)).'
+elim_neg_proof=$(mktemp)
+cat > "$elim_neg_proof" <<'ROCQ_NEG_INFINITE_RECIPROCAL'
+  - red.
+    intros eps.
+    specialize (limu (- / eps)).
+    revert limu.
+    apply filter_imp; intros.
+    unfold Rbar_minus; simpl.
+    rewrite Ropp_0 Rbar_plus_0_r.
+    destruct (u x) as [r| |]; simpl in *.
+    + (* Finite negative tail: multiplying by eps and -r reduces
+         reciprocal convergence to the already-known strict bound. *)
+      assert (Hepspos : 0 < eps) by apply cond_pos.
+      assert (Hepsnonzero : eps <> 0) by lra.
+      assert (Hinvpos : 0 < / eps)
+        by (apply Rinv_0_lt_compat; exact Hepspos).
+      assert (Hrneg : r < 0) by lra.
+      rewrite Rabs_Rinv.
+      rewrite (Rabs_left r) by exact Hrneg.
+      apply (Rmult_lt_reg_r (-r)); [lra |].
+      replace ((/ (-r))*(-r)) with 1 by (field; lra).
+      apply (Rmult_lt_compat_r eps _ _ Hepspos) in H.
+      replace ((- / eps)*eps) with (-1) in H by (field; lra).
+      nra.
+    + rewrite Rabs_R0; apply cond_pos.
+    + rewrite Rabs_R0; apply cond_pos.
+ROCQ_NEG_INFINITE_RECIPROCAL
+elim_neg_rewritten=$(mktemp)
+awk -v first="$elim_neg_branch" -v last="$elim_neg_last" -v proof="$elim_neg_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR > last {print}' rocq/utils/ELim_Seq.v > "$elim_neg_rewritten"
+mv "$elim_neg_rewritten" rocq/utils/ELim_Seq.v
+rm "$elim_neg_proof"
 
-# D175 diagnostic: state the actual patched Hilbert proof at the
-# failing line, to distinguish a transformed proof from a stale
-# upstream tactic without altering any declaration.
-printf 'D175 Hilbert patched source around legacy line 1242:\\n'
-sed -n '1238,1246p' rocq/CertRL/LM/hilbert.v
+# D175: In the forward Hilbert projection implication, strict
+# positivity of the squared distance already implies its norm is
+# nonzero. Replace two stale [Req_dec] branches that mistakenly
+# reference a shadowed H4 of type False. Stdlib [nra] proves the
+# required inequality/nonzero side condition directly from H2.
+hilbert_req_count=$(grep -Fc 'destruct (Req_dec (norm (minus v w)) 0).' rocq/CertRL/LM/hilbert.v)
+test "$hilbert_req_count" -ge 3
+hilbert_small2=$(grep -nF 'destruct (Req_dec (norm (minus v w)) 0).' rocq/CertRL/LM/hilbert.v | tail -n 1 | cut -d: -f1)
+hilbert_small1=$(grep -nF 'destruct (Req_dec (norm (minus v w)) 0).' rocq/CertRL/LM/hilbert.v | tail -n 2 | head -n 1 | cut -d: -f1)
+test -n "$hilbert_small1"
+test -n "$hilbert_small2"
+for_rewrite_next=$((hilbert_small2 + 1))
+sed -n "${for_rewrite_next}p" rocq/CertRL/LM/hilbert.v | grep -Fq 'absurd (0 = 0). rewrite H4 in H2.'
+sed -i "${hilbert_small2},$((hilbert_small2 + 3))c\\     nra." rocq/CertRL/LM/hilbert.v
+for_rewrite_next=$((hilbert_small1 + 1))
+sed -n "${for_rewrite_next}p" rocq/CertRL/LM/hilbert.v | grep -Fq 'absurd (0 = 0). rewrite H4 in H2.'
+sed -i "${hilbert_small1},$((hilbert_small1 + 3))c\\     nra." rocq/CertRL/LM/hilbert.v
