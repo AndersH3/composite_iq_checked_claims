@@ -2749,6 +2749,33 @@ Proof.
   apply exp_plus.
 Qed.
 
+(** [gcd_psd_zero_observed_variance_forces_zero_cross] (theorem).
+ Mathematical meaning: A zero-variance observed Gaussian direction
+ cannot have nonzero cross covariance with a future score.
+ Exact checked proposition: A positive-semidefinite scalar covariance
+ block with observed variance a=0 necessarily has b=0.
+ Premises: Both diagonal variances are nonnegative, the joint covariance
+ quadratic is nonnegative for every real contrast, and a=0.
+ Method: Reuse the proven two-by-two covariance Cauchy--Schwarz bound.
+ Library reuse: [gcd_psd_covariance_cauchy_schwarz] and Stdlib Psatz.
+ Boundary: An algebraic covariance conclusion, not almost-sure
+ constancy or sigma-algebra independence of a Gaussian observation.
+*)
+Theorem gcd_psd_zero_observed_variance_forces_zero_cross :
+  forall a b c : R,
+    0 <= a ->
+    0 <= c ->
+    (forall t : R, 0 <= a*t*t + 2*b*t + c) ->
+    a = 0 ->
+    b = 0.
+Proof.
+  intros a b c Ha Hc Hquad Ha0.
+  pose proof
+    (gcd_psd_covariance_cauchy_schwarz a b c Ha Hc Hquad) as Hcs.
+  rewrite Ha0 in Hcs.
+  nra.
+Qed.
+
 (** [gcd_psd_scalar_regression_residual_exists] (theorem).
  Mathematical meaning: A scalar observed variable with variance [a],
  cross covariance [b] with the future score, and future variance [c]
@@ -2791,11 +2818,85 @@ Proof.
         a*(c - (b/a)*b) = a*c - b*b).
       { field; lra. }
       nra.
-  - subst a.
-    assert (Hbzero : b = 0) by nra.
-    subst b.
+  - assert (Ha0 : a = 0) by lra.
+    pose proof
+      (gcd_psd_zero_observed_variance_forces_zero_cross
+         a b c Ha Hc Hquad Ha0) as Hbzero.
+    subst a b.
     exists 0.
     split; nra.
+Qed.
+
+(** [gcd_psd_scalar_regression_coefficient_unique_strict] (theorem).
+ Mathematical meaning: The regression slope is uniquely determined
+ whenever the observed variance is strictly positive.
+ Exact checked proposition: If a>0 and b=beta1*a=beta2*a,
+ then beta1=beta2.
+ Premises: Strictly positive observed variance and both normal equations.
+ Proof method: Subtract the equations and use the real integral domain.
+ Library reuse: Stdlib Reals [Rmult_integral], Psatz and Lra.
+ Boundary: Does not assert the existence of a Gaussian probability law,
+ independent regression residual or conditional expectation.
+*)
+Theorem gcd_psd_scalar_regression_coefficient_unique_strict :
+  forall a b beta1 beta2 : R,
+    0 < a ->
+    b = beta1*a ->
+    b = beta2*a ->
+    beta1 = beta2.
+Proof.
+  intros a b beta1 beta2 Ha Hbeta1 Hbeta2.
+  assert (Hzero : (beta1-beta2)*a = 0) by nra.
+  apply Rmult_integral in Hzero.
+  destruct Hzero as [Hcoeff | Hvariance]; lra.
+Qed.
+
+(** [gcd_psd_scalar_regression_explicit_strict] (theorem).
+ Mathematical meaning: In the nonsingular scalar case, the only
+ residual-orthogonal regression coefficient is b/a.
+ Exact checked proposition: For 0<a and b=beta*a, beta=b/a.
+ Premises: Positive observed variance and a residual normal equation.
+ Proof method: Rewrite and normalize rational expressions with Field.
+ Library reuse: Reals, Field and Lra; no custom inverse operation.
+ Boundary: The singular a=0 case is excluded, as it must be.
+*)
+Theorem gcd_psd_scalar_regression_explicit_strict :
+  forall a b beta : R,
+    0 < a ->
+    b = beta*a ->
+    beta = b/a.
+Proof.
+  intros a b beta Ha Hcross.
+  rewrite Hcross.
+  field; lra.
+Qed.
+
+(** [gcd_psd_scalar_regression_singular_coefficient_free] (theorem).
+ Mathematical meaning: With zero observed variance every coefficient
+ yields the same residual covariance because the cross term vanishes.
+ Exact checked proposition: Under PSD and a=0, every beta satisfies
+ both b=beta*a and c-beta*b=c.
+ Premises: PSD scalar covariance and zero observed variance.
+ Proof method: Reuse the proved singular zero-cross lemma.
+ Library reuse: [gcd_psd_zero_observed_variance_forces_zero_cross]
+ and Stdlib Ring; no independent matrix or measure implementation.
+ Boundary: Algebraic nonidentifiability does not by itself identify
+ conditional expectations outside the Gaussian law's support.
+*)
+Theorem gcd_psd_scalar_regression_singular_coefficient_free :
+  forall a b c beta : R,
+    0 <= a ->
+    0 <= c ->
+    (forall t : R, 0 <= a*t*t + 2*b*t + c) ->
+    a = 0 ->
+    b = beta*a /\ c-beta*b = c.
+Proof.
+  intros a b c beta Ha Hc Hquad Ha0.
+  pose proof
+    (gcd_psd_zero_observed_variance_forces_zero_cross
+       a b c Ha Hc Hquad Ha0) as Hb0.
+  subst a b.
+  split; ring.
 Qed.
 
 (** [gcd_psd_scalar_gaussian_laplace_factor_exists] (theorem).
