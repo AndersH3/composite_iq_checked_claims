@@ -316,6 +316,19 @@ must be distinguished:
       \texttt{is\_conditional\_expectation} API and almost-sure
       uniqueness rather than a new conditional-expectation definition.
 \end{enumerate}
+The singular-versus-strict scalar regression dichotomy is now also
+kernel-checked. In a two-coordinate positive-semidefinite block,
+\texttt{gcd\_psd\_zero\_observed\_variance\_forces\_zero\_cross}
+and
+\texttt{gcd\_psd\_scalar\_regression\_singular\_coefficient\_free}
+show that zero observed variance forces zero cross covariance and
+leaves the normal-equation coefficient nonidentifiable. For strictly
+positive observed variance,
+\texttt{gcd\_psd\_scalar\_regression\_coefficient\_unique\_strict}
+and \texttt{gcd\_psd\_scalar\_regression\_explicit\_strict}
+identify the sole coefficient as \(\beta=b/a\).
+These verified claims are covariance algebra, not independence or
+measure-theoretic conditional-expectation statements.
 The Moore--Penrose pseudoinverse is a canonical choice for the
 displayed affine version, not an implementation requirement for the
 covariance step. It suffices to construct a row vector
