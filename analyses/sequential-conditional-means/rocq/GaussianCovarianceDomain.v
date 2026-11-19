@@ -3529,7 +3529,10 @@ Proof.
     by (field; lra).
   assert (Hprod : 0 < a*(a+e)) by nra.
   set (delta := (c-b*b/(a+e))-(c-b*b/a)).
-  assert (Hdelta : 0 <= delta) by nra.
+  change (a*(a+e)*delta=b*b*e) in Hid.
+  assert (Hdelta : 0 <= delta).
+  { apply (Rmult_le_reg_l (a*(a+e))); [exact Hprod|].
+    rewrite Rmult_0_r; rewrite Hid; exact Hsq. }
   unfold delta in Hdelta; lra.
 Qed.
 
@@ -3559,7 +3562,10 @@ Proof.
     by (field; lra).
   assert (Hprod : 0 < a*(a+e)) by nra.
   set (delta := (c-b*b/(a+e))-(c-b*b/a)).
-  assert (Hdelta : 0 < delta) by nra.
+  change (a*(a+e)*delta=b*b*e) in Hid.
+  assert (Hdelta : 0 < delta).
+  { apply (Rmult_lt_reg_l (a*(a+e))); [exact Hprod|].
+    rewrite Rmult_0_r; rewrite Hid; exact Hsq. }
   unfold delta in Hdelta; lra.
 Qed.
 
