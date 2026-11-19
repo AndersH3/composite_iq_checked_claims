@@ -2756,7 +2756,7 @@ Qed.
  block with observed variance a=0 necessarily has b=0.
  Premises: Both diagonal variances are nonnegative, the joint covariance
  quadratic is nonnegative for every real contrast, and a=0.
- Method: Reuse the proven two-by-two covariance Cauchy--Schwarz bound.
+ Proof/definition method: Reuse the proven two-by-two covariance Cauchy--Schwarz bound.
  Library reuse: [gcd_psd_covariance_cauchy_schwarz] and Stdlib Psatz.
  Boundary: An algebraic covariance conclusion, not almost-sure
  constancy or sigma-algebra independence of a Gaussian observation.
@@ -2833,7 +2833,7 @@ Qed.
  Exact checked proposition: If a>0 and b=beta1*a=beta2*a,
  then beta1=beta2.
  Premises: Strictly positive observed variance and both normal equations.
- Proof method: Subtract the equations and use the real integral domain.
+ Proof/definition method: Subtract the equations and use the real integral domain.
  Library reuse: Stdlib Reals [Rmult_integral], Psatz and Lra.
  Boundary: Does not assert the existence of a Gaussian probability law,
  independent regression residual or conditional expectation.
@@ -2856,7 +2856,7 @@ Qed.
  residual-orthogonal regression coefficient is b/a.
  Exact checked proposition: For 0<a and b=beta*a, beta=b/a.
  Premises: Positive observed variance and a residual normal equation.
- Proof method: Rewrite and normalize rational expressions with Field.
+ Proof/definition method: Rewrite and normalize rational expressions with Field.
  Library reuse: Reals, Field and Lra; no custom inverse operation.
  Boundary: The singular a=0 case is excluded, as it must be.
 *)
@@ -2877,7 +2877,7 @@ Qed.
  Exact checked proposition: Under PSD and a=0, every beta satisfies
  both b=beta*a and c-beta*b=c.
  Premises: PSD scalar covariance and zero observed variance.
- Proof method: Reuse the proved singular zero-cross lemma.
+ Proof/definition method: Reuse the proved singular zero-cross lemma.
  Library reuse: [gcd_psd_zero_observed_variance_forces_zero_cross]
  and Stdlib Ring; no independent matrix or measure implementation.
  Boundary: Algebraic nonidentifiability does not by itself identify
