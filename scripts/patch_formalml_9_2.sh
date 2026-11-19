@@ -895,7 +895,7 @@ test -n "$elim_zero_line"
 elim_zero_next=$((elim_zero_line + 1))
 test "$(sed -n "${elim_zero_line}p" rocq/utils/ELim_Seq.v)" = "    + rewrite Rabs_R0."
 test "$(sed -n "${elim_zero_next}p" rocq/utils/ELim_Seq.v)" = "      now destruct eps."
-sed -i "${elim_zero_line},${elim_zero_next}c\\    + rewrite Rabs_R0; apply cond_pos.\\n    + rewrite Rabs_R0; apply cond_pos." rocq/utils/ELim_Seq.v
+sed -i "${elim_zero_line},${elim_zero_next}c\\    + rewrite Rabs_R0; apply cond_pos." rocq/utils/ELim_Seq.v
 
 # D157: Refactor the completion of the Hilbert projection-uniqueness
 # theorem. Earlier upstream replace commands left three real-ring
@@ -1066,3 +1066,60 @@ hilbert_multone_final=$(grep -n '^     now rewrite Rmult_1_r[.]$' rocq/CertRL/LM
 test -n "$hilbert_multone_final"
 test "$(sed -n "${hilbert_multone_final}p" rocq/CertRL/LM/hilbert.v)" = "     now rewrite Rmult_1_r."
 sed -i "${hilbert_multone_final}c\\     try rewrite Rmult_1_r." rocq/CertRL/LM/hilbert.v
+
+# D172: The original limit proof has only one unsolved extended-real
+# zero case after rbar_prover; an additional bullet produces 'No more
+# goals'. The D156 replacement above now closes exactly that case.
+
+# D173: Replace the brittle reverse direction of Hilbert's convex
+# projection characterization by reuse of its already-proved squared-
+# norm estimate [charac_ortho_projection_convex_aux1_r] and FormalML's
+# [is_glb_Rbar]/[is_lb_Rbar] greatest-lower-bound API. No statement,
+# typeclass, axiom or forward-direction proof is changed.
+charac_start=$(grep -n '^Lemma charac_ortho_projection_convex:' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$charac_start"
+charac_reverse=$(awk -v first="$charac_start" 'NR > first && /^\+intros[.]$/ {n++; if (n == 2) {print NR; exit}}' rocq/CertRL/LM/hilbert.v)
+test -n "$charac_reverse"
+charac_end=$(awk -v first="$charac_reverse" 'NR > first && /^Qed[.]$/ {print NR; exit}' rocq/CertRL/LM/hilbert.v)
+test -n "$charac_end"
+charac_last=$((charac_end - 1))
+test "$(sed -n "${charac_reverse}p" rocq/CertRL/LM/hilbert.v)" = "+intros."
+test "$(sed -n "${charac_end}p" rocq/CertRL/LM/hilbert.v)" = "Qed."
+sed -n "${charac_reverse},${charac_last}p" rocq/CertRL/LM/hilbert.v | grep -Fq 'rewrite <- H4.'
+charac_proof=$(mktemp)
+cat > "$charac_proof" <<'ROCQ_HILBERT_CONVEX_REVERSE'
++ intros Horth.
+  (* The existing squared-norm characterization gives the minimizer
+     inequality without re-expanding the parallelogram identity. *)
+  assert (Hbound : forall w : E, phi w ->
+      norm (minus u v) <= norm (minus u w)).
+  {
+    intros w Hw.
+    pose proof (charac_ortho_projection_convex_aux1_r
+      u v w H Hw (Horth w Hw)) as Hsq.
+    pose proof (norm_ge_0 (minus u v)) as Hnv.
+    pose proof (norm_ge_0 (minus u w)) as Hnw.
+    nra.
+  }
+  (* Reuse FormalML's infimum representation. Every candidate norm
+     dominates the projected norm, and the candidate at v attains it. *)
+  unfold Glb_Rbar.
+  destruct (ex_glb_Rbar
+    (fun r : R => exists w : E,
+       phi w /\ r = norm (minus u w))) as [bound Hglb].
+  simpl.
+  unfold is_glb_Rbar, is_lb_Rbar in Hglb.
+  destruct Hglb as [Hlower Hgreat].
+  apply Rbar_finite_eq.
+  apply Rbar_le_antisym.
+  - apply Hgreat.
+    intros candidate [w [Hw Hcandidate]].
+    subst candidate.
+    simpl; apply Hbound; exact Hw.
+  - apply Hlower.
+    exists v; split; [exact H | reflexivity].
+ROCQ_HILBERT_CONVEX_REVERSE
+charac_rewrite=$(mktemp)
+awk -v first="$charac_reverse" -v last="$charac_last" -v proof="$charac_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR > last {print}' rocq/CertRL/LM/hilbert.v > "$charac_rewrite"
+mv "$charac_rewrite" rocq/CertRL/LM/hilbert.v
+rm "$charac_proof"
