@@ -895,7 +895,7 @@ test -n "$elim_zero_line"
 elim_zero_next=$((elim_zero_line + 1))
 test "$(sed -n "${elim_zero_line}p" rocq/utils/ELim_Seq.v)" = "    + rewrite Rabs_R0."
 test "$(sed -n "${elim_zero_next}p" rocq/utils/ELim_Seq.v)" = "      now destruct eps."
-sed -i "${elim_zero_line},${elim_zero_next}c\all: rewrite Rabs_R0; apply cond_pos." rocq/utils/ELim_Seq.v
+sed -i "${elim_zero_line},${elim_zero_next}c\\    + rewrite Rabs_R0; apply cond_pos.\\n    + rewrite Rabs_R0; apply cond_pos." rocq/utils/ELim_Seq.v
 
 # D157: Refactor the completion of the Hilbert projection-uniqueness
 # theorem. Earlier upstream replace commands left three real-ring
@@ -1058,3 +1058,11 @@ sed -i "${hilbert_multone_line}c\     try rewrite Rmult_1_r." rocq/CertRL/LM/hil
 elim_pos_end=$(awk -v start="$elim_pos_start" 'NR > start && /^[[:space:]]*Qed[.]/ {print NR; exit}' rocq/utils/ELim_Seq.v)
 test -n "$elim_pos_end"
 sed -i "${elim_pos_end}i\  Show." rocq/utils/ELim_Seq.v
+
+# D171: The positive-inner-product branch has an additional old
+# `now rewrite Rmult_1_r` step. Rocq 9.2 already normalizes the unit
+# factor on an unfocused arithmetic goal; do not demand that rewrite.
+hilbert_multone_final=$(grep -n '^     now rewrite Rmult_1_r[.]$' rocq/CertRL/LM/hilbert.v | head -n 1 | cut -d: -f1)
+test -n "$hilbert_multone_final"
+test "$(sed -n "${hilbert_multone_final}p" rocq/CertRL/LM/hilbert.v)" = "     now rewrite Rmult_1_r."
+sed -i "${hilbert_multone_final}c\\     try rewrite Rmult_1_r." rocq/CertRL/LM/hilbert.v
