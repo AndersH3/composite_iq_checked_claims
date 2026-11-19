@@ -119,7 +119,7 @@ The [Rocq 9.2 kernel run](https://github.com/AndersH3/composite_iq_checked_claim
 | `gk_posterior_shape_sufficient_statistic` (theorem) | forall xs ys c theta, length xs=length ys -> gk_sum xs=gk_sum ys -> gk_posterior_kernel xs c theta=gk_posterior_kernel ys c theta | EquicorrelationVectors centered-energy mean, GaussianConditionalKernel ratio and Stdlib Ring/Field | Exact pointwise finite-vector likelihood sufficiency, not a normalized Gaussian conditional expectation |
 | `gk_history_likelihood_ratio_sufficient_statistic` (theorem) | forall xs ys c theta, length xs=length ys -> gk_sum xs=gk_sum ys -> c<>0 -> 1-c<>0 -> gk_d xs c<>0 -> gk_joint_kernel xs c theta/gk_evidence_kernel xs c = gk_joint_kernel ys c theta/gk_evidence_kernel ys c | EquicorrelationVectors centered-energy mean, GaussianConditionalKernel ratio and Stdlib Ring/Field | Exact pointwise finite-vector likelihood sufficiency, not a normalized Gaussian conditional expectation |
 
-## GaussianCovarianceDomain.v — 157 proof scripts
+## GaussianCovarianceDomain.v — 159 proof scripts
 
 | Proof script (kind) | Mathematical scope | Library reuse | Boundaries |
 |---|---|---|---|
@@ -293,6 +293,7 @@ The [Rocq 9.2 kernel run](https://github.com/AndersH3/composite_iq_checked_claim
 
 | `gcd_gaussian_uncorrelated_laplace_kernel_factor` (theorem) | A bivariate Gaussian Laplace quadratic with zero cross-covariance factors exactly into the two marginal exponential kernels for all real transform arguments. | Stdlib Reals, Ring, `exp_plus`; no custom Gaussian transform | Algebraic factorization only: does not establish transform uniqueness, sigma-algebra independence, or universal Gaussian conditional expectation |
 | `gcd_psd_scalar_regression_residual_exists` (theorem) | Every PSD scalar two-variable covariance block has some regression coefficient with exactly zero residual cross covariance and nonnegative residual variance, including a zero observed variance. | `gcd_psd_covariance_cauchy_schwarz`, Stdlib `field`, `nra` and real-order splitting | Singular-safe scalar covariance regression algebra only; Gaussian independence and the event-integral CE identity remain separate proof obligations |
+| `gcd_psd_scalar_gaussian_laplace_factor_exists` (theorem) | Every PSD scalar observed/future covariance admits a regression coefficient that makes the formal joint Gaussian Laplace quadratic factor into observed and residual kernels, including zero observed variance. | `gcd_psd_scalar_regression_residual_exists`, `gcd_gaussian_uncorrelated_laplace_kernel_factor`, Stdlib Ring | Algebraic transform-kernel identity only; existence and uniqueness of Gaussian probability laws, independence of sigma-algebras, and event-integral CE remain unproved |
 
 ## Full AI disclosure
 
