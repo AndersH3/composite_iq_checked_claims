@@ -2816,9 +2816,9 @@ Qed.
  the scalar coefficient is existential rather than uniquely specified.
  Proof/definition method: Reuse the previously kernel-proved singular-robust
  scalar regression existence lemma and the Gaussian zero-cross-covariance
- Laplace-factor lemma, reducing the coordinate change to [ring].
+ Laplace-factor lemma, reducing the coordinate change to [field] and [lra].
  Library reuse: [gcd_psd_scalar_regression_residual_exists],
- [gcd_gaussian_uncorrelated_laplace_kernel_factor], Stdlib Ring.
+ [gcd_gaussian_uncorrelated_laplace_kernel_factor], Stdlib Field/Lra.
  Boundary: This is an algebraic moment-generating/Laplace KERNEL
  factorization. It does not prove that a joint Gaussian probability
  measure exists, uniqueness of its Laplace transform, independence of
@@ -2852,5 +2852,5 @@ Proof.
   - apply gcd_gaussian_uncorrelated_laplace_kernel_factor.
     reflexivity.
   - rewrite Hcross.
-    ring.
+    field; lra.
 Qed.
