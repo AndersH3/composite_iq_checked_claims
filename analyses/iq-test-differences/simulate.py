@@ -74,6 +74,8 @@ if __name__ == "__main__":
     # Explicit worker count and bounded blocks limit memory and scheduler overhead.
     import argparse
     import platform
+    import hashlib
+    import time
     from importlib.metadata import version
 
     parser = argparse.ArgumentParser(description=__doc__)
@@ -104,6 +106,7 @@ if __name__ == "__main__":
     streams = np.random.SeedSequence(seed).spawn(len(scenarios) * args.replicates * blocks)
     total = args.replicates * args.rows_per_replicate
     rows = []
+    started = time.perf_counter()
     # Evaluate independent normal order-statistic integrals via SciPy quadrature.
     for index, (label, k, rho, mode) in enumerate(scenarios):
         tasks = [
@@ -138,6 +141,9 @@ if __name__ == "__main__":
     output = Path(__file__).resolve().parent / "simulation-data"
     output.mkdir(exist_ok=True)
     metadata = dict(seed=seed, rows_per_scenario=total, settings=vars(args),
+                    elapsed_seconds=time.perf_counter() - started,
+                    source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                    bit_generator="PCG64", scheduler="threads",
                     python=platform.python_version(),
                     versions={name: version(name) for name in ("numpy", "scipy", "dask", "deal")},
                     rows=rows)

@@ -210,6 +210,83 @@ covariance; hence they are independent. The range is a measurable
 function of the first and the average a measurable function of the
 second by \cref{prop:domain}.
 \end{proof}
+% Unequal-scale Gaussian law is a direct consequence of the linear contrast.
+\section{Unequal scales, means, and individual uncertainty}
+\begin{proposition}[Heterogeneous scores]\label{prop:heterogeneous}
+Let $(X,Y)$ be jointly normal with means $\mu_X,\mu_Y$,
+positive SDs $\sigma_X,\sigma_Y$ and correlation $\rho$.
+Write $\delta=\mu_X-\mu_Y$ and
+$v=\sigma_X^2+\sigma_Y^2-2\rho\sigma_X\sigma_Y$.
+Then $X-Y\sim N(\delta,v)$, and for $v>0$
+\[
+\E|X-Y|=2\sqrt v\,\phi(\delta/\sqrt v)
++\delta[2\Phi(\delta/\sqrt v)-1].
+\]
+At $v=0$ the absolute difference is $|\delta|$ almost surely.
+\end{proposition}
+\begin{proof}
+Bilinearity gives the variance and linearity gives the mean;
+Gaussian closure identifies the law. Split the density integral at zero,
+substitute $z=(x-\delta)/\sqrt v$, and use $\phi'(z)=-z\phi(z)$.
+Zero variance makes the contrast equal to its mean almost surely.
+\end{proof}
+Correlation one does not imply agreement: for $Y=X+c$ the absolute
+discrepancy is $|c|$ although the correlation is one.
+\begin{proposition}[Quantiles of the equal-mean gap]\label{prop:quantile}
+When $\tau>0$ is the SD of the Gaussian contrast and $0<p<1$,
+its absolute-gap $p$-quantile is $\tau\Phi^{-1}((1+p)/2)$.
+\end{proposition}
+\begin{proof}
+The CDF in \cref{prop:gap} is continuous and strictly increasing on
+the nonnegative half-line. Solve its defining equation at probability $p$.
+\end{proof}
+The central probability interval of a randomly selected person's
+gap is therefore not a confidence interval for the population mean.
+
+% Normal truncation uses the standard first moment of a truncated normal.
+\section{Selection on a high first score}
+\begin{proposition}[Threshold selection]\label{prop:selection}
+In the Gaussian two-test model with $\sigma>0$, $|\rho|<1$ and finite
+threshold $c$, put $z=(c-\mu)/\sigma$. Then
+\[
+\E[D\mid X_1>c]=(1-\rho)\sigma
+\frac{\phi(z)}{1-\Phi(z)}.
+\]
+\end{proposition}
+\begin{proof}
+Iterated expectation and \cref{prop:conditional} give
+$(1-\rho)\E[X_1-\mu\mid X_1>c]$.
+Standardize and integrate $u\phi(u)=-\phi'(u)$ from $z$ to infinity;
+divide by the positive tail probability. The boundary term vanishes.
+\end{proof}
+This selection result concerns signed gaps in a stipulated population,
+not the expected absolute gap conditional on a single known score.
+
+% Range second moment uses the joint density of the two extremes.
+\section{Second moment of the range}
+\begin{proposition}[Joint extremes]\label{prop:second}
+For iid standard normals, the minimum $m_k$ and maximum $M_k$
+have joint density
+\[
+ k(k-1)\phi(u)\phi(v)[\Phi(v)-\Phi(u)]^{k-2},\qquad u<v.
+\]
+Consequently, for $s=\sigma\sqrt{1-\rho}$,
+\[
+\E R_k^2=s^2 k(k-1)
+\int_{-\infty}^\infty\int_u^\infty
+(v-u)^2\phi(u)\phi(v)[\Phi(v)-\Phi(u)]^{k-2}\,dv\,du.
+\]
+\end{proposition}
+\begin{proof}
+There are $k(k-1)$ distinct assignments of the two extreme indices.
+Conditional on the endpoints, each remaining independent coordinate
+must fall between them; multiply these probabilities and endpoint
+densities and sum the disjoint assignments. Use the pointwise range
+representation in \cref{prop:range} and integrate the nonnegative
+squared gap. The second moment is finite since the squared range
+is bounded by the sum of squared pairwise differences
+(\cref{prop:bound}).
+\end{proof}
 \chapter{Scope and verification}
 Normality, equal scales and common correlations are assumptions, not
 empirical findings. Real tests may have ceiling effects, rounding,
@@ -234,6 +311,8 @@ Propositions & Foundations \\
 \ref{prop:range}, \ref{prop:five} & Order statistics, quadrant identity \\
 \ref{prop:mixtures}, \ref{prop:block} & Total covariance, Jensen, counting \\
 \ref{prop:sensitivity} & Pointwise monotonicity, scaling \\
+\ref{prop:heterogeneous}, \ref{prop:quantile} & Gaussian density, inverse CDF \\
+\ref{prop:selection}, \ref{prop:second} & Truncation, joint extremes \\
 \bottomrule
 \end{tabular}
 \ProjectReportAIAppendix
