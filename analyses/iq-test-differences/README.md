@@ -1,0 +1,14 @@
+# IQ test differences: fourth analysis
+
+**Author/researcher/requester:** Anders Hellström.
+
+**AI disclosure:** This work was drafted using ChatGPT (GPT-6.2). No human participant data, independent peer review, or executed Dask or Rocq verification is claimed for this initial revision. The common report disclosure also describes the broader project; its historical tool and execution statements do not constitute evidence for this new analysis.
+
+- [Mathematical report (XeLaTeX)](iq_test_differences.tex)
+- [Simulation report (XeLaTeX)](iq_difference_simulations.tex)
+- [Dask/Deal block experiment](simulate.py)
+- [Rocq proof register](rocq/README.md)
+
+Source revisions: [IQ-test-differences](https://github.com/AndersH3/IQ-test-differences/tree/a5590de96de6c6e66e9eaa278e44b33e2e2d14c5) and [Simulation2](https://github.com/AndersH3/Simulation2/tree/6577b79297b4e6be2577732a2d97138c86678a95). The first supplies joint-normal order statistics, mixtures and conditioning; the second distinguishes independent-person and correlated-test absolute discrepancies. No original repository is modified.
+
+From the repository root install the shared requirements. Run the canonical contract audit, then from this directory run `make smoke`, `make data`, and `make pdf` in that order. The full design is 40 million rows per scenario, ten scenarios (400 million rows overall); the smoke run overwrites results with its smaller explicitly recorded configuration. JSON retains replicate means and versions. Do not publish smoke output as a full run. PDFs are not yet built or visually checked. The initial report is narrower than the upstream 38-page book: unequal scales, selection, quantiles, higher moments and detailed psychometric literature still need expansion. The current Rocq proof file covers algebra only.

@@ -1,0 +1,241 @@
+% !TeX program = xelatex
+% Mathematical companion to the original R report and Simulation2.
+\input{../../library/latex/report_style}
+\title{Differences and Ranges of IQ Scores}
+\subtitle{Independent individuals, correlated tests, and conditional discrepancies}
+\author{\ProjectAuthor}
+\date{26 November 2026}
+\renewcommand{\ProjectReportHighlights}{For independent normal IQ scores the
+mean absolute gap is about 16.93 points; for correlation 0.6 it is 10.70.
+The expected five-test range is 22.07 under joint Gaussian equicorrelation.
+These are model deductions, not observed psychometric results.}
+\begin{document}
+\frontmatter
+\ProjectReportTitlePage
+\begin{abstract}
+We distinguish interindividual comparisons from intraindividual test
+discrepancies, derive the Gaussian answers using standard probability
+results, and expose their dependence on the joint distribution.
+A separate simulation book documents numerical checks and their status.
+\end{abstract}
+\tableofcontents
+\mainmatter
+\chapter{Model, estimands and assumptions}
+The upstream analyses are \citep{iqsource,simsource}. Let $X_j$ denote test
+$j$ for one person, or let $X_1,X_2$ denote scores of independently sampled
+people on the same test. Define $D=X_1-X_2$, $A=|D|$, and
+$R_k=\max_j X_j-\min_j X_j$, with $k\ge2$. The standard example uses
+$\mu=100$, $\sigma=15$ and $\rho=0.6$ for distinct tests; independence
+between people is a separate sampling hypothesis. A test correlation is
+not a reliability coefficient without a measurement model.
+All propositions below concern synthetic distributions.
+% First two moments require no normality.
+\begin{proposition}[Moment identities]\label{prop:moments}
+If two scores have finite second moments, common mean and common variance
+$\sigma^2>0$, and correlation $\rho$, then
+$\E D=0$, $\E D^2=2\sigma^2(1-\rho)$ and
+$\E A\le \sigma\sqrt{2(1-\rho)}$.
+\end{proposition}
+\begin{proof}
+Use linearity of expectation, bilinearity of covariance and
+Cauchy--Schwarz applied to $|D|$ and the constant one.
+\end{proof}
+% Projection representation also covers singular and negative correlations.
+\begin{proposition}[Admissible equicorrelation]\label{prop:domain}
+The matrix $C=(1-\rho)I_k+\rho\one\one^\T$ is positive semidefinite
+exactly when $-1/(k-1)\le\rho\le1$.
+For iid standard normals $Z_j$, with $\bar Z=k^{-1}\sum_j Z_j$, the vector
+\[
+X_j=\mu+\sigma\{\sqrt{1-\rho}(Z_j-\bar Z)
++\sqrt{1+(k-1)\rho}\,\bar Z\}
+\]
+has the Gaussian law with covariance $\sigma^2C$.
+\end{proposition}
+\begin{proof}
+The orthogonal projections $P=\one\one^\T/k$ and $I-P$ have complementary
+ranges of dimensions one and $k-1$. On them $C$ acts by
+$1+(k-1)\rho$ and $1-\rho$. Both eigenvalues must be nonnegative.
+The displayed linear map has product with its transpose equal to
+$\sigma^2C$ because cross-products of the projections vanish.
+Closure of Gaussian laws under linear maps and uniqueness by their
+characteristic functions give the claim \citep{anderson}.
+\end{proof}
+\chapter{Exact Gaussian differences and ranges}
+% Folded-normal expectation and distribution.
+\begin{proposition}[Absolute two-score gap]\label{prop:gap}
+Under joint normality, let $\tau^2=2\sigma^2(1-\rho)$.
+For $\tau>0$ and $a\ge0$,
+\[
+\E A=\tau\sqrt{2/\pi},\quad
+\mathbb{P}(A\le a)=2\Phi(a/\tau)-1,\quad
+\Var(A)=\tau^2(1-2/\pi).
+\]
+For $\tau=0$ the gap vanishes almost surely.
+\end{proposition}
+\begin{proof}
+The contrast is $N(0,\tau^2)$ by \cref{prop:moments}.
+Integrating the normal density over $[-a,a]$ gives the CDF; integrating
+$2x\phi(x)$ on the positive half-line gives $\sqrt{2/\pi}$.
+Since $A^2=D^2$, subtract the squared mean from its second moment.
+Zero variance with zero mean forces $D=0$ almost surely.
+\end{proof}
+Independent people with normal scores correspond to $\rho=0$, giving
+$30/\sqrt{\pi}\approx16.9257$; correlated tests with $\rho=0.6$
+give $30\sqrt{0.4/\pi}\approx10.7047$. These are not RMS gaps.
+% The common projection cancels pointwise, including negative rho.
+\begin{proposition}[Range distribution and expectation]\label{prop:range}
+Put $s=\sigma\sqrt{1-\rho}$ and let $M_k=\max_j Z_j$. Then
+\[
+\E R_k=2s\,a_k,\qquad a_k=k\int_{\mathbb R}z\phi(z)\Phi(z)^{k-1}\,dz.
+\]
+For $s>0$ and $r\ge0$,
+\[
+\mathbb{P}(R_k\le r)=k\int_{\mathbb R}\phi(z)
+[\Phi(z+r/s)-\Phi(z)]^{k-1}\,dz.
+\]
+\end{proposition}
+\begin{proof}
+By \cref{prop:domain}, common additive terms cancel and $R_k=s(M_k-\min Z_j)$.
+Sign symmetry and integrability (domination by $\sum |Z_j|$) imply the
+expectation identity. Independence yields $\mathbb{P}(M_k\le z)=\Phi(z)^k$;
+differentiate and integrate. The minimum is attained uniquely almost
+surely for iid continuous normals. Condition on which coordinate is the
+minimum and integrate its density against the probability that every other
+coordinate lies in the interval of width $r/s$. Sum the $k$ disjoint
+possibilities. If $s=0$, the range is identically zero.
+\end{proof}
+% Derive the closed form via the known bivariate Gaussian quadrant identity.
+\begin{proposition}[Five-test closed form]\label{prop:five}
+\[
+a_5=\frac5{4\sqrt{\pi}}
+\left(1+\frac6\pi\arcsin(1/3)\right).
+\]
+\end{proposition}
+\begin{proof}
+Integration by parts, using $\phi'=-z\phi$, gives
+$a_5=20\int \phi(z)^2\Phi(z)^3\,dz$ with zero boundary term.
+Since $\phi(z)^2$ is $1/(2\sqrt\pi)$ times the density of
+$Y\sim N(0,1/2)$, the integral is $10/\sqrt\pi$ times
+$\E\Phi(Y)^3$. For independent standard normals $U_i$ independent of $Y$,
+this expectation equals the probability all three $Y-U_i$ are positive.
+Their pairwise correlation is $1/3$. Expand the product of
+$(1+\operatorname{sgn}(Y-U_i))/2$: the odd sign moments vanish by joint
+symmetry and each pair sign expectation is $2\arcsin(1/3)/\pi$ by
+the Gaussian quadrant identity \citep{tong}. Therefore the orthant
+probability is $(1+6\arcsin(1/3)/\pi)/8$, proving the formula.
+\end{proof}
+For five tests at correlation 0.6 the exact expression evaluates to
+approximately 22.0657 IQ points.
+\chapter{Identification failures and sensitivity}
+% Mixtures preserve marginal normality but not the joint law.
+\begin{proposition}[Same marginal normals, different gaps]\label{prop:mixtures}
+Let a random correlation $C$ select a conditional Gaussian
+equicorrelation model with fixed $\mu,\sigma$ and $\E C=\rho$.
+The unconditional marginal laws are normal, and each pair has
+correlation $\rho$. The absolute gap and range means equal respectively
+$2\sigma\E\sqrt{1-C}/\sqrt\pi$ and $2\sigma a_k\E\sqrt{1-C}$.
+Unless $C$ is constant these are strictly smaller than the corresponding
+single Gaussian answers.
+\end{proposition}
+\begin{proof}
+The conditional marginal law does not depend on $C$. Total covariance
+gives $\sigma^2\E C$ because the conditional means are constant.
+Apply iterated expectation to \cref{prop:gap,prop:range}; strict Jensen
+inequality for the strictly concave square root gives the comparison.
+\end{proof}
+A shared/independent mixture chooses $C=1$ with probability 0.6 and $0$
+otherwise. A smooth mixture chooses 0.3 and 0.9 with equal probabilities.
+At $k=5$ their approximate range means are 13.96 and 20.11 respectively.
+% Average correlation cannot encode the entire covariance matrix.
+\begin{proposition}[Average correlation is insufficient]\label{prop:block}
+Take three copies of a normal score $U$ and two copies of $V$, with
+common mean and SD $\sigma$ and correlation $1/3$. Their average
+pairwise correlation is 0.6, but their expected range is
+$2\sigma\sqrt{(2/3)/\pi}$.
+\end{proposition}
+\begin{proof}
+Four of the ten pairs have correlation one and six have correlation
+$1/3$, giving $(4+6/3)/10=0.6$. Pointwise the range is $|U-V|$.
+Apply \cref{prop:gap}. The average pairwise gap instead averages
+four zero gaps and six cross-group gaps.
+\end{proof}
+% Bounds valid without specifying a copula.
+\begin{proposition}[Moment-only range bound]\label{prop:bound}
+For equal means, equal variances and common correlation,
+$\E R_k\le\sigma\sqrt{k(k-1)(1-\rho)}$.
+\end{proposition}
+\begin{proof}
+Pointwise $R_k^2=\max_{i<j}(X_i-X_j)^2\le
+\sum_{i<j}(X_i-X_j)^2$. Take expectations, apply
+\cref{prop:moments} to every pair and Cauchy--Schwarz.
+\end{proof}
+% Stochastic ordering when adding observations.
+\begin{proposition}[Sensitivity]\label{prop:sensitivity}
+For fixed admissible correlation, $\E R_k$ is nondecreasing with
+$k$ over admissible dimensions. For fixed $k$ it decreases with $\rho$,
+strictly before $\rho=1$, and scales linearly in $\sigma$.
+\end{proposition}
+\begin{proof}
+Couple all independent normals by taking an infinite iid sequence.
+Adding a coordinate cannot decrease its range. The remaining claims
+follow from \cref{prop:range}, since $a_k>0$ for $k\ge2$.
+\end{proof}
+\chapter{Conditioning versus unconditional comparison}
+% Gaussian regression and folded normal formula for a nonzero mean.
+\begin{proposition}[Observed first score]\label{prop:conditional}
+For $|\rho|<1$, given $X_1=x$ in the Gaussian two-test model,
+$D$ is normal with mean $d=(1-\rho)(x-\mu)$ and SD
+$t=\sigma\sqrt{1-\rho^2}$. Its conditional absolute mean is
+\[
+2t\phi(d/t)+d[2\Phi(d/t)-1].
+\]
+\end{proposition}
+\begin{proof}
+The residual $X_2-\mu-\rho(X_1-\mu)$ is jointly normal with $X_1$,
+has covariance zero with it and variance $t^2$. Uncorrelated jointly
+normal variables are independent \citep{anderson}. Subtract the
+conditional score from $x$ and integrate the resulting shifted normal
+density, splitting at zero and using $\phi'=-z\phi$.
+The formula defines a continuous version of the regular conditional law.
+\end{proof}
+At $x=145$, the predicted second score has mean 127; the signed gap
+mean is 18 and the conditional absolute gap mean is about 18.70.
+% Independence of the residual vector from the mean is a Gaussian result.
+\begin{proposition}[Range independent of battery average]\label{prop:average}
+Under the Gaussian equicorrelation model, $R_k$ and $\bar X$ are independent.
+\end{proposition}
+\begin{proof}
+The vectors $(I-P)Z$ and $PZ$ are jointly Gaussian with zero cross
+covariance; hence they are independent. The range is a measurable
+function of the first and the average a measurable function of the
+second by \cref{prop:domain}.
+\end{proof}
+\chapter{Scope and verification}
+Normality, equal scales and common correlations are assumptions, not
+empirical findings. Real tests may have ceiling effects, rounding,
+practice effects, heterogeneous norms or selection bias.
+The numerical companion checks selected consequences by simulation
+and records run-specific Monte Carlo uncertainty.
+Rocq coverage is currently limited to the explicit algebraic lemmas
+listed in the proof register; the probability proofs above are written
+deductions using standard Gaussian, expectation and order-statistic
+results, not a claim that every measure-theoretic argument is kernel checked.
+\bibliographystyle{plainnat}
+\bibliography{references}
+\appendix
+\chapter{Proof register}
+\begin{tabular}{ll}
+\toprule
+Propositions & Foundations \\
+\midrule
+\ref{prop:moments}, \ref{prop:bound} & Covariance, Cauchy--Schwarz \\
+\ref{prop:domain}, \ref{prop:average} & Orthogonal projections, Gaussian independence \\
+\ref{prop:gap}, \ref{prop:conditional} & Gaussian density, regression \\
+\ref{prop:range}, \ref{prop:five} & Order statistics, quadrant identity \\
+\ref{prop:mixtures}, \ref{prop:block} & Total covariance, Jensen, counting \\
+\ref{prop:sensitivity} & Pointwise monotonicity, scaling \\
+\bottomrule
+\end{tabular}
+\ProjectReportAIAppendix
+\paragraph{This analysis specifically.} ChatGPT (GPT-6.2) prepared this draft, source integration, mathematical exposition and experimental design at Anders Hellström's request. No executed Dask run, Rocq kernel check or visual PDF review is claimed for this initial revision. The general project disclosure above must not be read as evidence that those operations were performed for this book.
+\end{document}

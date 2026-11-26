@@ -1,6 +1,6 @@
 #!/bin/sh
-# Canonical Rocq source compiler for the shared math library and the three
-# specialized report libraries. Uses the complete explicit 41-module dependency order,
+# Canonical Rocq source compiler for the shared math library and the four
+# specialized report libraries. Uses the complete explicit 42-module dependency order,
 # never copies sources back into Git, and rejects duplicate module basenames.
 # This is a build utility, not a substitute for the Rocq kernel checker.
 set -eu
@@ -10,7 +10,8 @@ trap 'rm -rf "$WORK"' EXIT HUP INT TERM
 for f in "$ROOT"/library/rocq/*.v \
   "$ROOT"/analyses/hoeflin-ferguson/rocq/*.v \
   "$ROOT"/analyses/towers-multiple-test-admissions/rocq/*.v \
-  "$ROOT"/analyses/sequential-conditional-means/rocq/*.v
+  "$ROOT"/analyses/sequential-conditional-means/rocq/*.v \
+  "$ROOT"/analyses/iq-test-differences/rocq/*.v
 do
   [ -f "$f" ] || { echo "Missing proof source: $f" >&2; exit 1; }
   name=$(basename "$f")
@@ -63,3 +64,4 @@ rocq compile ThreeGroupPooling.v
 rocq compile TwoRatePrecision.v
 rocq compile StratifiedBernoulli.v
 rocq compile ThreeTestSchur.v
+rocq compile IQDifferenceAlgebra.v

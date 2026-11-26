@@ -29,6 +29,8 @@ DOCUMENTS = (
     ("towers-multiple-test-admissions", "towers_simulations"),
     ("sequential-conditional-means", "sequential_conditional_means"),
     ("sequential-conditional-means", "sequential_simulations"),
+    ("iq-test-differences", "iq_test_differences"),
+    ("iq-test-differences", "iq_difference_simulations"),
 )
 RECORD = ROOT.joinpath("reporting", "build-records", "revision.json")
 CAMPAIGN = ROOT.joinpath("reporting", "run.json")
