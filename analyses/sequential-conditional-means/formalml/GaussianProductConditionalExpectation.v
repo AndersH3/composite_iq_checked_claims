@@ -81,8 +81,10 @@ Section ProductGaussianRegression.
   Local Instance product_predictor_full_rv :
     RandomVariable full_sa borel_sa product_gaussian_predictor.
   Proof.
-    apply (RandomVariable_sa_sub full_probability observed_sub).
-    exact product_predictor_observed_rv.
+    (* Reuse sigma-algebra inclusion without a redundant probability argument. *)
+    eapply RandomVariable_sa_sub.
+    - exact observed_sub.
+    - exact product_predictor_observed_rv.
   Qed.
 
   Local Instance product_innovation_full_rv :

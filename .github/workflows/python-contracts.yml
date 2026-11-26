@@ -78,7 +78,10 @@ jobs:
 
       - name: IQ discrepancy Dask smoke experiment
         if: always()
-        run: make -C analyses/iq-test-differences smoke
+        run: |
+          make -C analyses/iq-test-differences smoke
+          git diff --exit-code -- analyses/iq-test-differences/simulation-data
+          python -m json.tool analyses/iq-test-differences/output/smoke/summary.json > /dev/null
       - name: Enforce at least 15 distinct Deal contracts per function
         if: always()
         run: python verification/check_contract_coverage.py

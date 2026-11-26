@@ -4185,7 +4185,7 @@ Review: G08/G13 report obligations concerning heterogeneous success counts, cali
 | `sb_variance_four_gap_identity` (theorem) | Sharp variance-deficit certificate decomposes the distance from the Bernoulli quarter maximum into three weighted squared contrasts. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |
 | `sb_variance_four_bound` (theorem) | The sum of three hypothetical independent Bernoulli count variances obeys the sharp total-exposure quarter bound. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |
 
-## IQDifferenceAlgebra.v — 16 proof scripts
+## IQDifferenceAlgebra.v — 18 proof scripts
 
 | Declaration | Method and scope | Library reuse |
 |---|---|---|
@@ -4207,4 +4207,7 @@ Review: G08/G13 report obligations concerning heterogeneous success counts, cali
 | `iq_two_component_scale_concavity` (Theorem) | Expand the deficit as a nonnegative squared difference. | Stdlib Rle_0_sqr and nra. |
 | `iq_parallel_variance_identity` (Theorem) | Translate the canonical centered pooling identity to the report's notation. | PooledMomentsAlgebra.pooled_between_centered_identity; Stdlib field and ring. |
 
-Computer10 Rocq 9.3.0 compiled all 16 declarations at `799af85da583075b6ed94179a5483e2180267739` as part of the successful 45-module canonical build. The 16 are deterministic algebra and notation bridges; no continuous-probability formalization or independent new probability result is implied.
+| `iq_weighted_scale_jensen_deficit` (Theorem) | Exact weighted two-scale dispersion identity. | Stdlib ring, centered-variance principle. |
+| `iq_weighted_scale_jensen_strict` (Theorem) | Positive mixture weights and distinct scales imply strict deficit. | Reuse preceding identity, Stdlib Rle_0_sqr, Rmult_integral, Rmult_lt_0_compat. |
+
+The two appended mixture certificates await kernel compilation. Computer10 Rocq 9.3.0 compiled the original 16 declarations at `799af85da583075b6ed94179a5483e2180267739` as part of the successful 45-module canonical build. The 16 are deterministic algebra and notation bridges; no continuous-probability formalization or independent new probability result is implied.

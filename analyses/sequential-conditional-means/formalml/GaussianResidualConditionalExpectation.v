@@ -78,7 +78,7 @@ Proof.
   apply (is_conditional_expectation_plus prob obs_sub predictor innovation
            (fun w => Finite (predictor w))
            (const (FiniteExpectation prob innovation))).
-  - apply (is_conditional_expectation_id prob obs_sub predictor).
+  - apply is_conditional_expectation_id.
   - apply (is_conditional_expectation_independent_sa
              prob obs_sub innovation); exact innovation_independent.
 Qed.
@@ -180,7 +180,7 @@ Proof.
        (fun w => Finite (predictor w))).
   - exact future_predictor_ae.
   - apply all_almost; intro w; reflexivity.
-  - apply (is_conditional_expectation_id prob obs_sub predictor).
+  - apply is_conditional_expectation_id.
 Qed.
 
 (** [gaussian_regression_perfect_information_mean_almost_sure].
@@ -240,6 +240,38 @@ Proof.
   eapply is_conditional_expectation_unique.
   - apply Condexp_cond_exp.
   - apply gaussian_regression_conditional_expectation_centered; assumption.
+Qed.
+
+(** [gaussian_regression_transfer_to_future] (theorem).
+ Mathematical meaning: Transfer the conditional expectation of an
+ adapted predictor plus centered independent innovation to an actual
+ measured future-score random variable agreeing almost surely with it.
+ Exact representation: Event-integral CE of future equals predictor.
+ Premises and side conditions: Measurable future, integrable summands,
+ residual independence, zero mean and almost-sure decomposition.
+ Proof/definition method: Reuse the centered regression identity and
+ the library's almost-sure congruence theorem.
+ Library reuse: FormalML is_conditional_expectation_proper, all_almost.
+ Boundary: Residual independence remains a hypothesis, not a consequence
+ inferred from zero covariance.
+*)
+Theorem gaussian_regression_transfer_to_future
+  (future : Omega -> R)
+  {future_rv : RandomVariable dom borel_sa future}
+  (future_decomposition :
+     almostR2 prob eq (rvplus predictor innovation) future)
+  (innovation_independent :
+    independent_sas prob
+      (pullback_rv_sub _ _ _ innovation_rv) obs_sub)
+  (innovation_centered : FiniteExpectation prob innovation = 0) :
+  is_conditional_expectation prob observed future
+    (fun w => Finite (predictor w)).
+Proof.
+  eapply is_conditional_expectation_proper.
+  - exact future_decomposition.
+  - apply all_almost; intro w; reflexivity.
+  - apply gaussian_regression_conditional_expectation_centered;
+      assumption.
 Qed.
 
 End GaussianLinearConditionalExpectation.

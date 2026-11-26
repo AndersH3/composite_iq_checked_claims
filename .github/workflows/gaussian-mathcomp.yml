@@ -32,7 +32,7 @@ jobs:
             echo 'No extra axioms or unfinished Gaussian probability proofs are allowed.' >&2
             exit 1
           fi
-          test "$(grep -c '^Theorem ' analyses/sequential-conditional-means/mathcomp/GaussianPosteriorMeasure.v)" -eq 3
+          test "$(grep -c '^Theorem ' analyses/sequential-conditional-means/mathcomp/GaussianPosteriorMeasure.v)" -eq 6
 
       - name: Compile normalized posterior-measure theorems with pinned MathComp-Analysis
         shell: bash

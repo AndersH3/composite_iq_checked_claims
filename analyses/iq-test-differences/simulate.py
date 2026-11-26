@@ -5,7 +5,6 @@ scores. NumPy supplies sampling and reduction, SciPy supplies analytic reference
 values, Dask schedules bounded blocks, and Deal checks callable boundaries.
 No participant data enter this module. The CLI records run-specific provenance.
 """
-import json
 import math
 from pathlib import Path
 
@@ -18,6 +17,7 @@ from scipy.integrate import quad
 from scipy.stats import foldnorm, norm
 
 from reporting.block_simulations import merge_moments, partial_moment
+from reporting.provenance import digest, dump
 
 MODES = ("Gaussian", "Shared mixture", "Smooth mixture", "Block", "Conditional")
 # Use distinct clauses for each estimand rather than one large compound predicate.
@@ -34,7 +34,7 @@ MOMENT_ATOL = 1e-7
 @deal.pre(lambda seed, n, k, rho, mu, sigma, mode: 2 <= k <= 100)
 @deal.pre(lambda seed, n, k, rho, mu, sigma, mode: type(rho) in (float, int))
 @deal.pre(lambda seed, n, k, rho, mu, sigma, mode: -1 <= rho <= 1)
-@deal.pre(lambda seed, n, k, rho, mu, sigma, mode: (k - 1) * rho >= -1)
+@deal.pre(lambda seed, n, k, rho, mu, sigma, mode: rho >= -np.divide(1, k - 1))
 @deal.pre(lambda seed, n, k, rho, mu, sigma, mode: type(mu) in (float, int))
 @deal.pre(lambda seed, n, k, rho, mu, sigma, mode: abs(mu) <= 1000)
 @deal.pre(lambda seed, n, k, rho, mu, sigma, mode: type(sigma) in (float, int))
@@ -102,7 +102,7 @@ def simulate_block(seed: int, n: int, k: int, rho: float, mu: float,
 @deal.pre(lambda k, rho, mu, sigma, mode: 2 <= k <= 100)
 @deal.pre(lambda k, rho, mu, sigma, mode: type(rho) in (float, int))
 @deal.pre(lambda k, rho, mu, sigma, mode: -1 <= rho <= 1)
-@deal.pre(lambda k, rho, mu, sigma, mode: (k - 1) * rho >= -1)
+@deal.pre(lambda k, rho, mu, sigma, mode: rho >= -np.divide(1, k - 1))
 @deal.pre(lambda k, rho, mu, sigma, mode: type(mu) in (float, int))
 @deal.pre(lambda k, rho, mu, sigma, mode: abs(mu) <= 1000)
 @deal.pre(lambda k, rho, mu, sigma, mode: type(sigma) in (float, int))
@@ -132,7 +132,14 @@ def analytic_means(k: int, rho: float, mu: float, sigma: float, mode: str) -> np
     if mode == "Conditional":
         delta = (1 - rho) * (145 - mu)
         tau = sigma * math.sqrt(1 - rho**2)
-        gap = foldnorm.mean(abs(delta) / tau, scale=tau)
+        # Avoid overflow in standardizing a near-degenerate conditional law.
+        # Beyond 40 SDs the folded correction is below binary64 resolution.
+        if tau == 0 or abs(delta) >= 40 * tau:
+            gap = abs(delta)
+        elif delta == 0:
+            gap = tau * math.sqrt(2 / math.pi)
+        else:
+            gap = foldnorm.mean(np.divide(abs(delta), tau), scale=tau)
         return np.array([gap, gap, delta])
     if mode == "Block":
         gap = 2 * sigma * math.sqrt((2 / 3) / math.pi)
@@ -156,7 +163,6 @@ if __name__ == "__main__":
     # Explicit worker count and bounded blocks limit memory and scheduler overhead.
     import argparse
     import platform
-    import hashlib
     import time
     from importlib.metadata import version
 
@@ -165,6 +171,9 @@ if __name__ == "__main__":
     parser.add_argument("--replicates", type=int, default=8)
     parser.add_argument("--block", type=int, default=250_000)
     parser.add_argument("--workers", type=int, default=4)
+    parser.add_argument("--output-dir", type=Path,
+                        default=Path(__file__).resolve().parent / "simulation-data",
+                        help="Separate smoke evidence from production datasets")
     args = parser.parse_args()
     if not (2 <= args.block <= 1_000_000 and args.rows_per_replicate >= args.block
             and args.rows_per_replicate % args.block == 0
@@ -213,18 +222,19 @@ if __name__ == "__main__":
         rows.append(dict(label=label, k=k, rho=rho, mode=mode, means=means.tolist(),
                          analytic=exact.tolist(), mcse=se.tolist(), passed=passed,
                          replicate_means=[[row["mean"] for row in replicate] for replicate in per_rep]))
-    output = Path(__file__).resolve().parent / "simulation-data"
-    output.mkdir(exist_ok=True)
-    metadata = dict(seed=seed, rows_per_scenario=total, settings=vars(args),
+    output = args.output_dir.resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    metadata = dict(seed=seed, rows_per_scenario=total, settings={key: value for key, value in vars(args).items() if key != "output_dir"},
                     elapsed_seconds=time.perf_counter() - started,
-                    source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                    source_sha256=digest(Path(__file__)),
                     bit_generator="PCG64", scheduler="threads",
-                    shared_reducer_sha256=hashlib.sha256(
-                        (Path(__file__).resolve().parents[2] / "reporting/block_simulations.py").read_bytes()).hexdigest(),
+                    shared_reducer_sha256=digest(
+                        Path(__file__).resolve().parents[2] / "reporting/block_simulations.py"),
+                    provenance_sha256=digest(Path(__file__).resolve().parents[2] / "reporting/provenance.py"),
                     python=platform.python_version(),
                     versions={name: version(name) for name in ("numpy", "scipy", "dask", "deal")},
                     rows=rows)
-    (output / "summary.json").write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
+    dump(output / "summary.json", metadata)
     lines = [
         f"{row['label']} & {row['means'][0]:.5f} & {row['analytic'][0]:.5f} & "
         f"{row['mcse'][0]:.5f} & {row['means'][1]:.5f} & {row['analytic'][1]:.5f} & "

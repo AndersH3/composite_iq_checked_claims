@@ -106,6 +106,10 @@ not execute Deal's effect or exception checking, its static linter, or
 Dask's task graph. The offline record is never substituted for the Dask
 campaign files.
 \chapter{Reproducibility and contract scope}
+The new source reuses the shared provenance functions, isolates
+smoke results from production data, and guards near-degenerate conditional
+scales. The previously published production record is revision-specific;
+regenerate it before attributing it to the refactored implementation.
 From this analysis directory, execute \texttt{make data} and
 \texttt{make pdf}. The shared repository requirements specify the software
 stack. The block function and analytical reference declare separate input-domain,

@@ -157,6 +157,15 @@ The conditional marginal law does not depend on $C$. Total covariance
 gives $\sigma^2\E C$ because the conditional means are constant.
 Apply iterated expectation to \cref{prop:gap,prop:range}; strict Jensen
 inequality for the strictly concave square root gives the comparison.
+For a two-component mixture with weight \(0<w<1\) and residual scales
+\(a,b\ge0\), an exact certificate is
+\[
+ wa^2+(1-w)b^2-(wa+(1-w)b)^2=w(1-w)(a-b)^2.
+\]
+If \(a\ne b\), the right-hand side is positive, so the mixture's
+mean scale is strictly smaller than its root-mean-square scale.
+Two new Rocq candidate scripts record this algebraic step separately
+from the Gaussian expectation theorem.
 \end{proof}
 A shared/independent mixture chooses $C=1$ with probability 0.6 and $0$
 otherwise. A smooth mixture chooses 0.3 and 0.9 with equal probabilities.

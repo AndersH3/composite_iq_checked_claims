@@ -7,8 +7,9 @@
     Library use: Stdlib Reals, Lra, Ring and Field; no new axioms.
     Limitations: No Gaussian measure, integrals, conditional laws or numerical
     library correctness are established by this file.
-    Reproduction: Compile using the repository's pinned Rocq workflow;
-    this draft has not yet received a successful kernel check.
+    Reproduction: Compile using the repository's canonical Rocq workflow.
+    The original 16 scripts compiled on Rocq 9.3.0 at 799af85; the
+    appended mixture certificates require independent kernel revalidation.
     Researcher/requester: Anders Hellström. *)
 From Stdlib Require Import Reals Lra Psatz Ring Field List.
 Require Import FiniteSum PooledMomentsAlgebra.
@@ -222,4 +223,47 @@ Proof.
     with (na*(a-pooled_mean na nb a b)*(a-pooled_mean na nb a b)+
           nb*(b-pooled_mean na nb a b)*(b-pooled_mean na nb a b)) by ring.
   exact (pooled_between_centered_identity na nb a b Ha Hb).
+Qed.
+
+(** [iq_weighted_scale_jensen_deficit]
+    Mathematical meaning: A mixture's squared mean residual scale differs
+    from its mean squared scale by exactly the weighted dispersion.
+    Exact representation: Bernoulli-weighted two-point variance identity.
+    Premises and side conditions: Algebra holds for all real inputs;
+    statistical interpretation requires weights in [0,1] and positive scales.
+    Proof/definition method: Normalize the polynomial with Stdlib ring.
+    Library reuse: Stdlib ring; centered-variance principle from pooling.
+    Boundary: Does not establish the Gaussian absolute moment itself. *)
+Theorem iq_weighted_scale_jensen_deficit (w a b : R) :
+  w*a^2+(1-w)*b^2-(w*a+(1-w)*b)^2 =
+  w*(1-w)*(a-b)^2.
+Proof. ring. Qed.
+
+(** [iq_weighted_scale_jensen_strict]
+    Mathematical meaning: Distinct conditional scales and positive mixture
+    weights yield a strictly smaller squared mean scale than mean square.
+    Exact representation: Strict two-point Jensen inequality for scales.
+    Premises and side conditions: Interior weight and distinct scales.
+    Proof/definition method: Reuse weighted deficit and explicit positive
+    square and product lemmas from the standard library.
+    Library reuse: iq_weighted_scale_jensen_deficit, Rle_0_sqr,
+    Rmult_integral, Rmult_lt_0_compat.
+    Boundary: Algebraic non-identification certificate, not a theorem
+    about probability measures or Gaussian absolute moments. *)
+Theorem iq_weighted_scale_jensen_strict (w a b : R) :
+  0 < w -> w < 1 -> a <> b ->
+  (w*a+(1-w)*b)^2 < w*a^2+(1-w)*b^2.
+Proof.
+  intros Hw Hw1 Hne.
+  pose proof (Rle_0_sqr (a-b)) as Hsq.
+  unfold Rsqr in Hsq.
+  assert (Hnz : (a-b)*(a-b) <> 0).
+  { intro Hz. apply Rmult_integral in Hz.
+    destruct Hz; apply Hne; lra. }
+  assert (Hs : 0 < (a-b)*(a-b)) by lra.
+  assert (Hweight : 0 < w*(1-w)).
+  { apply Rmult_lt_0_compat; lra. }
+  pose proof (Rmult_lt_0_compat _ _ Hweight Hs) as Hpositive.
+  pose proof (iq_weighted_scale_jensen_deficit w a b) as Hidentity.
+  nra.
 Qed.
