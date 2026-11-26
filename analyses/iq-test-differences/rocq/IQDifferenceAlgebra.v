@@ -10,7 +10,9 @@
     Reproduction: Compile using the repository's pinned Rocq workflow;
     this draft has not yet received a successful kernel check.
     Researcher/requester: Anders Hellström. *)
-From Stdlib Require Import Reals Lra Ring Field.
+From Stdlib Require Import Reals Lra Psatz Ring Field List.
+Require Import FiniteSum.
+Import ListNotations.
 Open Scope R_scope.
 
 (** [iq_gap_variance]
@@ -117,3 +119,86 @@ Proof. intros Hk Hlow Hhigh. split; lra. Qed.
     Boundary: Total covariance and marginal distribution invariance remain separate probability arguments. *)
 Theorem iq_shared_mixture_average : (3/5)*1+(2/5)*0=3/5.
 Proof. field. Qed.
+
+(** [iq_absolute_shift]
+    Mathematical meaning: A common translation preserves the absolute gap.
+    Exact representation: Absolute differences of two real scores after an arbitrary shift.
+    Premises and side conditions: No probability, sign or scale restrictions are needed.
+    Proof/definition method: Rewrite with the already proved common-shift identity.
+    Library reuse: iq_common_shift and Stdlib Rabs.
+    Boundary: Pointwise, not a statement about random-variable integrals. *)
+Theorem iq_absolute_shift (a x y : R) :
+  Rabs ((a+x)-(a+y)) = Rabs (x-y).
+Proof. now rewrite iq_common_shift. Qed.
+
+(** [iq_absolute_scale]
+    Mathematical meaning: A common nonnegative scaling multiplies the absolute gap.
+    Exact representation: The absolute value of a scaled difference factors as scale times gap.
+    Premises and side conditions: Require a nonnegative real scale; scores are arbitrary reals.
+    Proof/definition method: Rewrite the signed scale identity, multiplicativity of absolute value, and absolute value of a nonnegative number.
+    Library reuse: iq_scaled_gap, Rabs_mult and Rabs_right from Stdlib.
+    Boundary: No stochastic assumptions or Gaussian moment formulas. *)
+Theorem iq_absolute_scale (s x y : R) :
+  0 <= s -> Rabs (s*x-s*y) = s*Rabs (x-y).
+Proof.
+  intro Hs. rewrite iq_scaled_gap, Rabs_mult, (Rabs_right s); [reflexivity|lra].
+Qed.
+
+(** [iq_range_pair_square_bound]
+    Mathematical meaning: Every squared pairwise gap is bounded by the sum of all squared pairwise gaps.
+    Exact representation: A finite list of real signed gaps contains the particular signed gap being bounded.
+    Premises and side conditions: Require list membership; no positivity assumptions on signed gaps.
+    Proof/definition method: Apply the canonical nonnegative member bound to the square integrand and establish square nonnegativity by real arithmetic.
+    Library reuse: FiniteSum.finite_sum_member_le, Stdlib List and nra.
+    Boundary: This proves the finite pointwise inequality underlying the range bound; expectation and the enumeration of extrema are separate. *)
+Theorem iq_range_pair_square_bound (ds : list R) (d : R) :
+  In d ds -> d*d <= finite_sum (fun x => x*x) ds.
+Proof.
+  intro Hd. apply finite_sum_member_le.
+  - intros x Hx. nra.
+  - exact Hd.
+Qed.
+
+(** [iq_gap_heterogeneous_variance_nonnegative]
+    Mathematical meaning: The heterogeneous contrast variance is nonnegative on the upper correlation domain.
+    Exact representation: The variance decomposes into a squared scale difference plus a nonnegative covariance adjustment.
+    Premises and side conditions: Require nonnegative scales and rho <= 1.
+    Proof/definition method: Use the exact square decomposition and nonnegativity of the remaining product.
+    Library reuse: Stdlib ring, nra, Rmult_le_pos.
+    Boundary: The law of the contrast and its folded-normal expectation are not implied by this algebra alone. *)
+Theorem iq_gap_heterogeneous_variance_nonnegative (sx sy rho : R) :
+  0 <= sx -> 0 <= sy -> rho <= 1 ->
+  0 <= sx^2+sy^2-2*rho*sx*sy.
+Proof.
+  intros Hx Hy Hr.
+  assert (Hp : 0 <= 2*sx*sy*(1-rho)).
+  { apply Rmult_le_pos; [apply Rmult_le_pos; [lra|exact Hy]|lra]. }
+  nra.
+Qed.
+
+(** [iq_two_component_scale_concavity]
+    Mathematical meaning: The equal-weight mean of two square-root scales is no larger than their root mean square.
+    Exact representation: Two nonnegative scales a and b model the conditional residual scales of an equal-weight mixture.
+    Premises and side conditions: Require a,b nonnegative; the inequality is stated on squared scales to avoid a redundant root monotonicity proof.
+    Proof/definition method: Expand the deficit as a nonnegative squared difference.
+    Library reuse: Stdlib nra and real squares.
+    Boundary: An algebraic two-component Jensen instance, not a general probability Jensen theorem. *)
+Theorem iq_two_component_scale_concavity (a b : R) :
+  ((a+b)/2)^2 <= (a^2+b^2)/2.
+Proof. assert (H : 0 <= (a-b)^2) by nra; nra. Qed.
+
+(** [iq_parallel_variance_identity]
+    Mathematical meaning: Combining two centered blocks retains the between-block sum of squares.
+    Exact representation: Positive real block sizes and block means; pooled mean is defined by its weighted sum.
+    Premises and side conditions: Require both sizes positive, so their sum is nonzero.
+    Proof/definition method: Substitute the weighted mean and normalize rational real expressions.
+    Library reuse: Stdlib field and lra; this is the identity used by the existing shared moment merger.
+    Boundary: Exact real arithmetic, not a floating-point rounding certificate. *)
+Theorem iq_parallel_variance_identity (na nb a b : R) :
+  0 < na -> 0 < nb ->
+  let m := (na*a+nb*b)/(na+nb) in
+  na*(a-m)^2+nb*(b-m)^2 = na*nb/(na+nb)*(b-a)^2.
+Proof.
+  intros Ha Hb. cbv zeta.
+  field. lra.
+Qed.

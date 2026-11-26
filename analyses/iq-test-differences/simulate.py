@@ -9,11 +9,15 @@ import json
 import math
 from pathlib import Path
 
+# The CLI is launched from its analysis directory; Makefile sets PYTHONPATH.
+
 import dask
 import deal
 import numpy as np
 from scipy.integrate import quad
 from scipy.stats import foldnorm, norm
+
+from reporting.block_simulations import merge_moments, partial_moment
 
 MODES = ("Gaussian", "Shared mixture", "Smooth mixture", "Block", "Conditional")
 # Use distinct clauses for each estimand rather than one large compound predicate.
@@ -39,24 +43,23 @@ MOMENT_ATOL = 1e-7
 @deal.pre(lambda seed, n, k, rho, mu, sigma, mode: mode == "Gaussian" or rho == 0.6)
 @deal.pre(lambda seed, n, k, rho, mu, sigma, mode: mode != "Conditional" or k == 2)
 @deal.pre(lambda seed, n, k, rho, mu, sigma, mode: mode in ("Gaussian", "Conditional") or k == 5)
-@deal.post(lambda result: isinstance(result, np.ndarray) and result.shape == (2, 3))
-@deal.post(lambda result: bool(np.isfinite(result).all()))
-@deal.post(lambda result: bool((result[1] >= 0).all()))
-@deal.post(lambda result: 0 <= result[0, 0] <= result[0, 1] + MOMENT_ATOL)
-@deal.post(lambda result: abs(result[0, 2]) <= result[0, 0] + MOMENT_ATOL)
-@deal.post(lambda result: result[1, 0] == result[1, 2])
-@deal.post(lambda result: result[1, 0] <= result[1, 1] * (1 + MOMENT_RTOL) + MOMENT_ATOL)
+@deal.post(lambda result: isinstance(result, tuple) and len(result) == 3)
+@deal.post(lambda result: all(math.isfinite(row["mean"]) and math.isfinite(row["m2"]) for row in result))
+@deal.post(lambda result: all(row["m2"] >= 0 for row in result))
+@deal.post(lambda result: 0 <= result[0]["mean"] <= result[1]["mean"] + MOMENT_ATOL)
+@deal.post(lambda result: abs(result[2]["mean"]) <= result[0]["mean"] + MOMENT_ATOL)
+@deal.ensure(lambda seed, n, k, rho, mu, sigma, mode, result: all(row["n"] == n for row in result))
+@deal.post(lambda result: all(row["counts"] == (0, 0, 0) for row in result))
+@deal.post(lambda result: all(row["mse_sum"] == 0 for row in result))
+@deal.ensure(lambda seed, n, k, rho, mu, sigma, mode, result: k != 2 or result[0] == result[1])
+@deal.ensure(lambda seed, n, k, rho, mu, sigma, mode, result: mode != "Block" or result[0] == result[1])
 @deal.ensure(lambda seed, n, k, rho, mu, sigma, mode, result:
-             k != 2 or np.allclose(result[:, 0], result[:, 1], rtol=MOMENT_RTOL, atol=MOMENT_ATOL))
-@deal.ensure(lambda seed, n, k, rho, mu, sigma, mode, result:
-             mode != "Block" or np.allclose(result[:, 0], result[:, 1], rtol=MOMENT_RTOL, atol=MOMENT_ATOL))
-@deal.ensure(lambda seed, n, k, rho, mu, sigma, mode, result:
-             np.all(result[0]**2 <= n * result[1] * (1 + MOMENT_RTOL) + MOMENT_ATOL))
-@deal.ensure(lambda seed, n, k, rho, mu, sigma, mode, result:
-             mode != "Gaussian" or rho != 1 or np.count_nonzero(result) == 0)
+             mode != "Gaussian" or rho != 1 or all(row["mean"] == row["m2"] == 0 for row in result))
+@deal.raises(ValueError, TypeError, OverflowError, MemoryError)
+@deal.has("network", "random", "import")
 def simulate_block(seed: int, n: int, k: int, rho: float, mu: float,
-                   sigma: float, mode: str) -> np.ndarray:
-    """Generate one bounded block and reduce it to six finite moment sums.
+                   sigma: float, mode: str) -> tuple:
+    """Generate one bounded block and return three centered-moment records.
 
     Rows are synthetic batteries or independent pairs. The seed selects a local
     PCG64 generator, not a mathematical proof of independence. The projection
@@ -86,8 +89,10 @@ def simulate_block(seed: int, n: int, k: int, rho: float, mu: float,
         scores = mu + sigma * (np.sqrt(1 - c) * (z - center)
             + np.sqrt(np.maximum(0, 1 + (k - 1) * c)) * center)
     signed = scores[:, 0] - scores[:, -1] if mode == "Block" else scores[:, 0] - scores[:, 1]
-    values = np.column_stack((np.abs(signed), np.ptp(scores, axis=1), signed))
-    return np.stack((values.sum(axis=0), np.square(values).sum(axis=0)))
+    # Center before squaring via the existing shared reducer; no raw-moment
+    # subtraction or duplicate pooling algorithm is maintained here.
+    return (partial_moment(np.abs(signed)), partial_moment(np.ptp(scores, axis=1)),
+            partial_moment(signed))
 
 
 # Separate the analytic reference from the random-number implementation.
@@ -189,23 +194,31 @@ if __name__ == "__main__":
                 args.block, k, rho, 100.0, 15.0, mode)
             for rep in range(args.replicates) for j in range(blocks)
         ]
-        sums = np.asarray(dask.compute(*tasks, scheduler="threads", num_workers=args.workers))
-        per_rep = sums.reshape(args.replicates, blocks, 2, 3).sum(axis=1)
-        aggregate = per_rep.sum(axis=0)
-        means = aggregate[0] / total
-        variance = np.maximum(0, (aggregate[1] - total * means**2) / (total - 1))
-        se = np.sqrt(variance / total)
+        results = dask.compute(*tasks, scheduler="threads", num_workers=args.workers)
+        # Pool in submission order, first within each replicate and then across
+        # replicates. Shared merge_moments retains between-block variation.
+        per_rep = [
+            [merge_moments([row[j] for row in results[rep * blocks:(rep + 1) * blocks]])
+             for j in range(3)]
+            for rep in range(args.replicates)
+        ]
+        aggregate = [merge_moments([row[j] for row in per_rep]) for j in range(3)]
+        means = np.array([row["mean"] for row in aggregate])
+        se = np.array([math.sqrt(row["m2"] / (row["n"] - 1) / row["n"])
+                       for row in aggregate])
         exact = analytic_means(k, rho, 100.0, 15.0, mode)
         passed = bool(np.all(np.abs(means - exact) <= 6 * se + 1e-8))
         rows.append(dict(label=label, k=k, rho=rho, mode=mode, means=means.tolist(),
                          analytic=exact.tolist(), mcse=se.tolist(), passed=passed,
-                         replicate_means=(per_rep[:, 0] / args.rows_per_replicate).tolist()))
+                         replicate_means=[[row["mean"] for row in replicate] for replicate in per_rep]))
     output = Path(__file__).resolve().parent / "simulation-data"
     output.mkdir(exist_ok=True)
     metadata = dict(seed=seed, rows_per_scenario=total, settings=vars(args),
                     elapsed_seconds=time.perf_counter() - started,
                     source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                     bit_generator="PCG64", scheduler="threads",
+                    shared_reducer_sha256=hashlib.sha256(
+                        (Path(__file__).resolve().parents[2] / "reporting/block_simulations.py").read_bytes()).hexdigest(),
                     python=platform.python_version(),
                     versions={name: version(name) for name in ("numpy", "scipy", "dask", "deal")},
                     rows=rows)

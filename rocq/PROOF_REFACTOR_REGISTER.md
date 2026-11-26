@@ -4185,7 +4185,7 @@ Review: G08/G13 report obligations concerning heterogeneous success counts, cali
 | `sb_variance_four_gap_identity` (theorem) | Sharp variance-deficit certificate decomposes the distance from the Bernoulli quarter maximum into three weighted squared contrasts. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |
 | `sb_variance_four_bound` (theorem) | The sum of three hypothetical independent Bernoulli count variances obeys the sharp total-exposure quarter bound. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |
 
-## IQDifferenceAlgebra.v — 10 proof scripts
+## IQDifferenceAlgebra.v — 16 proof scripts
 
 | Declaration | Method and scope | Library reuse |
 |---|---|---|
@@ -4200,4 +4200,11 @@ Review: G08/G13 report obligations concerning heterogeneous success counts, cali
 | `iq_equicorrelation_domain` (Theorem) | Split the conjunction and use linear real arithmetic on the assumed products. | Stdlib lra. |
 | `iq_shared_mixture_average` (Theorem) | Use field normalization of the weighted sum. | Stdlib field arithmetic. |
 
-Initial draft: compiler status pending; this section does not alter historical verified counts.
+| `iq_absolute_shift` (Theorem) | Rewrite with the already proved common-shift identity. | iq_common_shift and Stdlib Rabs. |
+| `iq_absolute_scale` (Theorem) | Rewrite the signed scale identity, multiplicativity of absolute value, and absolute value of a nonnegative number. | iq_scaled_gap, Rabs_mult and Rabs_right from Stdlib. |
+| `iq_range_pair_square_bound` (Theorem) | Apply the canonical nonnegative member bound to the square integrand and establish square nonnegativity by real arithmetic. | FiniteSum.finite_sum_member_le, Stdlib List and nra. |
+| `iq_gap_heterogeneous_variance_nonnegative` (Theorem) | Use the exact square decomposition and nonnegativity of the remaining product. | Stdlib ring, nra, Rmult_le_pos. |
+| `iq_two_component_scale_concavity` (Theorem) | Expand the deficit as a nonnegative squared difference. | Stdlib nra and real squares. |
+| `iq_parallel_variance_identity` (Theorem) | Substitute the weighted mean and normalize rational real expressions. | Stdlib field and lra; this is the identity used by the existing shared moment merger. |
+
+Compiler status pending; this section does not alter historical verified counts.
