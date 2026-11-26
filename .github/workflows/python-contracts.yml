@@ -76,6 +76,9 @@ jobs:
           assert all(result["project"] for result in manifest["results"])
           PY
 
+      - name: IQ discrepancy Dask smoke experiment
+        if: always()
+        run: make -C analyses/iq-test-differences smoke
       - name: Enforce at least 15 distinct Deal contracts per function
         if: always()
         run: python verification/check_contract_coverage.py

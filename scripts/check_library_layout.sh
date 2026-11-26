@@ -14,7 +14,7 @@ do
   test -f "$source" || { echo "Missing canonical source: $source" >&2; exit 1; }
 done
 
-for project in hoeflin-ferguson towers-multiple-test-admissions sequential-conditional-means
+for project in hoeflin-ferguson towers-multiple-test-admissions sequential-conditional-means iq-test-differences
 do
   test -d "analyses/$project/rocq" || exit 1
   if test -d "analyses/$project/scripts"; then

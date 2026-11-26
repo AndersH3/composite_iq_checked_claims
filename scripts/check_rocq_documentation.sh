@@ -64,13 +64,14 @@ paths_by_module = {
     "GaussianBatchBalance": Path("analyses/sequential-conditional-means/rocq/GaussianBatchBalance.v"),
     "GaussianFiniteHistoryPosterior": Path("analyses/sequential-conditional-means/rocq/GaussianFiniteHistoryPosterior.v"),
     "ReportRounding": Path("analyses/sequential-conditional-means/rocq/ReportRounding.v"),
+    "IQDifferenceAlgebra": Path("analyses/iq-test-differences/rocq/IQDifferenceAlgebra.v"),
     "ReportCounterexample": Path("analyses/sequential-conditional-means/rocq/ReportCounterexample.v"),
 }
 modules = tuple(paths_by_module)
 canonical = set(paths_by_module.values())
 present = set(Path("library/rocq").glob("*.v"))
 for project in ("hoeflin-ferguson", "towers-multiple-test-admissions",
-                "sequential-conditional-means"):
+                "sequential-conditional-means", "iq-test-differences"):
     present.update(Path("analyses", project, "rocq").glob("*.v"))
 present.update(Path("rocq").glob("*.v"))
 if present != canonical:

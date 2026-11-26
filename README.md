@@ -4,15 +4,17 @@
 
 > **AI DISCLOSURE:** OpenAI ChatGPT/Codex and collaborating AI systems have substantially assisted with the mathematical analyses, program development, formalization, simulation reporting, editing, and repository maintenance. Automated checks do not constitute independent human review.
 
-This repository examines composite IQ scores, multiple-test admissions, and sequential conditional means under explicitly stated statistical models. **The maintained computational stack is Python, Dask, NumPy/SciPy, and Deal. Rocq is used for separately scoped mathematical proofs.** The former discontinued alternate-engine simulation and verification implementation has been removed from the current tree; its historical revisions remain accessible through Git history. No retired proof run is evidence that current Python is formally verified.
+This repository examines composite IQ scores, multiple-test admissions, sequential conditional means, and IQ score discrepancies under explicitly stated statistical models. **The maintained computational stack is Python, Dask, NumPy/SciPy, and Deal. Rocq is used for separately scoped mathematical proofs.** The former discontinued alternate-engine simulation and verification implementation has been removed from the current tree; its historical revisions remain accessible through Git history. No retired proof run is evidence that current Python is formally verified.
 
-## Six reports
+## Eight reports (including two new draft sources)
 
 | Analysis | Mathematical report | Simulation methods and results |
 |---|---|---|
 | Hoeflin/Ferguson: combining IQ scores | [PDF](analyses/hoeflin-ferguson/output/pdf/composite_iq_analysis.pdf) / [XeLaTeX](analyses/hoeflin-ferguson/composite_iq_analysis.tex) | [PDF](analyses/hoeflin-ferguson/output/pdf/hoeflin_simulations.pdf) / [XeLaTeX](analyses/hoeflin-ferguson/hoeflin_simulations.tex) |
 | Towers: multiple-test admissions | [PDF](analyses/towers-multiple-test-admissions/output/pdf/towers_admissions_analysis.pdf) / [XeLaTeX](analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex) | [PDF](analyses/towers-multiple-test-admissions/output/pdf/towers_simulations.pdf) / [XeLaTeX](analyses/towers-multiple-test-admissions/towers_simulations.tex) |
 | Sequential conditional means | [PDF](analyses/sequential-conditional-means/output/pdf/sequential_conditional_means.pdf) / [XeLaTeX](analyses/sequential-conditional-means/sequential_conditional_means.tex) | [PDF](analyses/sequential-conditional-means/output/pdf/sequential_simulations.pdf) / [XeLaTeX](analyses/sequential-conditional-means/sequential_simulations.tex) |
+
+| IQ test differences: independent people and correlated tests | [XeLaTeX](analyses/iq-test-differences/iq_test_differences.tex) | [XeLaTeX](analyses/iq-test-differences/iq_difference_simulations.tex) |
 
 **Publication status:** Source revisions and regenerated PDF artifacts must be checked together. The checked-in PDF files may predate the Python-only migration until a new XeLaTeX build is completed and committed; a PDF link alone does not establish that the PDF reflects the current TeX source.
 

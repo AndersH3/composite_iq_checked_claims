@@ -1,4 +1,4 @@
-name: Build six XeLaTeX books
+name: Build eight XeLaTeX books
 
 on:
   push:
@@ -20,7 +20,7 @@ on:
 permissions:
   contents: write
 
-# The six PDFs form one atomic publication set per branch. Cancel stale
+# The eight PDFs form one atomic publication set per branch. Cancel stale
 # builds when revised TeX arrives rather than pushing out-of-date binaries.
 concurrency:
   group: report-books-${{ github.workflow }}-${{ github.ref }}
@@ -38,6 +38,8 @@ jobs:
           - { project: towers-multiple-test-admissions, stem: towers_simulations }
           - { project: sequential-conditional-means, stem: sequential_conditional_means }
           - { project: sequential-conditional-means, stem: sequential_simulations }
+          - { project: iq-test-differences, stem: iq_test_differences }
+          - { project: iq-test-differences, stem: iq_difference_simulations }
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -49,6 +51,20 @@ jobs:
           git ls-files -z '*.sh' | xargs -0 -r shellcheck --severity=warning
       - name: Check shared report layout and AI disclosure structure
         run: bash scripts/check_report_template.sh
+      # The new simulation book is built from a freshly executed campaign.
+      # The other books continue to use their previously retained inputs.
+      - uses: actions/setup-python@v5
+        if: matrix.stem == 'iq_difference_simulations'
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - name: Install shared simulation dependencies
+        if: matrix.stem == 'iq_difference_simulations'
+        run: python -m pip install -r requirements-dev.txt
+      - name: Execute full IQ discrepancy Dask campaign
+        if: matrix.stem == 'iq_difference_simulations'
+        run: make -C analyses/iq-test-differences data
       - name: Build with XeLaTeX, KOMA-Script and latexmk
         uses: xu-cheng/latex-action@v3
         with:
@@ -73,6 +89,11 @@ jobs:
           test -s "analyses/${{ matrix.project }}/output/pdf/${{ matrix.stem }}.pdf"
           mkdir -p "assembled/analyses/${{ matrix.project }}/output/pdf"
           cp "analyses/${{ matrix.project }}/output/pdf/${{ matrix.stem }}.pdf" "assembled/analyses/${{ matrix.project }}/output/pdf/"
+      - name: Stage generated IQ discrepancy results and provenance with the PDF
+        if: matrix.stem == 'iq_difference_simulations'
+        run: |
+          mkdir -p assembled/analyses/iq-test-differences/simulation-data
+          cp analyses/iq-test-differences/simulation-data/{summary.json,results.tex,run.tex} assembled/analyses/iq-test-differences/simulation-data/
       - uses: actions/upload-artifact@v4
         with:
           name: book-${{ matrix.stem }}
@@ -108,11 +129,12 @@ jobs:
             git fetch origin "refs/heads/${GITHUB_REF_NAME}:refs/remotes/origin/${GITHUB_REF_NAME}"
             git reset --mixed "refs/remotes/origin/${GITHUB_REF_NAME}"
             git add analyses/*/output/pdf/*.pdf
+            git add analyses/iq-test-differences/simulation-data/{summary.json,results.tex,run.tex}
             if git diff --cached --quiet; then
               echo 'Compiled PDFs already match tracked bytes'
               exit 0
             fi
-            git commit -m 'Rebuild all six books from Python/Dask/Deal XeLaTeX source'
+            git commit -m 'Rebuild all eight books from Python/Dask/Deal XeLaTeX source'
             if git push origin "HEAD:${GITHUB_REF_NAME}"; then
               exit 0
             fi

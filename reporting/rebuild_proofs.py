@@ -2,7 +2,7 @@
 """Rebuild selected proof-complete KOMA-Script books in one Dask graph.
 
 The active, versioned Dask numerical assets are inputs to a document-only
-revision. This tool never reruns the random experiment; it typesets the six
+revision. This tool never reruns the random experiment; it typesets the eight
 KOMA-Script books and records a fresh hash manifest of source and outputs.
 XeLaTeX/BibTeX and Poppler perform rendering and Dask schedules tasks.
 """
@@ -29,6 +29,8 @@ DOCUMENTS = (
     ("towers-multiple-test-admissions", "towers_simulations"),
     ("sequential-conditional-means", "sequential_conditional_means"),
     ("sequential-conditional-means", "sequential_simulations"),
+    ("iq-test-differences", "iq_test_differences"),
+    ("iq-test-differences", "iq_difference_simulations"),
 )
 RECORD = ROOT.joinpath("reporting", "build-records", "revision.json")
 CAMPAIGN = ROOT.joinpath("reporting", "run.json")
@@ -69,6 +71,9 @@ def retained_data():
     paths = []
     for project in sorted({row[0] for row in DOCUMENTS}):
         folder = ROOT.joinpath("analyses", project, "simulation-data")
+        # A draft may legitimately have no new numerical assets yet.
+        if project == "iq-test-differences" and not folder.exists():
+            continue
         paths.extend(path for path in folder.iterdir()
                      if path.is_file() and path.suffix in {".csv", ".tex", ".json"}
                      and not path.name.startswith("historical"))
@@ -211,7 +216,7 @@ def record_revision(results, retained, graph_tasks):
 @deal.pre(lambda argv=None: argv is None or isinstance(argv, list) and all(isinstance(arg, str) and "\x00" not in arg for arg in argv))
 @deal.pre(lambda argv=None: ROOT.is_dir())
 @deal.pre(lambda argv=None: CAMPAIGN.is_file())
-@deal.pre(lambda argv=None: bool(DOCUMENTS) and len(DOCUMENTS) == 6)
+@deal.pre(lambda argv=None: bool(DOCUMENTS) and len(DOCUMENTS) == 8)
 @deal.pre(lambda argv=None: RECORD.suffix == ".json")
 @deal.ensure(lambda argv=None, result=None: result != 0 or RECORD.is_file())
 @deal.post(lambda result: result == 0)
@@ -228,7 +233,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--workers", type=int, choices=range(1, 5), default=2)
     parser.add_argument("--simulations-only", action="store_true",
-                        help="Build the three simulation books; leave analytical PDFs untouched")
+                        help="Build the four simulation books; leave analytical PDFs untouched")
     args = parser.parse_args(argv)
     documents = tuple(document for document in DOCUMENTS if not args.simulations_only or document[1].endswith("simulations"))
     retained = dask.delayed(retained_data)()

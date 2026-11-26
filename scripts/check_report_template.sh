@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Enforce the shared book-template structure for all six maintained reports.
+# Enforce the shared book-template structure for all eight maintained reports.
 # This is a structural check, not an independent review of report conclusions.
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -20,7 +20,9 @@ for spec in \
   'towers-multiple-test-admissions towers_admissions_analysis report_style' \
   'towers-multiple-test-admissions towers_simulations simulation_style' \
   'sequential-conditional-means sequential_conditional_means report_style' \
-  'sequential-conditional-means sequential_simulations simulation_style'
+  'sequential-conditional-means sequential_simulations simulation_style' \
+  'iq-test-differences iq_test_differences report_style' \
+  'iq-test-differences iq_difference_simulations simulation_style'
 do
   read -r project stem style <<< "$spec"
   book="analyses/$project/$stem.tex"

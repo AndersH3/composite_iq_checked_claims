@@ -34,8 +34,8 @@ jobs:
           echo '=== Retired compiler source count ==='
           find . -type f \( -name '*.ads' -o -name '*.adb' -o -name '*.gpr' \) -print
           echo '=== Main report source count ==='
-          for p in analyses/hoeflin-ferguson/composite_iq_analysis.tex analyses/hoeflin-ferguson/hoeflin_simulations.tex analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex analyses/towers-multiple-test-admissions/towers_simulations.tex analyses/sequential-conditional-means/sequential_conditional_means.tex analyses/sequential-conditional-means/sequential_simulations.tex; do test -s "$p"; done
-          echo '=== Inspect six published PDF artifacts for obsolete methodology ==='
+          for p in analyses/hoeflin-ferguson/composite_iq_analysis.tex analyses/hoeflin-ferguson/hoeflin_simulations.tex analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex analyses/towers-multiple-test-admissions/towers_simulations.tex analyses/sequential-conditional-means/sequential_conditional_means.tex analyses/sequential-conditional-means/sequential_simulations.tex analyses/iq-test-differences/iq_test_differences.tex analyses/iq-test-differences/iq_difference_simulations.tex; do test -s "$p"; done
+          echo '=== Inspect existing published PDF artifacts for obsolete methodology ==='
           command -v pdftotext || { sudo apt-get update -qq; sudo apt-get install -y poppler-utils; }
           count=0
           for pdf in analyses/*/output/pdf/*.pdf; do
@@ -50,6 +50,9 @@ jobs:
               exit 1
             fi
           done
-          test "$count" -eq 6 || { echo "Expected six published report PDFs; found $count" >&2; exit 1; }
-          echo 'All six published PDFs have no obsolete compiler references'
+          if [[ "$count" -ne 6 && "$count" -ne 8 ]]; then
+            echo "Expected the six existing PDFs or all eight after new-book publication; found $count" >&2
+            exit 1
+          fi
+          echo 'All currently published PDFs have no obsolete compiler references'
 
