@@ -11,7 +11,7 @@
     this draft has not yet received a successful kernel check.
     Researcher/requester: Anders Hellström. *)
 From Stdlib Require Import Reals Lra Psatz Ring Field List.
-Require Import FiniteSum.
+Require Import FiniteSum PooledMomentsAlgebra.
 Import ListNotations.
 Open Scope R_scope.
 
@@ -173,6 +173,7 @@ Proof.
   intros Hx Hy Hr.
   assert (Hp : 0 <= 2*sx*sy*(1-rho)).
   { apply Rmult_le_pos; [apply Rmult_le_pos; [lra|exact Hy]|lra]. }
+  assert (Hs : 0 <= (sx-sy)^2) by nra.
   nra.
 Qed.
 
@@ -191,8 +192,8 @@ Proof. assert (H : 0 <= (a-b)^2) by nra; nra. Qed.
     Mathematical meaning: Combining two centered blocks retains the between-block sum of squares.
     Exact representation: Positive real block sizes and block means; pooled mean is defined by its weighted sum.
     Premises and side conditions: Require both sizes positive, so their sum is nonzero.
-    Proof/definition method: Substitute the weighted mean and normalize rational real expressions.
-    Library reuse: Stdlib field and lra; this is the identity used by the existing shared moment merger.
+    Proof/definition method: Instantiate the canonical centered pooling identity, then translate its notation using field and ring normalization.
+    Library reuse: PooledMomentsAlgebra.pooled_between_centered_identity; Stdlib field and ring.
     Boundary: Exact real arithmetic, not a floating-point rounding certificate. *)
 Theorem iq_parallel_variance_identity (na nb a b : R) :
   0 < na -> 0 < nb ->
@@ -200,5 +201,9 @@ Theorem iq_parallel_variance_identity (na nb a b : R) :
   na*(a-m)^2+nb*(b-m)^2 = na*nb/(na+nb)*(b-a)^2.
 Proof.
   intros Ha Hb. cbv zeta.
-  field. lra.
+  replace ((na*a+nb*b)/(na+nb)) with (pooled_mean na nb a b) by reflexivity.
+  replace (na*nb/(na+nb)*(b-a)^2) with (pooled_between na nb a b)
+    by (unfold pooled_between, pooled_mass; field; lra).
+  rewrite <- (pooled_between_centered_identity na nb a b Ha Hb).
+  ring.
 Qed.

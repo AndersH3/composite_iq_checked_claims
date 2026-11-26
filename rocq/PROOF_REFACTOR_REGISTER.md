@@ -4205,6 +4205,6 @@ Review: G08/G13 report obligations concerning heterogeneous success counts, cali
 | `iq_range_pair_square_bound` (Theorem) | Apply the canonical nonnegative member bound to the square integrand and establish square nonnegativity by real arithmetic. | FiniteSum.finite_sum_member_le, Stdlib List and nra. |
 | `iq_gap_heterogeneous_variance_nonnegative` (Theorem) | Use the exact square decomposition and nonnegativity of the remaining product. | Stdlib ring, nra, Rmult_le_pos. |
 | `iq_two_component_scale_concavity` (Theorem) | Expand the deficit as a nonnegative squared difference. | Stdlib nra and real squares. |
-| `iq_parallel_variance_identity` (Theorem) | Substitute the weighted mean and normalize rational real expressions. | Stdlib field and lra; this is the identity used by the existing shared moment merger. |
+| `iq_parallel_variance_identity` (Theorem) | Translate the canonical centered pooling identity to the report's notation. | PooledMomentsAlgebra.pooled_between_centered_identity; Stdlib field and ring. |
 
 Compiler status pending; this section does not alter historical verified counts.
