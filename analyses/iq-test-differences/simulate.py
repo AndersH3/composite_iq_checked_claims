@@ -44,7 +44,6 @@ def simulate_block(seed, n, k, rho, mu, sigma, mode):
     The conditional case fixes the first score at 145. The block counterexample
     repeats three scores in one group and two in another. No external I/O.
     """
-    deal.enable()
     rng = np.random.default_rng(seed)
     z = rng.standard_normal((n, k))
     if mode == "Block":

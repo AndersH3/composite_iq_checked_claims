@@ -4184,3 +4184,20 @@ Review: G08/G13 report obligations concerning heterogeneous success counts, cali
 | `sb_dispersion_le_scaled_loss` (theorem) | The between-cohort heterogeneity term cannot exceed scaled calibration loss, since the omitted squared benchmark residual is nonnegative. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |
 | `sb_variance_four_gap_identity` (theorem) | Sharp variance-deficit certificate decomposes the distance from the Bernoulli quarter maximum into three weighted squared contrasts. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |
 | `sb_variance_four_bound` (theorem) | The sum of three hypothetical independent Bernoulli count variances obeys the sharp total-exposure quarter bound. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |
+
+## IQDifferenceAlgebra.v — 10 proof scripts
+
+| Declaration | Method and scope | Library reuse |
+|---|---|---|
+| `iq_gap_variance` (Theorem) | Ring normalization expands the two copies of the marginal variance and factors the correlation term. | Stdlib real arithmetic and ring; no custom algebra engine. |
+| `iq_gap_variance_nonnegative` (Theorem) | Apply nonnegativity of multiplication and linear/nonlinear real arithmetic to the factors. | Stdlib real order lemmas and nra/lra. |
+| `iq_block_average` (Theorem) | Field normalization computes the rational mean of the ten pairs. | Stdlib field tactic for real rational arithmetic. |
+| `iq_smooth_mixture_average` (Theorem) | Normalize the rational arithmetic in the average. | Stdlib field arithmetic. |
+| `iq_conditional_example` (Theorem) | Normalize the displayed rational expression. | Stdlib field arithmetic. |
+| `iq_conditional_variance_example` (Theorem) | Use field normalization on the squared terms. | Stdlib field arithmetic and real powers. |
+| `iq_common_shift` (Theorem) | Normalize the subtraction of the two translated real expressions. | Stdlib ring normalization. |
+| `iq_scaled_gap` (Theorem) | Use the distributive law via ring normalization. | Stdlib ring tactic. |
+| `iq_equicorrelation_domain` (Theorem) | Split the conjunction and use linear real arithmetic on the assumed products. | Stdlib lra. |
+| `iq_shared_mixture_average` (Theorem) | Use field normalization of the weighted sum. | Stdlib field arithmetic. |
+
+Initial draft: compiler status pending; this section does not alter historical verified counts.

@@ -1,4 +1,4 @@
-name: Build six XeLaTeX books
+name: Build eight XeLaTeX books
 
 on:
   push:
@@ -20,7 +20,7 @@ on:
 permissions:
   contents: write
 
-# The six PDFs form one atomic publication set per branch. Cancel stale
+# The eight PDFs form one atomic publication set per branch. Cancel stale
 # builds when revised TeX arrives rather than pushing out-of-date binaries.
 concurrency:
   group: report-books-${{ github.workflow }}-${{ github.ref }}
@@ -38,6 +38,8 @@ jobs:
           - { project: towers-multiple-test-admissions, stem: towers_simulations }
           - { project: sequential-conditional-means, stem: sequential_conditional_means }
           - { project: sequential-conditional-means, stem: sequential_simulations }
+          - { project: iq-test-differences, stem: iq_test_differences }
+          - { project: iq-test-differences, stem: iq_difference_simulations }
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -112,7 +114,7 @@ jobs:
               echo 'Compiled PDFs already match tracked bytes'
               exit 0
             fi
-            git commit -m 'Rebuild all six books from Python/Dask/Deal XeLaTeX source'
+            git commit -m 'Rebuild all eight books from Python/Dask/Deal XeLaTeX source'
             if git push origin "HEAD:${GITHUB_REF_NAME}"; then
               exit 0
             fi
