@@ -7,8 +7,8 @@
     "block": 250000,
     "workers": 4
   },
-  "elapsed_seconds": 24.187177943997085,
-  "source_sha256": "fdbd3ab08b925d7446c29080ac22ffa105b4ce3607bf3af32527ed7d39f3654b",
+  "elapsed_seconds": 24.622068171040155,
+  "source_sha256": "acf0c7ca7e760717c189e43793de97806b2d95953ab1031bd6297355e55ed17e",
   "bit_generator": "PCG64",
   "scheduler": "threads",
   "shared_reducer_sha256": "06c1d2a4e272de9c778a73d4dc35ed2b0834f0fbdbba554ab98a659ad59e8cd1",
