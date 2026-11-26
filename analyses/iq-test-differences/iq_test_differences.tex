@@ -164,7 +164,7 @@ For a two-component mixture with weight \(0<w<1\) and residual scales
 \]
 If \(a\ne b\), the right-hand side is positive, so the mixture's
 mean scale is strictly smaller than its root-mean-square scale.
-Two new Rocq candidate scripts record this algebraic step separately
+Two Rocq kernel-checked scripts record this algebraic step separately
 from the Gaussian expectation theorem.
 \end{proof}
 A shared/independent mixture chooses $C=1$ with probability 0.6 and $0$
@@ -318,8 +318,8 @@ practice effects, heterogeneous norms or selection bias.
 The numerical companion specifies checks of selected consequences and records
 run-specific Monte Carlo uncertainty when execution evidence is available.
 On November 26, 2026, computer10 compiled all 45 canonical Rocq
-modules using Rocq 9.3.0, including all 16 algebraic lemmas for this
-analysis (source revision \texttt{799af85}). The continuous probability
+modules using Rocq 9.3.0, including all 18 algebraic lemmas for this
+analysis (source revision \texttt{0b22b3f}). The continuous probability
 proofs above are written deductions using standard Gaussian,
 expectation and order-statistic results; this successful algebraic build
 does not establish their full measure-theoretic formalization.
@@ -330,8 +330,8 @@ does not establish their full measure-theoretic formalization.
 The Rocq source includes deterministic affine contrast, finite pairwise-square
 bound, heterogeneous variance, two-component scale inequality and pooling
 identities. The canonical finite sum and real arithmetic lemmas are reused;
-all 16 scripts passed the Rocq 9.3.0 kernel compilation at source
-revision \texttt{799af85}. The table identifies the mathematical
+all 18 scripts passed the Rocq 9.3.0 kernel compilation at source
+revision \texttt{0b22b3f}. The table identifies the mathematical
 foundations of the written proofs, not a complete list of machine-checked
 probability theorems. The continuous probability results still require
 measure-theoretic formalization.

@@ -37,7 +37,7 @@ means with analytical predictions and report estimated Monte Carlo standard
 errors. The six-SE diagnostic checks agreement for the executed configuration;
 it is neither a proof nor a guaranteed simultaneous confidence interval.
 The recorded computer10 Dask/Deal campaign processed all 400 million rows
-and passed all ten scenario diagnostics twice. The corrected Python
+and passed all ten scenario diagnostics in three runs. The corrected Python
 implementation also passed repository-wide static Deal lint and all 122
 Python tests. Its executed source hash is preserved in the run manifest.
 A matching simulation
@@ -94,7 +94,9 @@ versions, elapsed time and source hashes. The second November 26 computer10
 run completed in 25.49 seconds wall-clock time (24.62 seconds inside the
 campaign), with Deal enabled and all ten scenario diagnostics passing.
 The estimates reproduced those of the earlier run. The manifest identifies
-the exact corrected Python source used for the retained numerical results.
+the exact source used for the numerical results. The refactored third
+run at \texttt{0b22b3f} also exited successfully in 25.76 seconds wall-clock
+with 379 percent CPU utilization and about 411 MiB maximum resident memory.
 \section{Separately executed offline numerical check}
 \input{offline-validation/run.tex}
 \IQResultsTable{offline-validation/results.tex}
@@ -108,8 +110,9 @@ campaign files.
 \chapter{Reproducibility and contract scope}
 The new source reuses the shared provenance functions, isolates
 smoke results from production data, and guards near-degenerate conditional
-scales. The previously published production record is revision-specific;
-regenerate it before attributing it to the refactored implementation.
+scales. The production record is revision-specific; its hashes distinguish
+this refactored run from earlier evidence. The smoke run passed without
+changing any tracked production dataset.
 From this analysis directory, execute \texttt{make data} and
 \texttt{make pdf}. The shared repository requirements specify the software
 stack. The block function and analytical reference declare separate input-domain,
@@ -117,11 +120,11 @@ output-structure, finiteness, ordering and degeneracy contracts. Both the
 block reducer and the parallel moment merger are reused directly from
 \texttt{reporting/block\_simulations.py}.
 Contract counts are not correctness proofs. Computer10 passed the repository AST audit, all 122 tests and the full
-Dask campaign twice. The second validation passed static Deal lint with
+Dask campaign three times. The second validation passed static Deal lint with
 zero unexpected diagnostics, including the deliberate negative control.
 The subsequent computer10 run compiled all 45 canonical Rocq modules
-with Rocq 9.3.0, including all 16 IQ discrepancy algebra scripts
-(source revision \texttt{799af85}). The continuous probability obligations
+with Rocq 9.3.0, including all 18 IQ discrepancy algebra scripts
+(source revision \texttt{0b22b3f}). The continuous probability obligations
 remain separate from both the completed simulation and algebraic build. The report distinguishes its retained offline evidence from Dask campaign
 outputs; neither is copied from upstream R or legacy NumPy runs. The current
 IQ block and analytic helper declare 30 and 22 distinct decorators,

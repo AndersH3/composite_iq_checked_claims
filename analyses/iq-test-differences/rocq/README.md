@@ -14,4 +14,4 @@ The second computer10 compilation at `6f167731968e9eca8c9c755dbf18eb0a7dd21629` 
 
 See the [canonical verification record](../../../rocq/README.md#computer10-canonical-kernel-verification--november-26-2026) for the scope and revision of the successful run.
 
-Two new weighted-scale Jensen certificates strengthen the finite-mixture non-identification argument. They are candidate scripts until the next canonical compile; the verified baseline remains 16 IQ declarations. The MathComp density-factorization candidates and FormalML transfer are separate probability-library modules.
+Two new weighted-scale Jensen certificates strengthen the finite-mixture non-identification argument. Both compiled at `0b22b3f64c6429d04071b5c5f56028e86a3b8301` on Rocq 9.3.0, bringing the verified IQ algebra inventory to 18 declarations. The MathComp density-factorization candidates and FormalML transfer are separate probability-library modules.

@@ -175,10 +175,12 @@ Proof.
   apply
     (is_conditional_expectation_proper
        prob obs_sub
-       (rvplus predictor innovation) predictor
+       predictor (rvplus predictor innovation)
        (fun w => Finite (predictor w))
        (fun w => Finite (predictor w))).
-  - exact future_predictor_ae.
+  (* Transfer the CE of the adapted predictor TO the future variable;
+     the upstream congruence theorem takes source before destination. *)
+  - symmetry; exact future_predictor_ae.
   - apply all_almost; intro w; reflexivity.
   - apply is_conditional_expectation_id.
 Qed.
