@@ -4207,4 +4207,4 @@ Review: G08/G13 report obligations concerning heterogeneous success counts, cali
 | `iq_two_component_scale_concavity` (Theorem) | Expand the deficit as a nonnegative squared difference. | Stdlib Rle_0_sqr and nra. |
 | `iq_parallel_variance_identity` (Theorem) | Translate the canonical centered pooling identity to the report's notation. | PooledMomentsAlgebra.pooled_between_centered_identity; Stdlib field and ring. |
 
-Computer10 Rocq 9.3.0 accepted the first 13 declarations at 6f16773; it stopped at the heterogeneous variance square argument. The final three scripts require revalidation after the explicit Stdlib square and pooling fixes. This section does not alter historical verified counts.
+Computer10 Rocq 9.3.0 compiled all 16 declarations at `799af85da583075b6ed94179a5483e2180267739` as part of the successful 45-module canonical build. The 16 are deterministic algebra and notation bridges; no continuous-probability formalization or independent new probability result is implied.

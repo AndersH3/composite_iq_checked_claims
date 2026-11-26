@@ -308,10 +308,12 @@ empirical findings. Real tests may have ceiling effects, rounding,
 practice effects, heterogeneous norms or selection bias.
 The numerical companion specifies checks of selected consequences and records
 run-specific Monte Carlo uncertainty when execution evidence is available.
-Rocq coverage is currently limited to the explicit algebraic lemmas
-listed in the proof register; the probability proofs above are written
-deductions using standard Gaussian, expectation and order-statistic
-results, not a claim that every measure-theoretic argument is kernel checked.
+On November 26, 2026, computer10 compiled all 45 canonical Rocq
+modules using Rocq 9.3.0, including all 16 algebraic lemmas for this
+analysis (source revision \texttt{799af85}). The continuous probability
+proofs above are written deductions using standard Gaussian,
+expectation and order-statistic results; this successful algebraic build
+does not establish their full measure-theoretic formalization.
 \bibliographystyle{plainnat}
 \bibliography{references}
 \appendix
@@ -319,8 +321,10 @@ results, not a claim that every measure-theoretic argument is kernel checked.
 The Rocq source includes deterministic affine contrast, finite pairwise-square
 bound, heterogeneous variance, two-component scale inequality and pooling
 identities. The canonical finite sum and real arithmetic lemmas are reused;
-these scripts require a successful Rocq kernel check before counting them as
-verified. The continuous probability results in the table still require
+all 16 scripts passed the Rocq 9.3.0 kernel compilation at source
+revision \texttt{799af85}. The table identifies the mathematical
+foundations of the written proofs, not a complete list of machine-checked
+probability theorems. The continuous probability results still require
 measure-theoretic formalization.
 \begin{tabular}{ll}
 \toprule

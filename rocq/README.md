@@ -6,6 +6,12 @@ Researcher/requester: Anders Hellström. **All formal theorems and proof obligat
 
 **AI disclosure:** The proof-language guard, documentation and formalization work were AI-assisted; verification claims apply only to the exact statements accepted by Rocq.
 
+## Computer10 canonical kernel verification — November 26, 2026
+
+At [source revision 799af85](https://github.com/AndersH3/composite_iq_checked_claims/commit/799af85da583075b6ed94179a5483e2180267739), the researcher-provided computer10 terminal transcript records successful ShellCheck, the documentation audit, and compilation of all 45 canonical Stdlib-based Rocq modules using Rocq **9.3.0** (OCaml 4.14.2). The opam switch name is `rocq-9.2`, but the observed compiler version is 9.3.0. The terminal completed with `Rocq kernel compilation passed for all 45 modules.` The source audit counted 4,018 declarations, 3,684 theorem/helper proofs and 3,697 Proof./Qed. or Proof./Defined. scripts, including all 16 IQ discrepancy algebra proofs. These are counts of the checked corpus, not counts of independent probabilistic claims. The remaining warnings concern large nat literals and legacy vector APIs. The deprecated list-lemma and legacy simpl warnings are absent in this run.
+
+The dedicated FormalML, MathComp-Analysis and QBS modules are outside this compilation script. No claim of their acceptance or of the full joint-Gaussian conditional-expectation theorem follows from this result. The prior Rocq 9.2 CI records remain historical evidence, not verification of this exact revision with 9.2. This entry records researcher-supplied local validation rather than a new CI run.
+
 ## D050 — 56 kernel-verified Gaussian kernel and covariance-domain results
 
 **AI disclosure:** These candidate formal proofs, probability model analysis and

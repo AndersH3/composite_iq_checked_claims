@@ -6,7 +6,9 @@
 
 This repository examines composite IQ scores, multiple-test admissions, sequential conditional means, and IQ score discrepancies under explicitly stated statistical models. **The maintained computational stack is Python, Dask, NumPy/SciPy, and Deal. Rocq is used for separately scoped mathematical proofs.** The former discontinued alternate-engine simulation and verification implementation has been removed from the current tree; its historical revisions remain accessible through Git history. No retired proof run is evidence that current Python is formally verified.
 
-## Eight reports (including two new draft sources)
+## Eight reports
+
+The fourth analysis now has a locally executed production Dask campaign (400 million synthetic rows), passing Deal contract coverage and static lint, 122 passing tests, and all 16 IQ algebra proofs accepted in the [45-module Rocq 9.3.0 verification](rocq/README.md#computer10-canonical-kernel-verification--november-26-2026). This does not assert complete continuous-probability formalization or verification of future source revisions.
 
 | Analysis | Mathematical report | Simulation methods and results |
 |---|---|---|
