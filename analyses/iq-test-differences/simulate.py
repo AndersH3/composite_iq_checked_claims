@@ -72,7 +72,9 @@ def simulate_block(seed: int, n: int, k: int, rho: float, mu: float,
     z = rng.standard_normal((n, k))
     if mode == "Block":
         # Four within-group pairs have correlation one; six have correlation 1/3.
-        second = z[:, 0] / 3 + np.sqrt(8 / 9) * z[:, 1]
+        # Both denominators are fixed positive integers. Use NumPy's division
+        # ufunc directly rather than declare an impossible zero-divisor exception.
+        second = np.divide(z[:, 0], 3) + np.sqrt(np.divide(8, 9)) * z[:, 1]
         scores = mu + sigma * np.column_stack((z[:, 0], z[:, 0], z[:, 0], second, second))
     elif mode == "Conditional":
         scores = np.column_stack((np.full(n, 145.0),

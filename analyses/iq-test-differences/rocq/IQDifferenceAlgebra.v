@@ -154,7 +154,10 @@ Qed.
 Theorem iq_range_pair_square_bound (ds : list R) (d : R) :
   In d ds -> d*d <= finite_sum (fun x => x*x) ds.
 Proof.
-  intro Hd. apply finite_sum_member_le.
+  intro Hd.
+  (* Supply the square integrand explicitly; higher-order unification of
+     d*d otherwise chooses the unintended function fun x => d*x. *)
+  apply (@finite_sum_member_le R ds (fun x : R => x*x) d).
   - intros x Hx. nra.
   - exact Hd.
 Qed.

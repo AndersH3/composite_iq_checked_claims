@@ -4202,7 +4202,7 @@ Review: G08/G13 report obligations concerning heterogeneous success counts, cali
 
 | `iq_absolute_shift` (Theorem) | Rewrite with the already proved common-shift identity. | iq_common_shift and Stdlib Rabs. |
 | `iq_absolute_scale` (Theorem) | Rewrite the signed scale identity, multiplicativity of absolute value, and absolute value of a nonnegative number. | iq_scaled_gap, Rabs_mult and Rabs_right from Stdlib. |
-| `iq_range_pair_square_bound` (Theorem) | Apply the canonical nonnegative member bound to the square integrand and establish square nonnegativity by real arithmetic. | FiniteSum.finite_sum_member_le, Stdlib List and nra. |
+| `iq_range_pair_square_bound` (Theorem) | Explicitly instantiate the canonical nonnegative member bound with the square integrand and establish square nonnegativity by real arithmetic. | FiniteSum.finite_sum_member_le, Stdlib List and nra. |
 | `iq_gap_heterogeneous_variance_nonnegative` (Theorem) | Use the exact square decomposition and nonnegativity of the remaining product. | Stdlib ring, nra, Rmult_le_pos. |
 | `iq_two_component_scale_concavity` (Theorem) | Expand the deficit as a nonnegative squared difference. | Stdlib nra and real squares. |
 | `iq_parallel_variance_identity` (Theorem) | Translate the canonical centered pooling identity to the report's notation. | PooledMomentsAlgebra.pooled_between_centered_identity; Stdlib field and ring. |
