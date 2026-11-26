@@ -1,9 +1,12 @@
 """Chunked synthetic IQ-gap experiments with worker-local sufficient statistics.
 
 Anders Hellström requested the comparison of independent people and correlated
-tests. No participant data enter this module. All reductions use NumPy/Dask.
+scores. NumPy supplies sampling and reduction, SciPy supplies analytic reference
+values, Dask schedules bounded blocks, and Deal checks callable boundaries.
+No participant data enter this module. The CLI records run-specific provenance.
 """
 import json
+import math
 from pathlib import Path
 
 import dask
@@ -12,39 +15,57 @@ import numpy as np
 from scipy.integrate import quad
 from scipy.stats import foldnorm, norm
 
-# A block returns first and second raw moment sums for three estimands:
-# absolute gap, range, and signed gap. Rows are independent model replications.
+MODES = ("Gaussian", "Shared mixture", "Smooth mixture", "Block", "Conditional")
+# Use distinct clauses for each estimand rather than one large compound predicate.
+# Floating-point tolerances here are for summation, not statistical uncertainty.
+MOMENT_RTOL = 1e-10
+MOMENT_ATOL = 1e-7
+
+
 @deal.pre(lambda seed, n, k, rho, mu, sigma, mode: type(seed) is int)
 @deal.pre(lambda seed, n, k, rho, mu, sigma, mode: 0 <= seed < 2**64)
 @deal.pre(lambda seed, n, k, rho, mu, sigma, mode: type(n) is int)
 @deal.pre(lambda seed, n, k, rho, mu, sigma, mode: 2 <= n <= 1_000_000)
 @deal.pre(lambda seed, n, k, rho, mu, sigma, mode: type(k) is int)
 @deal.pre(lambda seed, n, k, rho, mu, sigma, mode: 2 <= k <= 100)
-@deal.pre(lambda seed, n, k, rho, mu, sigma, mode: np.isfinite(rho) and -1 <= rho <= 1)
-@deal.pre(lambda seed, n, k, rho, mu, sigma, mode: rho >= -1 / (k - 1))
-@deal.pre(lambda seed, n, k, rho, mu, sigma, mode: np.isfinite(mu) and abs(mu) <= 1000)
-@deal.pre(lambda seed, n, k, rho, mu, sigma, mode: np.isfinite(sigma) and 0 < sigma <= 100)
-@deal.pre(lambda seed, n, k, rho, mu, sigma, mode: mode in ("Gaussian", "Shared mixture", "Smooth mixture", "Block", "Conditional"))
-@deal.pre(lambda seed, n, k, rho, mu, sigma, mode: mode not in ("Shared mixture", "Smooth mixture", "Block") or (k == 5 and rho == 0.6))
-@deal.pre(lambda seed, n, k, rho, mu, sigma, mode: mode != "Conditional" or (k == 2 and rho == 0.6))
+@deal.pre(lambda seed, n, k, rho, mu, sigma, mode: type(rho) in (float, int))
+@deal.pre(lambda seed, n, k, rho, mu, sigma, mode: -1 <= rho <= 1)
+@deal.pre(lambda seed, n, k, rho, mu, sigma, mode: (k - 1) * rho >= -1)
+@deal.pre(lambda seed, n, k, rho, mu, sigma, mode: type(mu) in (float, int))
+@deal.pre(lambda seed, n, k, rho, mu, sigma, mode: abs(mu) <= 1000)
+@deal.pre(lambda seed, n, k, rho, mu, sigma, mode: type(sigma) in (float, int))
+@deal.pre(lambda seed, n, k, rho, mu, sigma, mode: 0 < sigma <= 100)
+@deal.pre(lambda seed, n, k, rho, mu, sigma, mode: mode in MODES)
+@deal.pre(lambda seed, n, k, rho, mu, sigma, mode: mode == "Gaussian" or rho == 0.6)
+@deal.pre(lambda seed, n, k, rho, mu, sigma, mode: mode != "Conditional" or k == 2)
+@deal.pre(lambda seed, n, k, rho, mu, sigma, mode: mode in ("Gaussian", "Conditional") or k == 5)
 @deal.post(lambda result: isinstance(result, np.ndarray) and result.shape == (2, 3))
 @deal.post(lambda result: bool(np.isfinite(result).all()))
 @deal.post(lambda result: bool((result[1] >= 0).all()))
-@deal.post(lambda result: 0 <= result[0, 0] <= result[0, 1] + 1e-7)
-@deal.post(lambda result: abs(result[0, 2]) <= result[0, 0] + 1e-7)
-@deal.ensure(lambda seed, n, k, rho, mu, sigma, mode, result: k != 2 or np.allclose(result[:, 0], result[:, 1]))
-@deal.ensure(lambda seed, n, k, rho, mu, sigma, mode, result: bool((result[0]**2 <= n * result[1] + 1e-5 * np.maximum(1, n * result[1])).all()))
-@deal.ensure(lambda seed, n, k, rho, mu, sigma, mode, result: mode != "Gaussian" or rho != 1 or bool((result == 0).all()))
-def simulate_block(seed, n, k, rho, mu, sigma, mode):
+@deal.post(lambda result: 0 <= result[0, 0] <= result[0, 1] + MOMENT_ATOL)
+@deal.post(lambda result: abs(result[0, 2]) <= result[0, 0] + MOMENT_ATOL)
+@deal.post(lambda result: result[1, 0] == result[1, 2])
+@deal.post(lambda result: result[1, 0] <= result[1, 1] * (1 + MOMENT_RTOL) + MOMENT_ATOL)
+@deal.ensure(lambda seed, n, k, rho, mu, sigma, mode, result:
+             k != 2 or np.allclose(result[:, 0], result[:, 1], rtol=MOMENT_RTOL, atol=MOMENT_ATOL))
+@deal.ensure(lambda seed, n, k, rho, mu, sigma, mode, result:
+             mode != "Block" or np.allclose(result[:, 0], result[:, 1], rtol=MOMENT_RTOL, atol=MOMENT_ATOL))
+@deal.ensure(lambda seed, n, k, rho, mu, sigma, mode, result:
+             np.all(result[0]**2 <= n * result[1] * (1 + MOMENT_RTOL) + MOMENT_ATOL))
+@deal.ensure(lambda seed, n, k, rho, mu, sigma, mode, result:
+             mode != "Gaussian" or rho != 1 or np.count_nonzero(result) == 0)
+def simulate_block(seed: int, n: int, k: int, rho: float, mu: float,
+                   sigma: float, mode: str) -> np.ndarray:
     """Generate one bounded block and reduce it to six finite moment sums.
 
-    The seed selects a local generator; it does not certify mathematical
-    independence. Equicorrelation uses orthogonal mean/residual projections
-    to accommodate negative correlations as well as singular boundaries.
-    The conditional case fixes the first score at 145. The block counterexample
-    repeats three scores in one group and two in another. No external I/O.
+    Rows are synthetic batteries or independent pairs. The seed selects a local
+    PCG64 generator, not a mathematical proof of independence. The projection
+    includes singular correlation boundaries. Conditional rows fix X1 at 145;
+    block-model rows measure the cross-group gap. No participant input or I/O.
+    Invalid model parameters violate the documented preconditions; allocation
+    failures are not converted into simulated observations.
     """
-    rng = np.random.default_rng(seed)
+    rng = np.random.Generator(np.random.PCG64(seed))
     z = rng.standard_normal((n, k))
     if mode == "Block":
         # Four within-group pairs have correlation one; six have correlation 1/3.
@@ -69,8 +90,62 @@ def simulate_block(seed, n, k, rho, mu, sigma, mode):
     return np.stack((values.sum(axis=0), np.square(values).sum(axis=0)))
 
 
+# Separate the analytic reference from the random-number implementation.
+@deal.pre(lambda k, rho, mu, sigma, mode: type(k) is int)
+@deal.pre(lambda k, rho, mu, sigma, mode: 2 <= k <= 100)
+@deal.pre(lambda k, rho, mu, sigma, mode: type(rho) in (float, int))
+@deal.pre(lambda k, rho, mu, sigma, mode: -1 <= rho <= 1)
+@deal.pre(lambda k, rho, mu, sigma, mode: (k - 1) * rho >= -1)
+@deal.pre(lambda k, rho, mu, sigma, mode: type(mu) in (float, int))
+@deal.pre(lambda k, rho, mu, sigma, mode: abs(mu) <= 1000)
+@deal.pre(lambda k, rho, mu, sigma, mode: type(sigma) in (float, int))
+@deal.pre(lambda k, rho, mu, sigma, mode: 0 < sigma <= 100)
+@deal.pre(lambda k, rho, mu, sigma, mode: mode in MODES)
+@deal.pre(lambda k, rho, mu, sigma, mode: mode == "Gaussian" or rho == 0.6)
+@deal.pre(lambda k, rho, mu, sigma, mode: mode != "Conditional" or k == 2)
+@deal.pre(lambda k, rho, mu, sigma, mode: mode in ("Gaussian", "Conditional") or k == 5)
+@deal.post(lambda result: isinstance(result, np.ndarray) and result.shape == (3,))
+@deal.post(lambda result: bool(np.isfinite(result).all()))
+@deal.post(lambda result: 0 <= result[0] <= result[1] + MOMENT_ATOL)
+@deal.post(lambda result: abs(result[2]) <= result[0] + MOMENT_ATOL)
+@deal.ensure(lambda k, rho, mu, sigma, mode, result: mode == "Conditional" or result[2] == 0)
+@deal.ensure(lambda k, rho, mu, sigma, mode, result: k != 2 or result[0] == result[1])
+@deal.ensure(lambda k, rho, mu, sigma, mode, result: mode != "Block" or result[0] == result[1])
+@deal.ensure(lambda k, rho, mu, sigma, mode, result: rho != 1 or np.count_nonzero(result) == 0)
+@deal.ensure(lambda k, rho, mu, sigma, mode, result:
+             mode != "Conditional" or math.isclose(result[2], (1 - rho) * (145 - mu)))
+def analytic_means(k: int, rho: float, mu: float, sigma: float, mode: str) -> np.ndarray:
+    """Evaluate the three model means without random draws or Dask tasks.
+
+    The result orders absolute gap, range, and signed gap. The Gaussian
+    two-score and duplicated-group cases have closed forms; other ranges use
+    SciPy quadrature. The folded-normal library handles nonzero conditional
+    means. Returned decimals are approximations, not certified enclosures.
+    """
+    if mode == "Conditional":
+        delta = (1 - rho) * (145 - mu)
+        tau = sigma * math.sqrt(1 - rho**2)
+        gap = foldnorm.mean(abs(delta) / tau, scale=tau)
+        return np.array([gap, gap, delta])
+    if mode == "Block":
+        gap = 2 * sigma * math.sqrt((2 / 3) / math.pi)
+        return np.array([gap, gap, 0.0])
+    scale = math.sqrt(1 - rho)
+    if mode == "Shared mixture":
+        scale = 1 - rho
+    elif mode == "Smooth mixture":
+        scale = (math.sqrt(0.7) + math.sqrt(0.1)) / 2
+    gap = 2 * sigma * scale / math.sqrt(math.pi)
+    if k == 2 or scale == 0:
+        return np.array([gap, gap, 0.0])
+    # The order-statistic density is k phi(x) Phi(x)^(k-1).
+    a = quad(lambda x: k * x * norm.pdf(x) * norm.cdf(x)**(k - 1),
+             -np.inf, np.inf, epsabs=1e-11)[0]
+    return np.array([gap, 2 * sigma * scale * a, 0.0])
+
+
 if __name__ == "__main__":
-    # Eight independently seeded replicates of five million rows per scenario.
+    # Eight separately seeded replicates of five million rows per scenario.
     # Explicit worker count and bounded blocks limit memory and scheduler overhead.
     import argparse
     import platform
@@ -107,7 +182,6 @@ if __name__ == "__main__":
     total = args.replicates * args.rows_per_replicate
     rows = []
     started = time.perf_counter()
-    # Evaluate independent normal order-statistic integrals via SciPy quadrature.
     for index, (label, k, rho, mode) in enumerate(scenarios):
         tasks = [
             dask.delayed(simulate_block, pure=False)(
@@ -121,19 +195,7 @@ if __name__ == "__main__":
         means = aggregate[0] / total
         variance = np.maximum(0, (aggregate[1] - total * means**2) / (total - 1))
         se = np.sqrt(variance / total)
-        a = quad(lambda x: k * x * norm.pdf(x) * norm.cdf(x)**(k - 1),
-                 -np.inf, np.inf, epsabs=1e-11)[0]
-        scale = np.sqrt(1 - rho)
-        if mode == "Shared mixture":
-            scale = 1 - rho
-        if mode == "Smooth mixture":
-            scale = (np.sqrt(0.7) + np.sqrt(0.1)) / 2
-        exact = np.array([30 * scale / np.sqrt(np.pi), 30 * scale * a, 0.0])
-        if mode == "Block":
-            exact[:2] = 30 * np.sqrt((2 / 3) / np.pi)
-        if mode == "Conditional":
-            gap = foldnorm.mean(18 / 12, scale=12)
-            exact = np.array([gap, gap, 18.0])
+        exact = analytic_means(k, rho, 100.0, 15.0, mode)
         passed = bool(np.all(np.abs(means - exact) <= 6 * se + 1e-8))
         rows.append(dict(label=label, k=k, rho=rho, mode=mode, means=means.tolist(),
                          analytic=exact.tolist(), mcse=se.tolist(), passed=passed,
