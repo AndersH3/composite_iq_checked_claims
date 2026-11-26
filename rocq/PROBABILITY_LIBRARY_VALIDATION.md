@@ -19,13 +19,42 @@ set -o pipefail
 opam switch create gaussian-rocq-9.2 ocaml-base-compiler.4.14.2 --no-switch
 opam repository add --switch=gaussian-rocq-9.2 rocq-released https://rocq-prover.org/opam/released
 opam update
+# Install the legacy command shims FIRST. Older upstream Makefiles
+# otherwise prefer Debian's system coqtop/coq_makefile/coqdep.
+opam install --switch=gaussian-rocq-9.2 -y \
+  rocq-core.9.2.0 rocq-runtime.9.2.0 rocq-stdlib.9.2.0 coq-core.9.2.0
+opam exec --switch=gaussian-rocq-9.2 -- coqc --version
 opam install --switch=gaussian-rocq-9.2 -y -j 3 \
   rocq-core.9.2.0 rocq-runtime.9.2.0 rocq-stdlib.9.2.0 \
-  rocq-mathcomp-analysis.1.18.0 \
+  coq-core.9.2.0 rocq-mathcomp-analysis.1.18.0 \
   2>&1 | tee "$LOGDIR/mathcomp-install.log"
 ~~~
 
 If the switch already exists, do not recreate it. Check its installed versions before proceeding. If the solver rejects the exact versions, preserve the output instead of relaxing the pins.
+
+### Recovery of the partially installed switch (November 26, 2026)
+
+The first installation on computer10 installed Rocq 9.2.0 and MathComp 2.6.0, but Finmap 2.2.4 and Bigenough 1.0.4 could not resolve HB.structures or mathcomp.ssreflect, respectively. The subsequent Gaussian compile could not import mathcomp.classical_sets because MathComp-Analysis was never installed. The upstream Makefile.common files at finmap 2.2.4 and bigenough 1.0.4 choose legacy commands before falling back to rocq. The missing coq-core.9.2.0 compatibility package is the leading diagnosis, not yet a confirmed repair.
+
+Install the compatibility package as above, then verify the selected binaries and library paths:
+
+~~~bash
+opam exec --switch=gaussian-rocq-9.2 -- which rocq coqc coqtop coq_makefile coqdep
+opam exec --switch=gaussian-rocq-9.2 -- coqc --version
+opam exec --switch=gaussian-rocq-9.2 -- coqc -where
+opam exec --switch=gaussian-rocq-9.2 -- rocq compile -where
+~~~
+
+The executable paths must be in the isolated switch, not /usr/bin or a different opam switch. Retry the two failed dependencies after verifying this:
+
+~~~bash
+opam install --switch=gaussian-rocq-9.2 -y -j 2 \
+  rocq-core.9.2.0 rocq-runtime.9.2.0 rocq-stdlib.9.2.0 coq-core.9.2.0 \
+  rocq-mathcomp-finmap.2.2.4 rocq-mathcomp-bigenough.1.0.4 \
+  2>&1 | tee "$LOGDIR/mathcomp-dependency-retry.log"
+~~~
+
+Only after both succeed, resume installation of Analysis with the compiler pins above. Do not edit the system Coq installation, create manual symlinks, or delete the successful partial switch. If either build still fails, retain the full corresponding opam .out and .env logs. The official compatibility package is documented at https://opam.ocaml.org/packages/coq-core/coq-core.9.2.0/.
 
 ~~~bash
 opam exec --switch=gaussian-rocq-9.2 -- rocq --version
@@ -58,7 +87,7 @@ cd FormalML
 git checkout --detach 8ee433dc802fca35f6bceb6dacb69d3c1315e886
 
 opam install --switch=gaussian-rocq-9.2 -y -j 2 --deps-only . \
-  rocq-core.9.2.0 rocq-runtime.9.2.0 rocq-stdlib.9.2.0 \
+  rocq-core.9.2.0 rocq-runtime.9.2.0 rocq-stdlib.9.2.0 coq-core.9.2.0 \
   2>&1 | tee "$LOGDIR/formalml-dependencies.log"
 ~~~
 

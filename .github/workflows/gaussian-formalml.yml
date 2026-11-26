@@ -55,6 +55,9 @@ jobs:
           docker run --rm -v "$PWD:/workspace:ro" rocq/rocq-prover:9.2.0 sh -euc '
             opam repository set-url rocq-released https://rocq-prover.org/opam/released -y
             opam update -y
+            # Keep legacy Coq entry points in the same pinned Rocq runtime.
+            opam install -y -j 2 rocq-core.9.2.0 rocq-runtime.9.2.0 rocq-stdlib.9.2.0 coq-core.9.2.0
+            opam exec -- coqc --version
             git clone --depth 1 https://github.com/IBM/FormalML.git /tmp/FormalML
             cd /tmp/FormalML
             git fetch --depth 1 origin 8ee433dc802fca35f6bceb6dacb69d3c1315e886
