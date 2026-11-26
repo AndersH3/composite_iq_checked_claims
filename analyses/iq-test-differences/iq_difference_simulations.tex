@@ -5,10 +5,23 @@
 \subtitle{Dask block reductions, Deal contracts and Monte Carlo diagnostics}
 \author{\ProjectAuthor}
 \date{26 November 2026}
-\renewcommand{\ProjectReportHighlights}{Synthetic independent-person and
-within-person score models are compared against analytic predictions.
-Numerical agreement is evidence about implementation, not mathematical proof
-or empirical psychometric validation.}
+\renewcommand{\ProjectReportHighlights}{%
+\textbf{What is being checked?} The analytical benchmarks are 16.93 points
+for two independently sampled people, 10.70 for two correlated tests
+(\(\rho=0.6\)), and 22.07 for the range across five such tests
+(SD 15). A first observed score of 145 instead implies a conditional
+absolute gap of 18.70 points.\par
+\textbf{Experimental design.} Ten scenarios include independent people,
+correlated batteries, singular covariance boundaries, two mixture models,
+a non-equicorrelated Gaussian example, and conditional prediction.
+The default Dask experiment specifies 40 million rows per scenario,
+400 million overall, with eight replicates and bounded worker-local blocks.\par
+\textbf{Reading the numerical evidence.} The tables compare Monte Carlo
+means with analytical predictions and report estimated Monte Carlo standard
+errors. The six-SE diagnostic checks agreement for the executed configuration;
+it is neither a proof nor a guaranteed simultaneous confidence interval.
+Results are reported only if a run record exists. A matching simulation
+cannot establish that actual IQ tests satisfy the stipulated model.}
 \begin{document}
 \frontmatter
 \ProjectReportTitlePage
@@ -73,5 +86,5 @@ not numerical results copied from upstream R or NumPy runs.
 \chapter{Implementation}
 \lstinputlisting[language=Python]{simulate.py}
 \ProjectReportAIAppendix
-\paragraph{This analysis specifically.} ChatGPT (GPT-6.2) prepared this draft, source integration, mathematical exposition and experimental design at Anders Hellström's request. No executed Dask run, Rocq kernel check or visual PDF review is claimed for this initial revision. The general project disclosure above must not be read as evidence that those operations were performed for this book.
+\paragraph{This analysis specifically.} ChatGPT (GPT-6.2) prepared this draft, source integration, mathematical exposition and experimental design at Anders Hellström's request. Dask execution, Rocq kernel verification and PDF inspection are separate claims that require revision-specific evidence. The general project disclosure above must not be read as evidence that those operations were performed for this book.
 \end{document}

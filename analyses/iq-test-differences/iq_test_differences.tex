@@ -5,10 +5,24 @@
 \subtitle{Independent individuals, correlated tests, and conditional discrepancies}
 \author{\ProjectAuthor}
 \date{26 November 2026}
-\renewcommand{\ProjectReportHighlights}{For independent normal IQ scores the
-mean absolute gap is about 16.93 points; for correlation 0.6 it is 10.70.
-The expected five-test range is 22.07 under joint Gaussian equicorrelation.
-These are model deductions, not observed psychometric results.}
+\renewcommand{\ProjectReportHighlights}{%
+\textbf{Two independent people.} If each person's IQ score is normally
+distributed with mean 100 and standard deviation 15, their expected absolute
+difference is \textbf{16.93 IQ points}.\par
+\textbf{Two tests taken by the same person.} With equal means and SDs of 15
+and joint Gaussian correlation 0.6, the expected absolute difference is
+\textbf{10.70 points}; the root-mean-square gap is 13.42. Across five such
+tests the expected highest-minus-lowest score is \textbf{22.07 points},
+not the mean of the ten pairwise gaps.\par
+\textbf{Conditioning changes the question.} Given a first score of 145,
+the predicted second score is 127, and the expected absolute discrepancy
+is 18.70 points. The unconditional average of 10.70 does not apply to this
+conditional prediction.\par
+\textbf{Interpretation.} Correlation determines the variance of the
+difference, but does not determine its mean absolute size or the range.
+Models with the same normal margins and correlation matrix can give
+different ranges. These are proved consequences of explicit probability
+models, not empirical discrepancy norms or measures of an individual's true IQ.}
 \begin{document}
 \frontmatter
 \ProjectReportTitlePage
@@ -73,7 +87,8 @@ For $\tau>0$ and $a\ge0$,
 For $\tau=0$ the gap vanishes almost surely.
 \end{proposition}
 \begin{proof}
-The contrast is $N(0,\tau^2)$ by \cref{prop:moments}.
+The contrast is normal by closure under linear transformations, with
+mean and variance supplied by \cref{prop:moments}.
 Integrating the normal density over $[-a,a]$ gives the CDF; integrating
 $2x\phi(x)$ on the positive half-line gives $\sqrt{2/\pi}$.
 Since $A^2=D^2$, subtract the squared mean from its second moment.
@@ -129,7 +144,7 @@ approximately 22.0657 IQ points.
 \chapter{Identification failures and sensitivity}
 % Mixtures preserve marginal normality but not the joint law.
 \begin{proposition}[Same marginal normals, different gaps]\label{prop:mixtures}
-Let a random correlation $C$ select a conditional Gaussian
+Fix $k\ge2$ and $\sigma>0$. Let a random admissible correlation $C$ select a conditional Gaussian
 equicorrelation model with fixed $\mu,\sigma$ and $\E C=\rho$.
 The unconditional marginal laws are normal, and each pair has
 correlation $\rho$. The absolute gap and range means equal respectively
@@ -148,7 +163,7 @@ otherwise. A smooth mixture chooses 0.3 and 0.9 with equal probabilities.
 At $k=5$ their approximate range means are 13.96 and 20.11 respectively.
 % Average correlation cannot encode the entire covariance matrix.
 \begin{proposition}[Average correlation is insufficient]\label{prop:block}
-Take three copies of a normal score $U$ and two copies of $V$, with
+Take a jointly normal pair $(U,V)$ and form three copies of $U$ and two copies of $V$, with
 common mean and SD $\sigma$ and correlation $1/3$. Their average
 pairwise correlation is 0.6, but their expected range is
 $2\sigma\sqrt{(2/3)/\pi}$.
@@ -202,7 +217,7 @@ At $x=145$, the predicted second score has mean 127; the signed gap
 mean is 18 and the conditional absolute gap mean is about 18.70.
 % Independence of the residual vector from the mean is a Gaussian result.
 \begin{proposition}[Range independent of battery average]\label{prop:average}
-Under the Gaussian equicorrelation model, $R_k$ and $\bar X$ are independent.
+Under the Gaussian equicorrelation model, $R_k$ and $\bar X$ are independent, including the degenerate boundaries.
 \end{proposition}
 \begin{proof}
 The vectors $(I-P)Z$ and $PZ$ are jointly Gaussian with zero cross
@@ -265,7 +280,7 @@ not the expected absolute gap conditional on a single known score.
 % Range second moment uses the joint density of the two extremes.
 \section{Second moment of the range}
 \begin{proposition}[Joint extremes]\label{prop:second}
-For iid standard normals, the minimum $m_k$ and maximum $M_k$
+For $k\ge2$ iid standard normals, the minimum $m_k$ and maximum $M_k$
 have joint density
 \[
  k(k-1)\phi(u)\phi(v)[\Phi(v)-\Phi(u)]^{k-2},\qquad u<v.
@@ -291,8 +306,8 @@ is bounded by the sum of squared pairwise differences
 Normality, equal scales and common correlations are assumptions, not
 empirical findings. Real tests may have ceiling effects, rounding,
 practice effects, heterogeneous norms or selection bias.
-The numerical companion checks selected consequences by simulation
-and records run-specific Monte Carlo uncertainty.
+The numerical companion specifies checks of selected consequences and records
+run-specific Monte Carlo uncertainty when execution evidence is available.
 Rocq coverage is currently limited to the explicit algebraic lemmas
 listed in the proof register; the probability proofs above are written
 deductions using standard Gaussian, expectation and order-statistic
@@ -316,5 +331,5 @@ Propositions & Foundations \\
 \bottomrule
 \end{tabular}
 \ProjectReportAIAppendix
-\paragraph{This analysis specifically.} ChatGPT (GPT-6.2) prepared this draft, source integration, mathematical exposition and experimental design at Anders Hellström's request. No executed Dask run, Rocq kernel check or visual PDF review is claimed for this initial revision. The general project disclosure above must not be read as evidence that those operations were performed for this book.
+\paragraph{This analysis specifically.} ChatGPT (GPT-6.2) prepared this draft, source integration, mathematical exposition and experimental design at Anders Hellström's request. Dask execution, Rocq kernel verification and PDF inspection are separate claims that require revision-specific evidence. The general project disclosure above must not be read as evidence that those operations were performed for this book.
 \end{document}
