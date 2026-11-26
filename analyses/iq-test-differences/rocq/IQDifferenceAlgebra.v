@@ -167,7 +167,7 @@ Qed.
     Exact representation: The variance decomposes into a squared scale difference plus a nonnegative covariance adjustment.
     Premises and side conditions: Require nonnegative scales and rho <= 1.
     Proof/definition method: Use the exact square decomposition and nonnegativity of the remaining product.
-    Library reuse: Stdlib ring, nra, Rmult_le_pos.
+    Library reuse: Stdlib ring, Rle_0_sqr, Rplus_le_le_0_compat, Rmult_le_pos.
     Boundary: The law of the contrast and its folded-normal expectation are not implied by this algebra alone. *)
 Theorem iq_gap_heterogeneous_variance_nonnegative (sx sy rho : R) :
   0 <= sx -> 0 <= sy -> rho <= 1 ->
@@ -176,8 +176,13 @@ Proof.
   intros Hx Hy Hr.
   assert (Hp : 0 <= 2*sx*sy*(1-rho)).
   { apply Rmult_le_pos; [apply Rmult_le_pos; [lra|exact Hy]|lra]. }
-  assert (Hs : 0 <= (sx-sy)^2) by nra.
-  nra.
+  (* The standard square lemma supplies positivity explicitly, rather
+     than asking nonlinear arithmetic to discover a difference square. *)
+  pose proof (Rle_0_sqr (sx-sy)) as Hs.
+  unfold Rsqr in Hs.
+  replace (sx^2+sy^2-2*rho*sx*sy) with
+    ((sx-sy)*(sx-sy)+2*sx*sy*(1-rho)) by ring.
+  exact (Rplus_le_le_0_compat _ _ Hs Hp).
 Qed.
 
 (** [iq_two_component_scale_concavity]
@@ -185,11 +190,15 @@ Qed.
     Exact representation: Two nonnegative scales a and b model the conditional residual scales of an equal-weight mixture.
     Premises and side conditions: Require a,b nonnegative; the inequality is stated on squared scales to avoid a redundant root monotonicity proof.
     Proof/definition method: Expand the deficit as a nonnegative squared difference.
-    Library reuse: Stdlib nra and real squares.
+    Library reuse: Stdlib Rle_0_sqr and lra/nra; no custom square lemma.
     Boundary: An algebraic two-component Jensen instance, not a general probability Jensen theorem. *)
 Theorem iq_two_component_scale_concavity (a b : R) :
   ((a+b)/2)^2 <= (a^2+b^2)/2.
-Proof. assert (H : 0 <= (a-b)^2) by nra; nra. Qed.
+Proof.
+  pose proof (Rle_0_sqr (a-b)) as H.
+  unfold Rsqr in H.
+  nra.
+Qed.
 
 (** [iq_parallel_variance_identity]
     Mathematical meaning: Combining two centered blocks retains the between-block sum of squares.
@@ -207,6 +216,10 @@ Proof.
   replace ((na*a+nb*b)/(na+nb)) with (pooled_mean na nb a b) by reflexivity.
   replace (na*nb/(na+nb)*(b-a)^2) with (pooled_between na nb a b)
     by (unfold pooled_between, pooled_mass; field; lra).
-  rewrite <- (pooled_between_centered_identity na nb a b Ha Hb).
-  ring.
+  (* Normalize only the left side to the canonical lemma's notation.
+     Avoid a reverse rewrite that also rewrites pooled_between on the right. *)
+  replace (na*(a-pooled_mean na nb a b)^2+nb*(b-pooled_mean na nb a b)^2)
+    with (na*(a-pooled_mean na nb a b)*(a-pooled_mean na nb a b)+
+          nb*(b-pooled_mean na nb a b)*(b-pooled_mean na nb a b)) by ring.
+  exact (pooled_between_centered_identity na nb a b Ha Hb).
 Qed.
