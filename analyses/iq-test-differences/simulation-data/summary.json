@@ -7,11 +7,12 @@
     "block": 250000,
     "workers": 4
   },
-  "elapsed_seconds": 24.622068171040155,
-  "source_sha256": "acf0c7ca7e760717c189e43793de97806b2d95953ab1031bd6297355e55ed17e",
+  "elapsed_seconds": 24.892283699009567,
+  "source_sha256": "002df8927ba241f882c29438be054e7f399725c6e447f1c98462b37708894851",
   "bit_generator": "PCG64",
   "scheduler": "threads",
   "shared_reducer_sha256": "06c1d2a4e272de9c778a73d4dc35ed2b0834f0fbdbba554ab98a659ad59e8cd1",
+  "provenance_sha256": "c24b15528498eb9904364941eb118f06f9c779a97a6cb44dfde3ff90a3a25434",
   "python": "3.13.5",
   "versions": {
     "numpy": "2.5.4",
