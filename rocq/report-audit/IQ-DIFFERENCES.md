@@ -22,6 +22,23 @@
 | prop:selection | Conditional algebra only | Event conditioning of signed gap, truncated normal first moment, positive denominator. | G03 G06 G14 G29 |
 | prop:second | IQDifferenceAlgebra.iq_range_pair_square_bound | Joint min/max density by product-law integration, second moment formula and integrability. | G26 G30 |
 
+## G26 continuation — finite extrema and range certificate (November 27, 2026)
+
+Candidate source: [IQDifferenceAlgebra.v at 79f6d0a](https://github.com/AndersH3/composite_iq_checked_claims/blob/79f6d0add7afe35fdffaa0f9b365d4b44b2e8843/analyses/iq-test-differences/rocq/IQDifferenceAlgebra.v).
+All seven new theorem scripts are **pending kernel acceptance and assumption checks**. The historical inventory below remains at its original source baseline.
+
+| Source claim | Candidate Rocq identifier | Exact scope |
+|---|---|---|
+| prop:range, attained extrema | IQDifferenceAlgebra.iq_extrema_exist | Every nonempty real list has attained lower and upper endpoints. |
+| prop:range, unique extrema values | IQDifferenceAlgebra.iq_extrema_unique | Attained endpoint values are unique; this is not uniqueness of the minimizing index. |
+| prop:range, common shift and scale | IQDifferenceAlgebra.iq_extrema_affine | For any nonnegative scale, the mapped list has the affine images of the original extrema, including scale zero. |
+| prop:sensitivity, nesting | IQDifferenceAlgebra.iq_extrema_nested_range | Inclusion of score lists implies monotonicity of their realized ranges. |
+| prop:bound, pair enumeration | IQDifferenceAlgebra.iq_pair_gaps_contains_distinct | The gap between two distinct member values occurs up to sign in the position-pair list. |
+| prop:bound and prop:second, deterministic square domination | IQDifferenceAlgebra.iq_extrema_pair_square_bound | The squared realized range is no larger than the sum of squared position-pair gaps, including a zero range. |
+| prop:bound, maximum of squared pair gaps | IQDifferenceAlgebra.iq_extrema_range_attains_pair_max | Every member pair has squared gap at most the squared realized range; the endpoints attain equality. |
+
+Two supporting definitions specify attained extrema and enumerate distinct-position pairs without deduplicating repeated scores. The proof reuses the shared finite_sum and its nonnegative member bound, not a separate summation engine. Remaining obligations include exact pair count and expectation reduction, measurable extrema, the actual iid normal law and coupling, unique minimizing index almost surely, order-statistic density/CDF and integration. Neither G26 nor G30 is closed by these deterministic statements. No additions to the verified theorem count until kernel acceptance.
+
 ## analyses/iq-test-differences/iq_test_differences.tex
 
 355 lines. Review complete mathematical and prose content.
