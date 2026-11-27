@@ -1444,3 +1444,18 @@ partition_rewritten=$(mktemp)
 awk -v first="$partition_first" -v last="$partition_end" -v proof="$partition_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR >= last {print}' rocq/ProbTheory/SigmaAlgebras.v > "$partition_rewritten"
 mv "$partition_rewritten" rocq/ProbTheory/SigmaAlgebras.v
 rm "$partition_proof"
+
+# D183: The tail of a finite event list padded by empty events has
+# probability zero. Prove the exact list equality with Stdlib
+# nth_overflow and Lia, then reuse FormalML's ps_none directly.
+# Avoid the unnecessary event setoid rewrite and implicit intuition.
+prob_list_start=$(grep -n '^Lemma ps_list_disjoint_union ' rocq/ProbTheory/ProbSpace.v | cut -d: -f1)
+test -n "$prob_list_start"
+prob_list_end=$(awk -v first="$prob_list_start" 'NR > first && /^Qed[.]$/ {print NR; exit}' rocq/ProbTheory/ProbSpace.v)
+test -n "$prob_list_end"
+prob_tail=$(awk -v first="$prob_list_start" -v last="$prob_list_end" 'NR > first && NR < last && /erewrite ps_proper; \[eapply ps_none \| \]; intros[.]/ {print NR; exit}' rocq/ProbTheory/ProbSpace.v)
+test -n "$prob_tail"
+test "$(sed -n "$((prob_tail - 1))p" rocq/ProbTheory/ProbSpace.v)" = '    + intros.'
+test "$(sed -n "$((prob_tail + 1))p" rocq/ProbTheory/ProbSpace.v)" = '      unfold list_collection.'
+test "$(sed -n "$((prob_tail + 2))p" rocq/ProbTheory/ProbSpace.v)" = '      rewrite nth_overflow; intuition.'
+sed -i "$((prob_tail - 1)),$((prob_tail + 2))c\\    + intro x.\\n      unfold list_collection.\\n      assert (Htail : nth (x + length l)%nat l ∅ = ∅).\\n      { apply nth_overflow; lia. }\\n      rewrite Htail.\\n      apply ps_none." rocq/ProbTheory/ProbSpace.v
