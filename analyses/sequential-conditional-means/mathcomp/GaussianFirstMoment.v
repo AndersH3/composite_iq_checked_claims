@@ -113,9 +113,22 @@ have w0 : w != 0.
 { by rewrite /w lt0r_neq0 ?sqrtr_gt0. }
 have wd : w ^+ 2 = d.
 { by rewrite /w sqr_sqrtr ?ltW. }
+(* The multiplier is a quotient of nonnegative real quantities.
+   Supply the two denominator/numerator certificates directly using
+   the library's positivity lemmas, rather than chaining conditional
+   rewrites whose side goals may depend on rewrite ordering. *)
 pose c := (1 + q) * normal_peak s / normal_peak w.
+have hq : 0 <= 1 + q.
+{ apply: addr_ge0; [exact: ler01 | exact: ltW q0]. }
+have hps : 0 <= normal_peak s.
+{ exact: normal_peak_ge0. }
+have hpw : 0 <= normal_peak w.
+{ exact: normal_peak_ge0. }
+have hn : 0 <= (1 + q) * normal_peak s.
+{ exact: mulr_ge0 hq hps. }
 have c0 : 0 <= c.
-{ by rewrite /c divr_ge0 ?mulr_ge0 ?addr_ge0 ?ler01 ?ltW ?normal_peak_ge0. }
+{ rewrite /c.
+  exact: divr_ge0 hn hpw. }
 exists w, c; split=> // x.
 pose u := x ^+ 2 / q.
 pose e := expR (- u).
@@ -144,7 +157,7 @@ rewrite Hleft Hright.
 (* State the common nonnegative multiplier independently, so the
    monotonicity application cannot confuse its two premises. *)
 have Hmult : 0 <= normal_peak s * e.
-{ by rewrite mulr_ge0 ?normal_peak_ge0. }
+{ exact: mulr_ge0 hps He. }
 apply: ler_wpM2r; [exact: Hmult | exact: Hbound].
 Qed.
 
