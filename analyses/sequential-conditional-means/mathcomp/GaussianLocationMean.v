@@ -13,7 +13,9 @@ From mathcomp Require Import boolp classical_sets functions reals ereal topology
 From mathcomp Require Import numfun measure lebesgue_integral
   lebesgue_stieltjes_measure lebesgue_measure measurable_realfun.
 From mathcomp.analysis Require Import normal_distribution.
-Require Import GaussianResidualMeasure GaussianSignedMean.
+(* Require the first-moment module directly: GaussianSignedMean imports
+   it for its own proofs but does not reexport its declarations. *)
+Require Import GaussianResidualMeasure GaussianFirstMoment GaussianSignedMean.
 
 Set Implicit Arguments.
 Unset Strict Implicit.
