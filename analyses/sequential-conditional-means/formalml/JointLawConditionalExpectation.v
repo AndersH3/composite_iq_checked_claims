@@ -30,10 +30,39 @@ Section JointLawRegression.
   Context {innovation_rv : RandomVariable dom borel_sa innovation}.
 
   (* Observe the entire history rather than only the predictor. *)
-  Let observed := pullback_sa history_sa history.
+  Let observed : SigmaAlgebra Omega := pullback_sa history_sa history.
   (* Reuse exactly the library's measurability inclusion witness. *)
   Let observed_sub : sa_sub observed dom :=
     pullback_rv_sub dom history_sa history history_rv.
+
+  (** Fix the carrier, sigma algebras and the exact existing
+      measurability certificates before forming any pushforward law.
+      With a real-valued component, unconstrained typeclass search for
+      the pair can recurse through the real-random-variable instances.
+      Use the same library product certificate as ProductLawIndependence,
+      with no additional mathematical hypothesis. *)
+  Let innovation_law : ProbSpace borel_sa :=
+    @pullback_ps Omega R dom borel_sa prob innovation innovation_rv.
+  Let history_law : ProbSpace history_sa :=
+    @pullback_ps Omega History dom history_sa prob history history_rv.
+  Let joint_sa : SigmaAlgebra (R * History) :=
+    product_sa borel_sa history_sa.
+  Let joint_rv :
+    RandomVariable dom joint_sa (fun w => (innovation w, history w)) :=
+    @product_sa_rv Omega R History dom borel_sa history_sa
+      innovation history innovation_rv history_rv.
+  Let joint_law : ProbSpace joint_sa :=
+    @pullback_ps Omega (R * History)%type dom joint_sa prob
+      (fun w => (innovation w, history w)) joint_rv.
+  Let marginal_product_law : ProbSpace joint_sa :=
+    @product_ps R History borel_sa history_sa innovation_law history_law.
+
+  (** Name the common factorization proposition once, rather than
+      elaborating three independent copies with unresolved instances.
+      The transparent local abbreviation retains equality of measures
+      on every measurable event, not merely a covariance condition. *)
+  Let joint_factorization : Prop :=
+    @ps_equiv (R * History)%type joint_sa marginal_product_law joint_law.
 
   (** Joint-law factorization is equivalent to independence of the
       residual-generated sigma algebra from the full observed history.
@@ -41,21 +70,24 @@ Section JointLawRegression.
       The law is written innovation first to align the inclusion
       certificates with FormalML's independent_rv_sas theorem. *)
   Theorem joint_law_iff_innovation_independent_of_history :
-    ps_equiv
-      (product_ps (pullback_ps _ _ prob innovation)
-                  (pullback_ps _ _ prob history))
-      (pullback_ps _ _ prob (fun w => (innovation w, history w))) <->
+    joint_factorization <->
     independent_sas prob
       (pullback_rv_sub dom borel_sa innovation innovation_rv)
       observed_sub.
   Proof.
     (* Both equivalences are library-backed and preserve the exact
        random-variable certificates in the dependent event types. *)
-    rewrite <- (@independent_rv_sas Omega dom prob R borel_sa
-                 History history_sa innovation history innovation_rv history_rv).
-    symmetry.
-    exact (@independent_rvs_iff_product_joint_law Omega R History dom
-             prob borel_sa history_sa innovation history innovation_rv history_rv).
+    pose proof (@independent_rv_sas Omega dom prob R borel_sa
+                  History history_sa innovation history innovation_rv history_rv)
+      as Hsigma.
+    pose proof (@independent_rvs_iff_product_joint_law Omega R History dom
+                  prob borel_sa history_sa innovation history innovation_rv history_rv)
+      as Hproduct.
+    (* Compose the implications directly; do not rewrite a dependent
+       probability-space expression or launch fresh typeclass search. *)
+    split; intro H.
+    - exact (proj1 Hsigma (proj2 Hproduct H)).
+    - exact (proj1 Hproduct (proj2 Hsigma H)).
   Qed.
 
   Context {predictor_rv_obs : RandomVariable observed borel_sa predictor}.
@@ -68,10 +100,7 @@ Section JointLawRegression.
       residual regression. The predictor is assumed measurable with
       respect to the observed history, and both summands integrable. *)
   Theorem joint_law_regression_conditional_expectation
-    (Hlaw : ps_equiv
-      (product_ps (pullback_ps _ _ prob innovation)
-                  (pullback_ps _ _ prob history))
-      (pullback_ps _ _ prob (fun w => (innovation w, history w))))
+    (Hlaw : joint_factorization)
     (Hcenter : FiniteExpectation prob innovation = 0) :
     is_conditional_expectation prob observed
       (rvplus predictor innovation) (fun w => Finite (predictor w)).
@@ -88,10 +117,7 @@ Section JointLawRegression.
       adapted predictor almost surely under the observed probability
       subspace. Reuse the existing existence/uniqueness proof. *)
   Theorem joint_law_regression_conditional_mean_almost_sure
-    (Hlaw : ps_equiv
-      (product_ps (pullback_ps _ _ prob innovation)
-                  (pullback_ps _ _ prob history))
-      (pullback_ps _ _ prob (fun w => (innovation w, history w))))
+    (Hlaw : joint_factorization)
     (Hcenter : FiniteExpectation prob innovation = 0) :
     almostR2 (prob_space_sa_sub prob observed_sub) eq
       (ConditionalExpectation prob observed_sub (rvplus predictor innovation))
