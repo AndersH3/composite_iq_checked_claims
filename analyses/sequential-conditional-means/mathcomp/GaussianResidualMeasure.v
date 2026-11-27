@@ -89,7 +89,10 @@ transitivity (mu [set` Interval (BRight (a + m)) (BRight (b + m))]).
 - rewrite !lebesgue_measure_itv /= !lte_fin ltrD2r.
   have Hlength : b + m - (a + m) = b - a by field.
   by rewrite -!EFinB Hlength.
-- exact (f_equal (@lebesgue_measure R) (eq_sym Hpre)).
+- (* Use propositional equality symmetry, not MathComp's Boolean
+     eq_sym lemma on an eqType. The event equality is in Prop. *)
+  symmetry.
+  exact (f_equal (@lebesgue_measure R) Hpre).
 Qed.
 
 (** Centering a normal law translates every measurable event, not just
