@@ -1,3 +1,5 @@
+**Scope update (November 27, 2026):** The [eight-report mandatory proof register](EIGHT_REPORT_PROOF_OBLIGATIONS.md) and its seven linked source indices supersede the previous six-volume scope. All mathematical claims, including inline prose and numerical targets, require equivalent Rocq results; preserve this document as historical proof-mapping evidence. No full-scope completion is claimed.
+
 > **AI disclosure — prepared with AI assistance.** This is a source-based theorem inventory and formalization-status register, not an independent validation of any Gaussian model or empirical IQ claims. The source references and proof scopes were checked against the files listed below.
 
 # Theorems and mathematical claims actually used in the reports

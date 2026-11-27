@@ -1,3 +1,5 @@
+**Scope update (November 27, 2026):** The [eight-report mandatory proof register](EIGHT_REPORT_PROOF_OBLIGATIONS.md) and its seven linked source indices supersede the previous six-volume scope. All mathematical claims, including inline prose and numerical targets, require equivalent Rocq results; preserve this document as historical proof-mapping evidence. No full-scope completion is claimed.
+
 # Six-volume Rocq proof-obligation register — D042x
 
 ## D050 — 56 kernel-verified Gaussian likelihood/covariance theorems

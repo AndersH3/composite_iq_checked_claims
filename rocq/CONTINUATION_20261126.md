@@ -126,3 +126,7 @@ At `70f2ef6a823480c3384aea0fe91b9b5fb7393eef` both ShellCheck checks and syntax 
 ### Eighteenth local FormalML build — November 27, 2026
 
 At `e790af0559c716596d2d251af32057879689672c`, D194 passed the former zero-vector error. ConditionalExpectation.vo was up to date, and ProductSpace.v advanced to line 8553 (freezing_sa_alt); the two integrability typeclass arguments could not be inferred. D195 passes the existing isfe/isfe2 certificates explicitly. The first project residual-module compile failed at line 75 because Finite was not imported; both project FormalML modules now import Coquelicot.Rbar explicitly. These changes are candidates pending ShellCheck and kernel validation. No theorem statements, assumptions or dependency versions changed.
+
+### Eight-report source audit — November 27, 2026
+
+The [master register](EIGHT_REPORT_PROOF_OBLIGATIONS.md) now covers all eight report roots and 58 tracked TeX files at `e790af0559c716596d2d251af32057879689672c`. The seven source indices contain 90 formal environments, 266 display anchors, 279 labels and 583 nonblank source spans. Verified index path coverage against the complete tracked TeX file list, with no omissions or duplicate paths. Retain G01–G24 and add G25–G30 for IQ discrepancies. Source indexing is not a semantic completeness guarantee; exact per-claim theorem matching and kernel evidence are required before final acceptance. No new proof has been counted as verified.
