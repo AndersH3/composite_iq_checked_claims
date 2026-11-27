@@ -1661,3 +1661,21 @@ awk -v f1="$filter_first" -v l1="$filter_end" -v p1="$filter_proof" -v f2="$subf
 ' "$filter_file" > "$filter_rewritten"
 mv "$filter_rewritten" "$filter_file"
 rm "$filter_proof" "$subfilter_proof"
+
+# D191: Rocq 9.2 Stdlib names the common left summand of
+# Rplus_lt_reg_l "r", not "x". For the first inequality reuse
+# strict multiplication monotonicity directly: c < 1 and phi > 0.
+# Preserve the two existing reciprocal estimates, correcting their
+# obsolete named arguments without changing the convergence proof.
+rbar_expect_file=rocq/ProbTheory/RbarExpectation.v
+rbar_scale_line=$(grep -nF '        -- apply Rplus_lt_reg_l with (x := - (c * phi omega)).' "$rbar_expect_file" | cut -d: -f1)
+test -n "$rbar_scale_line"
+test "$(sed -n "$((rbar_scale_line + 1))p" "$rbar_expect_file")" = '           ring_simplify.'
+test "$(sed -n "$((rbar_scale_line + 2))p" "$rbar_expect_file")" = '             replace (- c * phi omega + phi omega) with ((1-c)*phi omega) by lra.'
+test "$(sed -n "$((rbar_scale_line + 3))p" "$rbar_expect_file")" = '             apply Rmult_lt_0_compat; [lra | trivial].'
+test "$(grep -cF 'Rplus_lt_reg_l with (x :=' "$rbar_expect_file")" -eq 3
+sed -i "${rbar_scale_line},$((rbar_scale_line + 3))c\\        -- replace (phi omega) with (1 * phi omega) at 2 by ring.\\n           apply Rmult_lt_compat_r; assumption." "$rbar_expect_file"
+sed -i 's/Rplus_lt_reg_l with (x :=/Rplus_lt_reg_l with (r :=/g' "$rbar_expect_file"
+if grep -qF 'Rplus_lt_reg_l with (x :=' "$rbar_expect_file"; then
+  exit 1
+fi
