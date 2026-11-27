@@ -151,16 +151,21 @@ move=> Hs mA.
 pose f := fun z : R * R => (gmc_joint_density m0 s0 s z)%:E.
 pose h := f \_ A.
 have mf : measurable_fun [set: BorelPair] f.
-  rewrite /f; by apply/measurable_EFinP; exact: gmc_joint_density_measurable.
+{ rewrite /f; by apply/measurable_EFinP; exact: gmc_joint_density_measurable. }
+(* The restriction lemma is an iff. Apply its forward implication as a
+   proof term, not an ssreflect view on an already projected implication.
+   Name the domain-specific premise, and use braces so a certificate
+   cannot silently leave unresolved goals before the main equality. *)
+have mfd : measurable_fun A f.
+{ exact: measurable_funTS mf. }
 have mh : measurable_fun [set: BorelPair] h.
-  rewrite /h; apply/(measurable_restrictT f mA).1.
-  exact: measurable_funTS mf.
+{ rewrite /h.
+  exact (proj1 (@measurable_restrictT _ _ _ _ A f mA) mfd). }
 have h0 z : 0 <= h z.
-  rewrite /h; apply: erestrict_ge0 => t _.
-  by rewrite /f lee_fin; exact: gmc_joint_density_ge0.
-(* Let the actual integral's packed measure determine the intermediate
-   expression. Avoid reconstructing both sides of the goal with change:
-   the original definition was elaborated before HB registration. *)
+{ rewrite /h; apply: erestrict_ge0 => t _.
+  by rewrite /f lee_fin; exact: gmc_joint_density_ge0. }
+(* All certificates are now closed. Compose domain restriction and
+   Tonelli directly, without reconstructing the packed measure. *)
 rewrite /gmc_joint_mass.
 etransitivity; first exact: (integral_mkcond A f).
 (* Apply the existing Tonelli equality with the restricted integrand
