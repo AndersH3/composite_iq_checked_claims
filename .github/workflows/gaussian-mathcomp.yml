@@ -56,7 +56,8 @@ jobs:
             opam exec -- rocq compile GaussianResidualPushforward.v
             opam exec -- rocq compile GaussianPosteriorKernel.v
             opam exec -- rocq compile GaussianFirstMoment.v
-            opam exec -- rocq check GaussianFirstMoment
+            opam exec -- rocq compile GaussianSignedMean.v
+            opam exec -- rocq check GaussianSignedMean
             # Keep transitive assumption audits in separate processes.
             opam exec -- rocq compile AuditGaussianPosteriorMeasure.v
             opam exec -- rocq compile AuditGaussianResidualMeasure.v
@@ -65,4 +66,5 @@ jobs:
             opam exec -- rocq compile AuditGaussianResidualPushforward.v
             opam exec -- rocq compile AuditGaussianPosteriorKernel.v
             opam exec -- rocq compile AuditGaussianFirstMoment.v
+            opam exec -- rocq compile AuditGaussianSignedMean.v
           '
