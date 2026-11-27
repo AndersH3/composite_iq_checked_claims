@@ -76,13 +76,20 @@ have cq : q <= 1 + q.
   { apply: lerD; [exact: ler01 | exact: lexx]. }
   by rewrite add0r in H. }
 have c0 : 0 <= 1 + q := le_trans ler01 c1.
-apply: (le_trans (gmc_abs_le_one_square x)).
-apply: (@le_trans _ _ ((1 + q) * (1 + u))).
-- rewrite mulrDr mulr1 -qu.
-  apply: lerD; first exact: c1.
-  exact: ler_wpM2r u0 cq.
-- apply: ler_wpM2l => //.
-  exact: expR_ge1Dx.
+(* Prove the multiplicative comparison before any rewriting involving
+   x^2 or the quotient u.  Transport only the finished sum inequality
+   through q*u = x^2; this avoids matching inside local definitions. *)
+have hm : q * u <= (1 + q) * u.
+{ apply: ler_wpM2r; [exact: u0 | exact: cq]. }
+have hsum : 1 + q * u <= (1 + q) + (1 + q) * u.
+{ apply: lerD; [exact: c1 | exact: hm]. }
+have hpoly : 1 + x ^+ 2 <= (1 + q) * (1 + u).
+{ rewrite mulrDr mulr1.
+  rewrite qu in hsum.
+  exact: hsum. }
+have hexp : (1 + q) * (1 + u) <= (1 + q) * expR u.
+{ apply: ler_wpM2l; [exact: c0 | exact: expR_ge1Dx]. }
+exact: (le_trans (gmc_abs_le_one_square x) (le_trans hpoly hexp)).
 Qed.
 
 (** A Gaussian with twice the variance dominates the absolute first
@@ -134,8 +141,11 @@ have Hright :
 { rewrite /c.
   field by rewrite gt_eqF ?normal_peak_gt0. }
 rewrite Hleft Hright.
-apply: ler_wpM2r Hbound.
-by rewrite mulr_ge0 ?normal_peak_ge0.
+(* State the common nonnegative multiplier independently, so the
+   monotonicity application cannot confuse its two premises. *)
+have Hmult : 0 <= normal_peak s * e.
+{ by rewrite mulr_ge0 ?normal_peak_ge0. }
+apply: ler_wpM2r; [exact: Hmult | exact: Hbound].
 Qed.
 
 Local Open Scope ereal_scope.
