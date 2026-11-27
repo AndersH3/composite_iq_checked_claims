@@ -65,13 +65,25 @@ transitivity
   ((normal_pdf m0 (Num.sqrt (s0 ^+ 2 + s ^+ 2)) x)%:E *
      normal_prob (post_mean m0 s0 x s) (post_stddev s0 s)
        (gmc_translate (post_mean m0 s0 x s) @^-1` V))%E.
-- rewrite /normal_prob.
-  apply: ge0_integralZl_EFin.
-  all: first [exact: mpre
-             | solve [move=> t _; rewrite lee_fin; exact: normal_pdf_ge0]
-             | solve [apply/measurable_EFinP/measurable_funTS;
-                        exact: measurable_normal_pdf]
-             | exact: normal_pdf_ge0].
+- (* Supply all scaling arguments explicitly. In particular, prevent
+     higher-order unification from choosing an unintended integrand
+     or domain when matching the scalar product. *)
+  pose D := gmc_translate (post_mean m0 s0 x s) @^-1` V.
+  pose f := fun t : R =>
+    (normal_pdf (post_mean m0 s0 x s) (post_stddev s0 s) t)%:E.
+  pose k := normal_pdf m0 (Num.sqrt (s0 ^+ 2 + s ^+ 2)) x.
+  have mD : measurable D := mpre.
+  have f0 : forall t : R, D t -> (0 <= f t)%E.
+    by move=> t _; rewrite /f lee_fin; exact: normal_pdf_ge0.
+  have mf : measurable_fun D f.
+    rewrite /f.
+    by apply/measurable_EFinP/measurable_funTS; exact: measurable_normal_pdf.
+  have k0 : 0 <= k by rewrite /k; exact: normal_pdf_ge0.
+  change
+    (\int[mu]_(t in D) (k%:E * f t) =
+     k%:E * \int[mu]_(t in D) f t)%E.
+  exact (@ge0_integralZl_EFin _ (measurableTypeR R) R
+    mu D mD f f0 mf k k0).
 - (* The checked centering identity has exactly the required event
      equality; congruence transports it through the density product. *)
   exact (f_equal
