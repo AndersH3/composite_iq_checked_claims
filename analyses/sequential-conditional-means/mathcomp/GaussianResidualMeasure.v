@@ -112,11 +112,23 @@ transitivity
      ((normal_pdf 0 s (gmc_translate m t))%:E))%E.
   apply: eq_integral => t _.
   by rewrite !normal_pdfE// /normal_fun /gmc_translate subr0.
-rewrite -ge0_integral_pushforward//=.
-- apply: eq_measure_integral => A mA _.
+(* The backward rewrite cannot infer the measurable map from the
+   beta-reduced composite density. Fix both integration domains and
+   all measure structures, then apply the library theorem directly. *)
+transitivity
+  (\int[pushforward mu (gmc_translate m)]_(t in V)
+      (normal_pdf 0 s t)%:E)%E.
+- symmetry.
+  apply: (@ge0_integral_pushforward _ _
+            (measurableTypeR R) (measurableTypeR R) R
+            (gmc_translate m) (gmc_translation_measurable m)
+            mu V (fun t : R => (normal_pdf 0 s t)%:E) mV).
+  + by apply/measurable_EFinP/measurable_funTS; exact: measurable_normal_pdf.
+  + by move=> t _; rewrite lee_fin; exact: normal_pdf_ge0.
+- (* Translation invariance identifies the two measures on all
+     measurable subsets of the integration domain. *)
+  apply: (eq_measure_integral mu) => A mA _.
   exact: gmc_lebesgue_translation.
-- by apply/measurable_EFinP/measurable_funTS; exact: measurable_normal_pdf.
-- by move=> t _; rewrite lee_fin; exact: normal_pdf_ge0.
 Qed.
 
 (** Integrate the observation/residual density in the translated
