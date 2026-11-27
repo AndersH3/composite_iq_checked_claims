@@ -92,7 +92,7 @@ pose I := \int[mu]_x f x.
 have Hopp : I = - I.
 { rewrite /I.
   transitivity (\int[mu]_x f (- x)%R).
-  - exact: gmc_lebesgue_signed_reflection mf ri.
+  - exact (@gmc_lebesgue_signed_reflection f mf ri).
   - transitivity (\int[mu]_x - f x).
     + apply: eq_integral => x _.
       exact: oddf.
@@ -100,11 +100,13 @@ have Hopp : I = - I.
       exact: integrable_add_def. }
 have Hfin : I \is a fin_num.
 { rewrite /I.
-  exact: integrable_fin_num. }
+  exact (@integrable_fin_num _ (measurableTypeR R) R mu setT
+    measurableT f fi). }
 have Hrepr : (fine I)%:E = I := fineK Hfin.
 have Hr : fine I = (- fine I)%R.
 { apply: EFin_inj.
-  by rewrite EFinN Hrepr Hopp. }
+  rewrite EFinN !Hrepr.
+  exact: Hopp. }
 have Hsum : (fine I + fine I = 0)%R.
 { transitivity (fine I + (- fine I))%R.
   - exact (f_equal (fun t : R => (fine I + t)%R) Hr).
@@ -143,7 +145,7 @@ Theorem gmc_centered_weighted_pdf_integral_zero (s : R) :
 Proof.
 move=> Hs.
 apply: gmc_lebesgue_odd_integral_zero.
-- exact: gmc_centered_weighted_pdf_integrable.
+- exact (@gmc_centered_weighted_pdf_integrable R s Hs).
 - move=> x.
   by rewrite (@gmc_centered_normal_pdf_even s x Hs) mulNr EFinN.
 Qed.
@@ -163,6 +165,6 @@ rewrite (@integral_normal_prob R 0%R s
 transitivity (\int[mu]_x (x * normal_pdf 0%R s x)%:E).
 - apply: eq_integral => x _.
   by rewrite EFinM.
-- exact: gmc_centered_weighted_pdf_integral_zero.
+- exact (@gmc_centered_weighted_pdf_integral_zero s Hs).
 Qed.
 End SignedMean.
