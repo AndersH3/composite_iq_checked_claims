@@ -114,10 +114,12 @@ Theorem gmc_residual_pushforward_rectangle
 Proof.
 move=> Hs0 Hs mU mV.
 pose A := gmc_residual_map m0 s0 s @^-1` (U `*` V).
+have mUV : measurable (U `*` V).
+{ exact: measurableX. }
 have mA : measurable A.
 { rewrite /A -[X in measurable X]setTI.
-  apply: (@gmc_residual_map_measurable m0 s0 s) => //.
-  exact: measurableX. }
+  exact (@gmc_residual_map_measurable m0 s0 s
+    measurableT (U `*` V) mUV). }
 change (gmc_joint_mass m0 s0 s A = _).
 etransitivity; last exact (@gmc_original_residual_rectangle R
   m0 s0 s U V Hs0 Hs mU mV).
