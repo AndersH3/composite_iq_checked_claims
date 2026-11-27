@@ -189,14 +189,22 @@ transitivity (\int[p]_x (f x + g x)).
 - rewrite (@integralD _ (measurableTypeR R) R p setT measurableT f g fi gi).
   have Hf : \int[p]_x f x = 0.
   { exact (@gmc_normal_centered_coordinate_mean_zero m s Hs). }
+  (* Establish normalization on the actual probability measure as
+     a standalone certificate. Compose equalities directly instead
+     of rewriting through the potentially reduced packed measure. *)
+  have Hp : normal_prob m s [set: R] = 1.
+  { exact: probability_setT. }
   have Hg : \int[p]_x g x = m%:E.
-  { rewrite /g /p.
-    rewrite (@integral_cst _ (measurableTypeR R) R (normal_prob m s)
-      setT measurableT m%:E).
-    (* The normal law already has a registered probability-measure
-       structure. Use its generic normalization theorem without
-       unfolding the packed measure or redoing density integration. *)
-    by rewrite probability_setT mule1. }
-  by rewrite Hf Hg add0e.
+  { transitivity (m%:E * normal_prob m s [set: R]).
+    - exact (@integral_cst _ (measurableTypeR R) R (normal_prob m s)
+        setT measurableT m%:E).
+    - transitivity (m%:E * 1).
+      + exact (f_equal (fun z : \bar R => m%:E * z) Hp).
+      + exact: mule1. }
+  (* Use congruence for signed linearity as well, preserving the
+     integral expressions established by the preceding certificates. *)
+  transitivity (0 + m%:E).
+  - exact (f_equal2 (fun a b : \bar R => a + b) Hf Hg).
+  - exact: add0e.
 Qed.
 End LocationMean.
