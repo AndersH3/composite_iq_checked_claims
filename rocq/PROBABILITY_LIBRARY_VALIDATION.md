@@ -150,3 +150,26 @@ opam exec --switch=gaussian-rocq-9.2 -- \
 ~~~
 
 Retain logs outside the Git checkout. These instructions use upstream probability modules rather than a custom conditional-expectation implementation. The current large compatibility patch may fail; preserve the first actual error and do not bypass any proof.
+
+### Successful incremental FormalML build and assumption audit (November 27, 2026)
+
+The researcher supplied successful computer10 compilation logs for the residual module at `2a77faa` and product module at `26342d8` after applying D195 to the pinned upstream checkout. All nine target Print Assumptions commands completed; the exact per-theorem inherited axiom matrix is in [CONTINUATION_20261126.md](CONTINUATION_20261126.md). The existing Rbar coercion warning is nonfatal. No clean reproduction or independent compiled-object check of these modules is claimed yet.
+
+Reuse the existing working validation directory for the next check; do not reapply the compatibility patch. In the established project-gaussian directory with PROJECT and LOGDIR initialized:
+
+~~~bash
+cp "$PROJECT"/analyses/sequential-conditional-means/formalml/AuditGaussianConditionalExpectation.v \
+  "$LOGDIR/project-gaussian/"
+cd "$LOGDIR/project-gaussian"
+set -o pipefail
+opam exec --switch=gaussian-rocq-9.2 -- \
+  rocq check -R "$LOGDIR/FormalML/rocq" FormalML \
+  GaussianResidualConditionalExpectation GaussianProductConditionalExpectation \
+  2>&1 | tee "$LOGDIR/gaussian-independent-kernel-check.log" &&
+opam exec --switch=gaussian-rocq-9.2 -- \
+  rocq compile -R "$LOGDIR/FormalML/rocq" FormalML \
+  AuditGaussianConditionalExpectation.v \
+  2>&1 | tee "$LOGDIR/gaussian-combined-assumptions.log"
+~~~
+
+The combined audit prints exact theorem signatures and logical assumptions. A clean reproduction must instead use a fresh upstream checkout and apply the entire patch once. The CI workflow now includes the compiled-object check and combined audit; its result must be assessed independently from the local incremental build.
