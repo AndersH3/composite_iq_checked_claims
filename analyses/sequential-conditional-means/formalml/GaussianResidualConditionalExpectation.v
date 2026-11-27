@@ -26,6 +26,8 @@
  establishes formal verification.
 *)
 From Stdlib Require Import Reals Lra.
+(* Import the extended-real constructor Finite explicitly. *)
+From Coquelicot Require Import Rbar.
 From FormalML.ProbTheory Require Import
   ConditionalExpectation Independence RealRandomVariable RandomVariable
   Expectation SigmaAlgebras.

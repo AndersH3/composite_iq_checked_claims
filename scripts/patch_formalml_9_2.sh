@@ -1727,3 +1727,24 @@ test "$(sed -n "$((product_vector_base + 1))p" "$product_vector_file")" = '     
 test "$(sed -n "$((product_vector_base + 2))p" "$product_vector_file")" = '      unfold rv_preimage; simpl.'
 test "$(sed -n "$((product_vector_base + 3))p" "$product_vector_file")" = '      repeat match_destr; try lra; intuition.'
 sed -i "${product_vector_base},$((product_vector_base + 3))c\\    - intros; lia." "$product_vector_file"
+
+# D195: The integrability certificates for freezing_sa are already
+# explicit hypotheses of freezing_sa_alt. Pair-pattern reduction
+# identifies the integrands definitionally. Pass the certificates
+# explicitly instead of relying on typeclass search.
+freeze_file=rocq/ProbTheory/ProductSpace.v
+freeze_old="    destruct (freezing_sa sub2 sub3 X (fun '(ω2,ω) => Psi (ω2, Y ω)) H)."
+freeze_line=$(grep -nFx "$freeze_old" "$freeze_file" | cut -d: -f1)
+test -n "$freeze_line"
+freeze_proof=$(mktemp)
+cat > "$freeze_proof" <<'ROCQ_FREEZING_CERTIFICATES'
+    destruct (freezing_sa sub2 sub3 X (fun '(ω2,ω) => Psi (ω2, Y ω))
+      (isfe:=isfe) (isfe2:=isfe2) H).
+ROCQ_FREEZING_CERTIFICATES
+freeze_rewritten=$(mktemp)
+awk -v n="$freeze_line" -v proof="$freeze_proof" '
+  NR == n {while ((getline line < proof) > 0) print line; next}
+  {print}
+' "$freeze_file" > "$freeze_rewritten"
+mv "$freeze_rewritten" "$freeze_file"
+rm "$freeze_proof"

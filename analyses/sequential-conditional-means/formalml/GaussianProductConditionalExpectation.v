@@ -27,6 +27,8 @@
  only after the exact-source Rocq kernel workflow succeeds.
 *)
 From Stdlib Require Import Reals Lia Lra.
+(* Import the extended-real constructor Finite explicitly. *)
+From Coquelicot Require Import Rbar.
 From FormalML.ProbTheory Require Import
   ConditionalExpectation Independence ProductSpace
   RandomVariable RealRandomVariable Expectation SigmaAlgebras.
