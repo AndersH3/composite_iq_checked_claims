@@ -151,25 +151,23 @@ opam exec --switch=gaussian-rocq-9.2 -- \
 
 Retain logs outside the Git checkout. These instructions use upstream probability modules rather than a custom conditional-expectation implementation. The current large compatibility patch may fail; preserve the first actual error and do not bypass any proof.
 
-### Successful incremental FormalML build and assumption audit (November 27, 2026)
+### Successful incremental FormalML build and independent verification (November 27, 2026)
 
-The researcher supplied successful computer10 compilation logs for the residual module at `2a77faa` and product module at `26342d8` after applying D195 to the pinned upstream checkout. All nine target Print Assumptions commands completed; the exact per-theorem inherited axiom matrix is in [CONTINUATION_20261126.md](CONTINUATION_20261126.md). The existing Rbar coercion warning is nonfatal. No clean reproduction or independent compiled-object check of these modules is claimed yet.
+The researcher supplied successful computer10 compilation logs for the residual module at `2a77faa` and product module at `26342d8` after applying D195 to the pinned upstream checkout. All nine individual Print Assumptions commands completed; the exact per-theorem inherited axiom matrix is in [CONTINUATION_20261126.md](CONTINUATION_20261126.md). Both compiled modules and their imported closure passed independent rocq check at `bc76b21`. The combined audit process was subsequently killed; the transcript does not establish why. The split assumption-only audits reproduce the earlier successful procedure in separate Rocq processes.
 
-Reuse the existing working validation directory for the next check; do not reapply the compatibility patch. In the established project-gaussian directory with PROJECT and LOGDIR initialized:
+Reuse the existing working validation directory. Do not reapply D195. With PROJECT and LOGDIR initialized:
 
 ~~~bash
-cp "$PROJECT"/analyses/sequential-conditional-means/formalml/AuditGaussianConditionalExpectation.v \
-  "$LOGDIR/project-gaussian/"
-cd "$LOGDIR/project-gaussian"
-set -o pipefail
+cp "$PROJECT"/analyses/sequential-conditional-means/formalml/Audit{Residual,Product}Assumptions.v \
+  "$LOGDIR/project-gaussian/" &&
+cd "$LOGDIR/project-gaussian" &&
+set -o pipefail &&
 opam exec --switch=gaussian-rocq-9.2 -- \
-  rocq check -R "$LOGDIR/FormalML/rocq" FormalML \
-  GaussianResidualConditionalExpectation GaussianProductConditionalExpectation \
-  2>&1 | tee "$LOGDIR/gaussian-independent-kernel-check.log" &&
+  rocq compile -R "$LOGDIR/FormalML/rocq" FormalML AuditResidualAssumptions.v \
+  2>&1 | tee "$LOGDIR/gaussian-residual-assumptions-r2.log" &&
 opam exec --switch=gaussian-rocq-9.2 -- \
-  rocq compile -R "$LOGDIR/FormalML/rocq" FormalML \
-  AuditGaussianConditionalExpectation.v \
-  2>&1 | tee "$LOGDIR/gaussian-combined-assumptions.log"
+  rocq compile -R "$LOGDIR/FormalML/rocq" FormalML AuditProductAssumptions.v \
+  2>&1 | tee "$LOGDIR/gaussian-product-assumptions-r2.log"
 ~~~
 
-The combined audit prints exact theorem signatures and logical assumptions. A clean reproduction must instead use a fresh upstream checkout and apply the entire patch once. The CI workflow now includes the compiled-object check and combined audit; its result must be assessed independently from the local incremental build.
+The next candidate ProductLawIndependence.v can be compiled separately using the same -R mapping. A clean reproduction must use a fresh upstream checkout and apply the entire patch once. The split audit and clean CI results must be assessed independently from the local incremental build.
