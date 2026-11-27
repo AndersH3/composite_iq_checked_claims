@@ -83,10 +83,13 @@ Section ProductGaussianRegression.
   Local Instance product_predictor_full_rv :
     RandomVariable full_sa borel_sa product_gaussian_predictor.
   Proof.
-    (* Reuse sigma-algebra inclusion without a redundant probability argument. *)
-    eapply RandomVariable_sa_sub.
-    - exact observed_sub.
-    - exact product_predictor_observed_rv.
+    (* Fix the source sigma algebra before typeclass resolution. Otherwise
+       the generic discrete-space random-variable instance can determine
+       dom2 prematurely, although only observed_sa is justified here.
+       Reuse the library's inclusion theorem with the adapted certificate. *)
+    exact (RandomVariable_sa_sub (dom2:=observed_sa)
+             observed_sub product_gaussian_predictor
+             (rv_x:=product_predictor_observed_rv)).
   Qed.
 
   Local Instance product_innovation_full_rv :
