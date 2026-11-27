@@ -174,11 +174,15 @@ Qed.
  Library reuse: MathComp-Analysis normal_pdfE, normal_fun; MathComp addrK.
  Boundary: Pointwise equality only, not a change-of-variables theorem.
 *)
-Theorem gmc_normal_pdf_centered_residual m s e :
+Theorem gmc_normal_pdf_centered_residual (m s e : R) :
   s != 0 -> normal_pdf m s (m+e) = normal_pdf 0 s e.
 Proof.
 move=> Hs.
-by rewrite !normal_pdfE // /normal_fun [m+e]addrC addrK subr0.
+(* Bind the real structure explicitly, as the density lemma is generic.
+   Isolate the translated exponent identity from density rewriting. *)
+have Htranslate : m + e - m = e by rewrite addrC addrK.
+by rewrite (@normal_pdfE R m s Hs) (@normal_pdfE R 0 s Hs)
+           /normal_fun Htranslate subr0.
 Qed.
 
 (** [gmc_gaussian_observation_residual_density_factor] (theorem).
@@ -197,7 +201,8 @@ Qed.
  measure-level change of variables (unit Jacobian) and identification of
  the joint law are still needed to infer independent random variables.
 *)
-Theorem gmc_gaussian_observation_residual_density_factor m0 s0 s x e :
+Theorem gmc_gaussian_observation_residual_density_factor
+    (m0 s0 s x e : R) :
   s0 != 0 -> s != 0 ->
   normal_pdf (post_mean m0 s0 x s + e) s x *
     normal_pdf m0 s0 (post_mean m0 s0 x s + e) =
@@ -207,9 +212,13 @@ Proof.
 move=> Hs0 Hs.
 rewrite (@normal_pdf_conjugate R m0 s0 s x
   (post_mean m0 s0 x s + e) Hs0 Hs).
-have Hp : post_stddev s0 s != 0.
-  exact: lt0r_neq0 (post_stddev_gt0 Hs0 Hs).
-by rewrite gmc_normal_pdf_centered_residual.
+(* Obtain positivity from the pinned upstream lemma; nonzero is the
+   sole extra premise of the centered-density identity. *)
+have Hp0 : 0 < post_stddev s0 s :=
+  @post_stddev_gt0 R s0 s Hs0 Hs.
+have Hp : post_stddev s0 s != 0 by rewrite lt0r_neq0.
+by rewrite (gmc_normal_pdf_centered_residual
+  (post_mean m0 s0 x s) (post_stddev s0 s) e Hp).
 Qed.
 
 (** [gmc_gaussian_observation_marginal_measure] (theorem).
@@ -224,7 +233,8 @@ Qed.
  Boundary: This does not identify an arbitrary jointly Gaussian vector
  or prove its residual independence.
 *)
-Theorem gmc_gaussian_observation_marginal_measure m0 s0 m s V :
+Theorem gmc_gaussian_observation_marginal_measure
+    (m0 s0 m s : R) (V : set R) :
   s0 != 0 -> s != 0 -> measurable V ->
   (\int[normal_prob m0 s0]_t normal_prob (m+t) s V =
     normal_prob (m0+m) (Num.sqrt (s0 ^+ 2 + s ^+ 2)) V)%E.
