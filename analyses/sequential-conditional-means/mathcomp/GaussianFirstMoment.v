@@ -12,6 +12,8 @@
 *)
 From mathcomp Require Import boot order ssralg ssrnum field_tactic.
 From mathcomp Require Import boolp classical_sets functions reals ereal topology normedtype.
+(* sequences defines expR; exp develops its properties without reexporting it. *)
+From mathcomp Require Import sequences.
 From mathcomp Require Import exp numfun measure lebesgue_integral
   lebesgue_stieltjes_measure lebesgue_measure measurable_realfun.
 From mathcomp Require Import radon_nikodym.
