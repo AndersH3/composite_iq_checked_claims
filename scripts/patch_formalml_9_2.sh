@@ -1544,3 +1544,39 @@ real_const_end=$(awk -v first="$real_const_first" 'NR >= first && /^    Qed[.]$/
 test -n "$real_const_end"
 sed -n "${real_const_first},${real_const_end}p" rocq/ProbTheory/RealRandomVariable.v | grep -Fq 'destruct (Rle_dec c r).'
 sed -i "${real_const_first},$((real_const_end - 1))c\\      intro r.\\n      change (sa_sigma dom (fun _ : Ts => c <= r)).\\n      exact (sa_sigma_const_classic dom (c <= r))." rocq/ProbTheory/RealRandomVariable.v
+
+# D188: The expectation of an event indicator is its probability.
+# Retain the accepted finite-range sum reduction, but prove the final
+# event equivalence pointwise by splitting the event decision and
+# discharging 0/1 arithmetic explicitly. The bundled-event variant
+# then reuses this theorem via SimpleExpectation_ext, so the
+# finite-range computation is maintained in only one proof.
+indicator_file=rocq/ProbTheory/SimpleExpectation.v
+indicator_pre=$(grep -n '^  Lemma SimpleExpectation_pre_EventIndicator$' "$indicator_file" | cut -d: -f1)
+indicator_event=$(grep -n '^  Lemma SimpleExpectation_EventIndicator[[:space:]]*$' "$indicator_file" | cut -d: -f1)
+test -n "$indicator_pre"
+test -n "$indicator_event"
+indicator_pre_end=$(awk -v first="$indicator_pre" 'NR > first && /^  Qed[.]$/ {print NR; exit}' "$indicator_file")
+indicator_event_first=$(awk -v first="$indicator_event" 'NR > first && /^  Proof[.]$/ {print NR+1; exit}' "$indicator_file")
+indicator_event_end=$(awk -v first="$indicator_event_first" 'NR >= first && /^  Qed[.]$/ {print NR; exit}' "$indicator_file")
+test -n "$indicator_pre_end"
+test -n "$indicator_event_first"
+test -n "$indicator_event_end"
+test "$(sed -n "$((indicator_pre_end - 1))p" "$indicator_file")" = '    ; match_destr; intuition.'
+test "$(sed -n "$((indicator_event_end - 1))p" "$indicator_file")" = '    ; match_destr; intuition.'
+indicator_proof=$(mktemp)
+cat > "$indicator_proof" <<'ROCQ_INDICATOR_EXPECTATION'
+    destruct P as [P HP].
+    transitivity
+      (SimpleExpectation (EventIndicator dec)
+        (rv:=EventIndicator_pre_rv _ dec HP)
+        (frf:=EventIndicator_pre_frf dec)).
+    - apply SimpleExpectation_ext; intro x; reflexivity.
+    - apply SimpleExpectation_pre_EventIndicator.
+ROCQ_INDICATOR_EXPECTATION
+indicator_rewritten=$(mktemp)
+awk -v first="$indicator_event_first" -v last="$indicator_event_end" -v proof="$indicator_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR >= last {print}' "$indicator_file" > "$indicator_rewritten"
+mv "$indicator_rewritten" "$indicator_file"
+rm "$indicator_proof"
+test "$(sed -n "$((indicator_pre_end - 2))p" "$indicator_file" | sed 's/[[:space:]]*$//')" = '    ; apply ps_proper; intros ?; simpl'
+sed -i "$((indicator_pre_end - 2)),$((indicator_pre_end - 1))c\\    ; apply ps_proper; intro x; simpl\\n    ; destruct (dec x) as [Hx | Hx]; split; intro Hcase;\\n      try assumption; try reflexivity; try contradiction; lra." "$indicator_file"
