@@ -171,3 +171,7 @@ opam exec --switch=gaussian-rocq-9.2 -- \
 ~~~
 
 The next candidate ProductLawIndependence.v can be compiled separately using the same -R mapping. A clean reproduction must use a fresh upstream checkout and apply the entire patch once. The split audit and clean CI results must be assessed independently from the local incremental build.
+
+### Verified joint-law factorization bridge (November 27, 2026)
+
+Both split audits passed at `30fbbc1`. ProductLawIndependence.v at `e17d8c6` passed compilation, assumption audit and independent kernel check; see the continuation record for exact timings and memory usage. The three original-space regression candidates in JointLawConditionalExpectation.v reuse this theorem and the earlier generic CE results. Compile that new module after the existing residual and product-law modules. Use AuditJointLawConditionalExpectation.v in a separate process and rocq check on the compiled module. The tracked AuditProductLawIndependence.v reproduces the already successful audit. The CI workflow now includes both bridges; clean CI and validation of the three new targets remain pending.
