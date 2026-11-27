@@ -180,7 +180,9 @@ Proof.
 move=> Hs.
 (* Bind the real structure explicitly, as the density lemma is generic.
    Isolate the translated exponent identity from density rewriting. *)
-have Htranslate : m + e - m = e by rewrite addrC addrK.
+(* Subtraction is addition of an opposite in MathComp. Restrict the
+   commutativity rewrite to the inner sum, not the outer subtraction. *)
+have Htranslate : m + e - m = e by rewrite [m + e]addrC addrK.
 by rewrite (@normal_pdfE R m s Hs) (@normal_pdfE R 0 s Hs)
            /normal_fun Htranslate subr0.
 Qed.
@@ -217,7 +219,9 @@ rewrite (@normal_pdf_conjugate R m0 s0 s x
 have Hp0 : 0 < post_stddev s0 s :=
   @post_stddev_gt0 R s0 s Hs0 Hs.
 have Hp : post_stddev s0 s != 0 by rewrite lt0r_neq0.
-by rewrite (gmc_normal_pdf_centered_residual
+(* Use explicit arguments of the section-local theorem, avoiding
+   implicit inference of its scale from the nonzero premise. *)
+by rewrite (@gmc_normal_pdf_centered_residual
   (post_mean m0 s0 x s) (post_stddev s0 s) e Hp).
 Qed.
 
