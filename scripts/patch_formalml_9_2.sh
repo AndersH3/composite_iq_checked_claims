@@ -1580,3 +1580,16 @@ mv "$indicator_rewritten" "$indicator_file"
 rm "$indicator_proof"
 test "$(sed -n "$((indicator_pre_end - 2))p" "$indicator_file" | sed 's/[[:space:]]*$//')" = '    ; apply ps_proper; intros ?; simpl'
 sed -i "$((indicator_pre_end - 2)),$((indicator_pre_end - 1))c\\    ; apply ps_proper; intro x; simpl\\n    ; destruct (dec x) as [Hx | Hx]; split; intro Hcase;\\n      try assumption; try reflexivity; try contradiction; lra." "$indicator_file"
+
+# D189: The bundled indicator uses the same function with different
+# finite-range and measurability certificates. SimpleExpectation_ext
+# is declared later in this module; SimpleExpectation_pf_irrel is
+# already available and is exactly the certificate-independence result.
+indicator_file=rocq/ProbTheory/SimpleExpectation.v
+indicator_bundled=$(grep -n '^  Lemma SimpleExpectation_EventIndicator[[:space:]]*$' "$indicator_file" | cut -d: -f1)
+test -n "$indicator_bundled"
+indicator_bundled_end=$(awk -v first="$indicator_bundled" 'NR > first && /^  Qed[.]$/ {print NR; exit}' "$indicator_file")
+test -n "$indicator_bundled_end"
+indicator_irrel=$(awk -v first="$indicator_bundled" -v last="$indicator_bundled_end" 'NR > first && NR < last && /^    - apply SimpleExpectation_ext; intro x; reflexivity[.]$/ {print NR; exit}' "$indicator_file")
+test -n "$indicator_irrel"
+sed -i "${indicator_irrel}c\\    - apply SimpleExpectation_pf_irrel." "$indicator_file"
