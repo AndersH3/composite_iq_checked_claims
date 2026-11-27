@@ -24,8 +24,8 @@
 
 ## G26 continuation — finite extrema and range certificate (November 27, 2026)
 
-Candidate source: [IQDifferenceAlgebra.v at 79f6d0a](https://github.com/AndersH3/composite_iq_checked_claims/blob/79f6d0add7afe35fdffaa0f9b365d4b44b2e8843/analyses/iq-test-differences/rocq/IQDifferenceAlgebra.v).
-All seven new theorem scripts are **pending kernel acceptance and assumption checks**. The historical inventory below remains at its original source baseline.
+Kernel-compiled source: [IQDifferenceAlgebra.v at 2a77faa](https://github.com/AndersH3/composite_iq_checked_claims/blob/2a77faadfc50e85113022af286cfb02e95b08f54/analyses/iq-test-differences/rocq/IQDifferenceAlgebra.v).
+All seven new theorem scripts **passed kernel compilation** on computer10 under Rocq 9.3.0 at `2a77faadfc50e85113022af286cfb02e95b08f54`, after the correction at `2e61f81`. Transitive assumption checks remain pending. The historical inventory below remains at its original source baseline.
 
 | Source claim | Candidate Rocq identifier | Exact scope |
 |---|---|---|
@@ -37,7 +37,7 @@ All seven new theorem scripts are **pending kernel acceptance and assumption che
 | prop:bound and prop:second, deterministic square domination | IQDifferenceAlgebra.iq_extrema_pair_square_bound | The squared realized range is no larger than the sum of squared position-pair gaps, including a zero range. |
 | prop:bound, maximum of squared pair gaps | IQDifferenceAlgebra.iq_extrema_range_attains_pair_max | Every member pair has squared gap at most the squared realized range; the endpoints attain equality. |
 
-Two supporting definitions specify attained extrema and enumerate distinct-position pairs without deduplicating repeated scores. The proof reuses the shared finite_sum and its nonnegative member bound, not a separate summation engine. Remaining obligations include exact pair count and expectation reduction, measurable extrema, the actual iid normal law and coupling, unique minimizing index almost surely, order-statistic density/CDF and integration. Neither G26 nor G30 is closed by these deterministic statements. No additions to the verified theorem count until kernel acceptance.
+Two supporting definitions specify attained extrema and enumerate distinct-position pairs without deduplicating repeated scores. The proof reuses the shared finite_sum and its nonnegative member bound, not a separate summation engine. Remaining obligations include exact pair count and expectation reduction, measurable extrema, the actual iid normal law and coupling, unique minimizing index almost surely, order-statistic density/CDF and integration. Neither G26 nor G30 is closed by these deterministic statements. The seven deterministic theorem scripts are included in the 3,706-script canonical build; this does not close the continuous-probability obligations.
 
 ## analyses/iq-test-differences/iq_test_differences.tex
 
