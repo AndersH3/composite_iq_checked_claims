@@ -78,9 +78,18 @@ have Hpre :
     [set` Interval (BRight (a + m)) (BRight (b + m))].
   apply/seteqP; split => t /=;
     by rewrite !in_itv /= ltrBrDr lerBlDr.
-rewrite Hpre !lebesgue_measure_itv /= !lte_fin ltrD2r.
-have Hlength : b + m - (a + m) = b - a by field.
-by rewrite -!EFinB Hlength.
+(* The interval-witness elimination can reduce the set preimage to a
+   predicate under the packed measure coercion. Restore the intended
+   expression by conversion before applying Hpre. Use congruence of
+   the measure function rather than a syntactic search under coercions. *)
+change (mu [set` Interval (BRight a) (BRight b)] =
+        mu ((fun t : R => t - m) @^-1`
+              [set` Interval (BRight a) (BRight b)])).
+transitivity (mu [set` Interval (BRight (a + m)) (BRight (b + m))]).
+- rewrite !lebesgue_measure_itv /= !lte_fin ltrD2r.
+  have Hlength : b + m - (a + m) = b - a by field.
+  by rewrite -!EFinB Hlength.
+- exact (f_equal (@lebesgue_measure R) (eq_sym Hpre)).
 Qed.
 
 (** Centering a normal law translates every measurable event, not just
