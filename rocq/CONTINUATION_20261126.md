@@ -147,3 +147,27 @@ At `ed60b4c`, computer10 compiled both corrected canonical CE uniqueness proofs 
 ### Twenty-first local FormalML build — November 27, 2026
 
 Computer10 at `2a77faadfc50e85113022af286cfb02e95b08f54` passed ShellCheck, all documentation and ownership/language gates, and the entire 45-module canonical compilation with Rocq 9.3.0. The 3,706 registered canonical scripts (3,693 theorem/helper proofs and 4,029 declarations) now include all 25 IQDifferenceAlgebra theorem scripts, including the seven G26 extrema/range additions. The residual CE module also compiled completely under the isolated Rocq 9.2 switch; the product module advanced to line 88, where unconstrained RandomVariable_sa_sub selected the discrete source sigma algebra instead of observed_sa. Commit `028a087` explicitly supplies dom2 and the existing observed-measurability certificate using the pinned FormalML signature. The product correction awaits kernel compilation. These are revision-specific compilation results; clean upstream reproduction and transitive Print Assumptions evidence remain pending. The residual theorems are measure-theoretic CE statements under explicit independence/integrability or almost-sure equality, not a proof that general joint Gaussianity implies residual independence.
+
+### Twenty-second local FormalML build — November 27, 2026
+
+Computer10 at `c40554ccedb0f75214385162cab62228396d10d8` passed the corrected full-space predictor measurability proof and reached product_gaussian_innovation_independent, line 118. The two dependent event expressions used different opaque measurability certificates for the same second projection. Commit `13acb91` makes product_innovation_full_rv a transparent direct alias of snd_rv, eliminating the certificate mismatch by definitional conversion rather than invoking additional proof irrelevance. This candidate awaits compilation.
+
+The six residual CE theorem Print Assumptions commands completed using Rocq 9.2 and the D195-patched FormalML checkout (gaussian-residual-assumptions.log). Residual source unchanged since its successful compilation at `2a77faa`. The following exact union of inherited axiom identifiers was extracted from the six output blocks. No project-specific axiom or admitted result appeared.
+
+| Axiom identifier | Residual-mean CE | Centered CE | Perfect-information CE | Perfect-information a.s. | Centered a.s. | Future transfer |
+|---|---|---|---|---|---|---|
+| ClassicalDedekindReals.sig_not_dec | yes | yes | yes | yes | yes | yes |
+| ClassicalDedekindReals.sig_forall_dec | yes | yes | yes | yes | yes | yes |
+| FunctionalExtensionality.functional_extensionality_dep | yes | yes | yes | yes | yes | yes |
+| Eqdep.Eq_rect_eq.eq_rect_eq | yes | yes | yes | yes | yes | yes |
+| Description.constructive_definite_description | yes | yes | yes | yes | yes | yes |
+| Classical_Prop.classic | yes | yes | yes | yes | yes | yes |
+| Ensembles.Extensionality_Ensembles | yes | yes | yes | yes | yes | yes |
+| RelationalChoice.relational_choice | yes | yes | no | yes | yes | yes |
+| ClassicalUniqueChoice.dependent_unique_choice | yes | yes | no | yes | yes | yes |
+| PropExtensionality.propositional_extensionality | no | no | no | yes | yes | no |
+| ProofIrrelevance.proof_irrelevance | no | no | no | yes | yes | no |
+| IndefiniteDescription.constructive_indefinite_description | no | no | no | yes | yes | no |
+| Total | 9 | 9 | 7 | 12 | 12 | 9 |
+
+The columns follow the exact Print Assumptions order: gaussian_regression_conditional_expectation_with_residual_mean, gaussian_regression_conditional_expectation_centered, gaussian_regression_perfect_information_conditional_expectation, gaussian_regression_perfect_information_mean_almost_sure, gaussian_regression_conditional_mean_almost_sure, gaussian_regression_transfer_to_future. This is an audit of inherited logical axioms, not a discharge of the explicit residual independence and integrability hypotheses. The canonical 3,706 scripts, product module, clean upstream reproduction and overall report coverage retain their previously recorded statuses; the product and canonical transitive assumption audits remain open.
