@@ -1459,3 +1459,76 @@ test "$(sed -n "$((prob_tail - 1))p" rocq/ProbTheory/ProbSpace.v)" = '    + intr
 test "$(sed -n "$((prob_tail + 1))p" rocq/ProbTheory/ProbSpace.v)" = '      unfold list_collection.'
 test "$(sed -n "$((prob_tail + 2))p" rocq/ProbTheory/ProbSpace.v)" = '      rewrite nth_overflow; intuition.'
 sed -i "$((prob_tail - 1)),$((prob_tail + 2))c\\    + intro x.\\n      unfold list_collection.\\n      assert (Htail : nth (x + length l)%nat l ∅ = ∅).\\n      { apply nth_overflow; lia. }\\n      rewrite Htail.\\n      apply ps_none." rocq/ProbTheory/ProbSpace.v
+
+# D184: Antisymmetry of an almost-sure partial order holds on the
+# intersection of the two probability-one events. Use the underlying
+# PartialOrder equivalence in the reverse direction, without the
+# unnecessary transitivity step or anonymous intuition hypotheses.
+almost_part_start=$(grep -n '^  Global Instance almostR2_part ' rocq/ProbTheory/Almost.v | cut -d: -f1)
+test -n "$almost_part_start"
+almost_part_end=$(awk -v first="$almost_part_start" 'NR > first && /^  Qed[.]$/ {print NR; exit}' rocq/ProbTheory/Almost.v)
+test -n "$almost_part_end"
+almost_reverse=$(awk -v first="$almost_part_start" -v last="$almost_part_end" 'NR > first && NR < last && /intros \[\[P1 \[P1all eq_on1\]\] \[P2 \[P2all eq_on2\]\]\]/ {print NR; exit}' rocq/ProbTheory/Almost.v)
+test -n "$almost_reverse"
+sed -n "${almost_reverse},${almost_part_end}p" rocq/ProbTheory/Almost.v | grep -Fq 'transitivity (y a).'
+almost_part_proof=$(mktemp)
+cat > "$almost_part_proof" <<'ROCQ_ALMOST_ORDER'
+    - intros [[P1 [P1all eq_on1]] [P2 [P2all eq_on2]]].
+      exists (P1 ∩ P2); split.
+      + now apply ps_one_inter.
+      + intros a Ha.
+        change (P1 a /\ P2 a) in Ha.
+        destruct Ha as [Ha1 Ha2].
+        pose proof (R_part (x a) (y a)) as Hpart.
+        change (eqR (x a) (y a) <->
+          preR (x a) (y a) /\ preR (y a) (x a)) in Hpart.
+        apply (proj2 Hpart).
+        split; [exact (eq_on1 a Ha1) | exact (eq_on2 a Ha2)].
+ROCQ_ALMOST_ORDER
+almost_part_rewritten=$(mktemp)
+awk -v first="$almost_reverse" -v last="$almost_part_end" -v proof="$almost_part_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR >= last {print}' rocq/ProbTheory/Almost.v > "$almost_part_rewritten"
+mv "$almost_part_rewritten" rocq/ProbTheory/Almost.v
+rm "$almost_part_proof"
+
+# D185: Prove the lower-ray equivalences with real arithmetic before
+# applying the event setoid rewrite. The old intuition leaves a
+# real-order subgoal, so the next rewrite targets the wrong H1.
+# Also make the analogous open-interval and singleton proofs explicit.
+borel_closed=$(grep -n '^  Lemma sa_closed_intervals ' rocq/ProbTheory/BorelSigmaAlgebra.v | cut -d: -f1)
+borel_open=$(grep -n '^  Lemma sa_open_intervals ' rocq/ProbTheory/BorelSigmaAlgebra.v | cut -d: -f1)
+borel_point=$(grep -n '^  Lemma sa_le_pt ' rocq/ProbTheory/BorelSigmaAlgebra.v | cut -d: -f1)
+test -n "$borel_closed"
+test -n "$borel_open"
+test -n "$borel_point"
+borel_closed_line=$(awk -v first="$borel_closed" -v last="$borel_open" 'NR > first && NR < last && /^    red; intros; intuition[.]$/ {print NR; exit}' rocq/ProbTheory/BorelSigmaAlgebra.v)
+borel_open_line=$(awk -v first="$borel_open" -v last="$borel_point" 'NR > first && NR < last && /^    red; intros; intuition[.]$/ {print NR; exit}' rocq/ProbTheory/BorelSigmaAlgebra.v)
+test -n "$borel_closed_line"
+test -n "$borel_open_line"
+sed -i "${borel_closed_line}c\\    { intro x; split; intro Hx; lra. }" rocq/ProbTheory/BorelSigmaAlgebra.v
+sed -i "${borel_open_line}c\\    { intro x; split; intro Hx; lra. }" rocq/ProbTheory/BorelSigmaAlgebra.v
+borel_point_end=$(awk -v first="$borel_point" 'NR > first && /^  Qed[.]$/ {print NR; exit}' rocq/ProbTheory/BorelSigmaAlgebra.v)
+test -n "$borel_point_end"
+borel_point_line=$(awk -v first="$borel_point" -v last="$borel_point_end" 'NR > first && NR < last && /^      intuition[.]$/ {print NR; exit}' rocq/ProbTheory/BorelSigmaAlgebra.v)
+test -n "$borel_point_line"
+sed -i "${borel_point_line}c\\      split; intro Hx; lra." rocq/ProbTheory/BorelSigmaAlgebra.v
+
+# D186: The preimage under a constant function is a constant
+# predicate. Reuse the established sa_sigma_const_classic theorem
+# rather than duplicating the empty/universal event proof.
+rvconst_start=$(grep -n '^  Global Instance rvconst c ' rocq/ProbTheory/RandomVariable.v | cut -d: -f1)
+test -n "$rvconst_start"
+rvconst_first=$(awk -v first="$rvconst_start" 'NR > first && /^  Proof[.]$/ {print NR+1; exit}' rocq/ProbTheory/RandomVariable.v)
+rvconst_end=$(awk -v first="$rvconst_first" 'NR >= first && /^  Qed[.]$/ {print NR; exit}' rocq/ProbTheory/RandomVariable.v)
+test -n "$rvconst_first"
+test -n "$rvconst_end"
+sed -n "${rvconst_first},${rvconst_end}p" rocq/ProbTheory/RandomVariable.v | grep -Fq 'destruct (sa_dec B c).'
+rvconst_proof=$(mktemp)
+cat > "$rvconst_proof" <<'ROCQ_CONSTANT_RV'
+    red; intro B.
+    change (sa_sigma dom (fun _ : Ts => B c)).
+    exact (sa_sigma_const_classic dom (B c)).
+ROCQ_CONSTANT_RV
+rvconst_rewritten=$(mktemp)
+awk -v first="$rvconst_first" -v last="$rvconst_end" -v proof="$rvconst_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR >= last {print}' rocq/ProbTheory/RandomVariable.v > "$rvconst_rewritten"
+mv "$rvconst_rewritten" rocq/ProbTheory/RandomVariable.v
+rm "$rvconst_proof"
