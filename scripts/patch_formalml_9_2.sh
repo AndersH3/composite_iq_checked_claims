@@ -1153,16 +1153,17 @@ cat > "$elim_neg_proof" <<'ROCQ_NEG_INFINITE_RECIPROCAL'
     + (* Finite negative tail: multiplying by eps and -r reduces
          reciprocal convergence to the already-known strict bound. *)
       assert (Hepspos : 0 < eps) by apply cond_pos.
-      assert (Hepsnonzero : eps <> 0) by lra.
+      assert (Hepsnonzero : pos eps <> 0) by lra.
       assert (Hinvpos : 0 < / eps)
         by (apply Rinv_0_lt_compat; exact Hepspos).
       assert (Hrneg : r < 0) by lra.
+      change (Rabs (/ r) < pos eps).
       rewrite Rabs_Rinv.
       rewrite (Rabs_left r) by exact Hrneg.
       apply (Rmult_lt_reg_r (-r)); [lra |].
       replace ((/ (-r))*(-r)) with 1 by (field; lra).
-      apply (Rmult_lt_compat_r eps _ _ Hepspos) in H.
-      replace ((- / eps)*eps) with (-1) in H by (field; lra).
+      apply (Rmult_lt_compat_r (pos eps) _ _ Hepspos) in H.
+      replace ((- / (pos eps))*(pos eps)) with (-1) in H by (field; lra).
       nra.
     + rewrite Rabs_R0; apply cond_pos.
     + rewrite Rabs_R0; apply cond_pos.
@@ -1183,3 +1184,58 @@ test -n "$hilbert_small"
 hilbert_small_next=$((hilbert_small + 1))
 sed -n "${hilbert_small_next}p" rocq/CertRL/LM/hilbert.v | grep -Fq 'absurd (0 = 0). rewrite H4 in H2.'
 sed -i "${hilbert_small},$((hilbert_small + 3))c\\     nra." rocq/CertRL/LM/hilbert.v
+
+# D176: Replace the brittle forward convex-projection proof as one
+# unit rather than patching its generated arithmetic goals piecemeal.
+# For positive inner product a and squared distance b > 0 choose
+# t = min(1,a/b). The established aux5 gives 2*a <= t*b <= a,
+# contradicting a > 0. If b = 0, the same lemma at t = 1 suffices.
+# Keep the original statement and D173 reverse implication intact.
+forward_start=$(awk -v first="$charac_start" 'NR > first && /^\+intros[.]$/ {print NR; exit}' rocq/CertRL/LM/hilbert.v)
+test -n "$forward_start"
+forward_end=$(awk -v first="$forward_start" 'NR > first && /^\+ intros Horth[.]$/ {print NR; exit}' rocq/CertRL/LM/hilbert.v)
+test -n "$forward_end"
+forward_last=$((forward_end - 1))
+sed -n "${forward_start},${forward_last}p" rocq/CertRL/LM/hilbert.v | grep -Fq 'apply charac_ortho_projection_convex_aux5'
+forward_proof=$(mktemp)
+cat > "$forward_proof" <<'ROCQ_HILBERT_CONVEX_FORWARD'
++ intros Hmin w Hw.
+  (* Name the real quantities so arithmetic never unfolds the Hilbert
+     structure or the norm definition. *)
+  set (a := inner (minus u v) (minus w v)).
+  set (b := norm (minus v w) * norm (minus v w)).
+  change (a <= 0).
+  assert (Hb : 0 <= b) by (unfold b; apply Rle_0_sqr).
+  destruct (Req_dec b 0) as [Hbzero | Hbnz].
+  - assert (Hstep : 2 * a <= 1 * b).
+    { unfold a, b.
+      apply charac_ortho_projection_convex_aux5;
+        try assumption; lra. }
+    rewrite Hbzero in Hstep; lra.
+  - assert (Hbpos : 0 < b) by lra.
+    destruct (Rle_lt_dec a 0) as [Ha | Ha].
+    + exact Ha.
+    + exfalso.
+      set (t := Rmin 1 (a / b)).
+      assert (Hratio : 0 < a / b)
+        by (apply Rdiv_lt_0_compat; assumption).
+      assert (Htpos : 0 < t).
+      { unfold t, Rmin.
+        destruct (Rle_dec 1 (a / b)); lra. }
+      assert (Htone : t <= 1) by (unfold t; apply Rmin_l).
+      assert (Hstep : 2 * a <= t * b).
+      { unfold a, b.
+        apply charac_ortho_projection_convex_aux5;
+          try assumption; lra. }
+      assert (Htbound : t <= a / b)
+        by (unfold t; apply Rmin_r).
+      assert (Hprod : t * b <= a).
+      { apply (Rmult_le_compat_r b) in Htbound; [| lra].
+        replace (a / b * b) with a in Htbound by (field; exact Hbnz).
+        exact Htbound. }
+      lra.
+ROCQ_HILBERT_CONVEX_FORWARD
+forward_rewritten=$(mktemp)
+awk -v first="$forward_start" -v last="$forward_last" -v proof="$forward_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR > last {print}' rocq/CertRL/LM/hilbert.v > "$forward_rewritten"
+mv "$forward_rewritten" rocq/CertRL/LM/hilbert.v
+rm "$forward_proof"
