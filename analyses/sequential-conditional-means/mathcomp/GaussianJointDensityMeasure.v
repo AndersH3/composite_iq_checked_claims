@@ -13,6 +13,8 @@ From HB Require Import structures.
 From mathcomp Require Import boot order ssralg ssrnum.
 From mathcomp Require Import boolp classical_sets functions reals ereal topology normedtype.
 From mathcomp Require Import sequences esum.
+(* numfun owns erestrict_ge0; the integral facade does not reexport it. *)
+From mathcomp Require Import numfun.
 From mathcomp Require Import measure lebesgue_integral lebesgue_stieltjes_measure
   lebesgue_measure measurable_realfun.
 From mathcomp.analysis Require Import normal_distribution.
