@@ -1295,3 +1295,46 @@ event_const_rewritten=$(mktemp)
 awk -v first="$event_const_first" -v last="$event_const_last" -v proof="$event_const_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR > last {print}' rocq/ProbTheory/Event.v > "$event_const_rewritten"
 mv "$event_const_rewritten" rocq/ProbTheory/Event.v
 rm "$event_const_proof"
+
+# D179: The orthogonal-complement characterization already establishes
+# equality to zero. Select the right disjunct of real nonpositivity
+# explicitly and retain the original compatibility certificate.
+orth2_start=$(grep -n '^Lemma charac_ortho_projection_subspace2:' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
+test -n "$orth2_start"
+orth2_end=$(awk -v first="$orth2_start" 'NR > first && /^Qed[.]$/ {print NR; exit}' rocq/CertRL/LM/hilbert.v)
+test -n "$orth2_end"
+orth2_branch=$(awk -v first="$orth2_start" -v last="$orth2_end" 'NR > first && NR < last && /^\+ destruct phi_compat as / {print NR; exit}' rocq/CertRL/LM/hilbert.v)
+test -n "$orth2_branch"
+test "$(sed -n "${orth2_branch}p" rocq/CertRL/LM/hilbert.v)" = '+ destruct phi_compat as ((G1,(z,G2)),M).'
+orth2_tail=$((orth2_end - 2))
+test "$(sed -n "${orth2_tail}p" rocq/CertRL/LM/hilbert.v)" = '  intuition.'
+test "$(sed -n "$((orth2_tail + 1))p" rocq/CertRL/LM/hilbert.v)" = '  apply charac_ortho_projection_subspace1; trivial.'
+sed -i "${orth2_tail},$((orth2_tail + 1))c\\  right; exact H3.\\n  apply charac_ortho_projection_subspace1; assumption." rocq/CertRL/LM/hilbert.v
+sed -i "${orth2_branch}c\\+ pose proof phi_compat as Hcompat.\\n  destruct Hcompat as ((G1,(z,G2)),M)." rocq/CertRL/LM/hilbert.v
+
+# D180: Supply the existing nonemptiness witness at the two other
+# downstream calls to the refactored projection uniqueness theorem.
+# Use compatible_m_zero for the zero-vector membership obligation.
+orth_unique1=$(grep -nF '  apply (ortho_projection_convex_unique phi phi_convex phi_compl u).' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
+test -n "$orth_unique1"
+test "$(sed -n "$((orth_unique1 + 1))p" rocq/CertRL/LM/hilbert.v)" = '  trivial. trivial. trivial. trivial.'
+sed -i "${orth_unique1},$((orth_unique1 + 1))c\\  assert (Hnonempty : exists y : E, phi y) by (exists v; exact H).\\n  eapply (ortho_projection_convex_unique phi Hnonempty phi_convex); eassumption." rocq/CertRL/LM/hilbert.v
+orth_unique2=$(grep -nF '  apply (ortho_projection_convex_unique phi phi_convex phi_compl u); trivial.' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
+test -n "$orth_unique2"
+test "$(sed -n "$((orth_unique2 + 1))p" rocq/CertRL/LM/hilbert.v)" = '  assert (zero = scal zero v).'
+test "$(sed -n "$((orth_unique2 + 2))p" rocq/CertRL/LM/hilbert.v)" = '  rewrite scal_zero_l. reflexivity. destruct phi_compat.'
+test "$(sed -n "$((orth_unique2 + 3))p" rocq/CertRL/LM/hilbert.v)" = '  rewrite H3. apply H5; trivial.'
+sed -i "${orth_unique2},$((orth_unique2 + 3))c\\  assert (Hnonempty : exists y : E, phi y) by (exists v; exact H).\\n  eapply (ortho_projection_convex_unique phi Hnonempty phi_convex);\\n    try eassumption; apply compatible_m_zero; exact phi_compat." rocq/CertRL/LM/hilbert.v
+
+# D181: A subpartition difference is either empty or the original
+# cell. Choose the disjunction branch explicitly and reuse the event
+# library's existing setoid difference identities.
+sigma_diff=$(grep -n '^Lemma pre_sub_partition_diff ' rocq/ProbTheory/SigmaAlgebras.v | cut -d: -f1)
+test -n "$sigma_diff"
+sigma_diff_first=$(awk -v first="$sigma_diff" 'NR > first && /^Proof[.]$/ {print NR+1; exit}' rocq/ProbTheory/SigmaAlgebras.v)
+test -n "$sigma_diff_first"
+sigma_diff_end=$(awk -v first="$sigma_diff_first" 'NR >= first && /^Qed[.]$/ {print NR; exit}' rocq/ProbTheory/SigmaAlgebras.v)
+test -n "$sigma_diff_end"
+test "$(sed -n "$((sigma_diff_end - 2))p" rocq/ProbTheory/SigmaAlgebras.v)" = '  - rewrite pre_event_diff_self; intuition.'
+test "$(sed -n "$((sigma_diff_end - 1))p" rocq/ProbTheory/SigmaAlgebras.v)" = '  - rewrite pre_event_diff_false_r; intuition.'
+sed -i "${sigma_diff_first},$((sigma_diff_end - 1))c\\  intros is_sub n.\\n  destruct (is_sub n) as [eqq | eqq].\\n  - right; rewrite eqq; apply pre_event_diff_self.\\n  - left; rewrite eqq; apply pre_event_diff_false_r." rocq/ProbTheory/SigmaAlgebras.v
