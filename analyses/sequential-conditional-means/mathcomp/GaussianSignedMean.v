@@ -83,11 +83,16 @@ have mf : measurable_fun [set: R] f.
 { exact: measurable_int fi. }
 have ni : mu.-integrable [set: R] (-%E \o f).
 { apply: integrableN => //. }
-have ri : mu.-integrable [set: R] (fun x : R => f (- x)%R).
-{ apply: (eq_integrable _ ni).
-  move=> x _ /=.
+(* Transfer integrability from the negative function using the
+   pointwise oddness certificate.  Fix all measure, domain, and
+   function arguments of the library theorem explicitly. *)
+have Heq : {in [set: R], (-%E \o f) =1 (fun x : R => f (- x)%R)}.
+{ move=> x _ /=.
   symmetry.
   exact: oddf. }
+have ri : mu.-integrable [set: R] (fun x : R => f (- x)%R).
+{ exact (@eq_integrable _ (measurableTypeR R) R mu setT
+    measurableT (-%E \o f) (fun x : R => f (- x)%R) Heq ni). }
 pose I := \int[mu]_x f x.
 have Hopp : I = - I.
 { rewrite /I.
