@@ -92,12 +92,16 @@ Section ProductGaussianRegression.
              (rv_x:=product_predictor_observed_rv)).
   Qed.
 
+  (** The innovation is exactly the second product projection. Keep its
+      measurability certificate definitionally identical to the library's
+      snd_rv certificate, rather than wrapping it in an opaque proof.
+      The independent-sigma-algebra statement contains the inclusion
+      certificates in dependent event terms; conversion must see the
+      same certificate on both sides. No proof-irrelevance axiom is
+      needed for this alignment. *)
   Local Instance product_innovation_full_rv :
-    RandomVariable full_sa borel_sa product_gaussian_innovation.
-  Proof.
-    unfold product_gaussian_innovation.
-    exact (snd_rv history_sa borel_sa).
-  Qed.
+    RandomVariable full_sa borel_sa product_gaussian_innovation :=
+    snd_rv history_sa borel_sa.
 
   (** [product_gaussian_innovation_independent] (lemma).
    This is the crucial measure-theoretic independence assertion for
