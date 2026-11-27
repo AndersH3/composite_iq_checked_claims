@@ -1260,3 +1260,38 @@ forward_rewritten=$(mktemp)
 awk -v first="$forward_start" -v last="$forward_last" -v proof="$forward_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR > last {print}' rocq/CertRL/LM/hilbert.v > "$forward_rewritten"
 mv "$forward_rewritten" rocq/CertRL/LM/hilbert.v
 rm "$forward_proof"
+
+# D177: The refactored projection uniqueness proof retains the section
+# nonemptiness premise in its exported type. Witness it with the
+# already-known minimizer v; do not add a hypothesis to the caller.
+hilbert_unique_line=$(grep -nF 'apply (ortho_projection_convex_unique phi phi_convex phi_compl u); intuition.' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
+test -n "$hilbert_unique_line"
+test "$(sed -n "${hilbert_unique_line}p" rocq/CertRL/LM/hilbert.v)" = 'apply (ortho_projection_convex_unique phi phi_convex phi_compl u); intuition.'
+sed -i "${hilbert_unique_line}c\\assert (Hnonempty : exists y : E, phi y) by (exists v; exact (proj1 Hv)).\\ndestruct Hv as [Hv_mem Hv_min].\\ndestruct Hv' as [Hv'_mem Hv'_min].\\neapply (ortho_projection_convex_unique phi Hnonempty phi_convex); eassumption." rocq/CertRL/LM/hilbert.v
+
+# D178: A constant predicate is either the universal or empty event.
+# The original negative branch unfolded the universal event instead
+# of pre_event_none. Use explicit pointwise equivalence and the
+# existing sigma-algebra closure facts in both branches.
+event_const_start=$(grep -n '^  Lemma sa_sigma_const ' rocq/ProbTheory/Event.v | cut -d: -f1)
+test -n "$event_const_start"
+event_const_first=$(awk -v first="$event_const_start" 'NR > first && /^  Proof[.]$/ {print NR+1; exit}' rocq/ProbTheory/Event.v)
+event_const_end=$(awk -v first="$event_const_first" 'NR >= first && /^  Qed[.]$/ {print NR; exit}' rocq/ProbTheory/Event.v)
+test -n "$event_const_first"
+test -n "$event_const_end"
+event_const_last=$((event_const_end - 1))
+sed -n "${event_const_first},${event_const_last}p" rocq/ProbTheory/Event.v | grep -Fq 'eapply sa_proper; [| apply sa_none].'
+event_const_proof=$(mktemp)
+cat > "$event_const_proof" <<'ROCQ_CONSTANT_EVENT'
+    destruct Plem as [HP | HnotP].
+    - eapply sa_proper; [| apply sa_all].
+      unfold pre_event_equiv, pre_Ω.
+      intro x; split; tauto.
+    - eapply sa_proper; [| apply sa_none].
+      unfold pre_event_equiv, pre_event_none.
+      intro x; split; tauto.
+ROCQ_CONSTANT_EVENT
+event_const_rewritten=$(mktemp)
+awk -v first="$event_const_first" -v last="$event_const_last" -v proof="$event_const_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR > last {print}' rocq/ProbTheory/Event.v > "$event_const_rewritten"
+mv "$event_const_rewritten" rocq/ProbTheory/Event.v
+rm "$event_const_proof"
