@@ -158,15 +158,19 @@ have mh : measurable_fun [set: BorelPair] h.
 have h0 z : 0 <= h z.
   rewrite /h; apply: erestrict_ge0 => t _.
   by rewrite /f lee_fin; exact: gmc_joint_density_ge0.
-change (\int[(mu \x mu)]_(z in A) f z =
-        \int[mu]_x \int[mu]_(t in xsection A x) f (x,t)).
-rewrite (integral_mkcond A f).
-transitivity (\int[mu]_x \int[mu]_t h (x,t)).
+(* Let the actual integral's packed measure determine the intermediate
+   expression. Avoid reconstructing both sides of the goal with change:
+   the original definition was elaborated before HB registration. *)
+rewrite /gmc_joint_mass.
+etransitivity; first exact: (integral_mkcond A f).
+(* Apply the existing Tonelli equality with the restricted integrand
+   explicitly, leaving its iterated integral as the next intermediate. *)
+etransitivity.
 - exact (@fubini_tonelli1 _ _ (measurableTypeR R)
     (measurableTypeR R) R mu mu h mh h0).
 - apply: eq_integral => x _.
-  rewrite (integral_mkcond (xsection A x) (fun t => f (x,t))).
+  rewrite [RHS]integral_mkcond.
   apply: eq_integral => t _.
-  by rewrite /h !patchE mem_xsection.
+  by rewrite /h /f !patchE mem_xsection.
 Qed.
 End JointDensity.
