@@ -162,6 +162,10 @@ transitivity
 rewrite /normal_prob ge0_integralZr //=.
 - by apply/measurable_EFinP/measurable_funTS; exact: measurable_normal_pdf.
 - by move=> x _; rewrite lee_fin; exact: normal_pdf_ge0.
-- exact: measure_ge0.
+- (* The preceding unfolding of normal_prob leaves a Lebesgue
+     integral, not a measure application. Its nonnegativity follows
+     from the nonnegative normal density by the library integral law. *)
+  apply: integral_ge0 => e _.
+  by rewrite lee_fin; exact: normal_pdf_ge0.
 Qed.
 End ResidualMeasureLaws.
