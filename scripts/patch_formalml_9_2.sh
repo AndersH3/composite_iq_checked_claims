@@ -1343,11 +1343,14 @@ Proof.
     { eapply direct_sum_with_orth_compl_decomp; eassumption. }
     assert (Hzero : minus u v = @zero E).
     { apply direct_sumable_with_orth_compl; assumption. }
-    pose proof (f_equal (fun x : E => plus x v) Hzero) as Hsum.
-    change (plus (minus u v) v = plus zero v) in Hsum.
-    unfold minus in Hsum.
-    rewrite <- plus_assoc plus_opp_l plus_zero_r plus_zero_l in Hsum.
-    symmetry; exact Hsum.
+    (* Reuse precisely the cancellation pattern used in the upstream
+       ortho_projection_convex_unique proof. The explicit carrier
+       lambda is unnecessary and defeats canonical structure inference. *)
+    symmetry.
+    unfold minus in Hzero.
+    apply plus_reg_r with (opp v).
+    rewrite plus_opp_r.
+    exact Hzero.
   - intro Heq; subst v; exact Hv.
 ROCQ_ORTHOGONAL_CHARAC1
 orth_charac2_proof=$(mktemp)
