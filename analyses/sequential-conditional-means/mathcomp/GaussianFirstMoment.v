@@ -10,7 +10,7 @@
     Researcher/requester: Anders Hellström.
     AI disclosure: AI-assisted proof candidates; validation pending.
 *)
-From mathcomp Require Import boot order ssralg ssrnum field_tactic.
+From mathcomp Require Import boot order ssralg ssrnum.
 From mathcomp Require Import boolp classical_sets functions reals ereal topology normedtype.
 (* sequences defines expR; exp develops its properties without reexporting it. *)
 From mathcomp Require Import sequences.
@@ -133,11 +133,26 @@ exists w, c; split=> // x.
 pose u := x ^+ 2 / q.
 pose e := expR (- u).
 have He : 0 <= e := expR_ge0 _.
+(* Establish the exponent identity in the real field before passing
+   it through expR.  Since d and q are positive, cancellation by
+   either denominator is justified by the existing library lemmas. *)
+have hd : d != 0 := gt_eqF d0.
+have hqn : q != 0 := gt_eqF q0.
+have Hq : q = d + d.
+{ by rewrite /q mulr2n. }
+have Huq : u * q = x ^+ 2.
+{ by rewrite /u (divfK hqn). }
+have Hud : (u + u) * d = x ^+ 2.
+{ rewrite mulrDl -mulrDr -Hq.
+  exact: Huq. }
+have Hu : u + u = x ^+ 2 / d.
+{ apply: (mulIf hd).
+  rewrite (divfK hd).
+  exact: Hud. }
+have Harg : - (x ^+ 2) / d = - u + - u.
+{ by rewrite mulNr -opprD Hu. }
 have Hsfun : normal_fun 0 s x = e * e.
-{ rewrite /normal_fun subr0 /e -expRD.
-  congr expR.
-  rewrite /u /q -mulr_natr -/d.
-  field by rewrite ?gt_eqF. }
+{ by rewrite /normal_fun subr0 -/d /e -expRD Harg. }
 have Hwfun : normal_fun 0 w x = e.
 { by rewrite /normal_fun subr0 wd -/q /e /u mulNr. }
 have Hbound : `|x| * e <= 1 + q.
@@ -148,11 +163,15 @@ rewrite (normal_pdfE 0 Hs) (normal_pdfE 0 w0) /= Hsfun Hwfun.
 have Hleft :
     `|x| * (normal_peak s * (e * e)) =
     (`|x| * e) * (normal_peak s * e).
-{ ring. }
+{ by rewrite (mulrCA (normal_peak s) e e) mulrA. }
 have Hright :
     c * (normal_peak w * e) = (1 + q) * (normal_peak s * e).
-{ rewrite /c.
-  field by rewrite gt_eqF ?normal_peak_gt0. }
+{ (* Cancel the nonzero wider density peak without a field tactic. *)
+  have hpwn : normal_peak w != 0.
+  { exact: gt_eqF (normal_peak_gt0 w0). }
+  have Hcancel : c * normal_peak w = (1 + q) * normal_peak s.
+  { by rewrite /c (divfK hpwn). }
+  by rewrite mulrA Hcancel -mulrA. }
 rewrite Hleft Hright.
 (* State the common nonnegative multiplier independently, so the
    monotonicity application cannot confuse its two premises. *)
