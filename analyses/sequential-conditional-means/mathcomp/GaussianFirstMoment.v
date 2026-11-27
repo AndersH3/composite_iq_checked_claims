@@ -160,10 +160,22 @@ have Hsfun : normal_fun 0 s x = e * e.
 { by rewrite /normal_fun subr0 -/d /e -expRD Harg. }
 have Hwfun : normal_fun 0 w x = e.
 { by rewrite /normal_fun subr0 wd -/q /e /u mulNr. }
+(* Give the multiplied inequality its intended Boolean-reflected
+   proposition at construction time, rather than using change on
+   an already elaborated proof.  Cancel the exponential factor in
+   a separate real equality and transport the completed comparison. *)
+have Hexp : `|x| <= (1 + q) * expR u.
+{ exact: (@gmc_abs_exp_bound q x q0). }
+have Hscaled : `|x| * e <= ((1 + q) * expR u) * e.
+{ apply: ler_wpM2r; [exact: He | exact: Hexp]. }
+have Hunit : expR u * e = 1.
+{ rewrite /e.
+  exact: expRxMexpNx_1. }
+have Hscale : ((1 + q) * expR u) * e = 1 + q.
+{ by rewrite -mulrA Hunit mulr1. }
 have Hbound : `|x| * e <= 1 + q.
-{ have H := ler_wpM2r He (@gmc_abs_exp_bound q x q0).
-  change (`|x| * e <= ((1 + q) * expR u) * e) in H.
-  by move: H; rewrite /e -mulrA expRxMexpNx_1 mulr1. }
+{ rewrite Hscale in Hscaled.
+  exact: Hscaled. }
 rewrite (normal_pdfE 0 Hs) (normal_pdfE 0 w0) /= Hsfun Hwfun.
 have Hleft :
     `|x| * (normal_peak s * (e * e)) =
