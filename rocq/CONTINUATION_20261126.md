@@ -44,3 +44,9 @@ At `c6a26bf92df08c0c831f58460e1ec26eee55a775`, computer10 loaded MathComp-Analys
 ### Second MathComp candidate compile — November 27, 2026
 
 Computer10 at `d467dd7e3ababde82d5fd6a8223c87f827148fec` accepted the explicit realType binders and reached line 183 of the fourth proof. The unrestricted addrC rewrite left no matching subterm for addrK; subtraction is addition of an opposite, so the commutativity rewrite must target the inner sum explicitly. The revised script uses [m + e]addrC and addrK and makes the later section-local density lemma application explicit. No mathematical statement is changed. The first three theorems again passed their Qed commands; no completed six-theorem .vo was produced. A further kernel run is required.
+
+### Successful MathComp kernel compilation — November 27, 2026
+
+On November 27, 2026, computer10 compiled the exact six-theorem MathComp module at revision `9f5a5508fcb0e5fc8b079fe4090c10aa0a7ef0e1` using Rocq 9.2.0 and MathComp-Analysis 1.18.0. The researcher supplied the successful terminal transcript (exit status 0, GaussianPosteriorMeasure.vo, 75 KiB). All six theorem scripts passed, including the centered residual density, scalar observation/residual density factorization and marginal observation measure. This is local kernel evidence, not a successful GitHub Actions run or a proof of full multivariate Gaussian residual independence. The six scripts are tracked separately from the 3,699 canonical Stdlib proof scripts; the three previously verified posterior results must not be double-counted.
+
+Next: independently check the compiled module with rocq check and inspect Print Assumptions; build the FormalML dependency closure without changing the verified MathComp environment. The general joint Gaussian independence and full-history conditional expectation remain open.

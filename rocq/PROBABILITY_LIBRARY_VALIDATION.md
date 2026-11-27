@@ -77,11 +77,14 @@ opam exec --switch=gaussian-rocq-9.2 -- \
   2>&1 | tee "$LOGDIR/mathcomp-kernel.log"
 ~~~
 
-Use the exact six-theorem candidate file; the zero-scale fallback of the pinned normal density is not a Dirac measure. No full multivariate independence claim follows from a successful build.
+On November 27, 2026, computer10 compiled the exact six-theorem MathComp module at revision `9f5a5508fcb0e5fc8b079fe4090c10aa0a7ef0e1` using Rocq 9.2.0 and MathComp-Analysis 1.18.0. The researcher supplied the successful terminal transcript (exit status 0, GaussianPosteriorMeasure.vo, 75 KiB). All six theorem scripts passed, including the centered residual density, scalar observation/residual density factorization and marginal observation measure. This is local kernel evidence, not a successful GitHub Actions run or a proof of full multivariate Gaussian residual independence. The six scripts are tracked separately from the 3,699 canonical Stdlib proof scripts; the three previously verified posterior results must not be double-counted.
+
+The zero-scale fallback of the pinned normal density is not a Dirac measure. No full multivariate independence claim follows from a successful build.
+
 
 ## 2. FormalML separately
 
-Only proceed after the MathComp result is recorded. If reconnecting over SSH, rerun the PROJECT and LOGDIR initialization above before using these commands. FormalML at upstream commit 8ee433dc802fca35f6bceb6dacb69d3c1315e886 needs a large compatibility patch. Use its own worktree in the validation directory and the pinned dependency metadata. Keep the exact Rocq version fixed. A separate switch may be needed if dependency solving conflicts with MathComp-Analysis.
+Only proceed after the MathComp result is recorded. If reconnecting over SSH, rerun the PROJECT and LOGDIR initialization above before using these commands. FormalML at upstream commit 8ee433dc802fca35f6bceb6dacb69d3c1315e886 needs a large compatibility patch. Use its own worktree in the validation directory and the pinned dependency metadata. Keep the exact Rocq version fixed. Preview the dependency solution first, preserving the successful MathComp installation. Use a separate switch if opam proposes changing or removing any installed package.
 
 ~~~bash
 cd "$PROJECT"
@@ -96,6 +99,14 @@ git clone --no-checkout https://github.com/IBM/FormalML.git FormalML
 cd FormalML
 git checkout --detach 8ee433dc802fca35f6bceb6dacb69d3c1315e886
 
+opam install --switch=gaussian-rocq-9.2 --dry-run --deps-only . \
+  rocq-core.9.2.0 rocq-runtime.9.2.0 rocq-stdlib.9.2.0 coq-core.9.2.0 \
+  2>&1 | tee "$LOGDIR/formalml-dependency-plan.log"
+~~~
+
+Only if the preview succeeds and proposes no upgrades, downgrades or removals of existing packages, install:
+
+~~~bash
 opam install --switch=gaussian-rocq-9.2 -y -j 2 --deps-only . \
   rocq-core.9.2.0 rocq-runtime.9.2.0 rocq-stdlib.9.2.0 coq-core.9.2.0 \
   2>&1 | tee "$LOGDIR/formalml-dependencies.log"
