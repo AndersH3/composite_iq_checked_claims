@@ -34,7 +34,7 @@ If the switch already exists, do not recreate it. Check its installed versions b
 
 ### Recovery of the partially installed switch (November 26, 2026)
 
-The first installation on computer10 installed Rocq 9.2.0 and MathComp 2.6.0, but Finmap 2.2.4 and Bigenough 1.0.4 could not resolve HB.structures or mathcomp.ssreflect, respectively. The subsequent Gaussian compile could not import mathcomp.classical_sets because MathComp-Analysis was never installed. The upstream Makefile.common files at finmap 2.2.4 and bigenough 1.0.4 choose legacy commands before falling back to rocq. The missing coq-core.9.2.0 compatibility package is the leading diagnosis, not yet a confirmed repair.
+The first installation on computer10 installed Rocq 9.2.0 and MathComp 2.6.0, but Finmap 2.2.4 and Bigenough 1.0.4 could not resolve HB.structures or mathcomp.ssreflect, respectively. The subsequent Gaussian compile could not import mathcomp.classical_sets because MathComp-Analysis was never installed. The upstream Makefile.common files at finmap 2.2.4 and bigenough 1.0.4 choose legacy commands before falling back to rocq. The subsequent computer10 transcript confirms the repair: installing coq-core.9.2.0 put rocq, coqc, coqtop, coq_makefile and coqdep in the isolated switch, both previously failing dependencies built successfully, and Analysis 1.18.0 installed. The later file-not-found error was caused by unset shell variables after reconnecting over SSH, not by a proof or dependency failure.
 
 Install the compatibility package as above, then verify the selected binaries and library paths:
 
@@ -56,12 +56,22 @@ opam install --switch=gaussian-rocq-9.2 -y -j 2 \
 
 Only after both succeed, resume installation of Analysis with the compiler pins above. Do not edit the system Coq installation, create manual symlinks, or delete the successful partial switch. If either build still fails, retain the full corresponding opam .out and .env logs. The official compatibility package is documented at https://opam.ocaml.org/packages/coq-core/coq-core.9.2.0/.
 
+### Compile after successful installation (including after a fresh SSH login)
+
+Reinitialize these variables on every new SSH connection. They do not persist between shells. In particular, an empty LOGDIR must never be used to construct a log path.
+
 ~~~bash
+cd "$HOME/src/composite_iq_verification" &&
+export PROJECT="$PWD" &&
+export LOGDIR="$HOME/validation-logs/composite-probability-$(date +%Y%m%d-%H%M%S)" &&
+mkdir -p "$LOGDIR/mathcomp"
+set -o pipefail
+
 opam exec --switch=gaussian-rocq-9.2 -- rocq --version
 opam list --switch=gaussian-rocq-9.2 --installed
-mkdir -p "$LOGDIR/mathcomp"
-cp "$PROJECT/analyses/sequential-conditional-means/mathcomp/GaussianPosteriorMeasure.v" "$LOGDIR/mathcomp/"
-cd "$LOGDIR/mathcomp"
+cp "${PROJECT:?Reinitialize PROJECT}/analyses/sequential-conditional-means/mathcomp/GaussianPosteriorMeasure.v" \
+  "${LOGDIR:?Reinitialize LOGDIR}/mathcomp/" &&
+cd "$LOGDIR/mathcomp" &&
 opam exec --switch=gaussian-rocq-9.2 -- \
   rocq compile GaussianPosteriorMeasure.v \
   2>&1 | tee "$LOGDIR/mathcomp-kernel.log"
@@ -71,7 +81,7 @@ Use the exact six-theorem candidate file; the zero-scale fallback of the pinned 
 
 ## 2. FormalML separately
 
-Only proceed after the MathComp result is recorded. FormalML at upstream commit 8ee433dc802fca35f6bceb6dacb69d3c1315e886 needs a large compatibility patch. Use its own worktree in the validation directory and the pinned dependency metadata. Keep the exact Rocq version fixed. A separate switch may be needed if dependency solving conflicts with MathComp-Analysis.
+Only proceed after the MathComp result is recorded. If reconnecting over SSH, rerun the PROJECT and LOGDIR initialization above before using these commands. FormalML at upstream commit 8ee433dc802fca35f6bceb6dacb69d3c1315e886 needs a large compatibility patch. Use its own worktree in the validation directory and the pinned dependency metadata. Keep the exact Rocq version fixed. A separate switch may be needed if dependency solving conflicts with MathComp-Analysis.
 
 ~~~bash
 cd "$PROJECT"
