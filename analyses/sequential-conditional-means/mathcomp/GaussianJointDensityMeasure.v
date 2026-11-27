@@ -11,7 +11,8 @@
 *)
 From HB Require Import structures.
 From mathcomp Require Import boot order ssralg ssrnum.
-From mathcomp Require Import classical_sets reals ereal topology normedtype.
+From mathcomp Require Import boolp classical_sets functions reals ereal topology normedtype.
+From mathcomp Require Import sequences esum.
 From mathcomp Require Import measure lebesgue_integral lebesgue_stieltjes_measure
   lebesgue_measure measurable_realfun.
 From mathcomp.analysis Require Import normal_distribution.
@@ -71,7 +72,7 @@ have Hd : gmc_joint_density m0 s0 s =
     (fun z : R * R => normal_pdf 0 s (z.1 - z.2) *
                                   normal_pdf m0 s0 z.2).
   apply/funext => z.
-  by rewrite /gmc_joint_density (gmc_joint_likelihood_center z Hs).
+  by rewrite /gmc_joint_density (@gmc_joint_likelihood_center s z Hs).
 rewrite Hd.
 exact: measurable_funM ml mp.
 Qed.
@@ -119,7 +120,8 @@ have Hsum :
   - by move=> z _; rewrite lee_fin; exact: gmc_joint_density_ge0.
 rewrite Hsum.
 apply/cvg_closeP; split.
-- exact: is_cvg_nneseries.
+- apply: is_cvg_nneseries => n _ _.
+  exact: gmc_joint_mass_ge0.
 - by rewrite closeE.
 Qed.
 
