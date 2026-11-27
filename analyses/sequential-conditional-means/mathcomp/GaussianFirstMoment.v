@@ -213,10 +213,17 @@ pose g := fun x : R => c%:E * (normal_pdf 0%R w x)%:E.
 have mf : measurable_fun [set: R] f.
 { rewrite /f; apply/measurable_EFinP.
   apply: measurable_funM; [exact: measurable_id | exact: measurable_normal_pdf]. }
+(* First instantiate the library's normalized Gaussian density
+   integrability theorem at the wider scale.  Then scale this exact
+   integrable function, with the measure, domain and scalar fixed
+   explicitly; do not let backward unification choose a factor. *)
+have hi : mu.-integrable [set: R]
+    (fun x : R => (normal_pdf 0%R w x)%:E).
+{ exact (@integrable_normal_pdf R 0%R w). }
 have gi : mu.-integrable [set: R] g.
 { rewrite /g.
-  apply: integrableZl.
-  exact: integrable_normal_pdf. }
+  exact (@integrableZl _ (measurableTypeR R) R mu setT
+    measurableT c (fun x : R => (normal_pdf 0%R w x)%:E) hi). }
 have fg x : [set: R] x -> `|f x| <= `|g x|.
 { move=> _; rewrite /f /g -EFinM !abse_EFin lee_fin.
   rewrite !normrM (ger0_norm c0)
