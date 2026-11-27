@@ -1,4 +1,4 @@
-name: Gaussian posterior measure (MathComp-Analysis)
+name: Gaussian probability measures (MathComp-Analysis)
 
 on:
   push:
@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   normalized-gaussian-posterior:
-    name: MathComp Gaussian posterior kernel
+    name: MathComp Gaussian posterior and residual kernels
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -34,7 +34,7 @@ jobs:
           fi
           test "$(grep -c '^Theorem ' analyses/sequential-conditional-means/mathcomp/GaussianPosteriorMeasure.v)" -eq 6
 
-      - name: Compile normalized posterior-measure theorems with pinned MathComp-Analysis
+      - name: Compile, independently check and audit Gaussian probability measures
         shell: bash
         run: |
           docker run --rm -v "$PWD:/workspace:ro" rocq/rocq-prover:9.2.0 sh -euc '
@@ -46,8 +46,13 @@ jobs:
             opam exec -- coqc --version
             opam install -y -j 3 rocq-core.9.2.0 rocq-runtime.9.2.0 rocq-stdlib.9.2.0 coq-core.9.2.0 rocq-mathcomp-analysis.1.18.0
             mkdir -p /tmp/gaussian-mathcomp
-            cp /workspace/analyses/sequential-conditional-means/mathcomp/GaussianPosteriorMeasure.v /tmp/gaussian-mathcomp/
+            cp /workspace/analyses/sequential-conditional-means/mathcomp/*.v /tmp/gaussian-mathcomp/
             cd /tmp/gaussian-mathcomp
             opam exec -- rocq --version
             opam exec -- rocq compile GaussianPosteriorMeasure.v
+            opam exec -- rocq compile GaussianResidualMeasure.v
+            opam exec -- rocq check GaussianResidualMeasure
+            # Keep transitive assumption audits in separate processes.
+            opam exec -- rocq compile AuditGaussianPosteriorMeasure.v
+            opam exec -- rocq compile AuditGaussianResidualMeasure.v
           '
