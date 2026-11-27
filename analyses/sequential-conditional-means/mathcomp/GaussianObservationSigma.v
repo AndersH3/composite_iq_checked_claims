@@ -40,7 +40,11 @@ Theorem gmc_observation_sigma_events (A : set BorelPair) :
   measurable (A : set ObsSpace) <->
   exists U : set R, measurable U /\ A = U `*` [set: R].
 Proof.
-change (g_sigma_algebra_preimage obs A <-> _).
+(* Spell out both propositions: change does not infer an arbitrary
+   Prop placeholder from the surrounding equivalence. Preserve the
+   library's canonical preimage-generated sigma algebra. *)
+change (g_sigma_algebra_preimage obs A <->
+  exists U : set R, measurable U /\ A = U `*` [set: R]).
 split.
 - move=> [U mU H].
   exists U; split=> //.
