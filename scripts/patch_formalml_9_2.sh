@@ -1125,7 +1125,8 @@ cat > "$charac_proof" <<'ROCQ_HILBERT_CONVEX_REVERSE'
     simpl; apply Hbound; exact Hw. }
   destruct bound; simpl in Hupper, Hlower_v |- *;
     try contradiction.
-  apply Rle_antisym; assumption.
+  (* The remaining equality is between finite extended reals. *)
+  f_equal; apply Rle_antisym; assumption.
 ROCQ_HILBERT_CONVEX_REVERSE
 charac_rewrite=$(mktemp)
 awk -v first="$charac_reverse" -v last="$charac_last" -v proof="$charac_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR > last {print}' rocq/CertRL/LM/hilbert.v > "$charac_rewrite"
@@ -1171,7 +1172,12 @@ cat > "$elim_neg_proof" <<'ROCQ_NEG_INFINITE_RECIPROCAL'
       pose proof (Rinv_0_lt_contravar _ _ Hinvpos Htail) as Hrecip.
       rewrite Rinv_inv in Hrecip.
       change (Rabs (/ r) < pos eps).
-      rewrite Rabs_Rinv (Rabs_left r Hrneg).
+      (* Rabs_Rinv is deprecated and has a nonzero premise.
+         Rewrite the absolute value of the reciprocal directly,
+         then use the unconditional Stdlib reciprocal/negation law. *)
+      pose proof (Rinv_lt_0_compat r Hrneg) as Hrinvneg.
+      rewrite (Rabs_left (/ r) Hrinvneg).
+      rewrite <- (Rinv_opp r).
       exact Hrecip.
     + rewrite Rabs_R0; apply cond_pos.
     + rewrite Rabs_R0; apply cond_pos.
@@ -1219,7 +1225,7 @@ cat > "$forward_proof" <<'ROCQ_HILBERT_CONVEX_FORWARD'
     { unfold a, b.
       apply charac_ortho_projection_convex_aux5;
         try assumption; lra. }
-    rewrite Hbzero, Rmult_0_r in Hstep.
+    rewrite Hbzero Rmult_0_r in Hstep.
     apply (Rmult_le_reg_l 2); [apply Rlt_0_2 |].
     rewrite Rmult_0_r; exact Hstep.
   - assert (Hbpos : 0 < b) by
@@ -1243,7 +1249,7 @@ cat > "$forward_proof" <<'ROCQ_HILBERT_CONVEX_FORWARD'
       assert (Hprod : t * b <= a).
       { apply (Rmult_le_compat_r b) in Htbound; [| exact (Rlt_le _ _ Hbpos)].
         unfold Rdiv in Htbound.
-        rewrite Rmult_assoc, (Rinv_l b Hbnz), Rmult_1_r in Htbound.
+        rewrite Rmult_assoc (Rinv_l b Hbnz) Rmult_1_r in Htbound.
         exact Htbound. }
       (* Isolate the final contradiction from the definitions of a,b,t. *)
       pose proof (Rle_trans _ _ _ Hstep Hprod) as Hcontr.
