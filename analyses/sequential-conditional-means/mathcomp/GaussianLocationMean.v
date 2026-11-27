@@ -193,7 +193,10 @@ transitivity (\int[p]_x (f x + g x)).
   { rewrite /g /p.
     rewrite (@integral_cst _ (measurableTypeR R) R (normal_prob m s)
       setT measurableT m%:E).
-    by rewrite /normal_prob integral_normal_pdf mule1. }
+    (* The normal law already has a registered probability-measure
+       structure. Use its generic normalization theorem without
+       unfolding the packed measure or redoing density integration. *)
+    by rewrite probability_setT mule1. }
   by rewrite Hf Hg add0e.
 Qed.
 End LocationMean.
