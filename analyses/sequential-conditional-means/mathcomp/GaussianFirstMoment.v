@@ -37,14 +37,20 @@ Lemma gmc_abs_le_one_square (x : R) :
 Proof.
 have Hsq : `|x| ^+ 2 = x ^+ 2.
 { by rewrite -normrX ger0_norm ?sqr_ge0. }
+(* Construct ordinary inequalities directly. The ssreflect [LHS]
+   rewrite selector is for equalities, not these order goals. *)
 case: (leP `|x| 1) => h.
-- apply: (le_trans h).
-  by rewrite -[LHS]addr0 lerD2l sqr_ge0.
-- have h2 : `|x| <= `|x| ^+ 2.
-  { rewrite expr2 -[LHS]mulr1.
-    apply: ler_wpM2l; [exact: normr_ge0 | exact: ltW h]. }
-  apply: (le_trans h2).
-  by rewrite Hsq -[LHS]add0r lerD2r.
+- have h1 : (1 : R) + 0 <= 1 + x ^+ 2.
+  { apply: lerD; [exact: lexx | exact: sqr_ge0]. }
+  rewrite addr0 in h1.
+  exact: (le_trans h h1).
+- have hm : `|x| * 1 <= `|x| * `|x|.
+  { apply: ler_wpM2l; [exact: normr_ge0 | exact: ltW h]. }
+  rewrite mulr1 -expr2 Hsq in hm.
+  have hp : 0 + x ^+ 2 <= 1 + x ^+ 2.
+  { apply: lerD; [exact: ler01 | exact: lexx]. }
+  rewrite add0r in hp.
+  exact: (le_trans hm hp).
 Qed.
 
 (** An exponential majorant, valid at every real x for every
@@ -60,9 +66,13 @@ have u0 : 0 <= u.
 have qu : q * u = x ^+ 2.
 { by rewrite /u mulrC divfK ?gt_eqF. }
 have c1 : 1 <= 1 + q.
-{ by rewrite -[LHS]addr0 lerD2l ltW. }
+{ have H : (1 : R) + 0 <= 1 + q.
+  { apply: lerD; [exact: lexx | exact: ltW q0]. }
+  by rewrite addr0 in H. }
 have cq : q <= 1 + q.
-{ by rewrite -[LHS]add0r lerD2r ler01. }
+{ have H : 0 + q <= 1 + q.
+  { apply: lerD; [exact: ler01 | exact: lexx]. }
+  by rewrite add0r in H. }
 have c0 : 0 <= 1 + q := le_trans ler01 c1.
 apply: (le_trans (gmc_abs_le_one_square x)).
 apply: (@le_trans _ _ ((1 + q) * (1 + u))).
