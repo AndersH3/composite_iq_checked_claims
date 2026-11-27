@@ -267,3 +267,208 @@ Proof.
   pose proof (iq_weighted_scale_jensen_deficit w a b) as Hidentity.
   nra.
 Qed.
+
+
+(** [iq_extrema] (definition).
+    Mathematical meaning: Attained lower and upper endpoints of a finite
+    battery, including repeated values at distinct test positions.
+    Exact representation: Both endpoints occur and bound every listed value.
+    Premises and side conditions: The empty list cannot satisfy this predicate.
+    Proof/definition method: Use the standard list membership predicate.
+    Library reuse: Stdlib List.In and real order.
+    Boundary: Deterministic finite battery, not measurability or a distribution. *)
+Definition iq_extrema (xs : list R) (lo hi : R) : Prop :=
+  In lo xs /\ In hi xs /\
+  (forall z, In z xs -> lo <= z /\ z <= hi).
+
+(** [iq_extrema_exist].
+    Mathematical meaning: Every nonempty finite battery attains both extremes.
+    Exact proposition: A nonempty list has endpoints satisfying iq_extrema.
+    Premises and side conditions: Nonempty list; arbitrary real scores.
+    Proof/definition method: Induct on the list and compare the head with
+    each attained endpoint of the tail.
+    Library reuse: Stdlib List.In, Rle_dec and lra.
+    Boundary: Pointwise existence; no random-variable measurability follows. *)
+Theorem iq_extrema_exist (xs : list R) :
+  xs <> [] -> exists lo hi, iq_extrema xs lo hi.
+Proof.
+  induction xs as [|a xs IH]; intro Hnonempty.
+  - contradiction.
+  - destruct xs as [|b ys].
+    + exists a, a. unfold iq_extrema. simpl.
+      split; [auto|]. split; [auto|].
+      intros z [Hz|Hz]; [subst z; split; lra|contradiction].
+    + assert (Htail : b :: ys <> []) by discriminate.
+      destruct (IH Htail) as [lo [hi [Hlo [Hhi Hbounds]]]].
+      assert (Horder : lo <= hi) by (destruct (Hbounds lo Hlo); assumption).
+      simpl in Hlo, Hhi.
+      destruct (Rle_dec a lo) as [Hal|Hal];
+        destruct (Rle_dec hi a) as [Hha|Hha];
+        [exists a, a|exists a, hi|exists lo, a|exists lo, hi];
+        unfold iq_extrema; split; [simpl; tauto|];
+        split; [simpl; tauto|]; intros z Hz;
+        simpl in Hz; destruct Hz as [Hz|Hz].
+      all: try (subst z; split; lra).
+      all: specialize (Hbounds z Hz); split; lra.
+Qed.
+
+(** [iq_extrema_unique].
+    Mathematical meaning: Numerical extrema are unique even when several
+    positions realize an endpoint.
+    Exact proposition: Two endpoint pairs of the same list agree.
+    Premises and side conditions: Both pairs satisfy iq_extrema.
+    Proof/definition method: Apply each pair's bounds to the other's members.
+    Library reuse: Stdlib real order and lra.
+    Boundary: Does not establish unique minimizing indices. *)
+Theorem iq_extrema_unique (xs : list R) (lo hi lo' hi' : R) :
+  iq_extrema xs lo hi -> iq_extrema xs lo' hi' ->
+  lo = lo' /\ hi = hi'.
+Proof.
+  intros [Hl [Hh Hb]] [Hl' [Hh' Hb']].
+  pose proof (Hb lo' Hl') as H1.
+  pose proof (Hb hi' Hh') as H2.
+  pose proof (Hb' lo Hl) as H3.
+  pose proof (Hb' hi Hh) as H4.
+  split; lra.
+Qed.
+
+(** [iq_extrema_affine].
+    Mathematical meaning: Translation and nonnegative scaling preserve
+    extrema, including zero scale and repeated values.
+    Exact proposition: Affine images of the endpoints are extrema of
+    the corresponding mapped list.
+    Premises and side conditions: Nonnegative scale and attained extrema.
+    Proof/definition method: Transport membership through map and multiply
+    the lower and upper bounds by the nonnegative scalar.
+    Library reuse: Stdlib in_map_iff, Rmult_le_compat_l and lra.
+    Boundary: Pointwise part of the Gaussian range representation. *)
+Theorem iq_extrema_affine (xs : list R) (lo hi a s : R) :
+  0 <= s -> iq_extrema xs lo hi ->
+  iq_extrema (map (fun z => a+s*z) xs) (a+s*lo) (a+s*hi).
+Proof.
+  intros Hs [Hl [Hh Hb]].
+  unfold iq_extrema.
+  split.
+  - apply in_map_iff. exists lo. split; [reflexivity|exact Hl].
+  - split.
+    + apply in_map_iff. exists hi. split; [reflexivity|exact Hh].
+    + intros z Hz. apply in_map_iff in Hz.
+      destruct Hz as [x [Heq Hx]]. subst z.
+      destruct (Hb x Hx) as [Hlx Hxh].
+      pose proof (Rmult_le_compat_l s lo x Hs Hlx) as H1.
+      pose proof (Rmult_le_compat_l s x hi Hs Hxh) as H2.
+      split; lra.
+Qed.
+
+(** [iq_extrema_nested_range].
+    Mathematical meaning: Adding observations cannot shrink a realized range.
+    Exact proposition: List inclusion and attained extrema imply ordered
+    maximum-minus-minimum differences.
+    Premises and side conditions: Each list has attained endpoints;
+    inclusion need not preserve multiplicities.
+    Proof/definition method: Use the larger list's bounds on both smaller
+    list endpoint witnesses.
+    Library reuse: Stdlib List.incl and lra.
+    Boundary: The nested iid coupling and expectation monotonicity are separate. *)
+Theorem iq_extrema_nested_range (xs ys : list R) (lo hi lo' hi' : R) :
+  incl xs ys -> iq_extrema xs lo hi -> iq_extrema ys lo' hi' ->
+  hi-lo <= hi'-lo'.
+Proof.
+  intros Hinc [Hl [Hh Hb]] [Hl' [Hh' Hb']].
+  pose proof (Hb' lo (Hinc lo Hl)) as H1.
+  pose proof (Hb' hi (Hinc hi Hh)) as H2.
+  lra.
+Qed.
+
+(** [iq_pair_gaps] (definition).
+    Mathematical meaning: Enumerate one signed difference for every pair
+    of distinct list positions i<j, retaining multiplicities.
+    Exact representation: Pair the head with each tail position via map,
+    then append the recursively enumerated tail differences.
+    Premises and side conditions: Any finite list of real scores.
+    Proof/definition method: Structural recursion using standard map and app.
+    Library reuse: Stdlib List.map and List.app; shared finite_sum for sums.
+    Boundary: Signed values may repeat or vanish; no deduplication. *)
+Fixpoint iq_pair_gaps (xs : list R) : list R :=
+  match xs with
+  | [] => []
+  | a :: tail => map (fun z => a-z) tail ++ iq_pair_gaps tail
+  end.
+
+(** [iq_pair_gaps_contains_distinct].
+    Mathematical meaning: Two distinct attained scores produce a listed
+    pair difference, possibly with the opposite orientation.
+    Exact proposition: Distinct members x,y yield x-y or y-x in iq_pair_gaps.
+    Premises and side conditions: Both values occur and differ.
+    Proof/definition method: Induct on positions; head-tail pairs use map,
+    tail-tail pairs reuse the induction hypothesis.
+    Library reuse: Stdlib in_map_iff, in_or_app and List.In.
+    Boundary: A value-based witness; equal-valued positions are also
+    enumerated but are not needed in this theorem. *)
+Theorem iq_pair_gaps_contains_distinct (xs : list R) (x y : R) :
+  x <> y -> In x xs -> In y xs ->
+  In (x-y) (iq_pair_gaps xs) \/ In (y-x) (iq_pair_gaps xs).
+Proof.
+  induction xs as [|a xs IH]; intros Hne Hx Hy.
+  - contradiction.
+  - simpl in Hx, Hy.
+    cbn [iq_pair_gaps].
+    destruct Hx as [Hx|Hx]; destruct Hy as [Hy|Hy].
+    + exfalso. apply Hne. congruence.
+    + subst x. left. apply in_or_app. left.
+      apply in_map_iff. exists y. split; [reflexivity|exact Hy].
+    + subst y. right. apply in_or_app. left.
+      apply in_map_iff. exists x. split; [reflexivity|exact Hx].
+    + destruct (IH Hne Hx Hy) as [H|H].
+      * left. apply in_or_app. right. exact H.
+      * right. apply in_or_app. right. exact H.
+Qed.
+
+(** [iq_extrema_pair_square_bound].
+    Mathematical meaning: A realized squared range is bounded by the
+    sum of squared gaps over all unordered pairs of distinct positions.
+    Exact proposition: For attained extrema, the squared endpoint
+    difference is no larger than the finite_sum of squares of iq_pair_gaps.
+    Premises and side conditions: Attained extrema; includes constant lists
+    and singletons, for which the range is zero.
+    Proof/definition method: For equal endpoints use nonnegativity.
+    Otherwise the endpoint gap occurs up to sign; reuse the member bound.
+    Library reuse: iq_pair_gaps_contains_distinct, iq_range_pair_square_bound,
+    FiniteSum.finite_sum_nonnegative, Stdlib ring and nra.
+    Boundary: Deterministic inequality of prop:bound; expectation and
+    Cauchy-Schwarz on an actual probability space remain separate. *)
+Theorem iq_extrema_pair_square_bound (xs : list R) (lo hi : R) :
+  iq_extrema xs lo hi ->
+  (hi-lo)*(hi-lo) <= finite_sum (fun d => d*d) (iq_pair_gaps xs).
+Proof.
+  intros [Hl [Hh Hb]].
+  destruct (Req_EM_T hi lo) as [Heq|Hne].
+  - subst hi. replace ((lo-lo)*(lo-lo)) with 0 by ring.
+    apply finite_sum_nonnegative. intros d Hd. nra.
+  - destruct (iq_pair_gaps_contains_distinct xs hi lo Hne Hh Hl) as [H|H].
+    + exact (iq_range_pair_square_bound (iq_pair_gaps xs) (hi-lo) H).
+    + replace ((hi-lo)*(hi-lo)) with ((lo-hi)*(lo-hi)) by ring.
+      exact (iq_range_pair_square_bound (iq_pair_gaps xs) (lo-hi) H).
+Qed.
+
+(** [iq_extrema_range_attains_pair_max].
+    Mathematical meaning: No pair has larger squared gap than the range;
+    the attained endpoints themselves realize that squared gap.
+    Exact proposition: Any two members have squared difference at most
+    the squared endpoint difference.
+    Premises and side conditions: Both endpoints and both scores are members.
+    Proof/definition method: Bound both signs of the difference by the range
+    and use nonnegativity of the product of complementary differences.
+    Library reuse: Stdlib real order, Rmult_le_pos, ring and nra.
+    Boundary: Deterministic finite-range identity only. *)
+Theorem iq_extrema_range_attains_pair_max (xs : list R) (lo hi x y : R) :
+  iq_extrema xs lo hi -> In x xs -> In y xs ->
+  (x-y)*(x-y) <= (hi-lo)*(hi-lo).
+Proof.
+  intros [Hl [Hh Hb]] Hx Hy.
+  destruct (Hb x Hx) as [Hlx Hxh].
+  destruct (Hb y Hy) as [Hly Hyh].
+  assert (Hp : 0 <= ((hi-lo)-(x-y))*((hi-lo)+(x-y))).
+  { apply Rmult_le_pos; lra. }
+  nra.
+Qed.
