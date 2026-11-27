@@ -283,7 +283,13 @@ Theorem gaussian_regression_transfer_to_future
   is_conditional_expectation prob observed future
     (fun w => Finite (predictor w)).
 Proof.
-  eapply is_conditional_expectation_proper.
+  (* Supply the observed sigma-algebra inclusion and both random
+     variables explicitly, as in the earlier accepted congruence proof.
+     The source CE is transported to the actual future variable. *)
+  apply (is_conditional_expectation_proper prob obs_sub
+           (rvplus predictor innovation) future
+           (fun w => Finite (predictor w))
+           (fun w => Finite (predictor w))).
   - exact future_decomposition.
   - apply all_almost; intro w; reflexivity.
   - apply gaussian_regression_conditional_expectation_centered;
