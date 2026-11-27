@@ -177,8 +177,13 @@ move=> Hs0 Hs mA.
 pose J : {measure set BorelPair -> \bar R} :=
   @GaussianJointDensityMeasure_gmc_joint_mass__canonical__measure_function_Measure
     R m0 s0 s Hs.
-pose P : {measure set BorelPair -> \bar R} :=
+(* The library's conditional HB pushforward instance elaborates to a
+   function of the map-measurability certificate. The R3 diagnostic
+   exposes this function type explicitly. Supply the proved certificate
+   before using the resulting packed measure on any event. *)
+pose Pcert : {measure set BorelPair -> \bar R} :=
   pushforward J (gmc_residual_map m0 s0 s).
+pose P := Pcert (@gmc_residual_map_measurable m0 s0 s).
 change (P A =
   (normal_prob m0 (Num.sqrt (s0 ^+ 2 + s ^+ 2)) \x
     normal_prob 0%R (post_stddev s0 s)) A).
