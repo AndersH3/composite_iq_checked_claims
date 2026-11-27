@@ -1099,7 +1099,11 @@ cat > "$charac_proof" <<'ROCQ_HILBERT_CONVEX_REVERSE'
       u v w H Hw (Horth w Hw)) as Hsq.
     pose proof (norm_ge_0 (minus u v)) as Hnv.
     pose proof (norm_ge_0 (minus u w)) as Hnw.
-    nra.
+    (* Strict monotonicity of products on nonnegative reals is the
+       exact library result needed; no nonlinear tactic is required. *)
+    apply Rnot_lt_le; intro Hlt.
+    apply (Rle_not_lt _ _ Hsq).
+    apply Rmult_le_0_lt_compat; assumption.
   }
   (* Reuse FormalML's infimum representation. Every candidate norm
      dominates the projected norm, and the candidate at v attains it. *)
@@ -1110,14 +1114,18 @@ cat > "$charac_proof" <<'ROCQ_HILBERT_CONVEX_REVERSE'
   simpl.
   unfold is_glb_Rbar, is_lb_Rbar in Hglb.
   destruct Hglb as [Hlower Hgreat].
-  apply Rbar_finite_eq.
-  apply Rbar_le_antisym.
-  - apply Hgreat.
+  (* Establish both bounds before destructing the extended infimum.
+     Infinite values contradict one of these finite bounds. *)
+  assert (Hupper : Rbar_le bound (norm (minus u v))).
+  { apply Hlower. exists v; split; [exact H | reflexivity]. }
+  assert (Hlower_v : Rbar_le (norm (minus u v)) bound).
+  { apply Hgreat.
     intros candidate [w [Hw Hcandidate]].
     subst candidate.
-    simpl; apply Hbound; exact Hw.
-  - apply Hlower.
-    exists v; split; [exact H | reflexivity].
+    simpl; apply Hbound; exact Hw. }
+  destruct bound; simpl in Hupper, Hlower_v |- *;
+    try contradiction.
+  apply Rle_antisym; assumption.
 ROCQ_HILBERT_CONVEX_REVERSE
 charac_rewrite=$(mktemp)
 awk -v first="$charac_reverse" -v last="$charac_last" -v proof="$charac_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR > last {print}' rocq/CertRL/LM/hilbert.v > "$charac_rewrite"
@@ -1152,19 +1160,19 @@ cat > "$elim_neg_proof" <<'ROCQ_NEG_INFINITE_RECIPROCAL'
     destruct (u x) as [r| |]; simpl in *.
     + (* Finite negative tail: multiplying by eps and -r reduces
          reciprocal convergence to the already-known strict bound. *)
-      assert (Hepspos : 0 < eps) by apply cond_pos.
-      assert (Hepsnonzero : pos eps <> 0) by lra.
-      assert (Hinvpos : 0 < / eps)
-        by (apply Rinv_0_lt_compat; exact Hepspos).
+      change (r < - / (pos eps)) in H.
+      assert (Hepspos : 0 < pos eps) by apply cond_pos.
+      pose proof (Rinv_0_lt_compat _ Hepspos) as Hinvpos.
       assert (Hrneg : r < 0) by lra.
+      assert (Htail : / (pos eps) < -r) by lra.
+      (* Reciprocation reverses order on the positive half-line.
+         Supply the absolute-value side condition explicitly, since
+         ssreflect's rewrite parser does not accept rewrite ... by. *)
+      pose proof (Rinv_0_lt_contravar _ _ Hinvpos Htail) as Hrecip.
+      rewrite Rinv_inv in Hrecip.
       change (Rabs (/ r) < pos eps).
-      rewrite Rabs_Rinv.
-      rewrite (Rabs_left r) by exact Hrneg.
-      apply (Rmult_lt_reg_r (-r)); [lra |].
-      replace ((/ (-r))*(-r)) with 1 by (field; lra).
-      apply (Rmult_lt_compat_r (pos eps) _ _ Hepspos) in H.
-      replace ((- / (pos eps))*(pos eps)) with (-1) in H by (field; lra).
-      nra.
+      rewrite Rabs_Rinv (Rabs_left r Hrneg).
+      exact Hrecip.
     + rewrite Rabs_R0; apply cond_pos.
     + rewrite Rabs_R0; apply cond_pos.
 ROCQ_NEG_INFINITE_RECIPROCAL
@@ -1211,8 +1219,11 @@ cat > "$forward_proof" <<'ROCQ_HILBERT_CONVEX_FORWARD'
     { unfold a, b.
       apply charac_ortho_projection_convex_aux5;
         try assumption; lra. }
-    rewrite Hbzero in Hstep; lra.
-  - assert (Hbpos : 0 < b) by lra.
+    rewrite Hbzero, Rmult_0_r in Hstep.
+    apply (Rmult_le_reg_l 2); [apply Rlt_0_2 |].
+    rewrite Rmult_0_r; exact Hstep.
+  - assert (Hbpos : 0 < b) by
+      (destruct Hb as [Hb | Hb]; [exact Hb | exfalso; apply Hbnz; symmetry; exact Hb]).
     destruct (Rle_lt_dec a 0) as [Ha | Ha].
     + exact Ha.
     + exfalso.
@@ -1230,9 +1241,13 @@ cat > "$forward_proof" <<'ROCQ_HILBERT_CONVEX_FORWARD'
       assert (Htbound : t <= a / b)
         by (unfold t; apply Rmin_r).
       assert (Hprod : t * b <= a).
-      { apply (Rmult_le_compat_r b) in Htbound; [| lra].
-        replace (a / b * b) with a in Htbound by (field; exact Hbnz).
+      { apply (Rmult_le_compat_r b) in Htbound; [| exact (Rlt_le _ _ Hbpos)].
+        unfold Rdiv in Htbound.
+        rewrite Rmult_assoc, (Rinv_l b Hbnz), Rmult_1_r in Htbound.
         exact Htbound. }
+      (* Isolate the final contradiction from the definitions of a,b,t. *)
+      pose proof (Rle_trans _ _ _ Hstep Hprod) as Hcontr.
+      clearbody a.
       lra.
 ROCQ_HILBERT_CONVEX_FORWARD
 forward_rewritten=$(mktemp)
