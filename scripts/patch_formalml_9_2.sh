@@ -1679,3 +1679,17 @@ sed -i 's/Rplus_lt_reg_l with (x :=/Rplus_lt_reg_l with (r :=/g' "$rbar_expect_f
 if grep -qF 'Rplus_lt_reg_l with (x :=' "$rbar_expect_file"; then
   exit 1
 fi
+
+# D192: A nonnegative extended-real random variable with finite
+# expectation cannot have positive probability of infinity. Keep
+# the accepted positive-probability contradiction; in the remaining
+# branch combine Rnot_lt_le with ps_pos using real antisymmetry.
+finite_inf_file=rocq/ProbTheory/RbarExpectation.v
+finite_inf_start=$(grep -n '^   Lemma finite_Rbar_NonnegExpectation_never_inf$' "$finite_inf_file" | cut -d: -f1)
+test -n "$finite_inf_start"
+finite_inf_end=$(awk -v first="$finite_inf_start" 'NR > first && /^   Qed[.]$/ {print NR; exit}' "$finite_inf_file")
+test -n "$finite_inf_end"
+test "$(sed -n "$((finite_inf_end - 3))p" "$finite_inf_file")" = '       - generalize (ps_pos (exist (sa_sigma _) (fun x : Ts => f x = p_infty) (sa_pinf_Rbar f rv))); intros.'
+test "$(sed -n "$((finite_inf_end - 2))p" "$finite_inf_file")" = '         assert (0 >= ps_P (exist (sa_sigma _) (fun x : Ts => f x = p_infty) (sa_pinf_Rbar f rv))) by lra.'
+test "$(sed -n "$((finite_inf_end - 1))p" "$finite_inf_file")" = '         intuition.'
+sed -i "$((finite_inf_end - 3)),$((finite_inf_end - 1))c\\       - apply Rle_antisym.\\n         + apply Rnot_lt_le; assumption.\\n         + apply ps_pos." "$finite_inf_file"
