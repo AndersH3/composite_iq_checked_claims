@@ -37,7 +37,6 @@ Lemma gmc_abs_le_one_square (x : R) :
 Proof.
 have Hsq : `|x| ^+ 2 = x ^+ 2.
 { by rewrite -normrX ger0_norm ?sqr_ge0. }
-have h01 : 0 <= (1 : R) := ler01.
 case: (leP `|x| 1) => h.
 - apply: (le_trans h).
   by rewrite -[LHS]addr0 lerD2l sqr_ge0.
@@ -110,7 +109,7 @@ have Hsfun : normal_fun 0 s x = e * e.
 have Hwfun : normal_fun 0 w x = e.
 { by rewrite /normal_fun subr0 wd -/q /e /u mulNr. }
 have Hbound : `|x| * e <= 1 + q.
-{ have H := ler_wpM2r He (gmc_abs_exp_bound x q0).
+{ have H := ler_wpM2r He (@gmc_abs_exp_bound q x q0).
   change (`|x| * e <= ((1 + q) * expR u) * e) in H.
   by move: H; rewrite /e -mulrA expRxMexpNx_1 mulr1. }
 rewrite (normal_pdfE 0 Hs) (normal_pdfE 0 w0) /= Hsfun Hwfun.
@@ -149,7 +148,9 @@ have gi : mu.-integrable [set: R] g.
   exact: integrable_normal_pdf. }
 have fg x : [set: R] x -> `|f x| <= `|g x|.
 { move=> _; rewrite /f /g -EFinM !abse_EFin lee_fin.
-  rewrite !normrM (ger0_norm c0) !ger0_norm ?normal_pdf_ge0.
+  rewrite !normrM (ger0_norm c0)
+    (ger0_norm (@normal_pdf_ge0 R 0%R s x))
+    (ger0_norm (@normal_pdf_ge0 R 0%R w x)).
   exact: Hbound. }
 exact (@le_integrable _ (measurableTypeR R) R mu setT measurableT f g mf fg gi).
 Qed.
@@ -165,7 +166,7 @@ Theorem gmc_normal_nonnegative_integral (m s : R) (f : R -> \bar R) :
   \int[mu]_x (f x * (normal_pdf m s x)%:E).
 Proof.
 move=> f0 mf.
-pose p := normal_prob m s.
+pose p : {finite_measure set R -> \bar R} := normal_prob m s.
 pose g := Radon_Nikodym_SigmaFinite.f p mu.
 pose h := fun x : R => (normal_pdf m s x)%:E.
 have dom : p `<< mu.
@@ -202,8 +203,10 @@ Proof.
 move=> Hs.
 have mi : measurable_fun [set: R] (fun x : R => x%:E).
 { by apply/measurable_EFinP; exact: measurable_id. }
+have ma : measurable_fun [set: \bar R] (@abse R).
+{ exact: abse_measurable. }
 have mw : measurable_fun [set: R] (fun x : R => `|x%:E|).
-{ exact: measurableT_comp. }
+{ exact: measurableT_comp ma mi. }
 have w0 x : 0 <= `|x%:E| by exact: abse_ge0.
 have /integrableP [_ Hfin] := @gmc_centered_weighted_pdf_integrable s Hs.
 apply/integrableP; split; first exact: mi.
@@ -214,7 +217,9 @@ have Heq :
     \int[mu]_x `|(x * normal_pdf 0%R s x)%:E|.
 { apply: eq_integral => x _.
   rewrite EFinM abseM.
-  by rewrite (gee0_abs _) ?lee_fin ?normal_pdf_ge0. }
+  have Hp : 0 <= (normal_pdf 0%R s x)%:E.
+  { by rewrite lee_fin; exact: normal_pdf_ge0. }
+  by rewrite (gee0_abs Hp). }
 by rewrite Heq.
 Qed.
 End FirstMoment.
