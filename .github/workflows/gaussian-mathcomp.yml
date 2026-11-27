@@ -53,10 +53,12 @@ jobs:
             opam exec -- rocq compile GaussianResidualMeasure.v
             opam exec -- rocq compile GaussianOriginalResidualMeasure.v
             opam exec -- rocq compile GaussianJointDensityMeasure.v
-            opam exec -- rocq check GaussianJointDensityMeasure
+            opam exec -- rocq compile GaussianResidualPushforward.v
+            opam exec -- rocq check GaussianResidualPushforward
             # Keep transitive assumption audits in separate processes.
             opam exec -- rocq compile AuditGaussianPosteriorMeasure.v
             opam exec -- rocq compile AuditGaussianResidualMeasure.v
             opam exec -- rocq compile AuditGaussianOriginalResidualMeasure.v
             opam exec -- rocq compile AuditGaussianJointDensityMeasure.v
+            opam exec -- rocq compile AuditGaussianResidualPushforward.v
           '
