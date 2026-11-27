@@ -52,6 +52,8 @@ A separate [MathComp normalized posterior measure module](../mathcomp/GaussianPo
 uses the maintained Gaussian conjugacy theorem. All six theorems were
 locally kernel-compiled on computer10 at revision `9f5a5508fcb0e5fc8b079fe4090c10aa0a7ef0e1`
 on November 27, 2026, with Rocq 9.2 and MathComp-Analysis 1.18.0.
+The independent `rocq check` also accepted all six constants and their
+imported dependency closure on the same date.
 These are counted separately from the canonical Stdlib proof inventory;
 dedicated CI acceptance remains outstanding. Neither step alone proves
 the full observed-sigma-algebra conditional expectation of a future Gaussian score.

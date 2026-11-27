@@ -79,6 +79,8 @@ opam exec --switch=gaussian-rocq-9.2 -- \
 
 On November 27, 2026, computer10 compiled the exact six-theorem MathComp module at revision `9f5a5508fcb0e5fc8b079fe4090c10aa0a7ef0e1` using Rocq 9.2.0 and MathComp-Analysis 1.18.0. The researcher supplied the successful terminal transcript (exit status 0, GaussianPosteriorMeasure.vo, 75 KiB). All six theorem scripts passed, including the centered residual density, scalar observation/residual density factorization and marginal observation measure. This is local kernel evidence, not a successful GitHub Actions run or a proof of full multivariate Gaussian residual independence. The six scripts are tracked separately from the 3,699 canonical Stdlib proof scripts; the three previously verified posterior results must not be double-counted.
 
+On November 27, 2026, the researcher supplied the full independent `rocq check GaussianPosteriorMeasure` transcript for the previously compiled module at source revision `9f5a5508fcb0e5fc8b079fe4090c10aa0a7ef0e1`. The checker traversed the imported dependency closure and explicitly checked all six project theorem constants, ending with `Modules were successfully checked`. This is independent compiled-object verification, not a transitive assumption audit or a GitHub Actions success. The subsequent FormalML checkout at `8ee433dc802fca35f6bceb6dacb69d3c1315e886` succeeded. Its opam dry-run proposed exactly four additions: conf-clang 2, coq-coquelicot 3.4.5, coq-ext-lib 0.13.1, coq-mathcomp-ssreflect 2.6.0, with no removals or version changes. The displayed installations were simulated; actual dependency installation and FormalML compilation remain pending.
+
 The zero-scale fallback of the pinned normal density is not a Dirac measure. No full multivariate independence claim follows from a successful build.
 
 
@@ -104,12 +106,15 @@ opam install --switch=gaussian-rocq-9.2 --dry-run --deps-only . \
   2>&1 | tee "$LOGDIR/formalml-dependency-plan.log"
 ~~~
 
-Only if the preview succeeds and proposes no upgrades, downgrades or removals of existing packages, install:
+Only if the preview succeeds and proposes no upgrades, downgrades or removals of existing packages, install. A dry-run does not actually install packages even if its output says installed. The November 27 preview meets this criterion. The following pins retain the four previewed versions and the verified Analysis release:
 
 ~~~bash
-opam install --switch=gaussian-rocq-9.2 -y -j 2 --deps-only . \
+opam install --switch=gaussian-rocq-9.2 -y -j 2 \
   rocq-core.9.2.0 rocq-runtime.9.2.0 rocq-stdlib.9.2.0 coq-core.9.2.0 \
+  rocq-mathcomp-analysis.1.18.0 conf-clang.2 coq-coquelicot.3.4.5 \
+  coq-ext-lib.0.13.1 coq-mathcomp-ssreflect.2.6.0 \
   2>&1 | tee "$LOGDIR/formalml-dependencies.log"
+opam list --switch=gaussian-rocq-9.2 --installed
 ~~~
 
 If successful, run the previously ShellCheck-validated compatibility utility once on the pristine checkout:

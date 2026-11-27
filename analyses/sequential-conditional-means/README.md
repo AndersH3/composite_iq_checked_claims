@@ -66,7 +66,9 @@ probability-space axiom:
   and marginal observation measure. Computer10 compiled the complete module
   at revision `9f5a5508fcb0e5fc8b079fe4090c10aa0a7ef0e1` on November 27, 2026
   with Rocq 9.2 and MathComp-Analysis 1.18.0 (exit 0; 75 KiB .vo).
-  This does not establish independence of the original score-vector residual.
+  A subsequent independent `rocq check` accepted all six constants and
+  their imported dependency closure. This does not establish independence
+  of the original score-vector residual.
 - [The pinned MathComp-QBS normal-mean integration theorem](qbs/GaussianPosteriorExpectation.v)
   provides a **candidate** exact Lebesgue first moment for the normalized
   posterior; this is not a replacement for a full conditional-expectation
