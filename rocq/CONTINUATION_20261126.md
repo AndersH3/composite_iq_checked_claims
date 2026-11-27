@@ -175,3 +175,25 @@ The columns follow the exact Print Assumptions order: gaussian_regression_condit
 ### Twenty-third local FormalML build — November 27, 2026
 
 Computer10 at `c4c310cfde830a07418af4b5c6d2255d588ca2cb` passed the transparent projection-certificate correction and the product_gaussian_innovation_independent lemma, reaching product_gaussian_regression_conditional_expectation at line 163. The generic residual CE theorem application could not infer obs_sub and innovation_integrable. Commit `135662c` explicitly instantiates both residual CE theorems with the existing product probability space, inclusion, random variables, measurability certificates, finite-expectation witnesses, proved independence and centering premise. The product module has not yet compiled completely, so its separate Print Assumptions audit could not import it. No theorem statement, axiom, dependency or canonical source changed. The explicit applications await kernel validation; the canonical 3,706 scripts and six residual CE assumption audits remain valid at their recorded revisions.
+
+### Twenty-fourth local FormalML build — November 27, 2026
+
+At `26342d86d97fc8a35e1b930a1c0d1c0790c66251`, computer10 successfully compiled the complete GaussianProductConditionalExpectation.v module in the existing isolated Rocq 9.2 environment with D195-patched FormalML, followed by all three product Print Assumptions commands. The only displayed compiler diagnostic was the existing nonfatal Rbar coercion ambiguity warning. The explicit residual CE applications in `135662c` passed. Together with the earlier residual module and assumption audit, all nine target theorem/lemma constants are now compiled and transitive-assumption-audited. The product output has the following exact additional columns for the inherited axiom matrix above.
+
+| Axiom identifier | Product independence | Product event-integral CE | Product canonical CE a.s. |
+|---|---|---|---|
+| ClassicalDedekindReals.sig_not_dec | yes | yes | yes |
+| ClassicalDedekindReals.sig_forall_dec | yes | yes | yes |
+| FunctionalExtensionality.functional_extensionality_dep | yes | yes | yes |
+| Eqdep.Eq_rect_eq.eq_rect_eq | yes | yes | yes |
+| Description.constructive_definite_description | yes | yes | yes |
+| Classical_Prop.classic | yes | yes | yes |
+| Ensembles.Extensionality_Ensembles | yes | yes | yes |
+| RelationalChoice.relational_choice | yes | yes | yes |
+| ClassicalUniqueChoice.dependent_unique_choice | yes | yes | yes |
+| PropExtensionality.propositional_extensionality | no | no | yes |
+| ProofIrrelevance.proof_irrelevance | no | no | yes |
+| IndefiniteDescription.constructive_indefinite_description | yes | yes | yes |
+| Total | 10 | 10 | 12 |
+
+No project-specific axiom appeared; the union across all nine remains the same 12 inherited logical axioms. This does not discharge integrability, centering, or the required joint-Gaussian distributional representation. The canonical 3,706 scripts and six MathComp results are counted separately. The independent compiled-object check and clean pinned reproduction remain open. Commit `f14062a` tracks the exact nine-target audit source; `2c5fedb` adds the audit and independent compiled-object check to CI. These CI additions require their own validation. Do not reapply D195 to the working patched checkout.
