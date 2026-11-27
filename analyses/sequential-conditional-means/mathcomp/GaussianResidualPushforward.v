@@ -132,7 +132,10 @@ have mA : measurable A.
 { rewrite /A -[X in measurable X]setTI.
   exact (@gmc_residual_map_measurable m0 s0 s
     measurableT (U `*` V) mUV). }
-change (gmc_joint_mass m0 s0 s A = _).
+(* The pushforward is defined as the mass of a preimage. Unfold only
+   that definition and fold the already certified event A, preserving
+   the existing right-hand side without an elaboration placeholder. *)
+rewrite /pushforward -/A.
 etransitivity; last exact (@gmc_original_residual_rectangle R
   m0 s0 s U V Hs0 Hs mU mV).
 rewrite (@gmc_joint_mass_sections R m0 s0 s A Hs mA).
