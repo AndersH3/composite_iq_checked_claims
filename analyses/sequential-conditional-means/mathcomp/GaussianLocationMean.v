@@ -204,7 +204,7 @@ transitivity (\int[p]_x (f x + g x)).
   (* Use congruence for signed linearity as well, preserving the
      integral expressions established by the preceding certificates. *)
   transitivity (0 + m%:E).
-  - exact (f_equal2 (fun a b : \bar R => a + b) Hf Hg).
-  - exact: add0e.
+  + exact (f_equal2 (fun a b : \bar R => a + b) Hf Hg).
+  + exact: add0e.
 Qed.
 End LocationMean.
