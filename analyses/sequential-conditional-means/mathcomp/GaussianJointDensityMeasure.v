@@ -29,7 +29,7 @@ Section JointDensity.
 Context {R : realType}.
 Import MeasurableR.
 Local Abbreviation mu := (@lebesgue_measure R).
-Local Notation BorelPair := ((measurableTypeR R * measurableTypeR R)%type).
+Local Abbreviation BorelPair := ((measurableTypeR R * measurableTypeR R)%type).
 
 (** Joint likelihood times prior, in observation-first coordinates.
     Use the ordinary real density here, lifting only at integration. *)
@@ -83,6 +83,9 @@ Lemma gmc_joint_density_ge0 (m0 s0 s : R) (z : R * R) :
   0 <= gmc_joint_density m0 s0 s z.
 Proof. by rewrite /gmc_joint_density mulr_ge0 ?normal_pdf_ge0. Qed.
 
+(* All mass and integral operations below are extended-real operations.
+   The observation scale remains an ordinary real: explicitly scope
+   its zero literal with %R in every nonzero-scale hypothesis. *)
 Local Open Scope ereal_scope.
 
 (** Mass of a joint measurable event with respect to the product
@@ -105,7 +108,7 @@ Qed.
 (** Countable additivity follows from the existing nonnegative
     integral disjoint-union theorem. No probability axiom is added. *)
 Theorem gmc_joint_mass_sigma_additive (m0 s0 s : R) :
-  s != 0 -> semi_sigma_additive (gmc_joint_mass m0 s0 s).
+  s != 0%R -> semi_sigma_additive (gmc_joint_mass m0 s0 s).
 Proof.
 move=> Hs F mF tF mUF.
 have Hmf : measurable_fun [set: BorelPair]
@@ -127,17 +130,17 @@ Qed.
 
 (** A genuine joint measure, constructed from the three proved
     measure laws. Nonzero observation scale certifies measurability. *)
-HB.instance Definition _ m0 s0 s (Hs : s != 0) :=
+HB.instance Definition _ m0 s0 s (Hs : s != 0%R) :=
   isMeasure.Build _ _ _ (gmc_joint_mass m0 s0 s)
     (gmc_joint_mass0 m0 s0 s) (gmc_joint_mass_ge0 m0 s0 s)
-    (gmc_joint_mass_sigma_additive m0 s0 Hs).
+    (@gmc_joint_mass_sigma_additive m0 s0 s Hs).
 
 (** Tonelli for the restricted joint density gives an iterated integral
     over the actual measurable sections of an arbitrary joint event.
     This connects the two-dimensional measure to the scalar slice
     results without assuming a Gaussian change-of-variables formula. *)
 Theorem gmc_joint_mass_sections (m0 s0 s : R) (A : set BorelPair) :
-  s != 0 -> measurable A ->
+  s != 0%R -> measurable A ->
   gmc_joint_mass m0 s0 s A =
   \int[mu]_x \int[mu]_(t in xsection A x)
     (gmc_joint_density m0 s0 s (x,t))%:E.
