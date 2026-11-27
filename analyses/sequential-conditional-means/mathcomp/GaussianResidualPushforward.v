@@ -57,14 +57,26 @@ Definition gmc_residual_map (m0 s0 s : R) (z : R * R) : R * R :=
 Theorem gmc_residual_map_measurable (m0 s0 s : R) :
   measurable_fun [set: BorelPair] (gmc_residual_map m0 s0 s).
 Proof.
+(* Name the intermediate Borel spaces and maps. In particular, the
+   dependent composition lemma must see the real Borel codomain of
+   fst explicitly, rather than infer it from the nested subtraction. *)
+have mx : measurable_fun [set: BorelPair] (fst : R * R -> R).
+{ exact: measurable_fst. }
+have mt : measurable_fun [set: BorelPair] (snd : R * R -> R).
+{ exact: measurable_snd. }
+have mm : measurable_fun [set: R]
+    (fun x : R => post_mean m0 s0 x s).
+{ exact: gmc_post_mean_measurable. }
+have mc : measurable_fun [set: BorelPair]
+    (fun z : R * R => post_mean m0 s0 z.1 s).
+{ exact (@measurableT_comp _ _ _ BorelPair (measurableTypeR R)
+    (measurableTypeR R) (fun x : R => post_mean m0 s0 x s)
+    setT (fst : R * R -> R) mm mx). }
+have me : measurable_fun [set: BorelPair]
+    (fun z : R * R => z.2 - post_mean m0 s0 z.1 s).
+{ exact: measurable_funB mt mc. }
 rewrite /gmc_residual_map.
-apply: measurable_fun_pair.
-- exact: measurable_fst.
-- apply: measurable_funB.
-  + exact: measurable_snd.
-  + apply: measurableT_comp.
-    * exact: gmc_post_mean_measurable.
-    * exact: measurable_fst.
+exact: measurable_fun_pair mx me.
 Qed.
 
 HB.instance Definition _ m0 s0 s :=
