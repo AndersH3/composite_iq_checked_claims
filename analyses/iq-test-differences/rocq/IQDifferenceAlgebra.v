@@ -309,7 +309,7 @@ Proof.
         split; [simpl; tauto|]; intros z Hz;
         simpl in Hz; destruct Hz as [Hz|Hz].
       all: try (subst z; split; lra).
-      all: specialize (Hbounds z Hz); split; lra.
+      all: destruct (Hbounds z Hz) as [Hlower Hupper]; split; lra.
 Qed.
 
 (** [iq_extrema_unique].
@@ -325,10 +325,10 @@ Theorem iq_extrema_unique (xs : list R) (lo hi lo' hi' : R) :
   lo = lo' /\ hi = hi'.
 Proof.
   intros [Hl [Hh Hb]] [Hl' [Hh' Hb']].
-  pose proof (Hb lo' Hl') as H1.
-  pose proof (Hb hi' Hh') as H2.
-  pose proof (Hb' lo Hl) as H3.
-  pose proof (Hb' hi Hh) as H4.
+  destruct (Hb lo' Hl') as [H1 _].
+  destruct (Hb hi' Hh') as [_ H2].
+  destruct (Hb' lo Hl) as [H3 _].
+  destruct (Hb' hi Hh) as [_ H4].
   split; lra.
 Qed.
 
@@ -375,8 +375,8 @@ Theorem iq_extrema_nested_range (xs ys : list R) (lo hi lo' hi' : R) :
   hi-lo <= hi'-lo'.
 Proof.
   intros Hinc [Hl [Hh Hb]] [Hl' [Hh' Hb']].
-  pose proof (Hb' lo (Hinc lo Hl)) as H1.
-  pose proof (Hb' hi (Hinc hi Hh)) as H2.
+  destruct (Hb' lo (Hinc lo Hl)) as [H1 _].
+  destruct (Hb' hi (Hinc hi Hh)) as [_ H2].
   lra.
 Qed.
 
