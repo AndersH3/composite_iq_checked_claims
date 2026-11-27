@@ -1711,3 +1711,19 @@ test "$(sed -n "$((condexp_unused - 1))p" "$condexp_file")" = "      destruct nn
 test "$(sed -n "$((condexp_unused + 1))p" "$condexp_file")" = '      clear H1.'
 test "$(sed -n "$((condexp_unused + 2))p" "$condexp_file")" = '      apply Rbar_rvlim_almost_proper in H.'
 sed -i "${condexp_unused}d" "$condexp_file"
+
+# D194: No valid coordinate exists in a zero-length indexed vector.
+# The index-bound witnesses already contradict idx < 0, so discharge
+# the induction base case using Lia without unfolding independence or
+# dependent vector eliminators. Retain the accepted successor argument.
+product_vector_file=rocq/ProbTheory/ProductSpace.v
+product_vector_start=$(grep -n '^  Lemma ivector_nth_independent_rvs {' "$product_vector_file" | cut -d: -f1)
+test -n "$product_vector_start"
+product_vector_end=$(awk -v first="$product_vector_start" 'NR > first && /^  Qed[.]$/ {print NR; exit}' "$product_vector_file")
+test -n "$product_vector_end"
+product_vector_base=$(awk -v first="$product_vector_start" -v last="$product_vector_end" 'NR > first && NR < last && /^    - intros[.]$/ {print NR; exit}' "$product_vector_file")
+test -n "$product_vector_base"
+test "$(sed -n "$((product_vector_base + 1))p" "$product_vector_file")" = '      repeat red; intros.'
+test "$(sed -n "$((product_vector_base + 2))p" "$product_vector_file")" = '      unfold rv_preimage; simpl.'
+test "$(sed -n "$((product_vector_base + 3))p" "$product_vector_file")" = '      repeat match_destr; try lra; intuition.'
+sed -i "${product_vector_base},$((product_vector_base + 3))c\\    - intros; lia." "$product_vector_file"
