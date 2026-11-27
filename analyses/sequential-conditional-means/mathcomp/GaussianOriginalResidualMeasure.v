@@ -58,19 +58,27 @@ transitivity
      (normal_pdf (post_mean m0 s0 x s) (post_stddev s0 s) t)%:E))%E.
   apply: eq_integral => t _.
   by rewrite (@normal_pdf_conjugate R m0 s0 s x t Hs0 Hs) EFinM.
-rewrite ge0_integralZl_EFin //=.
-- (* The preimage map is real-valued, while the measure product is
-     extended-real-valued. Use the already checked centering equality
-     directly under multiplication; avoid reparsing real subtraction
-     inside an enclosing ereal scope or unfolding the packed measure. *)
+(* Keep integral scaling and event centering as separate equalities.
+   The scaling lemma generates positivity and measurability goals;
+   its application must not depend on the ordering of rewrite goals. *)
+transitivity
+  ((normal_pdf m0 (Num.sqrt (s0 ^+ 2 + s ^+ 2)) x)%:E *
+     normal_prob (post_mean m0 s0 x s) (post_stddev s0 s)
+       (gmc_translate (post_mean m0 s0 x s) @^-1` V))%E.
+- rewrite /normal_prob.
+  apply: ge0_integralZl_EFin.
+  all: first [exact: mpre
+             | solve [move=> t _; rewrite lee_fin; exact: normal_pdf_ge0]
+             | solve [apply/measurable_EFinP/measurable_funTS;
+                        exact: measurable_normal_pdf]
+             | exact: normal_pdf_ge0].
+- (* The checked centering identity has exactly the required event
+     equality; congruence transports it through the density product. *)
   exact (f_equal
     (fun p : \bar R =>
        ((normal_pdf m0 (Num.sqrt (s0 ^+ 2 + s ^+ 2)) x)%:E * p)%E)
     (@gmc_normal_centered_event R (post_mean m0 s0 x s)
        (post_stddev s0 s) V Hpost mV)).
-- by move=> t _; rewrite lee_fin; exact: normal_pdf_ge0.
-- by apply/measurable_EFinP/measurable_funTS; exact: measurable_normal_pdf.
-- exact: normal_pdf_ge0.
 Qed.
 
 (** Integrating the slice over any measurable observation event U
