@@ -39,7 +39,11 @@ Section JointProductLaw.
       pose proof (Hlaw (product_sa_event a b)) as Hrect.
       rewrite product_sa_product in Hrect.
       simpl in Hrect.
-      rewrite <- Hrect.
+      (* Hrect has the product of the marginal probabilities on its
+         left and the joint rectangle preimage probability on its right.
+         Fix the intermediate probability using the symmetric equality;
+         then compare the two source events extensionally. *)
+      etransitivity; [| exact (eq_sym Hrect)].
       apply ps_proper.
       intro w; reflexivity.
   Qed.
