@@ -11,6 +11,10 @@
 *)
 From HB Require Import structures.
 From mathcomp Require Import boot order ssralg ssrnum field_tactic.
+(* Interval constructors and in_itv belong to MathComp's interval module;
+   set_interval alone does not export them. Match the pinned upstream
+   Lebesgue measure proof's explicit import rather than rely on reexports. *)
+From mathcomp Require Import interval.
 From mathcomp Require Import classical_sets reals ereal topology normedtype.
 From mathcomp Require Import measure lebesgue_integral lebesgue_stieltjes_measure
   lebesgue_measure measurable_realfun set_interval.
