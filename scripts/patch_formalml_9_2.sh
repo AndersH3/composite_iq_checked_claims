@@ -1693,3 +1693,21 @@ test "$(sed -n "$((finite_inf_end - 3))p" "$finite_inf_file")" = '       - gener
 test "$(sed -n "$((finite_inf_end - 2))p" "$finite_inf_file")" = '         assert (0 >= ps_P (exist (sa_sigma _) (fun x : Ts => f x = p_infty) (sa_pinf_Rbar f rv))) by lra.'
 test "$(sed -n "$((finite_inf_end - 1))p" "$finite_inf_file")" = '         intuition.'
 sed -i "$((finite_inf_end - 3)),$((finite_inf_end - 1))c\\       - apply Rle_antisym.\\n         + apply Rnot_lt_le; assumption.\\n         + apply ps_pos." "$finite_inf_file"
+
+# D193: Conditional monotone convergence needs only almost-sure
+# equality of the modified sequence and its pointwise nonnegativity
+# in this subproof. Rbar_rvlim_almost_proper and Rbar_rvlim_nnf
+# have no RandomVariable hypotheses. Drop the redundant intermediate
+# measurability assertion rather than repairing unused automation.
+# The outer theorem still retains its original measurability premises.
+condexp_file=rocq/ProbTheory/ConditionalExpectation.v
+condexp_mct=$(grep -n '^  Lemma Condexp_monotone_convergence$' "$condexp_file" | cut -d: -f1)
+test -n "$condexp_mct"
+condexp_mct_end=$(awk -v first="$condexp_mct" 'NR > first && /^  Qed[.]$/ {print NR; exit}' "$condexp_file")
+test -n "$condexp_mct_end"
+condexp_unused=$(awk -v first="$condexp_mct" -v last="$condexp_mct_end" 'NR > first && NR < last && /assert \(HH: forall n, RandomVariable dom2 Rbar_borel_sa \(f1. n\)\) by intuition[.]/ {print NR; exit}' "$condexp_file")
+test -n "$condexp_unused"
+test "$(sed -n "$((condexp_unused - 1))p" "$condexp_file")" = "      destruct nnfcen as [f1' [?[??]]]."
+test "$(sed -n "$((condexp_unused + 1))p" "$condexp_file")" = '      clear H1.'
+test "$(sed -n "$((condexp_unused + 2))p" "$condexp_file")" = '      apply Rbar_rvlim_almost_proper in H.'
+sed -i "${condexp_unused}d" "$condexp_file"
