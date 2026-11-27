@@ -59,14 +59,15 @@ transitivity
   apply: eq_integral => t _.
   by rewrite (@normal_pdf_conjugate R m0 s0 s x t Hs0 Hs) EFinM.
 rewrite ge0_integralZl_EFin //=.
-- change
-    ((normal_pdf m0 (Num.sqrt (s0 ^+ 2 + s ^+ 2)) x)%:E *
-       normal_prob (post_mean m0 s0 x s) (post_stddev s0 s)
-         ((fun t : R => t - post_mean m0 s0 x s) @^-1` V) =
-     (normal_pdf m0 (Num.sqrt (s0 ^+ 2 + s ^+ 2)) x)%:E *
-       normal_prob 0 (post_stddev s0 s) V)%E.
-  by rewrite (@gmc_normal_centered_event R (post_mean m0 s0 x s)
-                 (post_stddev s0 s) V Hpost mV).
+- (* The preimage map is real-valued, while the measure product is
+     extended-real-valued. Use the already checked centering equality
+     directly under multiplication; avoid reparsing real subtraction
+     inside an enclosing ereal scope or unfolding the packed measure. *)
+  exact (f_equal
+    (fun p : \bar R =>
+       ((normal_pdf m0 (Num.sqrt (s0 ^+ 2 + s ^+ 2)) x)%:E * p)%E)
+    (@gmc_normal_centered_event R (post_mean m0 s0 x s)
+       (post_stddev s0 s) V Hpost mV)).
 - by move=> t _; rewrite lee_fin; exact: normal_pdf_ge0.
 - by apply/measurable_EFinP/measurable_funTS; exact: measurable_normal_pdf.
 - exact: normal_pdf_ge0.
