@@ -302,13 +302,22 @@ Proof.
       destruct (IH Htail) as [lo [hi [Hlo [Hhi Hbounds]]]].
       assert (Horder : lo <= hi) by (destruct (Hbounds lo Hlo); assumption).
       simpl in Hlo, Hhi.
+      (* Choose each endpoint by a separate order decision, then
+         discharge the same membership and bound obligations in every
+         branch. Avoid distributing a two-goal tactic over four cases. *)
       destruct (Rle_dec a lo) as [Hal|Hal];
-        destruct (Rle_dec hi a) as [Hha|Hha];
-        [exists a, a|exists a, hi|exists lo, a|exists lo, hi];
-        unfold iq_extrema; split; [simpl; tauto|];
-        split; [simpl; tauto|]; intros z Hz;
-        simpl in Hz; destruct Hz as [Hz|Hz].
-      all: try (subst z; split; lra).
+        [destruct (Rle_dec hi a) as [Hha|Hha];
+           [exists a, a|exists a, hi]
+        |destruct (Rle_dec hi a) as [Hha|Hha];
+           [exists lo, a|exists lo, hi]].
+      all: unfold iq_extrema.
+      all: split.
+      all: try solve [simpl; tauto].
+      all: split.
+      all: try solve [simpl; tauto].
+      all: intros z Hz.
+      all: simpl in Hz; destruct Hz as [Hz|Hz].
+      all: try solve [subst z; split; lra].
       all: destruct (Hbounds z Hz) as [Hlower Hupper]; split; lra.
 Qed.
 
