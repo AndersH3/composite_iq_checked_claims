@@ -1593,3 +1593,71 @@ test -n "$indicator_bundled_end"
 indicator_irrel=$(awk -v first="$indicator_bundled" -v last="$indicator_bundled_end" 'NR > first && NR < last && /^    - apply SimpleExpectation_ext; intro x; reflexivity[.]$/ {print NR; exit}' "$indicator_file")
 test -n "$indicator_irrel"
 sed -i "${indicator_irrel}c\\    - apply SimpleExpectation_pf_irrel." "$indicator_file"
+
+# D190: Classical filtering needs only a finite induction and
+# excluded middle at each head element. Keep the original logical
+# assumptions, and use the existing sublist and Forall2 constructors.
+# Explicitly transport list membership across equality; intuition
+# alone no longer closes the empty-list and membership obligations.
+filter_file=rocq/ProbTheory/SimpleExpectation.v
+filter_start=$(grep -n '^  Lemma classic_filter ' "$filter_file" | cut -d: -f1)
+subfilter_start=$(grep -n '^  Lemma classic_sub_filter ' "$filter_file" | cut -d: -f1)
+test -n "$filter_start"
+test -n "$subfilter_start"
+filter_first=$(awk -v first="$filter_start" 'NR > first && /^  Proof[.]$/ {print NR+1; exit}' "$filter_file")
+filter_end=$(awk -v first="$filter_first" 'NR >= first && /^  Qed[.]$/ {print NR; exit}' "$filter_file")
+subfilter_first=$(awk -v first="$subfilter_start" 'NR > first && /^  Proof[.]$/ {print NR+1; exit}' "$filter_file")
+subfilter_end=$(awk -v first="$subfilter_first" 'NR >= first && /^  Qed[.]$/ {print NR; exit}' "$filter_file")
+test -n "$filter_first"
+test -n "$filter_end"
+test -n "$subfilter_first"
+test -n "$subfilter_end"
+sed -n "${filter_first},${filter_end}p" "$filter_file" | grep -Fq 'destruct (classic (P a)).'
+sed -n "${subfilter_first},${subfilter_end}p" "$filter_file" | grep -Fq "destruct (classic_filter P a)"
+filter_proof=$(mktemp)
+cat > "$filter_proof" <<'ROCQ_CLASSICAL_FILTER'
+    induction l as [|a l IH].
+    - exists nil; split.
+      + apply sublist_nil.
+      + intro x; simpl; tauto.
+    - destruct IH as [l' [Hsub Hmem]].
+      destruct (classic (P a)) as [HPa | HnotPa].
+      + exists (a :: l'); split.
+        * apply sublist_cons; exact Hsub.
+        * intro x; simpl; split.
+          -- intros [Heq | Hin].
+             ++ subst x; split; [left; reflexivity | exact HPa].
+             ++ apply Hmem in Hin.
+                destruct Hin as [Hin HPx].
+                split; [right; exact Hin | exact HPx].
+          -- intros [[Heq | Hin] HPx].
+             ++ left; exact Heq.
+             ++ right; apply Hmem; split; assumption.
+      + exists l'; split.
+        * apply sublist_skip; exact Hsub.
+        * intro x; simpl; split.
+          -- intro Hin; apply Hmem in Hin.
+             destruct Hin as [Hin HPx].
+             split; [right; exact Hin | exact HPx].
+          -- intros [[Heq | Hin] HPx].
+             ++ subst x; contradiction.
+             ++ apply Hmem; split; assumption.
+ROCQ_CLASSICAL_FILTER
+subfilter_proof=$(mktemp)
+cat > "$subfilter_proof" <<'ROCQ_CLASSICAL_SUBFILTER'
+    induction l as [|a l IH].
+    - exists nil; split; constructor.
+    - destruct IH as [l' [Hsub Hmem]].
+      destruct (classic_filter P a) as [a' [Hasub Hamem]].
+      exists (a' :: l'); split.
+      + constructor; assumption.
+      + constructor; assumption.
+ROCQ_CLASSICAL_SUBFILTER
+filter_rewritten=$(mktemp)
+awk -v f1="$filter_first" -v l1="$filter_end" -v p1="$filter_proof" -v f2="$subfilter_first" -v l2="$subfilter_end" -v p2="$subfilter_proof" '
+  NR == f1 {while ((getline line < p1) > 0) print line}
+  NR == f2 {while ((getline line < p2) > 0) print line}
+  (NR < f1 || NR >= l1) && (NR < f2 || NR >= l2) {print}
+' "$filter_file" > "$filter_rewritten"
+mv "$filter_rewritten" "$filter_file"
+rm "$filter_proof" "$subfilter_proof"
