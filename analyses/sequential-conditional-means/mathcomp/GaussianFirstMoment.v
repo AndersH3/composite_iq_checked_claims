@@ -136,8 +136,13 @@ have He : 0 <= e := expR_ge0 _.
 (* Establish the exponent identity in the real field before passing
    it through expR.  Since d and q are positive, cancellation by
    either denominator is justified by the existing library lemmas. *)
-have hd : d != 0 := gt_eqF d0.
-have hqn : q != 0 := gt_eqF q0.
+(* gt_eqF produces an equality to false, not an is_true witness.
+   Rewrite the Boolean equality to obtain the nonzero certificates
+   required by the library cancellation lemmas. *)
+have hd : d != 0.
+{ by rewrite (gt_eqF d0). }
+have hqn : q != 0.
+{ by rewrite (gt_eqF q0). }
 have Hq : q = d + d.
 { by rewrite /q mulr2n. }
 have Huq : u * q = x ^+ 2.
@@ -168,7 +173,7 @@ have Hright :
     c * (normal_peak w * e) = (1 + q) * (normal_peak s * e).
 { (* Cancel the nonzero wider density peak without a field tactic. *)
   have hpwn : normal_peak w != 0.
-  { exact: gt_eqF (normal_peak_gt0 w0). }
+  { by rewrite (gt_eqF (normal_peak_gt0 w0)). }
   have Hcancel : c * normal_peak w = (1 + q) * normal_peak s.
   { by rewrite /c (divfK hpwn). }
   by rewrite mulrA Hcancel -mulrA. }
