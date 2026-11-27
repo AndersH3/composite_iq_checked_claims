@@ -1312,19 +1312,71 @@ test "$(sed -n "$((orth2_tail + 1))p" rocq/CertRL/LM/hilbert.v)" = '  apply char
 sed -i "${orth2_tail},$((orth2_tail + 1))c\\  right; exact H3.\\n  apply charac_ortho_projection_subspace1; assumption." rocq/CertRL/LM/hilbert.v
 sed -i "${orth2_branch}c\\+ pose proof phi_compat as Hcompat.\\n  destruct Hcompat as ((G1,(z,G2)),M)." rocq/CertRL/LM/hilbert.v
 
-# D180: Supply the existing nonemptiness witness at the two other
-# downstream calls to the refactored projection uniqueness theorem.
-# Use compatible_m_zero for the zero-vector membership obligation.
-orth_unique1=$(grep -nF '  apply (ortho_projection_convex_unique phi phi_convex phi_compl u).' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
-test -n "$orth_unique1"
-test "$(sed -n "$((orth_unique1 + 1))p" rocq/CertRL/LM/hilbert.v)" = '  trivial. trivial. trivial. trivial.'
-sed -i "${orth_unique1},$((orth_unique1 + 1))c\\  assert (Hnonempty : exists y : E, phi y) by (exists v; exact H).\\n  eapply (ortho_projection_convex_unique phi Hnonempty phi_convex); eassumption." rocq/CertRL/LM/hilbert.v
-orth_unique2=$(grep -nF '  apply (ortho_projection_convex_unique phi phi_convex phi_compl u); trivial.' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
-test -n "$orth_unique2"
-test "$(sed -n "$((orth_unique2 + 1))p" rocq/CertRL/LM/hilbert.v)" = '  assert (zero = scal zero v).'
-test "$(sed -n "$((orth_unique2 + 2))p" rocq/CertRL/LM/hilbert.v)" = '  rewrite scal_zero_l. reflexivity. destruct phi_compat.'
-test "$(sed -n "$((orth_unique2 + 3))p" rocq/CertRL/LM/hilbert.v)" = '  rewrite H3. apply H5; trivial.'
-sed -i "${orth_unique2},$((orth_unique2 + 3))c\\  assert (Hnonempty : exists y : E, phi y) by (exists v; exact H).\\n  eapply (ortho_projection_convex_unique phi Hnonempty phi_convex);\\n    try eassumption; apply compatible_m_zero; exact phi_compat." rocq/CertRL/LM/hilbert.v
+# D180 (refactored): Derive both direct-sum characterizations
+# from the already-proved orthogonal residual and trivial intersection
+# results. Avoid anonymous hypotheses and duplicate convexity proofs.
+orth_charac_first=$(grep -n '^Lemma direct_sum_with_orth_compl_charac1:' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
+orth_charac_second=$(grep -n '^Lemma direct_sum_with_orth_compl_charac2:' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
+test -n "$orth_charac_first"
+test -n "$orth_charac_second"
+orth_charac1_body=$(awk -v first="$orth_charac_first" 'NR > first && /^split; intros[.]$/ {print NR; exit}' rocq/CertRL/LM/hilbert.v)
+orth_charac1_end=$(awk -v first="$orth_charac1_body" 'NR >= first && /^Qed[.]$/ {print NR; exit}' rocq/CertRL/LM/hilbert.v)
+orth_charac2_body=$(awk -v first="$orth_charac_second" 'NR > first && /^split; intros[.]$/ {print NR; exit}' rocq/CertRL/LM/hilbert.v)
+orth_charac2_end=$(awk -v first="$orth_charac2_body" 'NR >= first && /^Qed[.]$/ {print NR; exit}' rocq/CertRL/LM/hilbert.v)
+test -n "$orth_charac1_body"
+test -n "$orth_charac1_end"
+test -n "$orth_charac2_body"
+test -n "$orth_charac2_end"
+sed -n "${orth_charac1_body},${orth_charac1_end}p" rocq/CertRL/LM/hilbert.v | grep -Fq 'apply (ortho_projection_convex_unique phi phi_convex phi_compl u).'
+sed -n "${orth_charac2_body},${orth_charac2_end}p" rocq/CertRL/LM/hilbert.v | grep -Fq 'apply (ortho_projection_convex_unique phi phi_convex phi_compl u); trivial.'
+orth_charac1_proof=$(mktemp)
+cat > "$orth_charac1_proof" <<'ROCQ_ORTHOGONAL_CHARAC1'
+Proof.
+  intros u v Hv Hmin; split.
+  - intro Hu.
+    (* The difference belongs both to the subspace and its orthogonal
+       complement. Their intersection is the zero vector. *)
+    assert (Hmem : phi (minus u v)).
+    { destruct phi_compat as ((Hsub, [z Hz]), Hscale).
+      unfold minus; apply Hsub; assumption. }
+    assert (Horth : orth_compl (minus u v)).
+    { eapply direct_sum_with_orth_compl_decomp; eassumption. }
+    assert (Hzero : minus u v = @zero E).
+    { apply direct_sumable_with_orth_compl; assumption. }
+    pose proof (f_equal (fun x : E => plus x v) Hzero) as Hsum.
+    change (plus (minus u v) v = plus zero v) in Hsum.
+    unfold minus in Hsum.
+    rewrite <- plus_assoc plus_opp_l plus_zero_r plus_zero_l in Hsum.
+    symmetry; exact Hsum.
+  - intro Heq; subst v; exact Hv.
+ROCQ_ORTHOGONAL_CHARAC1
+orth_charac2_proof=$(mktemp)
+cat > "$orth_charac2_proof" <<'ROCQ_ORTHOGONAL_CHARAC2'
+Proof.
+  intros u v Hv Hmin; split.
+  - intro Horth.
+    (* Orthogonal projection preserves the inner product against
+       every subspace vector, including the projected vector itself. *)
+    assert (Heq : forall w : E, phi w -> inner v w = inner u w).
+    { apply charac_ortho_projection_subspace2; assumption. }
+    assert (Hself : inner v v = 0).
+    { rewrite (Heq v Hv). apply Horth; exact Hv. }
+    apply PreHilbert.ax3 in Hself; exact Hself.
+  - intro Heq; subst v.
+    assert (Horth : orth_compl (minus u zero)).
+    { eapply direct_sum_with_orth_compl_decomp; eassumption. }
+    unfold minus in Horth.
+    rewrite opp_zero plus_zero_r in Horth.
+    exact Horth.
+ROCQ_ORTHOGONAL_CHARAC2
+orth_charac_rewritten=$(mktemp)
+awk -v f1="$orth_charac1_body" -v l1="$orth_charac1_end" -v p1="$orth_charac1_proof" -v f2="$orth_charac2_body" -v l2="$orth_charac2_end" -v p2="$orth_charac2_proof" '
+  NR == f1 {while ((getline line < p1) > 0) print line}
+  NR == f2 {while ((getline line < p2) > 0) print line}
+  (NR < f1 || NR >= l1) && (NR < f2 || NR >= l2) {print}
+' rocq/CertRL/LM/hilbert.v > "$orth_charac_rewritten"
+mv "$orth_charac_rewritten" rocq/CertRL/LM/hilbert.v
+rm "$orth_charac1_proof" "$orth_charac2_proof"
 
 # D181: A subpartition difference is either empty or the original
 # cell. Choose the disjunction branch explicitly and reuse the event
@@ -1338,3 +1390,54 @@ test -n "$sigma_diff_end"
 test "$(sed -n "$((sigma_diff_end - 2))p" rocq/ProbTheory/SigmaAlgebras.v)" = '  - rewrite pre_event_diff_self; intuition.'
 test "$(sed -n "$((sigma_diff_end - 1))p" rocq/ProbTheory/SigmaAlgebras.v)" = '  - rewrite pre_event_diff_false_r; intuition.'
 sed -i "${sigma_diff_first},$((sigma_diff_end - 1))c\\  intros is_sub n.\\n  destruct (is_sub n) as [eqq | eqq].\\n  - right; rewrite eqq; apply pre_event_diff_self.\\n  - left; rewrite eqq; apply pre_event_diff_false_r." rocq/ProbTheory/SigmaAlgebras.v
+
+# D182: Countable unions of subpartition selections are subpartition
+# selections again. Decide whether any selected cell equals the
+# original cell, rather than extracting a witness from a double
+# negation of event equivalence. Explicitly transport pointwise
+# memberships using existing pre_event_equiv and pre_sub_partition.
+partition_start=$(grep -n '^Program Instance countable_partition_sa ' rocq/ProbTheory/SigmaAlgebras.v | cut -d: -f1)
+test -n "$partition_start"
+partition_first=$(awk -v first="$partition_start" 'NR > first && /^Next Obligation[.]$/ {print NR+1; exit}' rocq/ProbTheory/SigmaAlgebras.v)
+test -n "$partition_first"
+partition_end=$(awk -v first="$partition_first" 'NR >= first && /^Qed[.]$/ {print NR; exit}' rocq/ProbTheory/SigmaAlgebras.v)
+test -n "$partition_end"
+sed -n "${partition_first},${partition_end}p" rocq/ProbTheory/SigmaAlgebras.v | grep -Fq "assert (HH':~ ~ (exists n0 : nat, partish n0 n nn)) by intuition."
+partition_proof=$(mktemp)
+cat > "$partition_proof" <<'ROCQ_PARTITION_COUNTABLE_UNION'
+  unfold pre_in_partition_union in *.
+  apply choice in H.
+  destruct H as [partish pH].
+  exists (fun n => pre_union_of_collection (fun i => partish i n)).
+  split.
+  - intros n.
+    (* A union of selections of a fixed cell is full precisely when
+       a selected cell is equivalent to that full cell (or it is empty). *)
+    destruct (classic (exists i : nat,
+        pre_event_equiv (partish i n) (part n))) as [[i Hi] | Hnone].
+    + left; intro x; unfold pre_union_of_collection; split.
+      * intros [j Hj].
+        destruct (proj1 (pH j) n) as [Heq | Heq].
+        -- exact (proj1 (Heq x) Hj).
+        -- exfalso; exact (proj1 (Heq x) Hj).
+      * intro Hx; exists i; exact (proj2 (Hi x) Hx).
+    + right; intro x; unfold pre_union_of_collection, pre_event_none; split.
+      * intros [j Hj].
+        destruct (proj1 (pH j) n) as [Heq | Heq].
+        -- exfalso; apply Hnone; exists j; exact Heq.
+        -- exact (proj1 (Heq x) Hj).
+      * contradiction.
+  - (* Interchange the two existential indices, then transport each
+       row through its original event equivalence. *)
+    intro x; unfold pre_union_of_collection; split.
+    + intros [n [i Hx]].
+      exists i; apply (proj1 (proj2 (pH i) x)).
+      exists n; exact Hx.
+    + intros [i Hx].
+      destruct (proj2 (proj2 (pH i) x) Hx) as [n Hn].
+      exists n, i; exact Hn.
+ROCQ_PARTITION_COUNTABLE_UNION
+partition_rewritten=$(mktemp)
+awk -v first="$partition_first" -v last="$partition_end" -v proof="$partition_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR >= last {print}' rocq/ProbTheory/SigmaAlgebras.v > "$partition_rewritten"
+mv "$partition_rewritten" rocq/ProbTheory/SigmaAlgebras.v
+rm "$partition_proof"
