@@ -209,8 +209,14 @@ Theorem gaussian_regression_perfect_information_mean_almost_sure
        (rvplus predictor innovation))
     (fun w => Finite (predictor w)).
 Proof.
-  eapply is_conditional_expectation_unique.
-  - apply Condexp_cond_exp.
+  (* Fix the underlying random variable and supply its existing finite-
+     expectation certificate explicitly. Unconstrained eapply can leave
+     the integrability premise as the first goal before the CE identities. *)
+  apply (is_conditional_expectation_unique prob obs_sub
+           (rvplus predictor innovation) _ _
+           (isfe:=gaussian_regression_future_integrable)).
+  - apply Condexp_cond_exp;
+      exact gaussian_regression_future_integrable.
   - apply gaussian_regression_perfect_information_conditional_expectation.
     exact future_predictor_ae.
 Qed.
@@ -241,8 +247,14 @@ Theorem gaussian_regression_conditional_mean_almost_sure
       (rvplus predictor innovation))
     (fun w => Finite (predictor w)).
 Proof.
-  eapply is_conditional_expectation_unique.
-  - apply Condexp_cond_exp.
+  (* Fix the underlying random variable and supply its existing finite-
+     expectation certificate explicitly. Unconstrained eapply can leave
+     the integrability premise as the first goal before the CE identities. *)
+  apply (is_conditional_expectation_unique prob obs_sub
+           (rvplus predictor innovation) _ _
+           (isfe:=gaussian_regression_future_integrable)).
+  - apply Condexp_cond_exp;
+      exact gaussian_regression_future_integrable.
   - apply gaussian_regression_conditional_expectation_centered; assumption.
 Qed.
 
