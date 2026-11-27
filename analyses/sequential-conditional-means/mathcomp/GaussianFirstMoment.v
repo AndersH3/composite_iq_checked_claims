@@ -285,7 +285,10 @@ have ma : measurable_fun [set: \bar R] (@abse R).
 { exact: abse_measurable. }
 have mw : measurable_fun [set: R] (fun x : R => `|x%:E|).
 { exact: measurableT_comp ma mi. }
-have w0 x : 0 <= `|x%:E| by exact: abse_ge0.
+(* Fix the domain of the absolute-value integrand to the current real
+   type: an untyped binder otherwise generalizes over numDomainType. *)
+have w0 (x : R) : (0 <= `|x%:E|)%E.
+{ exact: abse_ge0. }
 have /integrableP [_ Hfin] := @gmc_centered_weighted_pdf_integrable s Hs.
 apply/integrableP; split; first exact: mi.
 rewrite (@gmc_normal_nonnegative_integral 0%R s
