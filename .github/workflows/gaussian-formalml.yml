@@ -79,7 +79,12 @@ jobs:
             mkdir -p /tmp/formalml-gaussian
             cp /workspace/analyses/sequential-conditional-means/formalml/GaussianResidualConditionalExpectation.v /tmp/formalml-gaussian/
             cp /workspace/analyses/sequential-conditional-means/formalml/GaussianProductConditionalExpectation.v /tmp/formalml-gaussian/
+            cp /workspace/analyses/sequential-conditional-means/formalml/AuditGaussianConditionalExpectation.v /tmp/formalml-gaussian/
             cd /tmp/formalml-gaussian
             opam exec -- rocq compile -R /tmp/FormalML/rocq FormalML GaussianResidualConditionalExpectation.v
             opam exec -- rocq compile -R /tmp/FormalML/rocq FormalML GaussianProductConditionalExpectation.v
+            # Check compiled objects independently, then print exact theorem
+            # signatures and transitive axioms in the pinned build log.
+            opam exec -- rocq check -R /tmp/FormalML/rocq FormalML GaussianResidualConditionalExpectation GaussianProductConditionalExpectation
+            opam exec -- rocq compile -R /tmp/FormalML/rocq FormalML AuditGaussianConditionalExpectation.v
           '
