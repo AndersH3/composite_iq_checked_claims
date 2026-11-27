@@ -1532,3 +1532,15 @@ rvconst_rewritten=$(mktemp)
 awk -v first="$rvconst_first" -v last="$rvconst_end" -v proof="$rvconst_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR >= last {print}' rocq/ProbTheory/RandomVariable.v > "$rvconst_rewritten"
 mv "$rvconst_rewritten" rocq/ProbTheory/RandomVariable.v
 rm "$rvconst_proof"
+
+# D187: Real measurability of a constant follows directly from
+# constant-event measurability (D178). Avoid repeating the two
+# empty/universal event cases and their fragile setoid rewrites.
+real_const_start=$(grep -n '^    Instance constant_measurable ' rocq/ProbTheory/RealRandomVariable.v | cut -d: -f1)
+test -n "$real_const_start"
+real_const_first=$(awk -v first="$real_const_start" 'NR > first && /^    Proof[.]$/ {print NR+1; exit}' rocq/ProbTheory/RealRandomVariable.v)
+test -n "$real_const_first"
+real_const_end=$(awk -v first="$real_const_first" 'NR >= first && /^    Qed[.]$/ {print NR; exit}' rocq/ProbTheory/RealRandomVariable.v)
+test -n "$real_const_end"
+sed -n "${real_const_first},${real_const_end}p" rocq/ProbTheory/RealRandomVariable.v | grep -Fq 'destruct (Rle_dec c r).'
+sed -i "${real_const_first},$((real_const_end - 1))c\\      intro r.\\n      change (sa_sigma dom (fun _ : Ts => c <= r)).\\n      exact (sa_sigma_const_classic dom (c <= r))." rocq/ProbTheory/RealRandomVariable.v
