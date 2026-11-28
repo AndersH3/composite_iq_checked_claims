@@ -9,7 +9,9 @@
 *)
 From mathcomp Require Import boot order ssralg ssrnum interval field_tactic.
 From mathcomp Require Import boolp classical_sets set_interval functions
-  reals ereal topology normedtype derive exp real_interval.
+  reals ereal topology normedtype derive sequences exp real_interval.
+(* MathComp Analysis defines expR in sequences, while exp supplies
+   its derivative and continuity lemmas. Import both explicitly. *)
 From mathcomp Require Import measure lebesgue_measure lebesgue_integral ftc.
 From mathcomp.analysis Require Import normal_distribution.
 Require Import GaussianVarianceReduction.
