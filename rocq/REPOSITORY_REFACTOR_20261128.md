@@ -43,6 +43,10 @@ The tree contained three exact-blob duplicate groups: two analysis ignore files;
 - Rebuild all eight reports with XeLaTeX, validate exact source hashes, diagnostics, title author, initial disclosure, final appendix, and inspect rendered pages. No stale source/PDF pairing or silent replacement of historical simulation evidence.
 - Only after complete source review and satisfactory regression validation, resume GaussianVarianceCalculus R3 at the density derivative (`mulr0` mismatch, line 85), followed by finite FTC and whole-line boundary limits. No new theorem development during this phase.
 
+## Initial computer10 regression checkpoint
+
+At `0cd10ab`, the user transcript confirms successful branch synchronization, ShellCheck of tracked shell scripts, canonical Python/Rocq source ownership, and all eight report-template structure checks (one initial AI notice and one final disclosure appendix each). `make check` stopped at the first Python contract audit because the invoked system `python3` lacked Deal. Static lint and runtime tests were not reached; no numerical or proof regression result is inferred. Use a Python 3.13 virtual environment with the pinned `requirements-dev.txt` and pass its interpreter explicitly as `PYTHON` to Make. The untracked IQ smoke output is disposable and should remain separate from production evidence; its directory is now ignored without deleting local files.
+
 ## Complete AI disclosure
 
 This register is an AI-assisted engineering audit requested by Anders Hellström. The inventory, connector commits and reversible source transformations are direct evidence; proposed later changes and regression gates are not completed tests. The local execution environment could not resolve GitHub for a full clone and lacks ShellCheck; Rocq/Deal/Dask/XeLaTeX checks have not been run here. The supplied computer10 transcripts provide earlier verified-source evidence only. This refactoring register neither certifies every theorem or runtime contract nor validates empirical psychometric models. No new mathematical axioms or admitted proof placeholders were added by this batch.
