@@ -27,30 +27,32 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate manifest and shared report layout
+        run: |
+          git ls-files -z '*.sh' | xargs -0 -r shellcheck --severity=warning
+          bash scripts/check_report_template.sh
+      - name: Generate matrix from canonical book inventory
+        id: matrix
+        shell: bash
+        run: |
+          matrix=$(jq -Rsc 'split("\n") | map(select(length > 0) | split(" ") | {project: .[0], stem: .[1]}) | {include: .}' library/latex/books.txt)
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
   compile:
+    needs: inventory
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - { project: hoeflin-ferguson, stem: composite_iq_analysis }
-          - { project: hoeflin-ferguson, stem: hoeflin_simulations }
-          - { project: towers-multiple-test-admissions, stem: towers_admissions_analysis }
-          - { project: towers-multiple-test-admissions, stem: towers_simulations }
-          - { project: sequential-conditional-means, stem: sequential_conditional_means }
-          - { project: sequential-conditional-means, stem: sequential_simulations }
-          - { project: iq-test-differences, stem: iq_test_differences }
-          - { project: iq-test-differences, stem: iq_difference_simulations }
+      matrix: ${{ fromJSON(needs.inventory.outputs.matrix) }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
-      - name: ShellCheck all tracked shell scripts before report validation
-        shell: bash
-        run: |
-          command -v shellcheck
-          git ls-files -z '*.sh' | xargs -0 -r shellcheck --severity=warning
-      - name: Check shared report layout and AI disclosure structure
-        run: bash scripts/check_report_template.sh
       # The new simulation book is built from a freshly executed campaign.
       # The other books continue to use their previously retained inputs.
       - uses: actions/setup-python@v5

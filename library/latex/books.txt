@@ -1,0 +1,8 @@
+hoeflin-ferguson composite_iq_analysis report_style
+hoeflin-ferguson hoeflin_simulations simulation_style
+towers-multiple-test-admissions towers_admissions_analysis report_style
+towers-multiple-test-admissions towers_simulations simulation_style
+sequential-conditional-means sequential_conditional_means report_style
+sequential-conditional-means sequential_simulations simulation_style
+iq-test-differences iq_test_differences report_style
+iq-test-differences iq_difference_simulations simulation_style

@@ -22,16 +22,18 @@ import deal
 
 from reporting.provenance import digest, dump
 ROOT = Path(__file__).resolve().parents[1]
-DOCUMENTS = (
-    ("hoeflin-ferguson", "composite_iq_analysis"),
-    ("hoeflin-ferguson", "hoeflin_simulations"),
-    ("towers-multiple-test-admissions", "towers_admissions_analysis"),
-    ("towers-multiple-test-admissions", "towers_simulations"),
-    ("sequential-conditional-means", "sequential_conditional_means"),
-    ("sequential-conditional-means", "sequential_simulations"),
-    ("iq-test-differences", "iq_test_differences"),
-    ("iq-test-differences", "iq_difference_simulations"),
-)
+BOOK_MANIFEST = ROOT.joinpath("library", "latex", "books.txt")
+# The structural audit validates both book types per project; this consumer
+# preserves manifest order and refuses an incomplete or duplicate inventory.
+BOOK_ROWS = tuple(tuple(line.split()) for line in
+                  BOOK_MANIFEST.read_text(encoding="utf-8").splitlines())
+if (len(BOOK_ROWS) != 8 or any(len(row) != 3 for row in BOOK_ROWS)
+        or len({(row[0], row[1]) for row in BOOK_ROWS}) != 8
+        or len({(row[0], row[2]) for row in BOOK_ROWS}) != 8
+        or len({row[0] for row in BOOK_ROWS}) != 4
+        or any(row[2] not in ("report_style", "simulation_style") for row in BOOK_ROWS)):
+    raise ValueError("Expected eight unique books, two styles per project")
+DOCUMENTS = tuple((project, stem) for project, stem, _ in BOOK_ROWS)
 RECORD = ROOT.joinpath("reporting", "build-records", "revision.json")
 CAMPAIGN = ROOT.joinpath("reporting", "run.json")
 
@@ -197,6 +199,7 @@ def record_revision(results, retained, graph_tasks):
     sources = list(ROOT.joinpath("reporting").glob("*.tex")) + list(ROOT.joinpath("reporting").glob("*.bib"))
     # Hash the canonical templates as well as compatibility wrappers;
     # the wrappers alone cannot identify the actual typesetting inputs.
+    sources += [BOOK_MANIFEST]
     sources += list(ROOT.joinpath("library", "latex").glob("*.tex"))
     # The IQ discrepancy report also uses separately labeled offline evidence.
     sources += list(ROOT.joinpath("analyses", "iq-test-differences", "offline-validation").glob("*.tex"))

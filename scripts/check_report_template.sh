@@ -14,17 +14,27 @@ require_count() {
   fi
 }
 
-for spec in \
-  'hoeflin-ferguson composite_iq_analysis report_style' \
-  'hoeflin-ferguson hoeflin_simulations simulation_style' \
-  'towers-multiple-test-admissions towers_admissions_analysis report_style' \
-  'towers-multiple-test-admissions towers_simulations simulation_style' \
-  'sequential-conditional-means sequential_conditional_means report_style' \
-  'sequential-conditional-means sequential_simulations simulation_style' \
-  'iq-test-differences iq_test_differences report_style' \
-  'iq-test-differences iq_difference_simulations simulation_style'
-do
-  read -r project stem style <<< "$spec"
+# One canonical manifest drives this audit, Dask builds, and CI.
+manifest=library/latex/books.txt
+test -s "$manifest"
+declare -A seen_books=() seen_styles=() projects=()
+count=0
+while read -r project stem style extra; do
+  [[ "$project" =~ ^[a-z0-9-]+$ && "$stem" =~ ^[a-z0-9_]+$ && -z "$extra" ]]
+  case "$style" in
+    report_style|simulation_style) ;;
+    *) echo "Unknown report style: $style" >&2; exit 1 ;;
+  esac
+  key="$project/$stem"
+  style_key="$project/$style"
+  if [[ -n "${seen_books[$key]:-}" || -n "${seen_styles[$style_key]:-}" ]]; then
+    echo "Duplicate book or report type: $key ($style)" >&2
+    exit 1
+  fi
+  seen_books[$key]=1
+  seen_styles[$style_key]=1
+  projects[$project]=1
+  count=$((count + 1))
   book="analyses/$project/$stem.tex"
   test -s "$book"
   require_count "$book" "\input{../../library/latex/$style}" 1
@@ -54,7 +64,11 @@ do
     require_count "$book" "$forbidden" 0
   done
   echo "Book template: $book OK"
-done
+done < "$manifest"
+[[ "$count" -eq 8 && "${#projects[@]}" -eq 4 ]] || {
+  echo "Expected eight books in four distinct projects" >&2
+  exit 1
+}
 
 require_count library/latex/report_style.tex '\newcommand*{\ProjectReportTitlePage}' 1
 require_count library/latex/report_style.tex '\newcommand{\ProjectReportAIAppendix}' 1

@@ -35,3 +35,5 @@ latexmk -xelatex -interaction=nonstopmode -halt-on-error -outdir=output/pdf comp
 ```
 
 All documents follow the reference supplied as `iq_test_differences_report.tex`, while retaining mathematical conventions and bibliographic compatibility from the original six books.
+
+The canonical eight-book inventory is `books.txt` (project, source stem, template style). The template audit, Dask document builder, and CI build matrix consume it directly. The audit requires eight unique books across four projects, with one analytical and one simulation style in each project.
