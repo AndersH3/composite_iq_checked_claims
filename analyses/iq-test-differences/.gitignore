@@ -1,3 +1,5 @@
 output/pdf/*
 !output/pdf/*.pdf
 __pycache__/
+# Disposable smoke-test evidence; retain production data separately.
+output/smoke/
