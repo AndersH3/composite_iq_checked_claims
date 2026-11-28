@@ -49,46 +49,16 @@ jobs:
             cp /workspace/analyses/sequential-conditional-means/mathcomp/*.v /tmp/gaussian-mathcomp/
             cd /tmp/gaussian-mathcomp
             opam exec -- rocq --version
-            opam exec -- rocq compile GaussianPosteriorMeasure.v
-            opam exec -- rocq compile GaussianResidualMeasure.v
-            opam exec -- rocq compile GaussianOriginalResidualMeasure.v
-            opam exec -- rocq compile GaussianJointDensityMeasure.v
-            opam exec -- rocq compile GaussianResidualPushforward.v
-            opam exec -- rocq compile GaussianPosteriorKernel.v
-            opam exec -- rocq compile GaussianFirstMoment.v
-            opam exec -- rocq compile GaussianSignedMean.v
-            opam exec -- rocq compile GaussianLocationMean.v
-            opam exec -- rocq compile GaussianResidualIntegral.v
-            opam exec -- rocq compile GaussianProductHistory.v
-            opam exec -- rocq compile GaussianScalarConditionalMean.v
-            opam exec -- rocq compile GaussianObservationSigma.v
-            opam exec -- rocq compile GaussianHistoryJointLaw.v
-            opam exec -- rocq compile GaussianFiniteStandard.v
-            opam exec -- rocq compile GaussianFiniteAffine.v
-            opam exec -- rocq compile GaussianFiniteIndependence.v
-            opam exec -- rocq compile GaussianSecondMoment.v
-            opam exec -- rocq compile GaussianCrossMoment.v
-            opam exec -- rocq compile GaussianVarianceReduction.v
+            # One ordered inventory drives compilation and matching audits.
+            # Pending calculus is intentionally excluded.
+            manifest=/workspace/analyses/sequential-conditional-means/mathcomp/verified-modules.txt
+            test -s "$manifest"
+            while IFS= read -r module; do
+              opam exec -- rocq compile "$module.v"
+            done < "$manifest"
             opam exec -- rocq check GaussianObservationSigma GaussianVarianceReduction
             # Keep transitive assumption audits in separate processes.
-            opam exec -- rocq compile AuditGaussianPosteriorMeasure.v
-            opam exec -- rocq compile AuditGaussianResidualMeasure.v
-            opam exec -- rocq compile AuditGaussianOriginalResidualMeasure.v
-            opam exec -- rocq compile AuditGaussianJointDensityMeasure.v
-            opam exec -- rocq compile AuditGaussianResidualPushforward.v
-            opam exec -- rocq compile AuditGaussianPosteriorKernel.v
-            opam exec -- rocq compile AuditGaussianFirstMoment.v
-            opam exec -- rocq compile AuditGaussianSignedMean.v
-            opam exec -- rocq compile AuditGaussianLocationMean.v
-            opam exec -- rocq compile AuditGaussianResidualIntegral.v
-            opam exec -- rocq compile AuditGaussianScalarConditionalMean.v
-            opam exec -- rocq compile AuditGaussianObservationSigma.v
-            opam exec -- rocq compile AuditGaussianProductHistory.v
-            opam exec -- rocq compile AuditGaussianHistoryJointLaw.v
-            opam exec -- rocq compile AuditGaussianFiniteStandard.v
-            opam exec -- rocq compile AuditGaussianFiniteAffine.v
-            opam exec -- rocq compile AuditGaussianFiniteIndependence.v
-            opam exec -- rocq compile AuditGaussianSecondMoment.v
-            opam exec -- rocq compile AuditGaussianCrossMoment.v
-            opam exec -- rocq compile AuditGaussianVarianceReduction.v
+            while IFS= read -r module; do
+              opam exec -- rocq compile "Audit$module.v"
+            done < "$manifest"
           '
