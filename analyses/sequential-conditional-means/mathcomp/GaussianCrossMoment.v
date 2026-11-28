@@ -71,7 +71,10 @@ have Hinner (x : R) : \int[G]_y `|h (x,y)| = a x * C.
      scope over the multiplication and its y-dependent factor. *)
   transitivity (\int[G]_y ((`|x|%R)%:E * a y)).
   - apply: eq_integral => y _.
-    by rewrite /a /= abseM abse_EFin.
+    (* Expose the product without simplifying the extended-real
+       multiplication of finite embeddings before applying abseM. *)
+    change (`|x%:E * y%:E| = (`|x|%R)%:E * `|y%:E|).
+    by rewrite abseM (abse_EFin x).
   - transitivity ((`|x|%R)%:E * C).
     + rewrite /C.
       exact: integralZl ai.
