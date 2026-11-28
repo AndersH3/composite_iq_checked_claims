@@ -84,9 +84,9 @@ pose g := fun x : R => c%:E * ((x * normal_pdf 0%R w x)%R)%:E.
 have mf : measurable_fun [set: R] f.
 { rewrite /f; apply/measurable_EFinP.
   apply: measurable_funM; last exact: measurable_normal_pdf.
-  rewrite [X in measurable_fun _ X](_ : _ = (fun x : R => (x*x)%R)).
-  - exact: measurable_funM measurable_id measurable_id.
-  - apply/funext => x; by rewrite expr2. }
+  (* The library directly proves measurability of natural powers;
+     no function-product rewrite or identity-map inference is needed. *)
+  exact: exprn_measurable. }
 have gi : mu.-integrable [set: R] g.
 { exact (@integrableZl _ (measurableTypeR R) R mu setT
     measurableT c (fun x : R => ((x * normal_pdf 0%R w x)%R)%:E)
@@ -126,9 +126,9 @@ move=> Hs.
 pose f := fun x : R => ((x ^+ 2)%R)%:E.
 have mf : measurable_fun [set: R] f.
 { rewrite /f; apply/measurable_EFinP.
-  rewrite [X in measurable_fun _ X](_ : _ = (fun x : R => (x*x)%R)).
-  - exact: measurable_funM measurable_id measurable_id.
-  - apply/funext => x; by rewrite expr2. }
+  (* The library directly proves measurability of natural powers;
+     no function-product rewrite or identity-map inference is needed. *)
+  exact: exprn_measurable. }
 have f0 (x : R) : 0 <= f x.
 { by rewrite /f lee_fin sqr_ge0. }
 have ma : measurable_fun [set: \bar R] (@abse R).
