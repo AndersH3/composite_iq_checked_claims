@@ -9,7 +9,7 @@
     AI disclosure: AI-assisted proof candidates; validation pending.
 *)
 From mathcomp Require Import boot order ssralg ssrnum.
-From mathcomp Require Import boolp classical_sets functions reals ereal topology normedtype.
+From mathcomp Require Import boolp classical_sets set_interval functions reals ereal topology normedtype.
 From mathcomp Require Import numfun measure lebesgue_integral
   lebesgue_stieltjes_measure lebesgue_measure measurable_realfun.
 From mathcomp.analysis Require Import normal_distribution.
@@ -43,15 +43,23 @@ have Hw : w != 0.
 { apply/eqP => Hw0; subst w.
   have Hlt : (-1 : R) < 0.
   { by rewrite oppr_lt0 ltr01. }
+  (* Separate Boolean set membership from the real-valued
+     indicator. Use the classical set lemma explicitly, rather than
+     the overloaded inE multirule from the finite-set libraries. *)
+  have Hout : ((-1 : R) \in (`[0, 1]%classic : set R)) = false.
+  { apply/negP.
+    rewrite in_setE set_itvcc /=.
+    by rewrite (lt_geF Hlt). }
   have Hz : normal_pdf 0 0 (-1 : R) = 0.
-  { by rewrite /normal_pdf eqxx indicE inE /= in_itv /= (lt_geF Hlt). }
+  { by rewrite /normal_pdf eqxx indicE Hout. }
   have Hp : 0 < normal_pdf 0 s (-1 : R).
-  { rewrite (normal_pdfE 0 Hs).
+  { rewrite /normal_pdf (negbTE Hs).
     exact: NormalPdf0.normal_pdf0_gt0 Hs. }
   have H := Hbound (-1 : R).
   rewrite Hz mulr0 normrN normr1 mul1r in H.
   by rewrite (lt_geF Hp) in H. }
-exists w, c; by split=> //; split.
+exists w, c; split; first exact Hw.
+split; [exact c0 | exact Hbound].
 Qed.
 
 Local Open Scope ereal_scope.
