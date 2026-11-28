@@ -59,7 +59,7 @@ change ((- (2%:R : R)^-1) * ((2%:R * x ^+ 1) * 1) +
     x ^+ 2 * 0 = - x).
 rewrite expr1 mulr1 mulr0 addr0.
 have H2 : (2%:R : R) != 0 by rewrite pnatr_eq0.
-by rewrite mulNr mulrA mulVr // mul1r.
+by rewrite mulNr mulrA (mulVf H2) mul1r.
 Qed.
 
 (** The density derivative is the negative coordinate times its
@@ -78,9 +78,10 @@ rewrite gmc_standard_density_expression deriveM.
 - rewrite derive_cst fctE mulr0 addr0.
   have Hc := @derive1_comp _ q (@expR R) x dq
     (derivable_expR (q x)).
-  rewrite !derive1E derive_val gmc_standard_exponent_derivative in Hc.
+  rewrite !derive1E (derive_val (is_derive_expR (q x)))
+    gmc_standard_exponent_derivative in Hc.
   rewrite Hc fctE /=.
-  by rewrite mulrCA [expR _ * - x]mulrC.
+  by rewrite mulrA [LHS]mulrC.
 Qed.
 
 (** The product rule gives the exact density balance as the
@@ -97,7 +98,7 @@ apply: DeriveDef; first exact dF.
 rewrite deriveM; [exact: derivable_id | exact: (ex_derive dp) |].
 rewrite (derive_val dp) derive_id.
 change (x * (- x * p x) + p x * 1 = p x - x ^+ 2 * p x).
-by rewrite mulr1 mulrN mulrA -expr2 addrC.
+by rewrite mulr1 mulNr mulrN mulrA -expr2 addrC.
 Qed.
 
 (** The primitive is continuous on the full real line by its
