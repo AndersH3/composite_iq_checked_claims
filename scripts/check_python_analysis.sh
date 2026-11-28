@@ -29,6 +29,11 @@ printf '%s\n' "${files[@]}" > "$out/python-files.txt"
 "$prospector_python" -m pip check > "$out/prospector-pip-check.txt" 2>&1
 "$python" -m pip freeze > "$out/environment.txt"
 "$prospector_python" -m pip freeze > "$out/prospector-environment.txt"
+# Missing distributions must not masquerade as a tool finding (exit 1).
+for tool in pylint flake8 pyflakes bandit vulture radon ruff; do
+  "$python" -m pip show "$tool" > "$out/$tool.package.txt" || exit 2
+done
+"$prospector_python" -m pip show prospector > "$out/prospector.package.txt" || exit 2
 
 failed=0
 # Execute every analyzer even if an earlier one reports findings.
@@ -45,6 +50,11 @@ run_check() {
     elif [[ "$finding" != pylint && "$rc" == "$finding" ]]; then
       result=findings
     else
+      result=execution-error
+    fi
+    # A traceback or missing module is an execution error even when its
+    # exit status happens to coincide with the tool\u0027s findings status.
+    if grep -Eq 'Traceback \(most recent call last\)|No module named |^Fatal Python error:' "$out/$name.stderr"; then
       result=execution-error
     fi
     if [[ "$result" == execution-error || "$policy" == gate || "$mode" == strict ]]; then
@@ -65,7 +75,7 @@ run_check vulture baseline 3 "$python" -m vulture --min-confidence 60 "${files[@
 radon=$("$python" -c 'import sysconfig; print(sysconfig.get_path("scripts") + "/radon")')
 # Radon reports metrics, not a zero-complexity policy. It does not return
 # a nonzero status simply because a function is complex.
-run_check radon-cc metrics 999 "$radon" cc -s -a -j "${files[@]}"
+run_check radon-cc metrics 999 "$radon" cc -s -j "${files[@]}"
 run_check radon-mi metrics 999 "$radon" mi -s -j "${files[@]}"
 run_check radon-raw metrics 999 "$radon" raw -j "${files[@]}"
 run_check radon-hal metrics 999 "$radon" hal -j "${files[@]}"
@@ -73,9 +83,10 @@ run_check prospector baseline 1 "$prospector_python" -m prospector --strictness 
 run_check ruff baseline 1 "$python" -m ruff check --isolated --target-version py313 --select E,F,W,I,UP,B,S,SIM,C90 --output-format json "${files[@]}"
 
 # Enforce serious, relatively low-ambiguity findings from the first run.
-# Undefined names, invalid control-flow syntax and high-confidence/high-
+# Ruff reports syntax errors unconditionally. Undefined names, invalid
+# control flow and high-confidence/high-
 # severity security findings are not merely style debt.
-run_check ruff-correctness gate 1 "$python" -m ruff check --isolated --target-version py313 --select E9,F63,F7,F82 "${files[@]}"
+run_check ruff-correctness gate 1 "$python" -m ruff check --isolated --target-version py313 --select F63,F7,F82 "${files[@]}"
 run_check bandit-high gate 1 "$python" -m bandit -lll -iii "${files[@]}"
 
 # Validate machine-readable report structure; malformed reports fail,

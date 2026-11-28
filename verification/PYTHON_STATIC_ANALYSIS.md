@@ -26,11 +26,11 @@ All eight requested tools scan the tracked Python inventory, including tests and
 | Vulture | Unused-code candidates, confidence >=60 | Baseline; dynamic uses need review |
 | Radon | CC, MI, raw and Halstead JSON metrics | Metrics; errors fail |
 | Prospector | High strictness, test and doc warnings, unblended JSON | Baseline; tool errors fail |
-| Ruff | E/F/W/I/UP/B/S/SIM/C90 JSON | Baseline; E9/F63/F7/F82 correctness gate |
+| Ruff | E/F/W/I/UP/B/S/SIM/C90 JSON | Baseline; F63/F7/F82 and unconditional syntax-error correctness gate |
 
 `make check` includes the extended suite in addition to all previous Deal checks and runtime tests. `make static-analysis` runs only the extended checks. `make static-analysis-strict` additionally fails on any baseline finding; Radon measurements themselves are not findings. No automatic edits or baseline-wide suppression. Strict mode is deliberately not the initial default because existing findings have not yet been triaged. Review each warning, especially Dask delayed objects, public compatibility imports, pytest fixtures and security warnings about deliberate test assertions or seeded numerical simulation. A heuristic finding is not proof of dead code or exploitability.
 
-The runner retains native stdout, stderr, exit codes, tracked source list, Git commit/status, and package environments under `.analysis-results/` (override with ANALYSIS_OUTPUT). CI uploads that directory even on failure. The CI job is independent of the existing Deal and Dask test jobs. Only the existing Deal audit interprets the deliberate DEL012 fixture as a negative control; the new tools scan it normally.
+The runner checks that every requested distribution is installed, validates machine-readable output, and retains native stdout, stderr, exit codes, tracked source list, Git commit/status, and package environments under `.analysis-results/` (override with ANALYSIS_OUTPUT). CI uploads that directory even on failure. The CI job is independent of the existing Deal and Dask test jobs. Only the existing Deal audit interprets the deliberate DEL012 fixture as a negative control; the new tools scan it normally.
 
 Initial correctness/security gates are intentionally narrow, not a claim that all other issues are harmless. Establish the first diagnostic baseline, refactor genuine defects, and tighten the mandatory checks as findings are resolved. A zero exit from baseline mode is not proof that all eight analyzers reported no findings. No new mathematical proof development is authorized by this tooling change.
 
