@@ -46,7 +46,7 @@ have mh : measurable_fun [set: Pair] h.
 have Hp : QY [set: Y] = 1.
 { exact: probability_setT. }
 have Hinner (x : X) : \int[QY]_y `|h (x,y)| = `|f x|.
-{ transitivity (`|f x| * QY [set: X]).
+{ transitivity (`|f x| * QY [set: Y]).
   - exact (@integral_cst _ Y R QY setT measurableT (`|f x|)).
   - transitivity (`|f x| * 1).
     + exact (f_equal (fun z : \bar R => `|f x| * z) Hp).
@@ -74,7 +74,7 @@ have mh : measurable_fun [set: Pair] h.
 have Hp : QX [set: X] = 1.
 { exact: probability_setT. }
 have Hinner (y : Y) : \int[QX]_x `|h (x,y)| = `|f y|.
-{ transitivity (`|f y| * QX [set: Y]).
+{ transitivity (`|f y| * QX [set: X]).
   - exact (@integral_cst _ X R QX setT measurableT (`|f y|)).
   - transitivity (`|f y| * 1).
     + exact (f_equal (fun z : \bar R => `|f y| * z) Hp).
