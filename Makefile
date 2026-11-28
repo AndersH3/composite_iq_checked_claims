@@ -1,6 +1,6 @@
 PYTHON ?= python3
 
-.PHONY: check contracts lint test simulations library report-template proof-reports report-books simulation-reports
+.PHONY: shellcheck check contracts lint test simulations library report-template proof-reports report-books simulation-reports
 check: library report-template contracts lint test
 
 contracts:
@@ -12,10 +12,14 @@ lint:
 test:
 	$(PYTHON) -m pytest -q tests
 
-report-template:
+shellcheck:
+	command -v shellcheck
+	git ls-files -z '*.sh' | xargs -0 -r shellcheck --severity=warning
+
+report-template: shellcheck
 	bash scripts/check_report_template.sh
 
-library:
+library: shellcheck
 	bash scripts/check_library_layout.sh
 
 simulations:
