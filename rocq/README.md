@@ -1,3 +1,5 @@
+**Scope update (November 27, 2026):** The [eight-report mandatory proof register](EIGHT_REPORT_PROOF_OBLIGATIONS.md) and its seven linked source indices supersede the previous six-volume scope. All mathematical claims, including inline prose and numerical targets, require equivalent Rocq results; preserve this document as historical proof-mapping evidence. No full-scope completion is claimed.
+
 # Rocq formalization of checked claims
 
 ## Mandatory Rocq-only verification
@@ -5,6 +7,24 @@
 Researcher/requester: Anders Hellström. **All formal theorems and proof obligations must be proved in Rocq and accepted by its kernel.** Lean is not an accepted alternative, even if a Lean proof happens to compile. The D050 Lean prototype and its Lake/CI configuration were deleted; the canonical Rocq workflow invokes `scripts/check_rocq_only_proofs.sh` to prevent reintroducing such files. Rocq-compatible libraries, including the Rocq Stdlib, MathComp-Analysis and FormalML, may be reused rather than recreating probability theory. An uncompiled candidate `.v` file is **not** a completed proof, and a conventional mathematical derivation is not equivalent to a Rocq proof.
 
 **AI disclosure:** The proof-language guard, documentation and formalization work were AI-assisted; verification claims apply only to the exact statements accepted by Rocq.
+
+## Computer10 canonical kernel verification — November 26, 2026
+
+At [source revision 799af85](https://github.com/AndersH3/composite_iq_checked_claims/commit/799af85da583075b6ed94179a5483e2180267739), the researcher-provided computer10 terminal transcript records successful ShellCheck, the documentation audit, and compilation of all 45 canonical Stdlib-based Rocq modules using Rocq **9.3.0** (OCaml 4.14.2). The opam switch name is `rocq-9.2`, but the observed compiler version is 9.3.0. The terminal completed with `Rocq kernel compilation passed for all 45 modules.` The source audit counted 4,018 declarations, 3,684 theorem/helper proofs and 3,697 Proof./Qed. or Proof./Defined. scripts, including all 16 IQ discrepancy algebra proofs. These are counts of the checked corpus, not counts of independent probabilistic claims. The remaining warnings concern large nat literals and legacy vector APIs. The deprecated list-lemma and legacy simpl warnings are absent in this run.
+
+The dedicated FormalML, MathComp-Analysis and QBS modules are outside this compilation script. No claim of their acceptance or of the full joint-Gaussian conditional-expectation theorem follows from this result. The prior Rocq 9.2 CI records remain historical evidence, not verification of this exact revision with 9.2. This entry records researcher-supplied local validation rather than a new CI run.
+
+
+### Repeat computer10 validation at 0b22b3f
+
+The researcher-provided November 26 terminal transcript identifies source revision `0b22b3f64c6429d04071b5c5f56028e86a3b8301` and records:
+
+- ShellCheck and documentation audit passed: 4,020 declarations, 3,686 theorem/helper proofs and 3,699 registered proof scripts.
+- Rocq 9.3.0 (OCaml 4.14.2) compiled all 45 canonical modules, including all 18 IQ discrepancy algebra theorems and both weighted-scale Jensen certificates. Stdlib is 9.2.0; the switch name `rocq-9.2` is not the actual compiler version.
+- The Python audit passed for 139 functions and 2,217 contracts, with a minimum of 15; static lint passed with its expected DEL012 negative control; all 122 tests passed in 12.80 s.
+- The isolated IQ smoke run completed and the production-data Git diff was empty. The full default Dask/Deal run exited zero in 25.76 s wall clock (379% CPU, 421,100 KiB peak RSS). Its ten scenarios each use 40 million rows; failure of any diagnostic would exit nonzero.
+- Both XeLaTeX books built successfully (12 and 13 pages, respectively); the transcript shows the usual geometry and unicode-math warnings. No fresh visual inspection or artifact publication is demonstrated by this transcript. The new generated files and exact source hashes must be published from computer10.
+- MathComp and FormalML were not installed in the inspected switch; Docker was not found in PATH. Their candidate scripts remain unverified. The existing validated switch is to be preserved; use the isolated environment in [PROBABILITY_LIBRARY_VALIDATION.md](PROBABILITY_LIBRARY_VALIDATION.md).
 
 ## D050 — 56 kernel-verified Gaussian kernel and covariance-domain results
 
@@ -4942,3 +4962,9 @@ The dedicated `FiniteConditionalResidual.v` extends the prior finite covariance 
 OpenAI's assistant designed the finite-vector theorem statements, composed the Rocq proof scripts and accompanying documentation, and wired the module into the pinned CI validation. The independent operational evidence is the Rocq 9.2 kernel compilation and repository-wide Python/Deal CI gates; no extrapolation from a successful algebraic proof to empirical IQ calibration or continuous Gaussian probability is made.
 
 The final algebraic refinements identify the aggregate equicorrelation quadratic form with the **literal finite sum of each coordinate times its rank-one covariance-matrix action**; show every zero-sum vector is a contrast eigenvector; and characterize the exact nullspace under strict eigenvalue positivity using Stdlib.Forall and the shared finite-sum support lemmas. These statements are a finite real-vector realization, not a general matrix spectral theorem or probabilistic Gaussian model. Subsequent AI assistance developed and kernel-tested (subject to final pinned CI) the new full finite-list inverse, precision quadratic, linear-regression least-squares and Schur-vector theorems, and edited this README, report inventory, checker, and proof register. The assistant also authored the 26 finite two-cell conditional projection and total-variance proofs and wired them into the kernel and documentation audit without introducing a new summation algorithm. The assistant also prepared a 29-script nested finite projection continuation, including a source-ordered proof audit, CI registration and direct report mapping; its correctness depends on the pinned Rocq kernel. The assistant additionally drafted 31 bilinear finite covariance, affine predictor, pull-out and total-covariance theorem scripts, with a documented source-to-report mapping and CI check. The assistant additionally authored 30 finite conditional residual/fitted covariance and uniquely optimal projection proofs and registered their source documentation and CI checks; only the Rocq kernel establishes formal correctness. AI assistance subsequently produced 33 new general covariance-block linear-regression and Schur information-gain theorem scripts, updated their full source-order register and reporting inventory, and pinned their kernel build. No continuous Gaussian random-variable model or empirical IQ interpretation was independently proved.
+
+## November 27, 2026 — MathComp probability module accepted locally
+
+On November 27, 2026, computer10 compiled the exact six-theorem MathComp module at revision `9f5a5508fcb0e5fc8b079fe4090c10aa0a7ef0e1` using Rocq 9.2.0 and MathComp-Analysis 1.18.0. The researcher supplied the successful terminal transcript (exit status 0, GaussianPosteriorMeasure.vo, 75 KiB). All six theorem scripts passed, including the centered residual density, scalar observation/residual density factorization and marginal observation measure. This is local kernel evidence, not a successful GitHub Actions run or a proof of full multivariate Gaussian residual independence. The six scripts are tracked separately from the 3,699 canonical Stdlib proof scripts; the three previously verified posterior results must not be double-counted.
+
+See [probability validation instructions](PROBABILITY_LIBRARY_VALIDATION.md) and [continuation record](CONTINUATION_20261126.md) for the next independent FormalML checks.

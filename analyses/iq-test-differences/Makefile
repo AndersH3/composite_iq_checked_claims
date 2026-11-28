@@ -4,9 +4,9 @@ PDF_DIR := output/pdf
 .PHONY: all data pdf smoke
 all: data pdf
 data:
-	$(PYTHON) simulate.py
+	PYTHONPATH=../.. $(PYTHON) simulate.py
 smoke:
-	$(PYTHON) simulate.py --rows-per-replicate 100000 --replicates 2 --block 50000 --workers 2
+	PYTHONPATH=../.. $(PYTHON) simulate.py --rows-per-replicate 100000 --replicates 2 --block 50000 --workers 2 --output-dir output/smoke
 pdf:
 	mkdir -p $(PDF_DIR)
 	$(LATEXMK) -xelatex -outdir=$(PDF_DIR) -interaction=nonstopmode -halt-on-error iq_test_differences.tex

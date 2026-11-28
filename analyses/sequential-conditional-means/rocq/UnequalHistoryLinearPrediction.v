@@ -2421,7 +2421,7 @@ Qed.
 *)
 Theorem lhp_rev : forall xs c, lhp (rev xs) c=lhp xs c.
 Proof.
- intros xs c; unfold lhp; rewrite rev_length; unfold vector_real_sum at 1; rewrite finite_sum_rev; reflexivity.
+ intros xs c; unfold lhp; rewrite length_rev; unfold vector_real_sum at 1; rewrite finite_sum_rev; reflexivity.
 Qed.
 
 (** [lhp_permutation] (theorem).
@@ -2521,7 +2521,7 @@ Qed.
 *)
 Theorem lhm_rev : forall xs k c, lhm (rev xs) k c=lhm xs k c.
 Proof.
- intros xs k c; unfold lhm; rewrite rev_length; unfold vector_real_sum at 1; rewrite finite_sum_rev; reflexivity.
+ intros xs k c; unfold lhm; rewrite length_rev; unfold vector_real_sum at 1; rewrite finite_sum_rev; reflexivity.
 Qed.
 
 (** [lhf_append] (theorem).

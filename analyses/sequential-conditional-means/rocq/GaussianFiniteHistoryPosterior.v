@@ -11,7 +11,7 @@
  residual variance; all nonzero denominator and nonempty-history
  conditions are stated in the precise propositions that need them.
  Library use: Reuse FiniteSum.finite_sum_app, vector_real_sum_append,
- Stdlib.List.app_length, plus_INR, GaussianConditionalKernel and
+ Stdlib.List.length_app, plus_INR, GaussianConditionalKernel and
  previously proved Gaussian innovation and covariance lemmas.
  Limitations: Results establish exact Gaussian density algebra,
  sufficient-statistic identity and variance/precision ordering only;
@@ -52,7 +52,7 @@ Theorem gsp_mass_append : forall xs ys:list R, gk_mass (xs++ys)=gk_mass xs+gk_ma
 Proof.
  intros xs ys.
  unfold gk_mass.
- rewrite app_length, plus_INR.
+ rewrite length_app, plus_INR.
  reflexivity.
 Qed.
 

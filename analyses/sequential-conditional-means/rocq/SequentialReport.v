@@ -689,7 +689,7 @@ Theorem sequential_recursive_history_sum_closed_form :
      r * a + INR j * sequential_prediction r c a.
 Proof.
  induction j as [|j IH]; intros r c a Hdr Hall.
- - simpl [sequential_recursive_history_sum].
+ - cbn [sequential_recursive_history_sum].
    simpl.
    ring.
  - assert (Hprev :

@@ -49,10 +49,14 @@ covariance proofs establish full PSD/PD necessity and sufficiency for
 concrete future-score lists of length at least two, plus the one-future-score variance PSD/PD iff and both singular endpoints.
 
 A separate [MathComp normalized posterior measure module](../mathcomp/GaussianPosteriorMeasure.v)
-uses the maintained Gaussian conjugacy theorem but remains outside the
-Stdlib 9.2 kernel count until its dedicated workflow passes. Neither
-step alone proves the full observed-sigma-algebra conditional
-expectation of a future Gaussian score.
+uses the maintained Gaussian conjugacy theorem. All six theorems were
+locally kernel-compiled on computer10 at revision `9f5a5508fcb0e5fc8b079fe4090c10aa0a7ef0e1`
+on November 27, 2026, with Rocq 9.2 and MathComp-Analysis 1.18.0.
+The independent `rocq check` also accepted all six constants and their
+imported dependency closure on the same date.
+These are counted separately from the canonical Stdlib proof inventory;
+dedicated CI acceptance remains outstanding. Neither step alone proves
+the full observed-sigma-algebra conditional expectation of a future Gaussian score.
 
 The new `GaussianConditionalKernel.v` specifies the latent common-factor
 Gaussian prior and arbitrary unequal-history likelihood for `0<c<1`,

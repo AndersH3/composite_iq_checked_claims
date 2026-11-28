@@ -98,14 +98,14 @@ Definition equicorr_regression_cross (r c b : R) : R := c-sequential_d r c*b.
  Mathematical meaning: The inverse matrix action preserves the true number of coordinates.
  Exact checked proposition: forall c : R, forall ys : list R, length (vector_equicorrelation_inverse c ys) = length ys.
  Premises and side conditions: True finite-list dimensions and coordinate totals are used throughout; all inverse eigenvalues, positivity and admissible correlation conditions are explicit in the theorem statement when needed.
- Proof/definition method: Use Stdlib.List.map_length directly.
+ Proof/definition method: Use Stdlib.List.length_map directly.
  Library reuse: Stdlib.List, Reals, Lra, Psatz, Field/Ring, and the maintained FiniteSum, SequentialReport, EquicorrelationSpectral and EquicorrelationVectors theorems.
  Boundary: Deterministic rank-one real vector and Schur quadratic algebra; no inference of Gaussian conditional laws, normal quantiles or empirical composite-score accuracy.
  *)
 Theorem vector_equicorrelation_inverse_length :
  forall c : R, forall ys : list R, length (vector_equicorrelation_inverse c ys) = length ys.
 Proof.
- intros c ys; unfold vector_equicorrelation_inverse; apply map_length.
+ intros c ys; unfold vector_equicorrelation_inverse; apply length_map.
 Qed.
 
 (**
@@ -113,14 +113,14 @@ Qed.
  Mathematical meaning: The original equicorrelation matrix action preserves the true number of coordinates.
  Exact checked proposition: forall c : R, forall xs : list R, length (vector_equicorrelation_action c xs) = length xs.
  Premises and side conditions: True finite-list dimensions and coordinate totals are used throughout; all inverse eigenvalues, positivity and admissible correlation conditions are explicit in the theorem statement when needed.
- Proof/definition method: Reuse Stdlib.List.map_length rather than an index-level matrix proof.
+ Proof/definition method: Reuse Stdlib.List.length_map rather than an index-level matrix proof.
  Library reuse: Stdlib.List, Reals, Lra, Psatz, Field/Ring, and the maintained FiniteSum, SequentialReport, EquicorrelationSpectral and EquicorrelationVectors theorems.
  Boundary: Deterministic rank-one real vector and Schur quadratic algebra; no inference of Gaussian conditional laws, normal quantiles or empirical composite-score accuracy.
  *)
 Theorem vector_equicorrelation_action_length :
  forall c : R, forall xs : list R, length (vector_equicorrelation_action c xs) = length xs.
 Proof.
- intros c xs; unfold vector_equicorrelation_action; apply map_length.
+ intros c xs; unfold vector_equicorrelation_action; apply length_map.
 Qed.
 
 (**
@@ -552,7 +552,7 @@ Qed.
  Mathematical meaning: The concrete Schur residual matrix action preserves the number of future score coordinates.
  Exact checked proposition: forall r c : R, forall ys : list R, length (vector_schur_action r c ys)=length ys.
  Premises and side conditions: True finite-list dimensions and coordinate totals are used throughout; all inverse eigenvalues, positivity and admissible correlation conditions are explicit in the theorem statement when needed.
- Proof/definition method: Reuse Stdlib.List.map_length.
+ Proof/definition method: Reuse Stdlib.List.length_map.
  Library reuse: Stdlib.List, Reals, Lra, Psatz, Field/Ring, and the maintained FiniteSum, SequentialReport, EquicorrelationSpectral and EquicorrelationVectors theorems.
  Boundary: Deterministic rank-one real vector and Schur quadratic algebra; no inference of Gaussian conditional laws, normal quantiles or empirical composite-score accuracy.
  *)
@@ -560,7 +560,7 @@ Theorem vector_schur_action_length :
  forall r c : R, forall ys : list R,
  length (vector_schur_action r c ys)=length ys.
 Proof.
- intros r c ys; unfold vector_schur_action; apply map_length.
+ intros r c ys; unfold vector_schur_action; apply length_map.
 Qed.
 
 (**

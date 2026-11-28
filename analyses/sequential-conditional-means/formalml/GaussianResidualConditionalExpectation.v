@@ -26,6 +26,8 @@
  establishes formal verification.
 *)
 From Stdlib Require Import Reals Lra.
+(* Import the extended-real constructor Finite explicitly. *)
+From Coquelicot Require Import Rbar.
 From FormalML.ProbTheory Require Import
   ConditionalExpectation Independence RealRandomVariable RandomVariable
   Expectation SigmaAlgebras.
@@ -78,7 +80,7 @@ Proof.
   apply (is_conditional_expectation_plus prob obs_sub predictor innovation
            (fun w => Finite (predictor w))
            (const (FiniteExpectation prob innovation))).
-  - apply (is_conditional_expectation_id prob obs_sub predictor).
+  - apply is_conditional_expectation_id.
   - apply (is_conditional_expectation_independent_sa
              prob obs_sub innovation); exact innovation_independent.
 Qed.
@@ -175,12 +177,14 @@ Proof.
   apply
     (is_conditional_expectation_proper
        prob obs_sub
-       (rvplus predictor innovation) predictor
+       predictor (rvplus predictor innovation)
        (fun w => Finite (predictor w))
        (fun w => Finite (predictor w))).
-  - exact future_predictor_ae.
+  (* Transfer the CE of the adapted predictor TO the future variable;
+     the upstream congruence theorem takes source before destination. *)
+  - symmetry; exact future_predictor_ae.
   - apply all_almost; intro w; reflexivity.
-  - apply (is_conditional_expectation_id prob obs_sub predictor).
+  - apply is_conditional_expectation_id.
 Qed.
 
 (** [gaussian_regression_perfect_information_mean_almost_sure].
@@ -205,8 +209,14 @@ Theorem gaussian_regression_perfect_information_mean_almost_sure
        (rvplus predictor innovation))
     (fun w => Finite (predictor w)).
 Proof.
-  eapply is_conditional_expectation_unique.
-  - apply Condexp_cond_exp.
+  (* Fix the underlying random variable and supply its existing finite-
+     expectation certificate explicitly. Unconstrained eapply can leave
+     the integrability premise as the first goal before the CE identities. *)
+  apply (is_conditional_expectation_unique prob obs_sub
+           (rvplus predictor innovation) _ _
+           (isfe:=gaussian_regression_future_integrable)).
+  - apply Condexp_cond_exp;
+      exact gaussian_regression_future_integrable.
   - apply gaussian_regression_perfect_information_conditional_expectation.
     exact future_predictor_ae.
 Qed.
@@ -237,9 +247,53 @@ Theorem gaussian_regression_conditional_mean_almost_sure
       (rvplus predictor innovation))
     (fun w => Finite (predictor w)).
 Proof.
-  eapply is_conditional_expectation_unique.
-  - apply Condexp_cond_exp.
+  (* Fix the underlying random variable and supply its existing finite-
+     expectation certificate explicitly. Unconstrained eapply can leave
+     the integrability premise as the first goal before the CE identities. *)
+  apply (is_conditional_expectation_unique prob obs_sub
+           (rvplus predictor innovation) _ _
+           (isfe:=gaussian_regression_future_integrable)).
+  - apply Condexp_cond_exp;
+      exact gaussian_regression_future_integrable.
   - apply gaussian_regression_conditional_expectation_centered; assumption.
+Qed.
+
+(** [gaussian_regression_transfer_to_future] (theorem).
+ Mathematical meaning: Transfer the conditional expectation of an
+ adapted predictor plus centered independent innovation to an actual
+ measured future-score random variable agreeing almost surely with it.
+ Exact representation: Event-integral CE of future equals predictor.
+ Premises and side conditions: Measurable future, integrable summands,
+ residual independence, zero mean and almost-sure decomposition.
+ Proof/definition method: Reuse the centered regression identity and
+ the library's almost-sure congruence theorem.
+ Library reuse: FormalML is_conditional_expectation_proper, all_almost.
+ Boundary: Residual independence remains a hypothesis, not a consequence
+ inferred from zero covariance.
+*)
+Theorem gaussian_regression_transfer_to_future
+  (future : Omega -> R)
+  {future_rv : RandomVariable dom borel_sa future}
+  (future_decomposition :
+     almostR2 prob eq (rvplus predictor innovation) future)
+  (innovation_independent :
+    independent_sas prob
+      (pullback_rv_sub _ _ _ innovation_rv) obs_sub)
+  (innovation_centered : FiniteExpectation prob innovation = 0) :
+  is_conditional_expectation prob observed future
+    (fun w => Finite (predictor w)).
+Proof.
+  (* Supply the observed sigma-algebra inclusion and both random
+     variables explicitly, as in the earlier accepted congruence proof.
+     The source CE is transported to the actual future variable. *)
+  apply (is_conditional_expectation_proper prob obs_sub
+           (rvplus predictor innovation) future
+           (fun w => Finite (predictor w))
+           (fun w => Finite (predictor w))).
+  - exact future_decomposition.
+  - apply all_almost; intro w; reflexivity.
+  - apply gaussian_regression_conditional_expectation_centered;
+      assumption.
 Qed.
 
 End GaussianLinearConditionalExpectation.

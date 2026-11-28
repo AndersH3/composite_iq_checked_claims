@@ -163,4 +163,88 @@ exact: (@normal_prob_conjugate R 0 sigma0 sigma (total/n) V
            Hprior_nz Hnoise_nz mV).
 Qed.
 
+(** [gmc_normal_pdf_centered_residual] (theorem).
+ Mathematical meaning: Evaluating the normal density at its mean plus a
+ residual removes the location parameter. Exact representation:
+ normal_pdf m s (m+e) = normal_pdf 0 s e.
+ Premises and side conditions: Nonzero standard deviation, since the
+ library's zero-scale fallback is not a Dirac density.
+ Proof/definition method: Rewrite normal_pdfE and normal_fun, then
+ cancel the translated center in the exponent.
+ Library reuse: MathComp-Analysis normal_pdfE, normal_fun; MathComp addrK.
+ Boundary: Pointwise equality only, not a change-of-variables theorem.
+*)
+Theorem gmc_normal_pdf_centered_residual (m s e : R) :
+  s != 0 -> normal_pdf m s (m+e) = normal_pdf 0 s e.
+Proof.
+move=> Hs.
+(* Bind the real structure explicitly, as the density lemma is generic.
+   Isolate the translated exponent identity from density rewriting. *)
+(* Subtraction is addition of an opposite in MathComp. Restrict the
+   commutativity rewrite to the inner sum, not the outer subtraction. *)
+have Htranslate : m + e - m = e by rewrite [m + e]addrC addrK.
+by rewrite (@normal_pdfE R m s Hs) (@normal_pdfE R 0 s Hs)
+           /normal_fun Htranslate subr0.
+Qed.
+
+(** [gmc_gaussian_observation_residual_density_factor] (theorem).
+ Mathematical meaning: In the scalar Gaussian prior/noisy-observation
+ construction, the joint density evaluated at a posterior-center-plus-
+ residual coordinate factors into an observation density and a centered
+ posterior-scale residual density.
+ Exact representation: The prior-likelihood product at t=post_mean+e
+ equals the product of the marginal observation normal density and the
+ centered residual normal density.
+ Premises and side conditions: Prior and noise scales are nonzero.
+ Proof/definition method: Apply upstream pointwise normal conjugacy
+ and the centered residual translation above.
+ Library reuse: normal_pdf_conjugate, post_stddev_gt0, normal_pdfE.
+ Boundary: Density factorization at transformed coordinates. A
+ measure-level change of variables (unit Jacobian) and identification of
+ the joint law are still needed to infer independent random variables.
+*)
+Theorem gmc_gaussian_observation_residual_density_factor
+    (m0 s0 s x e : R) :
+  s0 != 0 -> s != 0 ->
+  normal_pdf (post_mean m0 s0 x s + e) s x *
+    normal_pdf m0 s0 (post_mean m0 s0 x s + e) =
+  normal_pdf m0 (Num.sqrt (s0 ^+ 2 + s ^+ 2)) x *
+    normal_pdf 0 (post_stddev s0 s) e.
+Proof.
+move=> Hs0 Hs.
+rewrite (@normal_pdf_conjugate R m0 s0 s x
+  (post_mean m0 s0 x s + e) Hs0 Hs).
+(* Obtain positivity from the pinned upstream lemma; nonzero is the
+   sole extra premise of the centered-density identity. *)
+have Hp0 : 0 < post_stddev s0 s :=
+  @post_stddev_gt0 R s0 s Hs0 Hs.
+have Hp : post_stddev s0 s != 0 by rewrite lt0r_neq0.
+(* Use explicit arguments of the section-local theorem, avoiding
+   implicit inference of its scale from the nonzero premise. *)
+by rewrite (@gmc_normal_pdf_centered_residual
+  (post_mean m0 s0 x s) (post_stddev s0 s) e Hp).
+Qed.
+
+(** [gmc_gaussian_observation_marginal_measure] (theorem).
+ Mathematical meaning: Integrating the Gaussian likelihood measure
+ over the normal prior gives the normalized marginal observation law.
+ Exact representation: For measurable V, integrate normal_prob (m+t)
+ s V under normal_prob m0 s0; the result has center m0+m and scale
+ sqrt(s0^2+s^2).
+ Premises and side conditions: Both scales nonzero; V measurable.
+ Proof/definition method: Direct specialization of upstream convolution.
+ Library reuse: MathComp-Analysis normal_probD.
+ Boundary: This does not identify an arbitrary jointly Gaussian vector
+ or prove its residual independence.
+*)
+Theorem gmc_gaussian_observation_marginal_measure
+    (m0 s0 m s : R) (V : set R) :
+  s0 != 0 -> s != 0 -> measurable V ->
+  (\int[normal_prob m0 s0]_t normal_prob (m+t) s V =
+    normal_prob (m0+m) (Num.sqrt (s0 ^+ 2 + s ^+ 2)) V)%E.
+Proof.
+move=> Hs0 Hs mV.
+exact: (@normal_probD R m0 s0 m s V Hs0 Hs mV).
+Qed.
+
 End EquicorrelatedGaussianPosterior.

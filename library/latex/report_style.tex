@@ -6,7 +6,7 @@
   numbers=noenddot,listof=totoc,bibliography=totoc]{scrbook}
 \usepackage{iftex}
 \RequireXeTeX
-\usepackage[margin=18mm,top=19mm,bottom=20mm,headheight=16pt,headsep=7mm]{geometry}
+\usepackage[verbose,margin=16mm,headheight=16pt,headsep=7mm]{geometry}
 \usepackage{fontspec}
 \setmainfont{lmroman10-regular.otf}[BoldFont=lmroman10-bold.otf,
   ItalicFont=lmroman10-italic.otf,BoldItalicFont=lmroman10-bolditalic.otf]
@@ -39,7 +39,7 @@
 \definecolor{pale}{HTML}{EFF5F7}
 \newcommand{\ProjectAuthor}{Anders Hellström}
 \hypersetup{unicode=true,colorlinks=true,linkcolor=ink,citecolor=teal,
-  urlcolor=teal,pdfauthor={Anders Hellström; AI-assisted research and drafting}}
+  urlcolor=teal,pdfauthor={Anders Hellström}}
 \clearpairofpagestyles
 \automark[chapter]{chapter}
 \renewcommand*{\chaptermarkformat}{}
@@ -131,9 +131,10 @@
       this report specifies its own assumptions, references and verification scope.
     \end{resultbox}
     \vfill
-    Prepared at the request of \textbf{\ProjectAuthor}\\
+    Prepared at the request of\\
+    \textbf{\ProjectAuthor}\\
     Report date: \textbf{\@date}\\
-    Format: XeLaTeX, KOMA-Script \texttt{scrbook}; A4, narrow margins
+    Format: XeLaTeX, KOMA-Script \texttt{scrbook}; A4, 16 mm margins
   \end{titlepage}%
 }
 \makeatother

@@ -55,6 +55,9 @@ jobs:
           docker run --rm -v "$PWD:/workspace:ro" rocq/rocq-prover:9.2.0 sh -euc '
             opam repository set-url rocq-released https://rocq-prover.org/opam/released -y
             opam update -y
+            # Keep legacy Coq entry points in the same pinned Rocq runtime.
+            opam install -y -j 2 rocq-core.9.2.0 rocq-runtime.9.2.0 rocq-stdlib.9.2.0 coq-core.9.2.0
+            opam exec -- coqc --version
             git clone --depth 1 https://github.com/IBM/FormalML.git /tmp/FormalML
             cd /tmp/FormalML
             git fetch --depth 1 origin 8ee433dc802fca35f6bceb6dacb69d3c1315e886
@@ -76,7 +79,22 @@ jobs:
             mkdir -p /tmp/formalml-gaussian
             cp /workspace/analyses/sequential-conditional-means/formalml/GaussianResidualConditionalExpectation.v /tmp/formalml-gaussian/
             cp /workspace/analyses/sequential-conditional-means/formalml/GaussianProductConditionalExpectation.v /tmp/formalml-gaussian/
+            cp /workspace/analyses/sequential-conditional-means/formalml/AuditResidualAssumptions.v /tmp/formalml-gaussian/
+            cp /workspace/analyses/sequential-conditional-means/formalml/AuditProductAssumptions.v /tmp/formalml-gaussian/
+            cp /workspace/analyses/sequential-conditional-means/formalml/ProductLawIndependence.v /tmp/formalml-gaussian/
+            cp /workspace/analyses/sequential-conditional-means/formalml/JointLawConditionalExpectation.v /tmp/formalml-gaussian/
+            cp /workspace/analyses/sequential-conditional-means/formalml/AuditProductLawIndependence.v /tmp/formalml-gaussian/
+            cp /workspace/analyses/sequential-conditional-means/formalml/AuditJointLawConditionalExpectation.v /tmp/formalml-gaussian/
             cd /tmp/formalml-gaussian
             opam exec -- rocq compile -R /tmp/FormalML/rocq FormalML GaussianResidualConditionalExpectation.v
             opam exec -- rocq compile -R /tmp/FormalML/rocq FormalML GaussianProductConditionalExpectation.v
+            opam exec -- rocq compile -R /tmp/FormalML/rocq FormalML ProductLawIndependence.v
+            opam exec -- rocq compile -R /tmp/FormalML/rocq FormalML JointLawConditionalExpectation.v
+            # Independently check compiled objects. Audit the axiom closures
+            # in separate processes, without costly signature printing.
+            opam exec -- rocq check -R /tmp/FormalML/rocq FormalML GaussianResidualConditionalExpectation GaussianProductConditionalExpectation ProductLawIndependence JointLawConditionalExpectation
+            opam exec -- rocq compile -R /tmp/FormalML/rocq FormalML AuditResidualAssumptions.v
+            opam exec -- rocq compile -R /tmp/FormalML/rocq FormalML AuditProductAssumptions.v
+            opam exec -- rocq compile -R /tmp/FormalML/rocq FormalML AuditProductLawIndependence.v
+            opam exec -- rocq compile -R /tmp/FormalML/rocq FormalML AuditJointLawConditionalExpectation.v
           '

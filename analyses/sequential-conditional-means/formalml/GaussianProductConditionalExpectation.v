@@ -27,6 +27,8 @@
  only after the exact-source Rocq kernel workflow succeeds.
 *)
 From Stdlib Require Import Reals Lia Lra.
+(* Import the extended-real constructor Finite explicitly. *)
+From Coquelicot Require Import Rbar.
 From FormalML.ProbTheory Require Import
   ConditionalExpectation Independence ProductSpace
   RandomVariable RealRandomVariable Expectation SigmaAlgebras.
@@ -81,16 +83,25 @@ Section ProductGaussianRegression.
   Local Instance product_predictor_full_rv :
     RandomVariable full_sa borel_sa product_gaussian_predictor.
   Proof.
-    apply (RandomVariable_sa_sub full_probability observed_sub).
-    exact product_predictor_observed_rv.
+    (* Fix the source sigma algebra before typeclass resolution. Otherwise
+       the generic discrete-space random-variable instance can determine
+       dom2 prematurely, although only observed_sa is justified here.
+       Reuse the library's inclusion theorem with the adapted certificate. *)
+    exact (RandomVariable_sa_sub (dom2:=observed_sa)
+             observed_sub product_gaussian_predictor
+             (rv_x:=product_predictor_observed_rv)).
   Qed.
 
+  (** The innovation is exactly the second product projection. Keep its
+      measurability certificate definitionally identical to the library's
+      snd_rv certificate, rather than wrapping it in an opaque proof.
+      The independent-sigma-algebra statement contains the inclusion
+      certificates in dependent event terms; conversion must see the
+      same certificate on both sides. No proof-irrelevance axiom is
+      needed for this alignment. *)
   Local Instance product_innovation_full_rv :
-    RandomVariable full_sa borel_sa product_gaussian_innovation.
-  Proof.
-    unfold product_gaussian_innovation.
-    exact (snd_rv history_sa borel_sa).
-  Qed.
+    RandomVariable full_sa borel_sa product_gaussian_innovation :=
+    snd_rv history_sa borel_sa.
 
   (** [product_gaussian_innovation_independent] (lemma).
    This is the crucial measure-theoretic independence assertion for
@@ -149,9 +160,18 @@ Section ProductGaussianRegression.
       (rvplus product_gaussian_predictor product_gaussian_innovation)
       (fun w => Finite (product_gaussian_predictor w)).
   Proof.
-    apply gaussian_regression_conditional_expectation_centered.
-    - apply product_gaussian_innovation_independent.
-    - exact innovation_centered.
+    (* The CE conclusion alone does not determine the inclusion witness
+       or the finite-expectation certificate used in FiniteExpectation.
+       Instantiate the already compiled generic theorem explicitly,
+       retaining the exact projection certificate in its independence
+       premise. No additional integrability argument is necessary. *)
+    exact (@gaussian_regression_conditional_expectation_centered
+      (History * R)%type full_sa
+      full_probability observed_sa observed_sub
+      product_gaussian_predictor product_gaussian_innovation
+      product_predictor_observed_rv product_predictor_full_rv
+      product_innovation_full_rv predictor_integrable innovation_integrable
+      product_gaussian_innovation_independent innovation_centered).
   Qed.
 
   (** Integrability of the future score is established centrally:
@@ -185,8 +205,14 @@ Section ProductGaussianRegression.
          (rvplus product_gaussian_predictor product_gaussian_innovation))
       (fun w => Finite (product_gaussian_predictor w)).
   Proof.
-    apply gaussian_regression_conditional_mean_almost_sure.
-    - apply product_gaussian_innovation_independent.
-    - exact innovation_centered.
+    (* Use the same explicit product-space instantiation for the
+       canonical CE theorem, avoiding the identical inference ambiguity. *)
+    exact (@gaussian_regression_conditional_mean_almost_sure
+      (History * R)%type full_sa
+      full_probability observed_sa observed_sub
+      product_gaussian_predictor product_gaussian_innovation
+      product_predictor_observed_rv product_predictor_full_rv
+      product_innovation_full_rv predictor_integrable innovation_integrable
+      product_gaussian_innovation_independent innovation_centered).
   Qed.
 End ProductGaussianRegression.

@@ -1,4 +1,4 @@
-name: Gaussian posterior measure (MathComp-Analysis)
+name: Gaussian probability measures (MathComp-Analysis)
 
 on:
   push:
@@ -12,12 +12,12 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
   normalized-gaussian-posterior:
-    name: MathComp Gaussian posterior kernel
+    name: MathComp Gaussian posterior and residual kernels
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -32,18 +32,63 @@ jobs:
             echo 'No extra axioms or unfinished Gaussian probability proofs are allowed.' >&2
             exit 1
           fi
-          test "$(grep -c '^Theorem ' analyses/sequential-conditional-means/mathcomp/GaussianPosteriorMeasure.v)" -eq 3
+          test "$(grep -c '^Theorem ' analyses/sequential-conditional-means/mathcomp/GaussianPosteriorMeasure.v)" -eq 6
 
-      - name: Compile normalized posterior-measure theorems with pinned MathComp-Analysis
+      - name: Compile, independently check and audit Gaussian probability measures
         shell: bash
         run: |
           docker run --rm -v "$PWD:/workspace:ro" rocq/rocq-prover:9.2.0 sh -euc '
             opam repository set-url rocq-released https://rocq-prover.org/opam/released -y
             opam update -y
-            opam install -y -j 3 rocq-core.9.2.0 rocq-mathcomp-analysis.1.18.0
+            # Legacy Makefiles prefer coq_makefile/coqtop if available.
+            # Install official compatibility commands before dependencies.
+            opam install -y -j 3 rocq-core.9.2.0 rocq-runtime.9.2.0 rocq-stdlib.9.2.0 coq-core.9.2.0
+            opam exec -- coqc --version
+            opam install -y -j 3 rocq-core.9.2.0 rocq-runtime.9.2.0 rocq-stdlib.9.2.0 coq-core.9.2.0 rocq-mathcomp-analysis.1.18.0
             mkdir -p /tmp/gaussian-mathcomp
-            cp /workspace/analyses/sequential-conditional-means/mathcomp/GaussianPosteriorMeasure.v /tmp/gaussian-mathcomp/
+            cp /workspace/analyses/sequential-conditional-means/mathcomp/*.v /tmp/gaussian-mathcomp/
             cd /tmp/gaussian-mathcomp
             opam exec -- rocq --version
             opam exec -- rocq compile GaussianPosteriorMeasure.v
+            opam exec -- rocq compile GaussianResidualMeasure.v
+            opam exec -- rocq compile GaussianOriginalResidualMeasure.v
+            opam exec -- rocq compile GaussianJointDensityMeasure.v
+            opam exec -- rocq compile GaussianResidualPushforward.v
+            opam exec -- rocq compile GaussianPosteriorKernel.v
+            opam exec -- rocq compile GaussianFirstMoment.v
+            opam exec -- rocq compile GaussianSignedMean.v
+            opam exec -- rocq compile GaussianLocationMean.v
+            opam exec -- rocq compile GaussianResidualIntegral.v
+            opam exec -- rocq compile GaussianProductHistory.v
+            opam exec -- rocq compile GaussianScalarConditionalMean.v
+            opam exec -- rocq compile GaussianObservationSigma.v
+            opam exec -- rocq compile GaussianHistoryJointLaw.v
+            opam exec -- rocq compile GaussianFiniteStandard.v
+            opam exec -- rocq compile GaussianFiniteAffine.v
+            opam exec -- rocq compile GaussianFiniteIndependence.v
+            opam exec -- rocq compile GaussianSecondMoment.v
+            opam exec -- rocq compile GaussianCrossMoment.v
+            opam exec -- rocq compile GaussianVarianceReduction.v
+            opam exec -- rocq check GaussianObservationSigma GaussianVarianceReduction
+            # Keep transitive assumption audits in separate processes.
+            opam exec -- rocq compile AuditGaussianPosteriorMeasure.v
+            opam exec -- rocq compile AuditGaussianResidualMeasure.v
+            opam exec -- rocq compile AuditGaussianOriginalResidualMeasure.v
+            opam exec -- rocq compile AuditGaussianJointDensityMeasure.v
+            opam exec -- rocq compile AuditGaussianResidualPushforward.v
+            opam exec -- rocq compile AuditGaussianPosteriorKernel.v
+            opam exec -- rocq compile AuditGaussianFirstMoment.v
+            opam exec -- rocq compile AuditGaussianSignedMean.v
+            opam exec -- rocq compile AuditGaussianLocationMean.v
+            opam exec -- rocq compile AuditGaussianResidualIntegral.v
+            opam exec -- rocq compile AuditGaussianScalarConditionalMean.v
+            opam exec -- rocq compile AuditGaussianObservationSigma.v
+            opam exec -- rocq compile AuditGaussianProductHistory.v
+            opam exec -- rocq compile AuditGaussianHistoryJointLaw.v
+            opam exec -- rocq compile AuditGaussianFiniteStandard.v
+            opam exec -- rocq compile AuditGaussianFiniteAffine.v
+            opam exec -- rocq compile AuditGaussianFiniteIndependence.v
+            opam exec -- rocq compile AuditGaussianSecondMoment.v
+            opam exec -- rocq compile AuditGaussianCrossMoment.v
+            opam exec -- rocq compile AuditGaussianVarianceReduction.v
           '

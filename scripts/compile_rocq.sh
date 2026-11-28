@@ -1,6 +1,6 @@
 #!/bin/sh
 # Canonical Rocq source compiler for the shared math library and the four
-# specialized report libraries. Uses the complete explicit 42-module dependency order,
+# specialized report libraries. Uses the complete explicit 45-module dependency order,
 # never copies sources back into Git, and rejects duplicate module basenames.
 # This is a build utility, not a substitute for the Rocq kernel checker.
 set -eu
@@ -65,3 +65,4 @@ rocq compile TwoRatePrecision.v
 rocq compile StratifiedBernoulli.v
 rocq compile ThreeTestSchur.v
 rocq compile IQDifferenceAlgebra.v
+printf '%s\n' 'Rocq kernel compilation passed for all 45 modules.'

@@ -1099,7 +1099,11 @@ cat > "$charac_proof" <<'ROCQ_HILBERT_CONVEX_REVERSE'
       u v w H Hw (Horth w Hw)) as Hsq.
     pose proof (norm_ge_0 (minus u v)) as Hnv.
     pose proof (norm_ge_0 (minus u w)) as Hnw.
-    nra.
+    (* Strict monotonicity of products on nonnegative reals is the
+       exact library result needed; no nonlinear tactic is required. *)
+    apply Rnot_lt_le; intro Hlt.
+    apply (Rle_not_lt _ _ Hsq).
+    apply Rmult_le_0_lt_compat; assumption.
   }
   (* Reuse FormalML's infimum representation. Every candidate norm
      dominates the projected norm, and the candidate at v attains it. *)
@@ -1110,14 +1114,19 @@ cat > "$charac_proof" <<'ROCQ_HILBERT_CONVEX_REVERSE'
   simpl.
   unfold is_glb_Rbar, is_lb_Rbar in Hglb.
   destruct Hglb as [Hlower Hgreat].
-  apply Rbar_finite_eq.
-  apply Rbar_le_antisym.
-  - apply Hgreat.
+  (* Establish both bounds before destructing the extended infimum.
+     Infinite values contradict one of these finite bounds. *)
+  assert (Hupper : Rbar_le bound (norm (minus u v))).
+  { apply Hlower. exists v; split; [exact H | reflexivity]. }
+  assert (Hlower_v : Rbar_le (norm (minus u v)) bound).
+  { apply Hgreat.
     intros candidate [w [Hw Hcandidate]].
     subst candidate.
-    simpl; apply Hbound; exact Hw.
-  - apply Hlower.
-    exists v; split; [exact H | reflexivity].
+    simpl; apply Hbound; exact Hw. }
+  destruct bound; simpl in Hupper, Hlower_v |- *;
+    try contradiction.
+  (* The remaining equality is between finite extended reals. *)
+  f_equal; apply Rle_antisym; assumption.
 ROCQ_HILBERT_CONVEX_REVERSE
 charac_rewrite=$(mktemp)
 awk -v first="$charac_reverse" -v last="$charac_last" -v proof="$charac_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR > last {print}' rocq/CertRL/LM/hilbert.v > "$charac_rewrite"
@@ -1152,18 +1161,24 @@ cat > "$elim_neg_proof" <<'ROCQ_NEG_INFINITE_RECIPROCAL'
     destruct (u x) as [r| |]; simpl in *.
     + (* Finite negative tail: multiplying by eps and -r reduces
          reciprocal convergence to the already-known strict bound. *)
-      assert (Hepspos : 0 < eps) by apply cond_pos.
-      assert (Hepsnonzero : eps <> 0) by lra.
-      assert (Hinvpos : 0 < / eps)
-        by (apply Rinv_0_lt_compat; exact Hepspos).
+      change (r < - / (pos eps)) in H.
+      assert (Hepspos : 0 < pos eps) by apply cond_pos.
+      pose proof (Rinv_0_lt_compat _ Hepspos) as Hinvpos.
       assert (Hrneg : r < 0) by lra.
-      rewrite Rabs_Rinv.
-      rewrite (Rabs_left r) by exact Hrneg.
-      apply (Rmult_lt_reg_r (-r)); [lra |].
-      replace ((/ (-r))*(-r)) with 1 by (field; lra).
-      apply (Rmult_lt_compat_r eps _ _ Hepspos) in H.
-      replace ((- / eps)*eps) with (-1) in H by (field; lra).
-      nra.
+      assert (Htail : / (pos eps) < -r) by lra.
+      (* Reciprocation reverses order on the positive half-line.
+         Supply the absolute-value side condition explicitly, since
+         ssreflect's rewrite parser does not accept rewrite ... by. *)
+      pose proof (Rinv_0_lt_contravar _ _ Hinvpos Htail) as Hrecip.
+      rewrite Rinv_inv in Hrecip.
+      change (Rabs (/ r) < pos eps).
+      (* Rabs_Rinv is deprecated and has a nonzero premise.
+         Rewrite the absolute value of the reciprocal directly,
+         then use the unconditional Stdlib reciprocal/negation law. *)
+      pose proof (Rinv_lt_0_compat r Hrneg) as Hrinvneg.
+      rewrite (Rabs_left (/ r) Hrinvneg).
+      rewrite <- (Rinv_opp r).
+      exact Hrecip.
     + rewrite Rabs_R0; apply cond_pos.
     + rewrite Rabs_R0; apply cond_pos.
 ROCQ_NEG_INFINITE_RECIPROCAL
@@ -1183,3 +1198,553 @@ test -n "$hilbert_small"
 hilbert_small_next=$((hilbert_small + 1))
 sed -n "${hilbert_small_next}p" rocq/CertRL/LM/hilbert.v | grep -Fq 'absurd (0 = 0). rewrite H4 in H2.'
 sed -i "${hilbert_small},$((hilbert_small + 3))c\\     nra." rocq/CertRL/LM/hilbert.v
+
+# D176: Replace the brittle forward convex-projection proof as one
+# unit rather than patching its generated arithmetic goals piecemeal.
+# For positive inner product a and squared distance b > 0 choose
+# t = min(1,a/b). The established aux5 gives 2*a <= t*b <= a,
+# contradicting a > 0. If b = 0, the same lemma at t = 1 suffices.
+# Keep the original statement and D173 reverse implication intact.
+forward_start=$(awk -v first="$charac_start" 'NR > first && /^\+intros[.]$/ {print NR; exit}' rocq/CertRL/LM/hilbert.v)
+test -n "$forward_start"
+forward_end=$(awk -v first="$forward_start" 'NR > first && /^\+ intros Horth[.]$/ {print NR; exit}' rocq/CertRL/LM/hilbert.v)
+test -n "$forward_end"
+forward_last=$((forward_end - 1))
+sed -n "${forward_start},${forward_last}p" rocq/CertRL/LM/hilbert.v | grep -Fq 'apply charac_ortho_projection_convex_aux5'
+forward_proof=$(mktemp)
+cat > "$forward_proof" <<'ROCQ_HILBERT_CONVEX_FORWARD'
++ intros Hmin w Hw.
+  (* Name the real quantities so arithmetic never unfolds the Hilbert
+     structure or the norm definition. *)
+  set (a := inner (minus u v) (minus w v)).
+  set (b := norm (minus v w) * norm (minus v w)).
+  change (a <= 0).
+  assert (Hb : 0 <= b) by (unfold b; apply Rle_0_sqr).
+  destruct (Req_dec b 0) as [Hbzero | Hbnz].
+  - assert (Hstep : 2 * a <= 1 * b).
+    { unfold a, b.
+      apply charac_ortho_projection_convex_aux5;
+        try assumption; lra. }
+    rewrite Hbzero Rmult_0_r in Hstep.
+    apply (Rmult_le_reg_l 2); [apply Rlt_0_2 |].
+    rewrite Rmult_0_r; exact Hstep.
+  - assert (Hbpos : 0 < b) by
+      (destruct Hb as [Hb | Hb]; [exact Hb | exfalso; apply Hbnz; symmetry; exact Hb]).
+    destruct (Rle_lt_dec a 0) as [Ha | Ha].
+    + exact Ha.
+    + exfalso.
+      set (t := Rmin 1 (a / b)).
+      assert (Hratio : 0 < a / b)
+        by (apply Rdiv_lt_0_compat; assumption).
+      assert (Htpos : 0 < t).
+      { unfold t, Rmin.
+        destruct (Rle_dec 1 (a / b)); lra. }
+      assert (Htone : t <= 1) by (unfold t; apply Rmin_l).
+      assert (Hstep : 2 * a <= t * b).
+      { unfold a, b.
+        apply charac_ortho_projection_convex_aux5;
+          try assumption; lra. }
+      assert (Htbound : t <= a / b)
+        by (unfold t; apply Rmin_r).
+      assert (Hprod : t * b <= a).
+      { apply (Rmult_le_compat_r b) in Htbound; [| exact (Rlt_le _ _ Hbpos)].
+        unfold Rdiv in Htbound.
+        rewrite Rmult_assoc (Rinv_l b Hbnz) Rmult_1_r in Htbound.
+        exact Htbound. }
+      (* Isolate the final contradiction from the definitions of a,b,t. *)
+      pose proof (Rle_trans _ _ _ Hstep Hprod) as Hcontr.
+      clearbody a.
+      lra.
+ROCQ_HILBERT_CONVEX_FORWARD
+forward_rewritten=$(mktemp)
+awk -v first="$forward_start" -v last="$forward_last" -v proof="$forward_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR > last {print}' rocq/CertRL/LM/hilbert.v > "$forward_rewritten"
+mv "$forward_rewritten" rocq/CertRL/LM/hilbert.v
+rm "$forward_proof"
+
+# D177: The refactored projection uniqueness proof retains the section
+# nonemptiness premise in its exported type. Witness it with the
+# already-known minimizer v; do not add a hypothesis to the caller.
+hilbert_unique_line=$(grep -nF 'apply (ortho_projection_convex_unique phi phi_convex phi_compl u); intuition.' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
+test -n "$hilbert_unique_line"
+test "$(sed -n "${hilbert_unique_line}p" rocq/CertRL/LM/hilbert.v)" = 'apply (ortho_projection_convex_unique phi phi_convex phi_compl u); intuition.'
+sed -i "${hilbert_unique_line}c\\assert (Hnonempty : exists y : E, phi y) by (exists v; exact (proj1 Hv)).\\ndestruct Hv as [Hv_mem Hv_min].\\ndestruct Hv' as [Hv'_mem Hv'_min].\\neapply (ortho_projection_convex_unique phi Hnonempty phi_convex); eassumption." rocq/CertRL/LM/hilbert.v
+
+# D178: A constant predicate is either the universal or empty event.
+# The original negative branch unfolded the universal event instead
+# of pre_event_none. Use explicit pointwise equivalence and the
+# existing sigma-algebra closure facts in both branches.
+event_const_start=$(grep -n '^  Lemma sa_sigma_const ' rocq/ProbTheory/Event.v | cut -d: -f1)
+test -n "$event_const_start"
+event_const_first=$(awk -v first="$event_const_start" 'NR > first && /^  Proof[.]$/ {print NR+1; exit}' rocq/ProbTheory/Event.v)
+event_const_end=$(awk -v first="$event_const_first" 'NR >= first && /^  Qed[.]$/ {print NR; exit}' rocq/ProbTheory/Event.v)
+test -n "$event_const_first"
+test -n "$event_const_end"
+event_const_last=$((event_const_end - 1))
+sed -n "${event_const_first},${event_const_last}p" rocq/ProbTheory/Event.v | grep -Fq 'eapply sa_proper; [| apply sa_none].'
+event_const_proof=$(mktemp)
+cat > "$event_const_proof" <<'ROCQ_CONSTANT_EVENT'
+    destruct Plem as [HP | HnotP].
+    - eapply sa_proper; [| apply sa_all].
+      unfold pre_event_equiv, pre_Ω.
+      intro x; split; tauto.
+    - eapply sa_proper; [| apply sa_none].
+      unfold pre_event_equiv, pre_event_none.
+      intro x; split; tauto.
+ROCQ_CONSTANT_EVENT
+event_const_rewritten=$(mktemp)
+awk -v first="$event_const_first" -v last="$event_const_last" -v proof="$event_const_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR > last {print}' rocq/ProbTheory/Event.v > "$event_const_rewritten"
+mv "$event_const_rewritten" rocq/ProbTheory/Event.v
+rm "$event_const_proof"
+
+# D179: The orthogonal-complement characterization already establishes
+# equality to zero. Select the right disjunct of real nonpositivity
+# explicitly and retain the original compatibility certificate.
+orth2_start=$(grep -n '^Lemma charac_ortho_projection_subspace2:' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
+test -n "$orth2_start"
+orth2_end=$(awk -v first="$orth2_start" 'NR > first && /^Qed[.]$/ {print NR; exit}' rocq/CertRL/LM/hilbert.v)
+test -n "$orth2_end"
+orth2_branch=$(awk -v first="$orth2_start" -v last="$orth2_end" 'NR > first && NR < last && /^\+ destruct phi_compat as / {print NR; exit}' rocq/CertRL/LM/hilbert.v)
+test -n "$orth2_branch"
+test "$(sed -n "${orth2_branch}p" rocq/CertRL/LM/hilbert.v)" = '+ destruct phi_compat as ((G1,(z,G2)),M).'
+orth2_tail=$((orth2_end - 2))
+test "$(sed -n "${orth2_tail}p" rocq/CertRL/LM/hilbert.v)" = '  intuition.'
+test "$(sed -n "$((orth2_tail + 1))p" rocq/CertRL/LM/hilbert.v)" = '  apply charac_ortho_projection_subspace1; trivial.'
+sed -i "${orth2_tail},$((orth2_tail + 1))c\\  right; exact H3.\\n  apply charac_ortho_projection_subspace1; assumption." rocq/CertRL/LM/hilbert.v
+sed -i "${orth2_branch}c\\+ pose proof phi_compat as Hcompat.\\n  destruct Hcompat as ((G1,(z,G2)),M)." rocq/CertRL/LM/hilbert.v
+
+# D180 (refactored): Derive both direct-sum characterizations
+# from the already-proved orthogonal residual and trivial intersection
+# results. Avoid anonymous hypotheses and duplicate convexity proofs.
+orth_charac_first=$(grep -n '^Lemma direct_sum_with_orth_compl_charac1:' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
+orth_charac_second=$(grep -n '^Lemma direct_sum_with_orth_compl_charac2:' rocq/CertRL/LM/hilbert.v | cut -d: -f1)
+test -n "$orth_charac_first"
+test -n "$orth_charac_second"
+orth_charac1_body=$(awk -v first="$orth_charac_first" 'NR > first && /^split; intros[.]$/ {print NR; exit}' rocq/CertRL/LM/hilbert.v)
+orth_charac1_end=$(awk -v first="$orth_charac1_body" 'NR >= first && /^Qed[.]$/ {print NR; exit}' rocq/CertRL/LM/hilbert.v)
+orth_charac2_body=$(awk -v first="$orth_charac_second" 'NR > first && /^split; intros[.]$/ {print NR; exit}' rocq/CertRL/LM/hilbert.v)
+orth_charac2_end=$(awk -v first="$orth_charac2_body" 'NR >= first && /^Qed[.]$/ {print NR; exit}' rocq/CertRL/LM/hilbert.v)
+test -n "$orth_charac1_body"
+test -n "$orth_charac1_end"
+test -n "$orth_charac2_body"
+test -n "$orth_charac2_end"
+sed -n "${orth_charac1_body},${orth_charac1_end}p" rocq/CertRL/LM/hilbert.v | grep -Fq 'apply (ortho_projection_convex_unique phi phi_convex phi_compl u).'
+sed -n "${orth_charac2_body},${orth_charac2_end}p" rocq/CertRL/LM/hilbert.v | grep -Fq 'apply (ortho_projection_convex_unique phi phi_convex phi_compl u); trivial.'
+orth_charac1_proof=$(mktemp)
+cat > "$orth_charac1_proof" <<'ROCQ_ORTHOGONAL_CHARAC1'
+Proof.
+  intros u v Hv Hmin; split.
+  - intro Hu.
+    (* The difference belongs both to the subspace and its orthogonal
+       complement. Their intersection is the zero vector. *)
+    assert (Hmem : phi (minus u v)).
+    { destruct phi_compat as ((Hsub, [z Hz]), Hscale).
+      unfold minus; apply Hsub; assumption. }
+    assert (Horth : orth_compl (minus u v)).
+    { eapply direct_sum_with_orth_compl_decomp; eassumption. }
+    assert (Hzero : minus u v = @zero E).
+    { apply direct_sumable_with_orth_compl; assumption. }
+    (* Reuse precisely the cancellation pattern used in the upstream
+       ortho_projection_convex_unique proof. The explicit carrier
+       lambda is unnecessary and defeats canonical structure inference. *)
+    symmetry.
+    unfold minus in Hzero.
+    apply plus_reg_r with (opp v).
+    rewrite plus_opp_r.
+    exact Hzero.
+  - intro Heq; subst v; exact Hv.
+ROCQ_ORTHOGONAL_CHARAC1
+orth_charac2_proof=$(mktemp)
+cat > "$orth_charac2_proof" <<'ROCQ_ORTHOGONAL_CHARAC2'
+Proof.
+  intros u v Hv Hmin; split.
+  - intro Horth.
+    (* Orthogonal projection preserves the inner product against
+       every subspace vector, including the projected vector itself. *)
+    assert (Heq : forall w : E, phi w -> inner v w = inner u w).
+    { apply charac_ortho_projection_subspace2; assumption. }
+    assert (Hself : inner v v = 0).
+    { rewrite (Heq v Hv). apply Horth; exact Hv. }
+    apply PreHilbert.ax3 in Hself; exact Hself.
+  - intro Heq; subst v.
+    assert (Horth : orth_compl (minus u zero)).
+    { eapply direct_sum_with_orth_compl_decomp; eassumption. }
+    unfold minus in Horth.
+    rewrite opp_zero plus_zero_r in Horth.
+    exact Horth.
+ROCQ_ORTHOGONAL_CHARAC2
+orth_charac_rewritten=$(mktemp)
+awk -v f1="$orth_charac1_body" -v l1="$orth_charac1_end" -v p1="$orth_charac1_proof" -v f2="$orth_charac2_body" -v l2="$orth_charac2_end" -v p2="$orth_charac2_proof" '
+  NR == f1 {while ((getline line < p1) > 0) print line}
+  NR == f2 {while ((getline line < p2) > 0) print line}
+  (NR < f1 || NR >= l1) && (NR < f2 || NR >= l2) {print}
+' rocq/CertRL/LM/hilbert.v > "$orth_charac_rewritten"
+mv "$orth_charac_rewritten" rocq/CertRL/LM/hilbert.v
+rm "$orth_charac1_proof" "$orth_charac2_proof"
+
+# D181: A subpartition difference is either empty or the original
+# cell. Choose the disjunction branch explicitly and reuse the event
+# library's existing setoid difference identities.
+sigma_diff=$(grep -n '^Lemma pre_sub_partition_diff ' rocq/ProbTheory/SigmaAlgebras.v | cut -d: -f1)
+test -n "$sigma_diff"
+sigma_diff_first=$(awk -v first="$sigma_diff" 'NR > first && /^Proof[.]$/ {print NR+1; exit}' rocq/ProbTheory/SigmaAlgebras.v)
+test -n "$sigma_diff_first"
+sigma_diff_end=$(awk -v first="$sigma_diff_first" 'NR >= first && /^Qed[.]$/ {print NR; exit}' rocq/ProbTheory/SigmaAlgebras.v)
+test -n "$sigma_diff_end"
+test "$(sed -n "$((sigma_diff_end - 2))p" rocq/ProbTheory/SigmaAlgebras.v)" = '  - rewrite pre_event_diff_self; intuition.'
+test "$(sed -n "$((sigma_diff_end - 1))p" rocq/ProbTheory/SigmaAlgebras.v)" = '  - rewrite pre_event_diff_false_r; intuition.'
+sed -i "${sigma_diff_first},$((sigma_diff_end - 1))c\\  intros is_sub n.\\n  destruct (is_sub n) as [eqq | eqq].\\n  - right; rewrite eqq; apply pre_event_diff_self.\\n  - left; rewrite eqq; apply pre_event_diff_false_r." rocq/ProbTheory/SigmaAlgebras.v
+
+# D182: Countable unions of subpartition selections are subpartition
+# selections again. Decide whether any selected cell equals the
+# original cell, rather than extracting a witness from a double
+# negation of event equivalence. Explicitly transport pointwise
+# memberships using existing pre_event_equiv and pre_sub_partition.
+partition_start=$(grep -n '^Program Instance countable_partition_sa ' rocq/ProbTheory/SigmaAlgebras.v | cut -d: -f1)
+test -n "$partition_start"
+partition_first=$(awk -v first="$partition_start" 'NR > first && /^Next Obligation[.]$/ {print NR+1; exit}' rocq/ProbTheory/SigmaAlgebras.v)
+test -n "$partition_first"
+partition_end=$(awk -v first="$partition_first" 'NR >= first && /^Qed[.]$/ {print NR; exit}' rocq/ProbTheory/SigmaAlgebras.v)
+test -n "$partition_end"
+sed -n "${partition_first},${partition_end}p" rocq/ProbTheory/SigmaAlgebras.v | grep -Fq "assert (HH':~ ~ (exists n0 : nat, partish n0 n nn)) by intuition."
+partition_proof=$(mktemp)
+cat > "$partition_proof" <<'ROCQ_PARTITION_COUNTABLE_UNION'
+  unfold pre_in_partition_union in *.
+  apply choice in H.
+  destruct H as [partish pH].
+  exists (fun n => pre_union_of_collection (fun i => partish i n)).
+  split.
+  - intros n.
+    (* A union of selections of a fixed cell is full precisely when
+       a selected cell is equivalent to that full cell (or it is empty). *)
+    destruct (classic (exists i : nat,
+        pre_event_equiv (partish i n) (part n))) as [[i Hi] | Hnone].
+    + left; intro x; unfold pre_union_of_collection; split.
+      * intros [j Hj].
+        destruct (proj1 (pH j) n) as [Heq | Heq].
+        -- exact (proj1 (Heq x) Hj).
+        -- exfalso; exact (proj1 (Heq x) Hj).
+      * intro Hx; exists i; exact (proj2 (Hi x) Hx).
+    + right; intro x; unfold pre_union_of_collection, pre_event_none; split.
+      * intros [j Hj].
+        destruct (proj1 (pH j) n) as [Heq | Heq].
+        -- exfalso; apply Hnone; exists j; exact Heq.
+        -- exact (proj1 (Heq x) Hj).
+      * contradiction.
+  - (* Interchange the two existential indices, then transport each
+       row through its original event equivalence. *)
+    intro x; unfold pre_union_of_collection; split.
+    + intros [n [i Hx]].
+      exists i; apply (proj1 (proj2 (pH i) x)).
+      exists n; exact Hx.
+    + intros [i Hx].
+      destruct (proj2 (proj2 (pH i) x) Hx) as [n Hn].
+      exists n, i; exact Hn.
+ROCQ_PARTITION_COUNTABLE_UNION
+partition_rewritten=$(mktemp)
+awk -v first="$partition_first" -v last="$partition_end" -v proof="$partition_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR >= last {print}' rocq/ProbTheory/SigmaAlgebras.v > "$partition_rewritten"
+mv "$partition_rewritten" rocq/ProbTheory/SigmaAlgebras.v
+rm "$partition_proof"
+
+# D183: The tail of a finite event list padded by empty events has
+# probability zero. Prove the exact list equality with Stdlib
+# nth_overflow and Lia, then reuse FormalML's ps_none directly.
+# Avoid the unnecessary event setoid rewrite and implicit intuition.
+prob_list_start=$(grep -n '^Lemma ps_list_disjoint_union ' rocq/ProbTheory/ProbSpace.v | cut -d: -f1)
+test -n "$prob_list_start"
+prob_list_end=$(awk -v first="$prob_list_start" 'NR > first && /^Qed[.]$/ {print NR; exit}' rocq/ProbTheory/ProbSpace.v)
+test -n "$prob_list_end"
+prob_tail=$(awk -v first="$prob_list_start" -v last="$prob_list_end" 'NR > first && NR < last && /erewrite ps_proper; \[eapply ps_none \| \]; intros[.]/ {print NR; exit}' rocq/ProbTheory/ProbSpace.v)
+test -n "$prob_tail"
+test "$(sed -n "$((prob_tail - 1))p" rocq/ProbTheory/ProbSpace.v)" = '    + intros.'
+test "$(sed -n "$((prob_tail + 1))p" rocq/ProbTheory/ProbSpace.v)" = '      unfold list_collection.'
+test "$(sed -n "$((prob_tail + 2))p" rocq/ProbTheory/ProbSpace.v)" = '      rewrite nth_overflow; intuition.'
+sed -i "$((prob_tail - 1)),$((prob_tail + 2))c\\    + intro x.\\n      unfold list_collection.\\n      assert (Htail : nth (x + length l)%nat l ∅ = ∅).\\n      { apply nth_overflow; lia. }\\n      rewrite Htail.\\n      apply ps_none." rocq/ProbTheory/ProbSpace.v
+
+# D184: Antisymmetry of an almost-sure partial order holds on the
+# intersection of the two probability-one events. Use the underlying
+# PartialOrder equivalence in the reverse direction, without the
+# unnecessary transitivity step or anonymous intuition hypotheses.
+almost_part_start=$(grep -n '^  Global Instance almostR2_part ' rocq/ProbTheory/Almost.v | cut -d: -f1)
+test -n "$almost_part_start"
+almost_part_end=$(awk -v first="$almost_part_start" 'NR > first && /^  Qed[.]$/ {print NR; exit}' rocq/ProbTheory/Almost.v)
+test -n "$almost_part_end"
+almost_reverse=$(awk -v first="$almost_part_start" -v last="$almost_part_end" 'NR > first && NR < last && /intros \[\[P1 \[P1all eq_on1\]\] \[P2 \[P2all eq_on2\]\]\]/ {print NR; exit}' rocq/ProbTheory/Almost.v)
+test -n "$almost_reverse"
+sed -n "${almost_reverse},${almost_part_end}p" rocq/ProbTheory/Almost.v | grep -Fq 'transitivity (y a).'
+almost_part_proof=$(mktemp)
+cat > "$almost_part_proof" <<'ROCQ_ALMOST_ORDER'
+    - intros [[P1 [P1all eq_on1]] [P2 [P2all eq_on2]]].
+      exists (P1 ∩ P2); split.
+      + now apply ps_one_inter.
+      + intros a Ha.
+        change (P1 a /\ P2 a) in Ha.
+        destruct Ha as [Ha1 Ha2].
+        pose proof (R_part (x a) (y a)) as Hpart.
+        change (eqR (x a) (y a) <->
+          preR (x a) (y a) /\ preR (y a) (x a)) in Hpart.
+        apply (proj2 Hpart).
+        split; [exact (eq_on1 a Ha1) | exact (eq_on2 a Ha2)].
+ROCQ_ALMOST_ORDER
+almost_part_rewritten=$(mktemp)
+awk -v first="$almost_reverse" -v last="$almost_part_end" -v proof="$almost_part_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR >= last {print}' rocq/ProbTheory/Almost.v > "$almost_part_rewritten"
+mv "$almost_part_rewritten" rocq/ProbTheory/Almost.v
+rm "$almost_part_proof"
+
+# D185: Prove the lower-ray equivalences with real arithmetic before
+# applying the event setoid rewrite. The old intuition leaves a
+# real-order subgoal, so the next rewrite targets the wrong H1.
+# Also make the analogous open-interval and singleton proofs explicit.
+borel_closed=$(grep -n '^  Lemma sa_closed_intervals ' rocq/ProbTheory/BorelSigmaAlgebra.v | cut -d: -f1)
+borel_open=$(grep -n '^  Lemma sa_open_intervals ' rocq/ProbTheory/BorelSigmaAlgebra.v | cut -d: -f1)
+borel_point=$(grep -n '^  Lemma sa_le_pt ' rocq/ProbTheory/BorelSigmaAlgebra.v | cut -d: -f1)
+test -n "$borel_closed"
+test -n "$borel_open"
+test -n "$borel_point"
+borel_closed_line=$(awk -v first="$borel_closed" -v last="$borel_open" 'NR > first && NR < last && /^    red; intros; intuition[.]$/ {print NR; exit}' rocq/ProbTheory/BorelSigmaAlgebra.v)
+borel_open_line=$(awk -v first="$borel_open" -v last="$borel_point" 'NR > first && NR < last && /^    red; intros; intuition[.]$/ {print NR; exit}' rocq/ProbTheory/BorelSigmaAlgebra.v)
+test -n "$borel_closed_line"
+test -n "$borel_open_line"
+sed -i "${borel_closed_line}c\\    { intro x; split; intro Hx; lra. }" rocq/ProbTheory/BorelSigmaAlgebra.v
+sed -i "${borel_open_line}c\\    { intro x; split; intro Hx; lra. }" rocq/ProbTheory/BorelSigmaAlgebra.v
+borel_point_end=$(awk -v first="$borel_point" 'NR > first && /^  Qed[.]$/ {print NR; exit}' rocq/ProbTheory/BorelSigmaAlgebra.v)
+test -n "$borel_point_end"
+borel_point_line=$(awk -v first="$borel_point" -v last="$borel_point_end" 'NR > first && NR < last && /^      intuition[.]$/ {print NR; exit}' rocq/ProbTheory/BorelSigmaAlgebra.v)
+test -n "$borel_point_line"
+sed -i "${borel_point_line}c\\      split; intro Hx; lra." rocq/ProbTheory/BorelSigmaAlgebra.v
+
+# D186: The preimage under a constant function is a constant
+# predicate. Reuse the established sa_sigma_const_classic theorem
+# rather than duplicating the empty/universal event proof.
+rvconst_start=$(grep -n '^  Global Instance rvconst c ' rocq/ProbTheory/RandomVariable.v | cut -d: -f1)
+test -n "$rvconst_start"
+rvconst_first=$(awk -v first="$rvconst_start" 'NR > first && /^  Proof[.]$/ {print NR+1; exit}' rocq/ProbTheory/RandomVariable.v)
+rvconst_end=$(awk -v first="$rvconst_first" 'NR >= first && /^  Qed[.]$/ {print NR; exit}' rocq/ProbTheory/RandomVariable.v)
+test -n "$rvconst_first"
+test -n "$rvconst_end"
+sed -n "${rvconst_first},${rvconst_end}p" rocq/ProbTheory/RandomVariable.v | grep -Fq 'destruct (sa_dec B c).'
+rvconst_proof=$(mktemp)
+cat > "$rvconst_proof" <<'ROCQ_CONSTANT_RV'
+    red; intro B.
+    change (sa_sigma dom (fun _ : Ts => B c)).
+    exact (sa_sigma_const_classic dom (B c)).
+ROCQ_CONSTANT_RV
+rvconst_rewritten=$(mktemp)
+awk -v first="$rvconst_first" -v last="$rvconst_end" -v proof="$rvconst_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR >= last {print}' rocq/ProbTheory/RandomVariable.v > "$rvconst_rewritten"
+mv "$rvconst_rewritten" rocq/ProbTheory/RandomVariable.v
+rm "$rvconst_proof"
+
+# D187: Real measurability of a constant follows directly from
+# constant-event measurability (D178). Avoid repeating the two
+# empty/universal event cases and their fragile setoid rewrites.
+real_const_start=$(grep -n '^    Instance constant_measurable ' rocq/ProbTheory/RealRandomVariable.v | cut -d: -f1)
+test -n "$real_const_start"
+real_const_first=$(awk -v first="$real_const_start" 'NR > first && /^    Proof[.]$/ {print NR+1; exit}' rocq/ProbTheory/RealRandomVariable.v)
+test -n "$real_const_first"
+real_const_end=$(awk -v first="$real_const_first" 'NR >= first && /^    Qed[.]$/ {print NR; exit}' rocq/ProbTheory/RealRandomVariable.v)
+test -n "$real_const_end"
+sed -n "${real_const_first},${real_const_end}p" rocq/ProbTheory/RealRandomVariable.v | grep -Fq 'destruct (Rle_dec c r).'
+sed -i "${real_const_first},$((real_const_end - 1))c\\      intro r.\\n      change (sa_sigma dom (fun _ : Ts => c <= r)).\\n      exact (sa_sigma_const_classic dom (c <= r))." rocq/ProbTheory/RealRandomVariable.v
+
+# D188: The expectation of an event indicator is its probability.
+# Retain the accepted finite-range sum reduction, but prove the final
+# event equivalence pointwise by splitting the event decision and
+# discharging 0/1 arithmetic explicitly. The bundled-event variant
+# then reuses this theorem via SimpleExpectation_ext, so the
+# finite-range computation is maintained in only one proof.
+indicator_file=rocq/ProbTheory/SimpleExpectation.v
+indicator_pre=$(grep -n '^  Lemma SimpleExpectation_pre_EventIndicator$' "$indicator_file" | cut -d: -f1)
+indicator_event=$(grep -n '^  Lemma SimpleExpectation_EventIndicator[[:space:]]*$' "$indicator_file" | cut -d: -f1)
+test -n "$indicator_pre"
+test -n "$indicator_event"
+indicator_pre_end=$(awk -v first="$indicator_pre" 'NR > first && /^  Qed[.]$/ {print NR; exit}' "$indicator_file")
+indicator_event_first=$(awk -v first="$indicator_event" 'NR > first && /^  Proof[.]$/ {print NR+1; exit}' "$indicator_file")
+indicator_event_end=$(awk -v first="$indicator_event_first" 'NR >= first && /^  Qed[.]$/ {print NR; exit}' "$indicator_file")
+test -n "$indicator_pre_end"
+test -n "$indicator_event_first"
+test -n "$indicator_event_end"
+test "$(sed -n "$((indicator_pre_end - 1))p" "$indicator_file")" = '    ; match_destr; intuition.'
+test "$(sed -n "$((indicator_event_end - 1))p" "$indicator_file")" = '    ; match_destr; intuition.'
+indicator_proof=$(mktemp)
+cat > "$indicator_proof" <<'ROCQ_INDICATOR_EXPECTATION'
+    destruct P as [P HP].
+    transitivity
+      (SimpleExpectation (EventIndicator dec)
+        (rv:=EventIndicator_pre_rv _ dec HP)
+        (frf:=EventIndicator_pre_frf dec)).
+    - apply SimpleExpectation_ext; intro x; reflexivity.
+    - apply SimpleExpectation_pre_EventIndicator.
+ROCQ_INDICATOR_EXPECTATION
+indicator_rewritten=$(mktemp)
+awk -v first="$indicator_event_first" -v last="$indicator_event_end" -v proof="$indicator_proof" 'NR == first {while ((getline line < proof) > 0) print line} NR < first || NR >= last {print}' "$indicator_file" > "$indicator_rewritten"
+mv "$indicator_rewritten" "$indicator_file"
+rm "$indicator_proof"
+test "$(sed -n "$((indicator_pre_end - 2))p" "$indicator_file" | sed 's/[[:space:]]*$//')" = '    ; apply ps_proper; intros ?; simpl'
+sed -i "$((indicator_pre_end - 2)),$((indicator_pre_end - 1))c\\    ; apply ps_proper; intro x; simpl\\n    ; destruct (dec x) as [Hx | Hx]; split; intro Hcase;\\n      try assumption; try reflexivity; try contradiction; lra." "$indicator_file"
+
+# D189: The bundled indicator uses the same function with different
+# finite-range and measurability certificates. SimpleExpectation_ext
+# is declared later in this module; SimpleExpectation_pf_irrel is
+# already available and is exactly the certificate-independence result.
+indicator_file=rocq/ProbTheory/SimpleExpectation.v
+indicator_bundled=$(grep -n '^  Lemma SimpleExpectation_EventIndicator[[:space:]]*$' "$indicator_file" | cut -d: -f1)
+test -n "$indicator_bundled"
+indicator_bundled_end=$(awk -v first="$indicator_bundled" 'NR > first && /^  Qed[.]$/ {print NR; exit}' "$indicator_file")
+test -n "$indicator_bundled_end"
+indicator_irrel=$(awk -v first="$indicator_bundled" -v last="$indicator_bundled_end" 'NR > first && NR < last && /^    - apply SimpleExpectation_ext; intro x; reflexivity[.]$/ {print NR; exit}' "$indicator_file")
+test -n "$indicator_irrel"
+sed -i "${indicator_irrel}c\\    - apply SimpleExpectation_pf_irrel." "$indicator_file"
+
+# D190: Classical filtering needs only a finite induction and
+# excluded middle at each head element. Keep the original logical
+# assumptions, and use the existing sublist and Forall2 constructors.
+# Explicitly transport list membership across equality; intuition
+# alone no longer closes the empty-list and membership obligations.
+filter_file=rocq/ProbTheory/SimpleExpectation.v
+filter_start=$(grep -n '^  Lemma classic_filter ' "$filter_file" | cut -d: -f1)
+subfilter_start=$(grep -n '^  Lemma classic_sub_filter ' "$filter_file" | cut -d: -f1)
+test -n "$filter_start"
+test -n "$subfilter_start"
+filter_first=$(awk -v first="$filter_start" 'NR > first && /^  Proof[.]$/ {print NR+1; exit}' "$filter_file")
+filter_end=$(awk -v first="$filter_first" 'NR >= first && /^  Qed[.]$/ {print NR; exit}' "$filter_file")
+subfilter_first=$(awk -v first="$subfilter_start" 'NR > first && /^  Proof[.]$/ {print NR+1; exit}' "$filter_file")
+subfilter_end=$(awk -v first="$subfilter_first" 'NR >= first && /^  Qed[.]$/ {print NR; exit}' "$filter_file")
+test -n "$filter_first"
+test -n "$filter_end"
+test -n "$subfilter_first"
+test -n "$subfilter_end"
+sed -n "${filter_first},${filter_end}p" "$filter_file" | grep -Fq 'destruct (classic (P a)).'
+sed -n "${subfilter_first},${subfilter_end}p" "$filter_file" | grep -Fq "destruct (classic_filter P a)"
+filter_proof=$(mktemp)
+cat > "$filter_proof" <<'ROCQ_CLASSICAL_FILTER'
+    induction l as [|a l IH].
+    - exists nil; split.
+      + apply sublist_nil.
+      + intro x; simpl; tauto.
+    - destruct IH as [l' [Hsub Hmem]].
+      destruct (classic (P a)) as [HPa | HnotPa].
+      + exists (a :: l'); split.
+        * apply sublist_cons; exact Hsub.
+        * intro x; simpl; split.
+          -- intros [Heq | Hin].
+             ++ subst x; split; [left; reflexivity | exact HPa].
+             ++ apply Hmem in Hin.
+                destruct Hin as [Hin HPx].
+                split; [right; exact Hin | exact HPx].
+          -- intros [[Heq | Hin] HPx].
+             ++ left; exact Heq.
+             ++ right; apply Hmem; split; assumption.
+      + exists l'; split.
+        * apply sublist_skip; exact Hsub.
+        * intro x; simpl; split.
+          -- intro Hin; apply Hmem in Hin.
+             destruct Hin as [Hin HPx].
+             split; [right; exact Hin | exact HPx].
+          -- intros [[Heq | Hin] HPx].
+             ++ subst x; contradiction.
+             ++ apply Hmem; split; assumption.
+ROCQ_CLASSICAL_FILTER
+subfilter_proof=$(mktemp)
+cat > "$subfilter_proof" <<'ROCQ_CLASSICAL_SUBFILTER'
+    induction l as [|a l IH].
+    - exists nil; split; constructor.
+    - destruct IH as [l' [Hsub Hmem]].
+      destruct (classic_filter P a) as [a' [Hasub Hamem]].
+      exists (a' :: l'); split.
+      + constructor; assumption.
+      + constructor; assumption.
+ROCQ_CLASSICAL_SUBFILTER
+filter_rewritten=$(mktemp)
+awk -v f1="$filter_first" -v l1="$filter_end" -v p1="$filter_proof" -v f2="$subfilter_first" -v l2="$subfilter_end" -v p2="$subfilter_proof" '
+  NR == f1 {while ((getline line < p1) > 0) print line}
+  NR == f2 {while ((getline line < p2) > 0) print line}
+  (NR < f1 || NR >= l1) && (NR < f2 || NR >= l2) {print}
+' "$filter_file" > "$filter_rewritten"
+mv "$filter_rewritten" "$filter_file"
+rm "$filter_proof" "$subfilter_proof"
+
+# D191: Rocq 9.2 Stdlib names the common left summand of
+# Rplus_lt_reg_l "r", not "x". For the first inequality reuse
+# strict multiplication monotonicity directly: c < 1 and phi > 0.
+# Preserve the two existing reciprocal estimates, correcting their
+# obsolete named arguments without changing the convergence proof.
+rbar_expect_file=rocq/ProbTheory/RbarExpectation.v
+rbar_scale_line=$(grep -nF '        -- apply Rplus_lt_reg_l with (x := - (c * phi omega)).' "$rbar_expect_file" | cut -d: -f1)
+test -n "$rbar_scale_line"
+test "$(sed -n "$((rbar_scale_line + 1))p" "$rbar_expect_file")" = '           ring_simplify.'
+test "$(sed -n "$((rbar_scale_line + 2))p" "$rbar_expect_file")" = '             replace (- c * phi omega + phi omega) with ((1-c)*phi omega) by lra.'
+test "$(sed -n "$((rbar_scale_line + 3))p" "$rbar_expect_file")" = '             apply Rmult_lt_0_compat; [lra | trivial].'
+test "$(grep -cF 'Rplus_lt_reg_l with (x :=' "$rbar_expect_file")" -eq 3
+sed -i "${rbar_scale_line},$((rbar_scale_line + 3))c\\        -- replace (phi omega) with (1 * phi omega) at 2 by ring.\\n           apply Rmult_lt_compat_r; assumption." "$rbar_expect_file"
+sed -i 's/Rplus_lt_reg_l with (x :=/Rplus_lt_reg_l with (r :=/g' "$rbar_expect_file"
+if grep -qF 'Rplus_lt_reg_l with (x :=' "$rbar_expect_file"; then
+  exit 1
+fi
+
+# D192: A nonnegative extended-real random variable with finite
+# expectation cannot have positive probability of infinity. Keep
+# the accepted positive-probability contradiction; in the remaining
+# branch combine Rnot_lt_le with ps_pos using real antisymmetry.
+finite_inf_file=rocq/ProbTheory/RbarExpectation.v
+finite_inf_start=$(grep -n '^   Lemma finite_Rbar_NonnegExpectation_never_inf$' "$finite_inf_file" | cut -d: -f1)
+test -n "$finite_inf_start"
+finite_inf_end=$(awk -v first="$finite_inf_start" 'NR > first && /^   Qed[.]$/ {print NR; exit}' "$finite_inf_file")
+test -n "$finite_inf_end"
+test "$(sed -n "$((finite_inf_end - 3))p" "$finite_inf_file")" = '       - generalize (ps_pos (exist (sa_sigma _) (fun x : Ts => f x = p_infty) (sa_pinf_Rbar f rv))); intros.'
+test "$(sed -n "$((finite_inf_end - 2))p" "$finite_inf_file")" = '         assert (0 >= ps_P (exist (sa_sigma _) (fun x : Ts => f x = p_infty) (sa_pinf_Rbar f rv))) by lra.'
+test "$(sed -n "$((finite_inf_end - 1))p" "$finite_inf_file")" = '         intuition.'
+sed -i "$((finite_inf_end - 3)),$((finite_inf_end - 1))c\\       - apply Rle_antisym.\\n         + apply Rnot_lt_le; assumption.\\n         + apply ps_pos." "$finite_inf_file"
+
+# D193: Conditional monotone convergence needs only almost-sure
+# equality of the modified sequence and its pointwise nonnegativity
+# in this subproof. Rbar_rvlim_almost_proper and Rbar_rvlim_nnf
+# have no RandomVariable hypotheses. Drop the redundant intermediate
+# measurability assertion rather than repairing unused automation.
+# The outer theorem still retains its original measurability premises.
+condexp_file=rocq/ProbTheory/ConditionalExpectation.v
+condexp_mct=$(grep -n '^  Lemma Condexp_monotone_convergence$' "$condexp_file" | cut -d: -f1)
+test -n "$condexp_mct"
+condexp_mct_end=$(awk -v first="$condexp_mct" 'NR > first && /^  Qed[.]$/ {print NR; exit}' "$condexp_file")
+test -n "$condexp_mct_end"
+condexp_unused=$(awk -v first="$condexp_mct" -v last="$condexp_mct_end" 'NR > first && NR < last && /assert \(HH: forall n, RandomVariable dom2 Rbar_borel_sa \(f1. n\)\) by intuition[.]/ {print NR; exit}' "$condexp_file")
+test -n "$condexp_unused"
+test "$(sed -n "$((condexp_unused - 1))p" "$condexp_file")" = "      destruct nnfcen as [f1' [?[??]]]."
+test "$(sed -n "$((condexp_unused + 1))p" "$condexp_file")" = '      clear H1.'
+test "$(sed -n "$((condexp_unused + 2))p" "$condexp_file")" = '      apply Rbar_rvlim_almost_proper in H.'
+sed -i "${condexp_unused}d" "$condexp_file"
+
+# D194: No valid coordinate exists in a zero-length indexed vector.
+# The index-bound witnesses already contradict idx < 0, so discharge
+# the induction base case using Lia without unfolding independence or
+# dependent vector eliminators. Retain the accepted successor argument.
+product_vector_file=rocq/ProbTheory/ProductSpace.v
+product_vector_start=$(grep -n '^  Lemma ivector_nth_independent_rvs {' "$product_vector_file" | cut -d: -f1)
+test -n "$product_vector_start"
+product_vector_end=$(awk -v first="$product_vector_start" 'NR > first && /^  Qed[.]$/ {print NR; exit}' "$product_vector_file")
+test -n "$product_vector_end"
+product_vector_base=$(awk -v first="$product_vector_start" -v last="$product_vector_end" 'NR > first && NR < last && /^    - intros[.]$/ {print NR; exit}' "$product_vector_file")
+test -n "$product_vector_base"
+test "$(sed -n "$((product_vector_base + 1))p" "$product_vector_file")" = '      repeat red; intros.'
+test "$(sed -n "$((product_vector_base + 2))p" "$product_vector_file")" = '      unfold rv_preimage; simpl.'
+test "$(sed -n "$((product_vector_base + 3))p" "$product_vector_file")" = '      repeat match_destr; try lra; intuition.'
+sed -i "${product_vector_base},$((product_vector_base + 3))c\\    - intros; lia." "$product_vector_file"
+
+# D195: The integrability certificates for freezing_sa are already
+# explicit hypotheses of freezing_sa_alt. Pair-pattern reduction
+# identifies the integrands definitionally. Pass the certificates
+# explicitly instead of relying on typeclass search.
+freeze_file=rocq/ProbTheory/ProductSpace.v
+freeze_old="    destruct (freezing_sa sub2 sub3 X (fun '(ω2,ω) => Psi (ω2, Y ω)) H)."
+freeze_line=$(grep -nFx "$freeze_old" "$freeze_file" | cut -d: -f1)
+test -n "$freeze_line"
+freeze_proof=$(mktemp)
+cat > "$freeze_proof" <<'ROCQ_FREEZING_CERTIFICATES'
+    destruct (freezing_sa sub2 sub3 X (fun '(ω2,ω) => Psi (ω2, Y ω))
+      (isfe:=isfe) (isfe2:=isfe2) H).
+ROCQ_FREEZING_CERTIFICATES
+freeze_rewritten=$(mktemp)
+awk -v n="$freeze_line" -v proof="$freeze_proof" '
+  NR == n {while ((getline line < proof) > 0) print line; next}
+  {print}
+' "$freeze_file" > "$freeze_rewritten"
+mv "$freeze_rewritten" "$freeze_file"
+rm "$freeze_proof"

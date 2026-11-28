@@ -3035,8 +3035,8 @@ Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims
 
 | Declaration (proof script) | Refactoring / proof method | Library reuse | Scope and boundary |
 |---|---|---|---|
-| `vector_equicorrelation_inverse_length` (theorem) | Preserve input shape using Stdlib.map_length. | Stdlib.List/Reals/Field/Ring/Lra/Psatz, FiniteSum, EquicorrelationSpectral, EquicorrelationVectors and SequentialReport. | Deterministic finite-dimensional covariance inverse, precision, regression and Schur algebra; Gaussian conditional-law realization remains unproved. |
-| `vector_equicorrelation_action_length` (theorem) | Preserve covariance-action shape using Stdlib.map_length. | Stdlib.List/Reals/Field/Ring/Lra/Psatz, FiniteSum, EquicorrelationSpectral, EquicorrelationVectors and SequentialReport. | Deterministic finite-dimensional covariance inverse, precision, regression and Schur algebra; Gaussian conditional-law realization remains unproved. |
+| `vector_equicorrelation_inverse_length` (theorem) | Preserve input shape using Stdlib.length_map. | Stdlib.List/Reals/Field/Ring/Lra/Psatz, FiniteSum, EquicorrelationSpectral, EquicorrelationVectors and SequentialReport. | Deterministic finite-dimensional covariance inverse, precision, regression and Schur algebra; Gaussian conditional-law realization remains unproved. |
+| `vector_equicorrelation_action_length` (theorem) | Preserve covariance-action shape using Stdlib.length_map. | Stdlib.List/Reals/Field/Ring/Lra/Psatz, FiniteSum, EquicorrelationSpectral, EquicorrelationVectors and SequentialReport. | Deterministic finite-dimensional covariance inverse, precision, regression and Schur algebra; Gaussian conditional-law realization remains unproved. |
 | `vector_equicorrelation_inverse_affine` (theorem) | Derive componentwise affine inverse with Field and Stdlib.map_ext_in. | Stdlib.List/Reals/Field/Ring/Lra/Psatz, FiniteSum, EquicorrelationSpectral, EquicorrelationVectors and SequentialReport. | Deterministic finite-dimensional covariance inverse, precision, regression and Schur algebra; Gaussian conditional-law realization remains unproved. |
 | `vector_equicorrelation_inverse_sum` (theorem) | Derive true vector inverse-sum identity with finite-vector affine sum. | Stdlib.List/Reals/Field/Ring/Lra/Psatz, FiniteSum, EquicorrelationSpectral, EquicorrelationVectors and SequentialReport. | Deterministic finite-dimensional covariance inverse, precision, regression and Schur algebra; Gaussian conditional-law realization remains unproved. |
 | `vector_equicorrelation_inverse_left` (theorem) | Prove the exact left inverse on every finite real coordinate list. | Stdlib.List/Reals/Field/Ring/Lra/Psatz, FiniteSum, EquicorrelationSpectral, EquicorrelationVectors and SequentialReport. | Deterministic finite-dimensional covariance inverse, precision, regression and Schur algebra; Gaussian conditional-law realization remains unproved. |
@@ -4185,7 +4185,7 @@ Review: G08/G13 report obligations concerning heterogeneous success counts, cali
 | `sb_variance_four_gap_identity` (theorem) | Sharp variance-deficit certificate decomposes the distance from the Bernoulli quarter maximum into three weighted squared contrasts. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |
 | `sb_variance_four_bound` (theorem) | The sum of three hypothetical independent Bernoulli count variances obeys the sharp total-exposure quarter bound. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |
 
-## IQDifferenceAlgebra.v — 10 proof scripts
+## IQDifferenceAlgebra.v — 25 proof scripts
 
 | Declaration | Method and scope | Library reuse |
 |---|---|---|
@@ -4200,4 +4200,24 @@ Review: G08/G13 report obligations concerning heterogeneous success counts, cali
 | `iq_equicorrelation_domain` (Theorem) | Split the conjunction and use linear real arithmetic on the assumed products. | Stdlib lra. |
 | `iq_shared_mixture_average` (Theorem) | Use field normalization of the weighted sum. | Stdlib field arithmetic. |
 
-Initial draft: compiler status pending; this section does not alter historical verified counts.
+| `iq_absolute_shift` (Theorem) | Rewrite with the already proved common-shift identity. | iq_common_shift and Stdlib Rabs. |
+| `iq_absolute_scale` (Theorem) | Rewrite the signed scale identity, multiplicativity of absolute value, and absolute value of a nonnegative number. | iq_scaled_gap, Rabs_mult and Rabs_right from Stdlib. |
+| `iq_range_pair_square_bound` (Theorem) | Explicitly instantiate the canonical nonnegative member bound with the square integrand and establish square nonnegativity by real arithmetic. | FiniteSum.finite_sum_member_le, Stdlib List and nra. |
+| `iq_gap_heterogeneous_variance_nonnegative` (Theorem) | Use the exact square decomposition and nonnegativity of the remaining product. | Stdlib ring, Rle_0_sqr, Rplus_le_le_0_compat, Rmult_le_pos. |
+| `iq_two_component_scale_concavity` (Theorem) | Expand the deficit as a nonnegative squared difference. | Stdlib Rle_0_sqr and nra. |
+| `iq_parallel_variance_identity` (Theorem) | Translate the canonical centered pooling identity to the report's notation. | PooledMomentsAlgebra.pooled_between_centered_identity; Stdlib field and ring. |
+
+| `iq_weighted_scale_jensen_deficit` (Theorem) | Exact weighted two-scale dispersion identity. | Stdlib ring, centered-variance principle. |
+| `iq_weighted_scale_jensen_strict` (Theorem) | Positive mixture weights and distinct scales imply strict deficit. | Reuse preceding identity, Stdlib Rle_0_sqr, Rmult_integral, Rmult_lt_0_compat. |
+
+| `iq_extrema_exist` (Theorem) | Induction on the nonempty list with explicit head comparisons; attained extrema. | Stdlib List.In, Rle_dec, lra. |
+| `iq_extrema_unique` (Theorem) | Use both endpoint pairs' bounds to prove equality of their values. | Stdlib real order, lra. |
+| `iq_extrema_affine` (Theorem) | Transport endpoint membership and inequalities under a common affine map with nonnegative slope. | Stdlib in_map_iff, Rmult_le_compat_l, lra. |
+| `iq_extrema_nested_range` (Theorem) | Transfer both smaller-list endpoints to the containing list and compare realized ranges. | Stdlib List.incl, lra. |
+| `iq_pair_gaps_contains_distinct` (Theorem) | Induction over positions establishes a signed difference in either orientation. | Stdlib in_map_iff, in_or_app, List.In. |
+| `iq_extrema_pair_square_bound` (Theorem) | Split equal endpoints from distinct endpoints; reuse the nonnegative member sum bound. | iq_pair_gaps_contains_distinct, iq_range_pair_square_bound, FiniteSum.finite_sum_nonnegative, ring, nra. |
+| `iq_extrema_range_attains_pair_max` (Theorem) | Use the endpoint inequalities to dominate every squared member difference. | Stdlib Rmult_le_pos, nra. |
+
+Both appended mixture certificates passed the canonical kernel compilation at `0b22b3f64c6429d04071b5c5f56028e86a3b8301`. Computer10 Rocq 9.3.0 compiled the original 16 declarations at `799af85da583075b6ed94179a5483e2180267739` as part of the successful 45-module canonical build. All 18 are deterministic algebra and notation bridges; no continuous-probability formalization or independent new probability result is implied.
+
+The seven finite-extrema scripts introduced at `79f6d0a` and corrected at `2e61f81` passed the complete canonical Rocq 9.3.0 compilation on computer10 at `2a77faadfc50e85113022af286cfb02e95b08f54`. All 25 scripts in this module are now kernel-compiled. These are pointwise deterministic statements, not a Gaussian order-statistics proof; transitive assumption evidence remains pending.

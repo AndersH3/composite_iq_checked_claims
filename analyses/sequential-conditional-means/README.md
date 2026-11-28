@@ -60,18 +60,24 @@ probability-space axiom:
   equicorrelated multivariate Gaussian law; moreover, the pinned FormalML
   build must still kernel-compile its dependency closure.
 - [MathComp-Analysis's normalized Gaussian conjugacy theorem](mathcomp/GaussianPosteriorMeasure.v)
-  is used for a **candidate** genuine posterior-measure identity for a
-  *single observed sample-mean statistic*. The first two parameter reductions
-  have reached `Qed` during its workflow; the normalized-measure application
-  still requires successful kernel verification.
+  supports six **locally kernel-verified** results for a *single observed
+  sample-mean statistic*: posterior center and variance, normalized posterior
+  measure, centered residual density, observation/residual density factorization,
+  and marginal observation measure. Computer10 compiled the complete module
+  at revision `9f5a5508fcb0e5fc8b079fe4090c10aa0a7ef0e1` on November 27, 2026
+  with Rocq 9.2 and MathComp-Analysis 1.18.0 (exit 0; 75 KiB .vo).
+  A subsequent independent `rocq check` accepted all six constants and
+  their imported dependency closure. This does not establish independence
+  of the original score-vector residual.
 - [The pinned MathComp-QBS normal-mean integration theorem](qbs/GaussianPosteriorExpectation.v)
   provides a **candidate** exact Lebesgue first moment for the normalized
   posterior; this is not a replacement for a full conditional-expectation
   theorem on the original score-vector probability space.
 
 All three integrations are separately tested with pinned GitHub Actions.
-**None is counted as a new verified Gaussian probability theorem until its
-exact-revision CI succeeds.** No `Admitted`, new `Axiom`, or silently assumed
+The six MathComp results have local kernel evidence, recorded separately
+from the canonical proof inventory. **Dedicated exact-revision CI acceptance
+remains outstanding; FormalML and QBS are still candidates.** No `Admitted`, new `Axiom`, or silently assumed
 joint-Gaussian independence is allowed. The prior count of **292 checked
 D050–D056 Gaussian-specific statements** remains the verified baseline.
 
