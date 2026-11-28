@@ -43,11 +43,16 @@ Lemma gmc_standard_density_expression :
 Proof.
 have Hs : (1 : R) != 0 by exact: oner_neq0.
 apply/funext => x.
-rewrite (normal_pdfE 0 Hs) /normal_fun subr0 expr1n mul1rn.
-rewrite !fctE /=.
-congr (_ * _).
-congr expR.
-by rewrite mulNr mulrC.
+rewrite (normal_pdfE 0 Hs) /normal_fun subr0 expr1n.
+(* Natural scaling of the ring unit is definitionally the natural
+   cast: (1 *+ 2) = 2%:R. Expose both scalar exponents explicitly,
+   then use only the library's negation and commutativity laws. *)
+change (k * expR (- x ^+ 2 / (2%:R : R)) =
+        k * expR ((- (2%:R : R)^-1) * x ^+ 2)).
+have Harg : - x ^+ 2 / (2%:R : R) =
+    (- (2%:R : R)^-1) * x ^+ 2.
+{ by rewrite !mulNr mulrC. }
+by rewrite Harg.
 Qed.
 
 (** The exponent polynomial is differentiable with derivative -x.
