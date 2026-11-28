@@ -110,6 +110,12 @@ Definition sb_net (n m k p q r:R) : R := sb_success n m k p q r-sb_failure n m k
 *)
 Definition sb_offset (n m k p q r t:R) : R := sb_success n m k p q r-t*(sb_mass n m k).
 
+(** Centralize the repeated deterministic polynomial normalization. The
+    tactic only expands the existing shared definitions and invokes Stdlib
+    Ring; it changes no proposition or statistical assumption. *)
+Local Ltac sb_polynomial_normalize :=
+  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+
 (** [success_swap_cohorts] (theorem).
  Mathematical meaning: The success report statistic is invariant under simultaneous permutation of the first two strata.
  Exact proposition: Theorem success_swap_cohorts : forall (n m k p q r:R), sb_success n m k p q r = sb_success m n k q p r.
@@ -120,7 +126,7 @@ Definition sb_offset (n m k p q r t:R) : R := sb_success n m k p q r-t*(sb_mass 
 *)
 Theorem success_swap_cohorts : forall (n m k p q r:R), sb_success n m k p q r = sb_success m n k q p r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [success_rotate_cohorts] (theorem).
@@ -133,7 +139,7 @@ Qed.
 *)
 Theorem success_rotate_cohorts : forall (n m k p q r:R), sb_success n m k p q r = sb_success m k n q r p.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [success_zero_exposure_1] (theorem).
@@ -146,7 +152,7 @@ Qed.
 *)
 Theorem success_zero_exposure_1 : forall (n m k p q r:R), sb_success 0 m k p q r = sb_success 0 m k 0 q r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [success_zero_exposure_2] (theorem).
@@ -159,7 +165,7 @@ Qed.
 *)
 Theorem success_zero_exposure_2 : forall (n m k p q r:R), sb_success n 0 k p q r = sb_success n 0 k p 0 r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [success_zero_exposure_3] (theorem).
@@ -172,7 +178,7 @@ Qed.
 *)
 Theorem success_zero_exposure_3 : forall (n m k p q r:R), sb_success n m 0 p q r = sb_success n m 0 p q 0.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [success_exposure_rescale] (theorem).
@@ -185,7 +191,7 @@ Qed.
 *)
 Theorem success_exposure_rescale : forall (n m k p q r h:R), sb_success (h*n) (h*m) (h*k) p q r = h*(sb_success n m k p q r).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [failure_swap_cohorts] (theorem).
@@ -198,7 +204,7 @@ Qed.
 *)
 Theorem failure_swap_cohorts : forall (n m k p q r:R), sb_failure n m k p q r = sb_failure m n k q p r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [failure_rotate_cohorts] (theorem).
@@ -211,7 +217,7 @@ Qed.
 *)
 Theorem failure_rotate_cohorts : forall (n m k p q r:R), sb_failure n m k p q r = sb_failure m k n q r p.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [failure_zero_exposure_1] (theorem).
@@ -224,7 +230,7 @@ Qed.
 *)
 Theorem failure_zero_exposure_1 : forall (n m k p q r:R), sb_failure 0 m k p q r = sb_failure 0 m k 0 q r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [failure_zero_exposure_2] (theorem).
@@ -237,7 +243,7 @@ Qed.
 *)
 Theorem failure_zero_exposure_2 : forall (n m k p q r:R), sb_failure n 0 k p q r = sb_failure n 0 k p 0 r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [failure_zero_exposure_3] (theorem).
@@ -250,7 +256,7 @@ Qed.
 *)
 Theorem failure_zero_exposure_3 : forall (n m k p q r:R), sb_failure n m 0 p q r = sb_failure n m 0 p q 0.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [failure_exposure_rescale] (theorem).
@@ -263,7 +269,7 @@ Qed.
 *)
 Theorem failure_exposure_rescale : forall (n m k p q r h:R), sb_failure (h*n) (h*m) (h*k) p q r = h*(sb_failure n m k p q r).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [variance_swap_cohorts] (theorem).
@@ -276,7 +282,7 @@ Qed.
 *)
 Theorem variance_swap_cohorts : forall (n m k p q r:R), sb_variance n m k p q r = sb_variance m n k q p r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [variance_rotate_cohorts] (theorem).
@@ -289,7 +295,7 @@ Qed.
 *)
 Theorem variance_rotate_cohorts : forall (n m k p q r:R), sb_variance n m k p q r = sb_variance m k n q r p.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [variance_zero_exposure_1] (theorem).
@@ -302,7 +308,7 @@ Qed.
 *)
 Theorem variance_zero_exposure_1 : forall (n m k p q r:R), sb_variance 0 m k p q r = sb_variance 0 m k 0 q r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [variance_zero_exposure_2] (theorem).
@@ -315,7 +321,7 @@ Qed.
 *)
 Theorem variance_zero_exposure_2 : forall (n m k p q r:R), sb_variance n 0 k p q r = sb_variance n 0 k p 0 r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [variance_zero_exposure_3] (theorem).
@@ -328,7 +334,7 @@ Qed.
 *)
 Theorem variance_zero_exposure_3 : forall (n m k p q r:R), sb_variance n m 0 p q r = sb_variance n m 0 p q 0.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [variance_exposure_rescale] (theorem).
@@ -341,7 +347,7 @@ Qed.
 *)
 Theorem variance_exposure_rescale : forall (n m k p q r h:R), sb_variance (h*n) (h*m) (h*k) p q r = h*(sb_variance n m k p q r).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [second_swap_cohorts] (theorem).
@@ -354,7 +360,7 @@ Qed.
 *)
 Theorem second_swap_cohorts : forall (n m k p q r:R), sb_second n m k p q r = sb_second m n k q p r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [second_rotate_cohorts] (theorem).
@@ -367,7 +373,7 @@ Qed.
 *)
 Theorem second_rotate_cohorts : forall (n m k p q r:R), sb_second n m k p q r = sb_second m k n q r p.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [second_zero_exposure_1] (theorem).
@@ -380,7 +386,7 @@ Qed.
 *)
 Theorem second_zero_exposure_1 : forall (n m k p q r:R), sb_second 0 m k p q r = sb_second 0 m k 0 q r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [second_zero_exposure_2] (theorem).
@@ -393,7 +399,7 @@ Qed.
 *)
 Theorem second_zero_exposure_2 : forall (n m k p q r:R), sb_second n 0 k p q r = sb_second n 0 k p 0 r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [second_zero_exposure_3] (theorem).
@@ -406,7 +412,7 @@ Qed.
 *)
 Theorem second_zero_exposure_3 : forall (n m k p q r:R), sb_second n m 0 p q r = sb_second n m 0 p q 0.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [second_exposure_rescale] (theorem).
@@ -419,7 +425,7 @@ Qed.
 *)
 Theorem second_exposure_rescale : forall (n m k p q r h:R), sb_second (h*n) (h*m) (h*k) p q r = h*(sb_second n m k p q r).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_swap_cohorts] (theorem).
@@ -432,7 +438,7 @@ Qed.
 *)
 Theorem loss_swap_cohorts : forall (n m k p q r t:R), sb_loss n m k p q r t = sb_loss m n k q p r t.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_rotate_cohorts] (theorem).
@@ -445,7 +451,7 @@ Qed.
 *)
 Theorem loss_rotate_cohorts : forall (n m k p q r t:R), sb_loss n m k p q r t = sb_loss m k n q r p t.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_zero_exposure_1] (theorem).
@@ -458,7 +464,7 @@ Qed.
 *)
 Theorem loss_zero_exposure_1 : forall (n m k p q r t:R), sb_loss 0 m k p q r t = sb_loss 0 m k 0 q r t.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_zero_exposure_2] (theorem).
@@ -471,7 +477,7 @@ Qed.
 *)
 Theorem loss_zero_exposure_2 : forall (n m k p q r t:R), sb_loss n 0 k p q r t = sb_loss n 0 k p 0 r t.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_zero_exposure_3] (theorem).
@@ -484,7 +490,7 @@ Qed.
 *)
 Theorem loss_zero_exposure_3 : forall (n m k p q r t:R), sb_loss n m 0 p q r t = sb_loss n m 0 p q 0 t.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_exposure_rescale] (theorem).
@@ -497,7 +503,7 @@ Qed.
 *)
 Theorem loss_exposure_rescale : forall (n m k p q r t h:R), sb_loss (h*n) (h*m) (h*k) p q r t = h*(sb_loss n m k p q r t).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [dispersion_swap_cohorts] (theorem).
@@ -510,7 +516,7 @@ Qed.
 *)
 Theorem dispersion_swap_cohorts : forall (n m k p q r:R), sb_dispersion n m k p q r = sb_dispersion m n k q p r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [dispersion_rotate_cohorts] (theorem).
@@ -523,7 +529,7 @@ Qed.
 *)
 Theorem dispersion_rotate_cohorts : forall (n m k p q r:R), sb_dispersion n m k p q r = sb_dispersion m k n q r p.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [dispersion_zero_exposure_1] (theorem).
@@ -536,7 +542,7 @@ Qed.
 *)
 Theorem dispersion_zero_exposure_1 : forall (n m k p q r:R), sb_dispersion 0 m k p q r = sb_dispersion 0 m k 0 q r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [dispersion_zero_exposure_2] (theorem).
@@ -549,7 +555,7 @@ Qed.
 *)
 Theorem dispersion_zero_exposure_2 : forall (n m k p q r:R), sb_dispersion n 0 k p q r = sb_dispersion n 0 k p 0 r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [dispersion_zero_exposure_3] (theorem).
@@ -562,7 +568,7 @@ Qed.
 *)
 Theorem dispersion_zero_exposure_3 : forall (n m k p q r:R), sb_dispersion n m 0 p q r = sb_dispersion n m 0 p q 0.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [dispersion_exposure_rescale] (theorem).
@@ -575,7 +581,7 @@ Qed.
 *)
 Theorem dispersion_exposure_rescale : forall (n m k p q r h:R), sb_dispersion (h*n) (h*m) (h*k) p q r = h*h*(sb_dispersion n m k p q r).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [net_swap_cohorts] (theorem).
@@ -588,7 +594,7 @@ Qed.
 *)
 Theorem net_swap_cohorts : forall (n m k p q r:R), sb_net n m k p q r = sb_net m n k q p r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [net_rotate_cohorts] (theorem).
@@ -601,7 +607,7 @@ Qed.
 *)
 Theorem net_rotate_cohorts : forall (n m k p q r:R), sb_net n m k p q r = sb_net m k n q r p.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [net_zero_exposure_1] (theorem).
@@ -614,7 +620,7 @@ Qed.
 *)
 Theorem net_zero_exposure_1 : forall (n m k p q r:R), sb_net 0 m k p q r = sb_net 0 m k 0 q r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [net_zero_exposure_2] (theorem).
@@ -627,7 +633,7 @@ Qed.
 *)
 Theorem net_zero_exposure_2 : forall (n m k p q r:R), sb_net n 0 k p q r = sb_net n 0 k p 0 r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [net_zero_exposure_3] (theorem).
@@ -640,7 +646,7 @@ Qed.
 *)
 Theorem net_zero_exposure_3 : forall (n m k p q r:R), sb_net n m 0 p q r = sb_net n m 0 p q 0.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [net_exposure_rescale] (theorem).
@@ -653,7 +659,7 @@ Qed.
 *)
 Theorem net_exposure_rescale : forall (n m k p q r h:R), sb_net (h*n) (h*m) (h*k) p q r = h*(sb_net n m k p q r).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [offset_swap_cohorts] (theorem).
@@ -666,7 +672,7 @@ Qed.
 *)
 Theorem offset_swap_cohorts : forall (n m k p q r t:R), sb_offset n m k p q r t = sb_offset m n k q p r t.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [offset_rotate_cohorts] (theorem).
@@ -679,7 +685,7 @@ Qed.
 *)
 Theorem offset_rotate_cohorts : forall (n m k p q r t:R), sb_offset n m k p q r t = sb_offset m k n q r p t.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [offset_zero_exposure_1] (theorem).
@@ -692,7 +698,7 @@ Qed.
 *)
 Theorem offset_zero_exposure_1 : forall (n m k p q r t:R), sb_offset 0 m k p q r t = sb_offset 0 m k 0 q r t.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [offset_zero_exposure_2] (theorem).
@@ -705,7 +711,7 @@ Qed.
 *)
 Theorem offset_zero_exposure_2 : forall (n m k p q r t:R), sb_offset n 0 k p q r t = sb_offset n 0 k p 0 r t.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [offset_zero_exposure_3] (theorem).
@@ -718,7 +724,7 @@ Qed.
 *)
 Theorem offset_zero_exposure_3 : forall (n m k p q r t:R), sb_offset n m 0 p q r t = sb_offset n m 0 p q 0 t.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [offset_exposure_rescale] (theorem).
@@ -731,7 +737,7 @@ Qed.
 *)
 Theorem offset_exposure_rescale : forall (n m k p q r t h:R), sb_offset (h*n) (h*m) (h*k) p q r t = h*(sb_offset n m k p q r t).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [success_size_increment_1] (theorem).
@@ -744,7 +750,7 @@ Qed.
 *)
 Theorem success_size_increment_1 : forall (n m k p q r h:R), sb_success (n+h) m k p q r = sb_success n m k p q r+h*p.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [success_size_increment_2] (theorem).
@@ -757,7 +763,7 @@ Qed.
 *)
 Theorem success_size_increment_2 : forall (n m k p q r h:R), sb_success n (m+h) k p q r = sb_success n m k p q r+h*q.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [success_size_increment_3] (theorem).
@@ -770,7 +776,7 @@ Qed.
 *)
 Theorem success_size_increment_3 : forall (n m k p q r h:R), sb_success n m (k+h) p q r = sb_success n m k p q r+h*r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [failure_size_increment_1] (theorem).
@@ -783,7 +789,7 @@ Qed.
 *)
 Theorem failure_size_increment_1 : forall (n m k p q r h:R), sb_failure (n+h) m k p q r = sb_failure n m k p q r+h*(1-p).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [failure_size_increment_2] (theorem).
@@ -796,7 +802,7 @@ Qed.
 *)
 Theorem failure_size_increment_2 : forall (n m k p q r h:R), sb_failure n (m+h) k p q r = sb_failure n m k p q r+h*(1-q).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [failure_size_increment_3] (theorem).
@@ -809,7 +815,7 @@ Qed.
 *)
 Theorem failure_size_increment_3 : forall (n m k p q r h:R), sb_failure n m (k+h) p q r = sb_failure n m k p q r+h*(1-r).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [variance_size_increment_1] (theorem).
@@ -822,7 +828,7 @@ Qed.
 *)
 Theorem variance_size_increment_1 : forall (n m k p q r h:R), sb_variance (n+h) m k p q r = sb_variance n m k p q r+h*p*(1-p).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [variance_size_increment_2] (theorem).
@@ -835,7 +841,7 @@ Qed.
 *)
 Theorem variance_size_increment_2 : forall (n m k p q r h:R), sb_variance n (m+h) k p q r = sb_variance n m k p q r+h*q*(1-q).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [variance_size_increment_3] (theorem).
@@ -848,7 +854,7 @@ Qed.
 *)
 Theorem variance_size_increment_3 : forall (n m k p q r h:R), sb_variance n m (k+h) p q r = sb_variance n m k p q r+h*r*(1-r).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [second_size_increment_1] (theorem).
@@ -861,7 +867,7 @@ Qed.
 *)
 Theorem second_size_increment_1 : forall (n m k p q r h:R), sb_second (n+h) m k p q r = sb_second n m k p q r+h*p*p.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [second_size_increment_2] (theorem).
@@ -874,7 +880,7 @@ Qed.
 *)
 Theorem second_size_increment_2 : forall (n m k p q r h:R), sb_second n (m+h) k p q r = sb_second n m k p q r+h*q*q.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [second_size_increment_3] (theorem).
@@ -887,7 +893,7 @@ Qed.
 *)
 Theorem second_size_increment_3 : forall (n m k p q r h:R), sb_second n m (k+h) p q r = sb_second n m k p q r+h*r*r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_size_increment_1] (theorem).
@@ -900,7 +906,7 @@ Qed.
 *)
 Theorem loss_size_increment_1 : forall (n m k p q r t h:R), sb_loss (n+h) m k p q r t = sb_loss n m k p q r t+h*(p-t)*(p-t).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_size_increment_2] (theorem).
@@ -913,7 +919,7 @@ Qed.
 *)
 Theorem loss_size_increment_2 : forall (n m k p q r t h:R), sb_loss n (m+h) k p q r t = sb_loss n m k p q r t+h*(q-t)*(q-t).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_size_increment_3] (theorem).
@@ -926,7 +932,7 @@ Qed.
 *)
 Theorem loss_size_increment_3 : forall (n m k p q r t h:R), sb_loss n m (k+h) p q r t = sb_loss n m k p q r t+h*(r-t)*(r-t).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [net_size_increment_1] (theorem).
@@ -939,7 +945,7 @@ Qed.
 *)
 Theorem net_size_increment_1 : forall (n m k p q r h:R), sb_net (n+h) m k p q r = sb_net n m k p q r+h*(2*p-1).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [net_size_increment_2] (theorem).
@@ -952,7 +958,7 @@ Qed.
 *)
 Theorem net_size_increment_2 : forall (n m k p q r h:R), sb_net n (m+h) k p q r = sb_net n m k p q r+h*(2*q-1).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [net_size_increment_3] (theorem).
@@ -965,7 +971,7 @@ Qed.
 *)
 Theorem net_size_increment_3 : forall (n m k p q r h:R), sb_net n m (k+h) p q r = sb_net n m k p q r+h*(2*r-1).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [offset_size_increment_1] (theorem).
@@ -978,7 +984,7 @@ Qed.
 *)
 Theorem offset_size_increment_1 : forall (n m k p q r t h:R), sb_offset (n+h) m k p q r t = sb_offset n m k p q r t+h*(p-t).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [offset_size_increment_2] (theorem).
@@ -991,7 +997,7 @@ Qed.
 *)
 Theorem offset_size_increment_2 : forall (n m k p q r t h:R), sb_offset n (m+h) k p q r t = sb_offset n m k p q r t+h*(q-t).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [offset_size_increment_3] (theorem).
@@ -1004,7 +1010,7 @@ Qed.
 *)
 Theorem offset_size_increment_3 : forall (n m k p q r t h:R), sb_offset n m (k+h) p q r t = sb_offset n m k p q r t+h*(r-t).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [success_rate_replacement_1] (theorem).
@@ -1017,7 +1023,7 @@ Qed.
 *)
 Theorem success_rate_replacement_1 : forall (n m k p q r s:R), sb_success n m k s q r = sb_success n m k p q r+n*(s-p).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [success_rate_replacement_2] (theorem).
@@ -1030,7 +1036,7 @@ Qed.
 *)
 Theorem success_rate_replacement_2 : forall (n m k p q r s:R), sb_success n m k p s r = sb_success n m k p q r+m*(s-q).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [success_rate_replacement_3] (theorem).
@@ -1043,7 +1049,7 @@ Qed.
 *)
 Theorem success_rate_replacement_3 : forall (n m k p q r s:R), sb_success n m k p q s = sb_success n m k p q r+k*(s-r).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [failure_rate_replacement_1] (theorem).
@@ -1056,7 +1062,7 @@ Qed.
 *)
 Theorem failure_rate_replacement_1 : forall (n m k p q r s:R), sb_failure n m k s q r = sb_failure n m k p q r+n*(p-s).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [failure_rate_replacement_2] (theorem).
@@ -1069,7 +1075,7 @@ Qed.
 *)
 Theorem failure_rate_replacement_2 : forall (n m k p q r s:R), sb_failure n m k p s r = sb_failure n m k p q r+m*(q-s).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [failure_rate_replacement_3] (theorem).
@@ -1082,7 +1088,7 @@ Qed.
 *)
 Theorem failure_rate_replacement_3 : forall (n m k p q r s:R), sb_failure n m k p q s = sb_failure n m k p q r+k*(r-s).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [variance_rate_replacement_1] (theorem).
@@ -1095,7 +1101,7 @@ Qed.
 *)
 Theorem variance_rate_replacement_1 : forall (n m k p q r s:R), sb_variance n m k s q r = sb_variance n m k p q r+n*(s-p)*(1-s-p).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [variance_rate_replacement_2] (theorem).
@@ -1108,7 +1114,7 @@ Qed.
 *)
 Theorem variance_rate_replacement_2 : forall (n m k p q r s:R), sb_variance n m k p s r = sb_variance n m k p q r+m*(s-q)*(1-s-q).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [variance_rate_replacement_3] (theorem).
@@ -1121,7 +1127,7 @@ Qed.
 *)
 Theorem variance_rate_replacement_3 : forall (n m k p q r s:R), sb_variance n m k p q s = sb_variance n m k p q r+k*(s-r)*(1-s-r).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [second_rate_replacement_1] (theorem).
@@ -1134,7 +1140,7 @@ Qed.
 *)
 Theorem second_rate_replacement_1 : forall (n m k p q r s:R), sb_second n m k s q r = sb_second n m k p q r+n*(s-p)*(s+p).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [second_rate_replacement_2] (theorem).
@@ -1147,7 +1153,7 @@ Qed.
 *)
 Theorem second_rate_replacement_2 : forall (n m k p q r s:R), sb_second n m k p s r = sb_second n m k p q r+m*(s-q)*(s+q).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [second_rate_replacement_3] (theorem).
@@ -1160,7 +1166,7 @@ Qed.
 *)
 Theorem second_rate_replacement_3 : forall (n m k p q r s:R), sb_second n m k p q s = sb_second n m k p q r+k*(s-r)*(s+r).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_rate_replacement_1] (theorem).
@@ -1173,7 +1179,7 @@ Qed.
 *)
 Theorem loss_rate_replacement_1 : forall (n m k p q r t s:R), sb_loss n m k s q r t = sb_loss n m k p q r t+n*(s-p)*(s+p-2*t).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_rate_replacement_2] (theorem).
@@ -1186,7 +1192,7 @@ Qed.
 *)
 Theorem loss_rate_replacement_2 : forall (n m k p q r t s:R), sb_loss n m k p s r t = sb_loss n m k p q r t+m*(s-q)*(s+q-2*t).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_rate_replacement_3] (theorem).
@@ -1199,7 +1205,7 @@ Qed.
 *)
 Theorem loss_rate_replacement_3 : forall (n m k p q r t s:R), sb_loss n m k p q s t = sb_loss n m k p q r t+k*(s-r)*(s+r-2*t).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [net_rate_replacement_1] (theorem).
@@ -1212,7 +1218,7 @@ Qed.
 *)
 Theorem net_rate_replacement_1 : forall (n m k p q r s:R), sb_net n m k s q r = sb_net n m k p q r+n*2*(s-p).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [net_rate_replacement_2] (theorem).
@@ -1225,7 +1231,7 @@ Qed.
 *)
 Theorem net_rate_replacement_2 : forall (n m k p q r s:R), sb_net n m k p s r = sb_net n m k p q r+m*2*(s-q).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [net_rate_replacement_3] (theorem).
@@ -1238,7 +1244,7 @@ Qed.
 *)
 Theorem net_rate_replacement_3 : forall (n m k p q r s:R), sb_net n m k p q s = sb_net n m k p q r+k*2*(s-r).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [offset_rate_replacement_1] (theorem).
@@ -1251,7 +1257,7 @@ Qed.
 *)
 Theorem offset_rate_replacement_1 : forall (n m k p q r t s:R), sb_offset n m k s q r t = sb_offset n m k p q r t+n*(s-p).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [offset_rate_replacement_2] (theorem).
@@ -1264,7 +1270,7 @@ Qed.
 *)
 Theorem offset_rate_replacement_2 : forall (n m k p q r t s:R), sb_offset n m k p s r t = sb_offset n m k p q r t+m*(s-q).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [offset_rate_replacement_3] (theorem).
@@ -1277,7 +1283,7 @@ Qed.
 *)
 Theorem offset_rate_replacement_3 : forall (n m k p q r t s:R), sb_offset n m k p q s t = sb_offset n m k p q r t+k*(s-r).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [dispersion_size_increment_1] (theorem).
@@ -1290,7 +1296,7 @@ Qed.
 *)
 Theorem dispersion_size_increment_1 : forall (n m k p q r h:R), sb_dispersion (n+h) m k p q r = sb_dispersion n m k p q r+h*m*(p-q)*(p-q)+h*k*(p-r)*(p-r).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [dispersion_rate_replacement_1] (theorem).
@@ -1303,7 +1309,7 @@ Qed.
 *)
 Theorem dispersion_rate_replacement_1 : forall (n m k p q r s:R), sb_dispersion n m k s q r = sb_dispersion n m k p q r+n*(s-p)*(m*(s+p-2*q)+k*(s+p-2*r)).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [dispersion_size_increment_2] (theorem).
@@ -1316,7 +1322,7 @@ Qed.
 *)
 Theorem dispersion_size_increment_2 : forall (n m k p q r h:R), sb_dispersion n (m+h) k p q r = sb_dispersion n m k p q r+h*k*(q-r)*(q-r)+h*n*(q-p)*(q-p).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [dispersion_rate_replacement_2] (theorem).
@@ -1329,7 +1335,7 @@ Qed.
 *)
 Theorem dispersion_rate_replacement_2 : forall (n m k p q r s:R), sb_dispersion n m k p s r = sb_dispersion n m k p q r+m*(s-q)*(k*(s+q-2*r)+n*(s+q-2*p)).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [dispersion_size_increment_3] (theorem).
@@ -1342,7 +1348,7 @@ Qed.
 *)
 Theorem dispersion_size_increment_3 : forall (n m k p q r h:R), sb_dispersion n m (k+h) p q r = sb_dispersion n m k p q r+h*n*(r-p)*(r-p)+h*m*(r-q)*(r-q).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [dispersion_rate_replacement_3] (theorem).
@@ -1355,7 +1361,7 @@ Qed.
 *)
 Theorem dispersion_rate_replacement_3 : forall (n m k p q r s:R), sb_dispersion n m k p q s = sb_dispersion n m k p q r+k*(s-r)*(n*(s+r-2*p)+m*(s+r-2*q)).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [success_common_rate_translation] (theorem).
@@ -1368,7 +1374,7 @@ Qed.
 *)
 Theorem success_common_rate_translation : forall (n m k p q r h:R), sb_success n m k (p+h) (q+h) (r+h) = sb_success n m k p q r+h*(sb_mass n m k).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [success_common_rate_rescale] (theorem).
@@ -1381,7 +1387,7 @@ Qed.
 *)
 Theorem success_common_rate_rescale : forall (n m k p q r h:R), sb_success n m k (h*p) (h*q) (h*r) = h*(sb_success n m k p q r).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [success_complement_event_rates] (theorem).
@@ -1394,7 +1400,7 @@ Qed.
 *)
 Theorem success_complement_event_rates : forall (n m k p q r:R), sb_success n m k (1-p) (1-q) (1-r) = sb_failure n m k p q r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [success_homogeneous_rate] (theorem).
@@ -1407,7 +1413,7 @@ Qed.
 *)
 Theorem success_homogeneous_rate : forall (n m k p:R), sb_success n m k p p p = (sb_mass n m k)*p.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [success_impossible_event] (theorem).
@@ -1420,7 +1426,7 @@ Qed.
 *)
 Theorem success_impossible_event : forall (n m k:R), sb_success n m k 0 0 0 = 0.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [success_certain_event] (theorem).
@@ -1433,7 +1439,7 @@ Qed.
 *)
 Theorem success_certain_event : forall (n m k:R), sb_success n m k 1 1 1 = sb_mass n m k.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [failure_common_rate_translation] (theorem).
@@ -1446,7 +1452,7 @@ Qed.
 *)
 Theorem failure_common_rate_translation : forall (n m k p q r h:R), sb_failure n m k (p+h) (q+h) (r+h) = sb_failure n m k p q r-h*(sb_mass n m k).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [failure_common_rate_rescale] (theorem).
@@ -1459,7 +1465,7 @@ Qed.
 *)
 Theorem failure_common_rate_rescale : forall (n m k p q r h:R), sb_failure n m k (h*p) (h*q) (h*r) = sb_mass n m k-h*(sb_success n m k p q r).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [failure_complement_event_rates] (theorem).
@@ -1472,7 +1478,7 @@ Qed.
 *)
 Theorem failure_complement_event_rates : forall (n m k p q r:R), sb_failure n m k (1-p) (1-q) (1-r) = sb_success n m k p q r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [failure_homogeneous_rate] (theorem).
@@ -1485,7 +1491,7 @@ Qed.
 *)
 Theorem failure_homogeneous_rate : forall (n m k p:R), sb_failure n m k p p p = (sb_mass n m k)*(1-p).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [failure_impossible_event] (theorem).
@@ -1498,7 +1504,7 @@ Qed.
 *)
 Theorem failure_impossible_event : forall (n m k:R), sb_failure n m k 0 0 0 = sb_mass n m k.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [failure_certain_event] (theorem).
@@ -1511,7 +1517,7 @@ Qed.
 *)
 Theorem failure_certain_event : forall (n m k:R), sb_failure n m k 1 1 1 = 0.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [variance_common_rate_translation] (theorem).
@@ -1524,7 +1530,7 @@ Qed.
 *)
 Theorem variance_common_rate_translation : forall (n m k p q r h:R), sb_variance n m k (p+h) (q+h) (r+h) = sb_variance n m k p q r+h*(sb_mass n m k)-2*h*(sb_success n m k p q r)-h*h*(sb_mass n m k).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [variance_common_rate_rescale] (theorem).
@@ -1537,7 +1543,7 @@ Qed.
 *)
 Theorem variance_common_rate_rescale : forall (n m k p q r h:R), sb_variance n m k (h*p) (h*q) (h*r) = h*(sb_success n m k p q r)-h*h*(sb_second n m k p q r).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [variance_complement_event_rates] (theorem).
@@ -1550,7 +1556,7 @@ Qed.
 *)
 Theorem variance_complement_event_rates : forall (n m k p q r:R), sb_variance n m k (1-p) (1-q) (1-r) = sb_variance n m k p q r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [variance_homogeneous_rate] (theorem).
@@ -1563,7 +1569,7 @@ Qed.
 *)
 Theorem variance_homogeneous_rate : forall (n m k p:R), sb_variance n m k p p p = (sb_mass n m k)*p*(1-p).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [variance_impossible_event] (theorem).
@@ -1576,7 +1582,7 @@ Qed.
 *)
 Theorem variance_impossible_event : forall (n m k:R), sb_variance n m k 0 0 0 = 0.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [variance_certain_event] (theorem).
@@ -1589,7 +1595,7 @@ Qed.
 *)
 Theorem variance_certain_event : forall (n m k:R), sb_variance n m k 1 1 1 = 0.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [second_common_rate_translation] (theorem).
@@ -1602,7 +1608,7 @@ Qed.
 *)
 Theorem second_common_rate_translation : forall (n m k p q r h:R), sb_second n m k (p+h) (q+h) (r+h) = sb_second n m k p q r+2*h*(sb_success n m k p q r)+h*h*(sb_mass n m k).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [second_common_rate_rescale] (theorem).
@@ -1615,7 +1621,7 @@ Qed.
 *)
 Theorem second_common_rate_rescale : forall (n m k p q r h:R), sb_second n m k (h*p) (h*q) (h*r) = h*h*(sb_second n m k p q r).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [second_complement_event_rates] (theorem).
@@ -1628,7 +1634,7 @@ Qed.
 *)
 Theorem second_complement_event_rates : forall (n m k p q r:R), sb_second n m k (1-p) (1-q) (1-r) = sb_mass n m k-2*(sb_success n m k p q r)+sb_second n m k p q r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [second_homogeneous_rate] (theorem).
@@ -1641,7 +1647,7 @@ Qed.
 *)
 Theorem second_homogeneous_rate : forall (n m k p:R), sb_second n m k p p p = (sb_mass n m k)*p*p.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [second_impossible_event] (theorem).
@@ -1654,7 +1660,7 @@ Qed.
 *)
 Theorem second_impossible_event : forall (n m k:R), sb_second n m k 0 0 0 = 0.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [second_certain_event] (theorem).
@@ -1667,7 +1673,7 @@ Qed.
 *)
 Theorem second_certain_event : forall (n m k:R), sb_second n m k 1 1 1 = sb_mass n m k.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_common_rate_translation] (theorem).
@@ -1680,7 +1686,7 @@ Qed.
 *)
 Theorem loss_common_rate_translation : forall (n m k p q r t h:R), sb_loss n m k (p+h) (q+h) (r+h) t = sb_loss n m k p q r (t-h).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_common_rate_rescale] (theorem).
@@ -1693,7 +1699,7 @@ Qed.
 *)
 Theorem loss_common_rate_rescale : forall (n m k p q r t h:R), sb_loss n m k (h*p) (h*q) (h*r) (h*t) = h*h*(sb_loss n m k p q r t).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_complement_event_rates] (theorem).
@@ -1706,7 +1712,7 @@ Qed.
 *)
 Theorem loss_complement_event_rates : forall (n m k p q r t:R), sb_loss n m k (1-p) (1-q) (1-r) (1-t) = sb_loss n m k p q r t.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_homogeneous_rate] (theorem).
@@ -1719,7 +1725,7 @@ Qed.
 *)
 Theorem loss_homogeneous_rate : forall (n m k p t:R), sb_loss n m k p p p t = (sb_mass n m k)*(p-t)*(p-t).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_impossible_event] (theorem).
@@ -1732,7 +1738,7 @@ Qed.
 *)
 Theorem loss_impossible_event : forall (n m k t:R), sb_loss n m k 0 0 0 t = (sb_mass n m k)*t*t.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_certain_event] (theorem).
@@ -1745,7 +1751,7 @@ Qed.
 *)
 Theorem loss_certain_event : forall (n m k t:R), sb_loss n m k 1 1 1 t = (sb_mass n m k)*(1-t)*(1-t).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [dispersion_common_rate_translation] (theorem).
@@ -1758,7 +1764,7 @@ Qed.
 *)
 Theorem dispersion_common_rate_translation : forall (n m k p q r h:R), sb_dispersion n m k (p+h) (q+h) (r+h) = sb_dispersion n m k p q r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [dispersion_common_rate_rescale] (theorem).
@@ -1771,7 +1777,7 @@ Qed.
 *)
 Theorem dispersion_common_rate_rescale : forall (n m k p q r h:R), sb_dispersion n m k (h*p) (h*q) (h*r) = h*h*(sb_dispersion n m k p q r).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [dispersion_complement_event_rates] (theorem).
@@ -1784,7 +1790,7 @@ Qed.
 *)
 Theorem dispersion_complement_event_rates : forall (n m k p q r:R), sb_dispersion n m k (1-p) (1-q) (1-r) = sb_dispersion n m k p q r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [dispersion_homogeneous_rate] (theorem).
@@ -1797,7 +1803,7 @@ Qed.
 *)
 Theorem dispersion_homogeneous_rate : forall (n m k p:R), sb_dispersion n m k p p p = 0.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [dispersion_impossible_event] (theorem).
@@ -1810,7 +1816,7 @@ Qed.
 *)
 Theorem dispersion_impossible_event : forall (n m k:R), sb_dispersion n m k 0 0 0 = 0.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [dispersion_certain_event] (theorem).
@@ -1823,7 +1829,7 @@ Qed.
 *)
 Theorem dispersion_certain_event : forall (n m k:R), sb_dispersion n m k 1 1 1 = 0.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [net_common_rate_translation] (theorem).
@@ -1836,7 +1842,7 @@ Qed.
 *)
 Theorem net_common_rate_translation : forall (n m k p q r h:R), sb_net n m k (p+h) (q+h) (r+h) = sb_net n m k p q r+2*h*(sb_mass n m k).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [net_common_rate_rescale] (theorem).
@@ -1849,7 +1855,7 @@ Qed.
 *)
 Theorem net_common_rate_rescale : forall (n m k p q r h:R), sb_net n m k (h*p) (h*q) (h*r) = 2*h*(sb_success n m k p q r)-sb_mass n m k.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [net_complement_event_rates] (theorem).
@@ -1862,7 +1868,7 @@ Qed.
 *)
 Theorem net_complement_event_rates : forall (n m k p q r:R), sb_net n m k (1-p) (1-q) (1-r) = -(sb_net n m k p q r).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [net_homogeneous_rate] (theorem).
@@ -1875,7 +1881,7 @@ Qed.
 *)
 Theorem net_homogeneous_rate : forall (n m k p:R), sb_net n m k p p p = (sb_mass n m k)*(2*p-1).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [net_impossible_event] (theorem).
@@ -1888,7 +1894,7 @@ Qed.
 *)
 Theorem net_impossible_event : forall (n m k:R), sb_net n m k 0 0 0 = -(sb_mass n m k).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [net_certain_event] (theorem).
@@ -1901,7 +1907,7 @@ Qed.
 *)
 Theorem net_certain_event : forall (n m k:R), sb_net n m k 1 1 1 = sb_mass n m k.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [offset_common_rate_translation] (theorem).
@@ -1914,7 +1920,7 @@ Qed.
 *)
 Theorem offset_common_rate_translation : forall (n m k p q r t h:R), sb_offset n m k (p+h) (q+h) (r+h) t = sb_offset n m k p q r t+h*(sb_mass n m k).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [offset_common_rate_rescale] (theorem).
@@ -1927,7 +1933,7 @@ Qed.
 *)
 Theorem offset_common_rate_rescale : forall (n m k p q r t h:R), sb_offset n m k (h*p) (h*q) (h*r) (h*t) = h*(sb_offset n m k p q r t).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [offset_complement_event_rates] (theorem).
@@ -1940,7 +1946,7 @@ Qed.
 *)
 Theorem offset_complement_event_rates : forall (n m k p q r t:R), sb_offset n m k (1-p) (1-q) (1-r) (1-t) = -(sb_offset n m k p q r t).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [offset_homogeneous_rate] (theorem).
@@ -1953,7 +1959,7 @@ Qed.
 *)
 Theorem offset_homogeneous_rate : forall (n m k p t:R), sb_offset n m k p p p t = (sb_mass n m k)*(p-t).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [offset_impossible_event] (theorem).
@@ -1966,7 +1972,7 @@ Qed.
 *)
 Theorem offset_impossible_event : forall (n m k t:R), sb_offset n m k 0 0 0 t = -t*(sb_mass n m k).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [offset_certain_event] (theorem).
@@ -1979,7 +1985,7 @@ Qed.
 *)
 Theorem offset_certain_event : forall (n m k t:R), sb_offset n m k 1 1 1 t = (1-t)*(sb_mass n m k).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_joint_rate_target_translation] (theorem).
@@ -1992,7 +1998,7 @@ Qed.
 *)
 Theorem loss_joint_rate_target_translation : forall (n m k p q r t h:R), sb_loss n m k (p+h) (q+h) (r+h) (t+h) = sb_loss n m k p q r t.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [offset_joint_rate_target_translation] (theorem).
@@ -2005,7 +2011,7 @@ Qed.
 *)
 Theorem offset_joint_rate_target_translation : forall (n m k p q r t h:R), sb_offset n m k (p+h) (q+h) (r+h) (t+h) = sb_offset n m k p q r t.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [mass_success_failure_decomposition] (theorem).
@@ -2018,7 +2024,7 @@ Qed.
 *)
 Theorem mass_success_failure_decomposition : forall (n m k p q r:R), sb_success n m k p q r+sb_failure n m k p q r = sb_mass n m k.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [failure_as_complement] (theorem).
@@ -2031,7 +2037,7 @@ Qed.
 *)
 Theorem failure_as_complement : forall (n m k p q r:R), sb_failure n m k p q r = sb_mass n m k-sb_success n m k p q r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [net_as_success_failure_gap] (theorem).
@@ -2044,7 +2050,7 @@ Qed.
 *)
 Theorem net_as_success_failure_gap : forall (n m k p q r:R), sb_net n m k p q r = sb_success n m k p q r-sb_failure n m k p q r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [net_as_two_success_minus_mass] (theorem).
@@ -2070,7 +2076,7 @@ Qed.
 *)
 Theorem net_plus_twice_failures : forall (n m k p q r:R), sb_net n m k p q r+2*(sb_failure n m k p q r) = sb_mass n m k.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [net_minus_twice_successes] (theorem).
@@ -2083,7 +2089,7 @@ Qed.
 *)
 Theorem net_minus_twice_successes : forall (n m k p q r:R), sb_net n m k p q r-2*(sb_success n m k p q r) = -(sb_mass n m k).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [variance_as_success_minus_square] (theorem).
@@ -2096,7 +2102,7 @@ Qed.
 *)
 Theorem variance_as_success_minus_square : forall (n m k p q r:R), sb_variance n m k p q r = sb_success n m k p q r-sb_second n m k p q r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [second_as_success_minus_variance] (theorem).
@@ -2135,7 +2141,7 @@ Qed.
 *)
 Theorem loss_second_moment_expansion : forall (n m k p q r t:R), sb_loss n m k p q r t = sb_second n m k p q r-2*t*(sb_success n m k p q r)+t*t*(sb_mass n m k).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_at_zero_target] (theorem).
@@ -2148,7 +2154,7 @@ Qed.
 *)
 Theorem loss_at_zero_target : forall (n m k p q r:R), sb_loss n m k p q r 0 = sb_second n m k p q r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_at_unit_target] (theorem).
@@ -2161,7 +2167,7 @@ Qed.
 *)
 Theorem loss_at_unit_target : forall (n m k p q r:R), sb_loss n m k p q r 1 = sb_mass n m k-2*(sb_success n m k p q r)+sb_second n m k p q r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [offset_from_success] (theorem).
@@ -2174,7 +2180,7 @@ Qed.
 *)
 Theorem offset_from_success : forall (n m k p q r t:R), sb_offset n m k p q r t = sb_success n m k p q r-t*(sb_mass n m k).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [offset_at_zero_target] (theorem).
@@ -2187,7 +2193,7 @@ Qed.
 *)
 Theorem offset_at_zero_target : forall (n m k p q r:R), sb_offset n m k p q r 0 = sb_success n m k p q r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [offset_at_one_target] (theorem).
@@ -2200,7 +2206,7 @@ Qed.
 *)
 Theorem offset_at_one_target : forall (n m k p q r:R), sb_offset n m k p q r 1 = -(sb_failure n m k p q r).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_target_increment] (theorem).
@@ -2213,7 +2219,7 @@ Qed.
 *)
 Theorem loss_target_increment : forall (n m k p q r t h:R), sb_loss n m k p q r (t+h) = sb_loss n m k p q r t+h*(2*t*(sb_mass n m k)+h*(sb_mass n m k)-2*(sb_success n m k p q r)).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [offset_target_increment] (theorem).
@@ -2226,7 +2232,7 @@ Qed.
 *)
 Theorem offset_target_increment : forall (n m k p q r t h:R), sb_offset n m k p q r (t+h) = sb_offset n m k p q r t-h*(sb_mass n m k).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_target_sign_pair] (theorem).
@@ -2239,7 +2245,7 @@ Qed.
 *)
 Theorem loss_target_sign_pair : forall (n m k p q r t:R), sb_loss n m k p q r t+sb_loss n m k p q r (-t) = 2*(sb_second n m k p q r)+2*t*t*(sb_mass n m k).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [loss_target_opposite_difference] (theorem).
@@ -2252,7 +2258,7 @@ Qed.
 *)
 Theorem loss_target_opposite_difference : forall (n m k p q r t:R), sb_loss n m k p q r (-t) = sb_loss n m k p q r t+4*t*(sb_success n m k p q r).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [pair_dispersion_moment_identity] (theorem).
@@ -2265,7 +2271,7 @@ Qed.
 *)
 Theorem pair_dispersion_moment_identity : forall (n m k p q r:R), sb_dispersion n m k p q r = (sb_mass n m k)*(sb_second n m k p q r)-(sb_success n m k p q r)*(sb_success n m k p q r).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [pair_dispersion_loss_certificate] (theorem).
@@ -2304,7 +2310,7 @@ Qed.
 *)
 Theorem success_two_rate_bridge : forall (n m k p q r:R), sb_success n m 0 p q r = rate_count n m p q.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [variance_two_rate_bridge] (theorem).
@@ -2317,7 +2323,7 @@ Qed.
 *)
 Theorem variance_two_rate_bridge : forall (n m k p q r:R), sb_variance n m 0 p q r = rate_count_variance n m p q.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  sb_polynomial_normalize.
 Qed.
 
 (** [sb_mass_nonnegative] (theorem).
