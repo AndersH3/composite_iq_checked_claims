@@ -173,6 +173,10 @@ Lemma gmc_affine_map_measurable (b : 'I_k -> R)
   measurable_fun [set: T] (gmc_affine_map b a).
 Proof.
 apply/measurable_fun_tnthP => i.
+(* Expose the coordinate function explicitly before rewriting:
+   the library criterion may present it as a composed function. *)
+change (measurable_fun [set: T]
+  (fun t : T => tnth (gmc_affine_map b a t) i)).
 have -> : (fun t : T => tnth (gmc_affine_map b a t) i) =
     gmc_affine_row (b i) (a i).
 { apply/funext => t; by rewrite /gmc_affine_map tnth_mktuple. }
