@@ -66,7 +66,8 @@ jobs:
             opam exec -- rocq compile GaussianFiniteStandard.v
             opam exec -- rocq compile GaussianFiniteAffine.v
             opam exec -- rocq compile GaussianFiniteIndependence.v
-            opam exec -- rocq check GaussianObservationSigma GaussianHistoryJointLaw GaussianFiniteAffine GaussianFiniteIndependence
+            opam exec -- rocq compile GaussianSecondMoment.v
+            opam exec -- rocq check GaussianObservationSigma GaussianHistoryJointLaw GaussianFiniteIndependence GaussianSecondMoment
             # Keep transitive assumption audits in separate processes.
             opam exec -- rocq compile AuditGaussianPosteriorMeasure.v
             opam exec -- rocq compile AuditGaussianResidualMeasure.v
@@ -85,4 +86,5 @@ jobs:
             opam exec -- rocq compile AuditGaussianFiniteStandard.v
             opam exec -- rocq compile AuditGaussianFiniteAffine.v
             opam exec -- rocq compile AuditGaussianFiniteIndependence.v
+            opam exec -- rocq compile AuditGaussianSecondMoment.v
           '
