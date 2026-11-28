@@ -181,10 +181,22 @@ elim: n => [|n IH] in i *.
     by rewrite setTI in H. }
   have Hset : [set t : (n.+1.-tuple (measurableTypeR R)) | U (tnth t (lift ord0 j))] =
     [set t : (n.+1.-tuple (measurableTypeR R)) | A [tuple of behead t]].
-  { have Hj : inord j.+1 = lift ord0 j.
-    { apply/val_inj; by rewrite inordK ?ltnS ?ltn_ord. }
-    apply/seteqP; split=> t;
-      by rewrite /A /= tnth_behead Hj. }
+  { (* Decompose the tuple and use the library's successor-coordinate
+       rule directly. No conversion between ordinal constructors is
+       necessary, and tuple value injection identifies the actual tail. *)
+    have Hcoord (t : n.+1.-tuple (measurableTypeR R)) :
+        tnth t (lift ord0 j) = tnth [tuple of behead t] j.
+    { case: (tupleP t) => x s.
+      have Htail : [tuple of behead [tuple of x :: s]] = s.
+      { apply/val_inj; reflexivity. }
+      by rewrite tnthS Htail. }
+    apply/seteqP; split=> t.
+    - change (U (tnth t (lift ord0 j)) ->
+        U (tnth [tuple of behead t] j)).
+      by rewrite Hcoord.
+    - change (U (tnth [tuple of behead t] j) ->
+        U (tnth t (lift ord0 j))).
+      by rewrite Hcoord. }
   rewrite Hset.
   transitivity (gmc_standard_history n A).
   + exact: gmc_standard_history_tail mA.
