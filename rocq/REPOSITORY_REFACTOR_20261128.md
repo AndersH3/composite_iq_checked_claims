@@ -70,6 +70,12 @@ FiniteMoments.v was successfully retrieved directly via blob fd9fdfcb86cf2fd0b8f
 
 Re-run the canonical regression on this third batch and build all eight books using retained inputs, preferably from an isolated detached worktree. No new theorem development. The report build, full named-predicate/semantic contract review, probability-library regression and remaining source review are pending.
 
+## Third-batch canonical regression and report diagnostics
+
+At `fb59962`, computer10 passed ShellCheck, the canonical documentation and Rocq-only audits, all 45 canonical module compilations and independent kernel replay. Counts remain 4029 documented declarations, 3693 theorem proofs and 3706 registered proof scripts. Wall time 85.74 s, peak 1178484 KiB, no swaps, exit 0. All 498 previously consolidated proof bodies have now passed canonical kernel replay. No additional theorem is counted.
+
+The detached eight-book document-only build stopped after 98.36 s (peak 268872 KiB, no swaps, make exit 2) at sequential_conditional_means: underfull hbox badness 1406 at lines 292–312; overfull hboxes 162.19351 pt and 2.18599 pt at lines 319–364. The ranges correspond to the included theorem_foundations.tex text containing long literal Rocq names, rather than necessarily the main book's source lines. Commit `a91676f` replaces 21 unbreakable texttt identifiers with existing xurl/hyperref nolinkurl markup and splits two paragraphs; exact identifier strings were checked before and after. This is a candidate layout correction, not a completed build or visual inspection. No suppression of diagnostics, margin change, new packages or mathematical modifications. Retest in a fresh detached worktree and retain the failed logs. New proof development remains suspended.
+
 ## Complete AI disclosure
 
 This register is an AI-assisted engineering audit requested by Anders Hellström. The inventory, connector commits and reversible source transformations are direct evidence; proposed later changes and regression gates are not completed tests. The local execution environment could not resolve GitHub for a full clone and lacks ShellCheck; Rocq/Deal/Dask/XeLaTeX checks have not been run here. The supplied computer10 transcripts provide earlier verified-source evidence only. This refactoring register neither certifies every theorem or runtime contract nor validates empirical psychometric models. No new mathematical axioms or admitted proof placeholders were added by this batch.
