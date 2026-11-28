@@ -500,6 +500,9 @@ def finalize_run(results, config, task_count):
     Fresh figures are TeX/PGFPlots output; no plotting runtime is imported.
     """
     source_paths = list(ROOT.joinpath("reporting").glob("*.py")) + list(ROOT.joinpath("reporting").glob("*.tex")) + list(ROOT.joinpath("reporting").glob("*.bib"))
+    # Include the implementations behind the shared reporting imports.
+    source_paths += list(ROOT.joinpath("library", "python").glob("*.py"))
+    source_paths += list(ROOT.joinpath("library", "latex").glob("*.tex"))
     source_paths += [ROOT.joinpath("requirements-dev.txt")]
     output_paths = []
     for project in PROJECTS:

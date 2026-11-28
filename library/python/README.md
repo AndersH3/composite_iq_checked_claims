@@ -8,6 +8,8 @@
 
 `statistics.py` is the original pure, shared Dask-report statistical aggregation implementation. It is **moved**, not duplicated. Its three functions provide the cross-report moment, event and replicate-pooling calculations, reusing SciPy maintained statistics. `reporting/statistics.py` remains an import-only compatibility interface and `reporting/simulate.py` consumes the canonical library directly.
 
+`moments.py` owns the existing contracted `partial_moment` and `merge_moments` implementations. Both shared block workers and the IQ discrepancy campaign consume this module; `reporting.block_simulations` retains import-only compatibility for these names. New runs hash the canonical source; historical run records are not rewritten.
+
 Every analysis retains specialized calculations and checks in its own `analyses/<project>/scripts/` directory. Keep statistical metadata, report interpretation, CSV I/O and numerical model assumptions in those adapters; move only genuinely reusable algorithms into this library.
 
 Verify with `python verification/check_contract_coverage.py`, `python -m pytest -q tests`, `make library` and the CI workflows.

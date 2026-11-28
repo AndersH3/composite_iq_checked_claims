@@ -23,6 +23,7 @@ import pytest
 
 from conftest import protected_history_intact, reference_inputs_intact
 from reporting import block_simulations, simulate
+from library.python import moments
 
 
 @deal.pre(lambda: protected_history_intact())
@@ -45,6 +46,9 @@ def test_centered_block_moment_merge_and_seeded_substreams():
     """Merging blocks must preserve between-block variation and tail counts."""
     left = np.array([1_000_001.0, 1_000_003.0])
     right = np.array([1_000_011.0, 1_000_013.0, 1_000_015.0])
+    # Legacy worker imports must resolve to the canonical contracted functions.
+    assert block_simulations.partial_moment is moments.partial_moment
+    assert block_simulations.merge_moments is moments.merge_moments
     partials = [block_simulations.partial_moment(values) for values in (left, right)]
     merged = block_simulations.merge_moments(partials)
     combined = np.concatenate((left, right))
