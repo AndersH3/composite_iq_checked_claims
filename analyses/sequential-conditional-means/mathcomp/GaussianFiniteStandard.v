@@ -168,7 +168,10 @@ Theorem gmc_standard_history_coordinate n (i : 'I_n) (U : set R) :
   gmc_standard_history n [set t : (n.-tuple (measurableTypeR R)) | U (tnth t i)] = G U.
 Proof.
 elim: n => [|n IH] in i *.
-- by case: i => j; rewrite ltn0.
+- (* The zero-dimensional ordinal is impossible. Rewrite only the
+     extracted bound, not the dependent ordinal constructor. *)
+  have Hi : (i < 0)%N := ltn_ord i.
+  by rewrite ltn0 in Hi.
 - move=> mU.
   case: (unliftP ord0 i) => [j ->|->]; last exact: gmc_standard_history_head mU.
   pose A := [set t : (n.-tuple (measurableTypeR R)) | U (tnth t j)].
