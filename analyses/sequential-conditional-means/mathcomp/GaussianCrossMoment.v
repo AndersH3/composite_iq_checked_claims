@@ -67,7 +67,9 @@ have Cf : C \is a fin_num.
 have CK : (fine C)%:E = C.
 { exact: fineK Cf. }
 have Hinner (x : R) : \int[G]_y `|h (x,y)| = a x * C.
-{ transitivity (\int[G]_y (`|x|%R)%:E * a y).
+{ (* Parenthesize the entire integrand: the integral binder must
+     scope over the multiplication and its y-dependent factor. *)
+  transitivity (\int[G]_y ((`|x|%R)%:E * a y)).
   - apply: eq_integral => y _.
     by rewrite /a /= abseM abse_EFin.
   - transitivity ((`|x|%R)%:E * C).
@@ -75,7 +77,7 @@ have Hinner (x : R) : \int[G]_y `|h (x,y)| = a x * C.
       exact: integralZl ai.
     + by rewrite /a abse_EFin. }
 have Hwhole : \int[G]_x \int[G]_y `|h (x,y)| =
-    \int[G]_x a x * (fine C)%:E.
+    \int[G]_x (a x * (fine C)%:E).
 { apply: eq_integral => x _.
   by rewrite Hinner CK. }
 have si : G.-integrable [set: R]
