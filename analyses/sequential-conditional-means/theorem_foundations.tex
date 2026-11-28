@@ -274,16 +274,16 @@ must be distinguished:
       \(C=CB^+B\) and the residual's vanishing cross-covariance
       using the verified matrix/domain developments, including
       the zero-variance directions of singular \(B\). The Rocq
-      theorems \texttt{gcd\_psd\_quadratic\_zero\_cross} and
-      \texttt{gcd\_psd\_null\_covariance} verify the
+      theorems \nolinkurl{gcd_psd_quadratic_zero_cross} and
+      \nolinkurl{gcd_psd_null_covariance} verify the
       positive-semidefinite null-direction identity. The independently
-      kernel-checked \texttt{gcd\_psd\_covariance\_cauchy\_schwarz}
-      and \texttt{gcd\_psd\_covariance\_characterization} establish
+      kernel-checked \nolinkurl{gcd_psd_covariance_cauchy_schwarz}
+      and \nolinkurl{gcd_psd_covariance_characterization} establish
       the sharp \(b^2\leq ac\) criterion for a symmetric
       \(2\times2\) covariance block with nonnegative diagonals,
       including the equality and zero-variance boundaries.
       The kernel-checked
-      \texttt{gcd\_psd\_scalar\_regression\_residual\_exists}
+      \nolinkurl{gcd_psd_scalar_regression_residual_exists}
       further constructs a scalar coefficient \(\beta\) satisfying
       \(b=\beta a\) and \(c-\beta b\geq0\) for every such PSD
       covariance block, even when the observed variance \(a=0\).
@@ -295,14 +295,14 @@ must be distinguished:
       \(\sigma(W)\) and \(\sigma(X)\) are independent. Covariance
       orthogonality alone cannot discharge this obligation.
       The kernel-checked theorem
-      \texttt{gcd\_gaussian\_uncorrelated\_laplace\_kernel\_factor}
+      \nolinkurl{gcd_gaussian_uncorrelated_laplace_kernel_factor}
       proves only real Gaussian Laplace-kernel factorization at zero
       cross covariance. A theorem identifying the transform of an
       actual jointly Gaussian random vector, together with
       distributional uniqueness and independence of the generated
       sigma-algebras, remains necessary.
       The singular-safe scalar theorem
-      \texttt{gcd\_psd\_scalar\_gaussian\_laplace\_factor\_exists}
+      \nolinkurl{gcd_psd_scalar_gaussian_laplace_factor_exists}
       also gives an existential orthogonalizing regression coefficient
       for every positive-semidefinite \(2\times2\) covariance block,
       including a zero observed variance, and proves the associated
@@ -313,38 +313,40 @@ must be distinguished:
       integrability and measurability and then prove, for every
       \(A\in\sigma(X)\), that
       \(\E[\one_A W]=P(A)\E[W]=0\), using the existing
-      \texttt{is\_conditional\_expectation} API and almost-sure
+      \nolinkurl{is_conditional_expectation} API and almost-sure
       uniqueness rather than a new conditional-expectation definition.
 \end{enumerate}
 The singular-versus-strict scalar regression dichotomy is now also
 kernel-checked. In a two-coordinate positive-semidefinite block,
-\texttt{gcd\_psd\_zero\_observed\_variance\_forces\_zero\_cross}
+\nolinkurl{gcd_psd_zero_observed_variance_forces_zero_cross}
 and
-\texttt{gcd\_psd\_scalar\_regression\_singular\_coefficient\_free}
+\nolinkurl{gcd_psd_scalar_regression_singular_coefficient_free}
 show that zero observed variance forces zero cross covariance and
 leaves the normal-equation coefficient nonidentifiable. For strictly
 positive observed variance,
-\texttt{gcd\_psd\_scalar\_regression\_coefficient\_unique\_strict}
-and \texttt{gcd\_psd\_scalar\_regression\_explicit\_strict}
+\nolinkurl{gcd_psd_scalar_regression_coefficient_unique_strict}
+and \nolinkurl{gcd_psd_scalar_regression_explicit_strict}
 identify the sole coefficient as \(\beta=b/a\).
 These verified claims are covariance algebra, not independence or
 measure-theoretic conditional-expectation statements.
+
 The Moore--Penrose pseudoinverse is a canonical choice for the
 displayed affine version, not an implementation requirement for the
 covariance step. It suffices to construct a row vector
 \(\beta\) satisfying \(\beta B=C\) once the positive-semidefinite
 null-direction argument establishes that \(C\) belongs to the row
 space of \(B\). MathComp's maintained partial-matrix inverse
-\texttt{pinvmx} and row-space lemma \texttt{mulmxKpV} provide
+\nolinkurl{pinvmx} and row-space lemma \nolinkurl{mulmxKpV} provide
 appropriate algebraic tools. The partial inverse is
 \emph{not} itself the Moore--Penrose pseudoinverse: a proof using
 it must establish the linear equation and almost-sure equivalence
 of the resulting predictor, rather than silently replacing
 \(B^+\) by an unrelated generalized inverse.
-The Rocq module \texttt{GaussianResidualConditionalExpectation.v}
+
+The Rocq module \nolinkurl{GaussianResidualConditionalExpectation.v}
 provides the final implication \emph{conditional on} residual
 independence. The separate
-\texttt{GaussianProductConditionalExpectation.v} derives independence
+\nolinkurl{GaussianProductConditionalExpectation.v} derives independence
 in an explicitly constructed product model. These modules still
 require successful compilation against pinned IBM FormalML, and neither
 by itself supplies the distributional bridge for every jointly
@@ -352,9 +354,9 @@ Gaussian law or the singular pseudoinverse result. The QBS/MathComp
 posterior first-moment proof addresses a distinct normalized
 single-observation model. To avoid reimplementing scalar Gaussian
 integration, the next distributional development can reuse IBM
-FormalML's \texttt{ProbTheory/Gaussian.v} (normalized Gaussian density,
+FormalML's \nolinkurl{ProbTheory/Gaussian.v} (normalized Gaussian density,
 mean, and variance integrals) and MathComp-Analysis'
-\texttt{normal\_prob\_conjugate} (normalized single-observation
+\nolinkurl{normal_prob_conjugate} (normalized single-observation
 conjugate posterior). Their probability-measure APIs are distinct;
 neither theorem supplies multivariate affine closure, block
 independence, or singular-covariance conditional expectation by itself.
@@ -367,10 +369,10 @@ There is a separate measure-theoretic argument at the perfectly
 observed singular endpoint. Whenever a future score equals an
 observed-measurable, integrable predictor almost surely, the defining
 event-integral conditional-expectation equality follows from
-FormalML's \texttt{is\_conditional\_expectation\_id} and
-\texttt{is\_conditional\_expectation\_proper}, without assuming an
+FormalML's \nolinkurl{is_conditional_expectation_id} and
+\nolinkurl{is_conditional_expectation_proper}, without assuming an
 independent Gaussian residual. The revised
-\texttt{GaussianResidualConditionalExpectation.v} includes this
+\nolinkurl{GaussianResidualConditionalExpectation.v} includes this
 event-integral proposition and its almost-sure uniqueness consequence,
 both subject to pinned FormalML kernel compilation. To specialize
 either proposition to equicorrelation \(c=1\), a separate formal
