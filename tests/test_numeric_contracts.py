@@ -465,6 +465,10 @@ def test_towers_reference_csvs(towers):
     # Negative controls: the admissions validator must reject individually
     # corrupted correlations, feasible-mass bounds and derived probabilities.
     assert towers._valid_admissions(admissions)
+    # Cardinality errors must reject the table without a zip exception.
+    assert not towers._valid_admissions([])
+    assert not towers._valid_admissions(admissions[:-1])
+    assert not towers._valid_admissions(admissions + [dict(admissions[-1])])
     for field, bad_value in (
         ("rho", 0.6),
         ("joint", admissions[0]["p_a"] + 0.001),

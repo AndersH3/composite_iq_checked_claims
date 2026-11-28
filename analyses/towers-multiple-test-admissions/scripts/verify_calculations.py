@@ -344,8 +344,15 @@ def _valid_grid(rows) -> bool:
            [row["case"] for row in result] ==
            [label for label, _, _ in CASES])
 @deal.post(lambda result: all(row["rho"] == RHO for row in result))
-@deal.post(lambda result: all(row["p_a"] == p_a and row["p_b"] == p_b
-                              for row, (_, p_a, p_b) in zip(result, CASES, strict=True)))
+# Deal's static evaluator approximates the appended list by its initial
+# empty value. The complete _valid_admissions predicate above still rejects
+# empty results at runtime. Check cardinality before strict iteration so
+# this independent marginal check returns a Boolean rather than raising.
+@deal.post(lambda result: not result or (
+    len(result) == len(CASES)
+    and all(row["p_a"] == p_a and row["p_b"] == p_b
+            for row, (_, p_a, p_b) in zip(result, CASES, strict=True))
+))
 @deal.post(lambda result: all(row["union"] ==
                               row["p_a"] + row["p_b"] - row["joint"]
                               for row in result))
