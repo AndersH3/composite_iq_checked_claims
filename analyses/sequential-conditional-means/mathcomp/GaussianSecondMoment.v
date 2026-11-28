@@ -93,10 +93,13 @@ have gi : mu.-integrable [set: R] g.
     (@gmc_centered_weighted_pdf_integrable R w Hw)). }
 have fg x : [set: R] x -> `|f x| <= `|g x|.
 { move=> _; rewrite /f /g -EFinM !abse_EFin lee_fin.
-  rewrite !normrM (ger0_norm c0)
-    (ger0_norm (@normal_pdf_ge0 R 0%R s x))
-    (ger0_norm (@normal_pdf_ge0 R 0%R w x))
-    (ger0_norm (sqr_ge0 x)).
+  (* Remove the norm of the entire nonnegative square density
+     before expanding any product on the dominating side. This
+     avoids rewriting inside the definitional expansion of x^2. *)
+  have Hf0 : (0 <= x ^+ 2 * normal_pdf 0 s x)%R.
+  { exact: mulr_ge0 (sqr_ge0 x) (@normal_pdf_ge0 R 0%R s x). }
+  rewrite (ger0_norm Hf0) !normrM (ger0_norm c0)
+    (ger0_norm (@normal_pdf_ge0 R 0%R w x)).
   have H := Hbound x.
   have Hm : (`|x| * (`|x| * normal_pdf 0 s x) <=
       `|x| * (c * normal_pdf 0 w x))%R.
