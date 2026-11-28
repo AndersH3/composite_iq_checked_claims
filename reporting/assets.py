@@ -156,6 +156,89 @@ def public_scalar_rows(rows):
     ]
 
 
+# Sequential tables have a distinct finite/limiting-law schema. Keep
+# their serialization separate from the generic publication boundary.
+@deal.pre(lambda directory, pooled, replicas, config: isinstance(directory, Path))
+@deal.pre(lambda directory, pooled, replicas, config: directory.is_dir())
+@deal.pre(lambda directory, pooled, replicas, config: isinstance(pooled, list))
+@deal.pre(lambda directory, pooled, replicas, config: bool(pooled))
+@deal.pre(lambda directory, pooled, replicas, config:
+          all(isinstance(row, dict) for row in pooled))
+@deal.pre(lambda directory, pooled, replicas, config: isinstance(replicas, list))
+@deal.pre(lambda directory, pooled, replicas, config: bool(replicas))
+@deal.pre(lambda directory, pooled, replicas, config:
+          all(isinstance(row, dict) for row in replicas))
+@deal.pre(lambda directory, pooled, replicas, config:
+          isinstance(config, dict) and "seeds" in config)
+@deal.pre(lambda directory, pooled, replicas, config:
+          isinstance(config["seeds"], (list, tuple)) and bool(config["seeds"]))
+@deal.post(lambda result: result is None)
+@deal.raises(OSError, ValueError, TypeError, KeyError, csv.Error, OverflowError)
+@deal.has("network", "write", "read")
+@deal.ensure(lambda directory, pooled, replicas, config, result:
+             directory.joinpath("moments.csv").is_file())
+@deal.ensure(lambda directory, pooled, replicas, config, result:
+             all(directory.joinpath(f"{mode}-r{r}.csv").is_file()
+                 for mode in ("population", "conditional") for r in (1, 2, 3)))
+@deal.ensure(lambda directory, pooled, replicas, config, result:
+             all(directory.joinpath(name + ".tex").is_file()
+                 for name in ("means", "population-means", "sds",
+                              "population-sds", "limits", "replicates")))
+@deal.ensure(lambda directory, pooled, replicas, config, result:
+             r"\input{simulation-data/population-means.tex}"
+             in directory.joinpath("means.tex").read_text(encoding="utf-8"))
+@deal.ensure(lambda directory, pooled, replicas, config, result:
+             r"\input{simulation-data/population-sds.tex}"
+             in directory.joinpath("sds.tex").read_text(encoding="utf-8"))
+def write_sequential_tables(directory, pooled, replicas, config):
+    """Serialize the Sequential project's finite and limiting-law tables.
+
+    Inputs are scalar pooled and replicate records, in their established
+    order, plus the base-seed configuration. Write the complete moments
+    CSV, six finite-law subsets, six TeX tables, and the existing TeX
+    inclusion references. Retain the distinction between population and
+    conditional laws and between base and derived stream seeds.
+    Missing required fields or representative replicate cases fail rather
+    than inventing a numerical observation. No random sampling is done.
+    """
+    write_csv(directory.joinpath("moments.csv"), pooled)
+    finite = [row for row in pooled if row["mode"] in {"population", "conditional"}]
+    for mode in ("population", "conditional"):
+        for r in (1, 2, 3):
+            write_csv(directory.joinpath(mode + "-r" + str(r) + ".csv"), [row for row in finite if row["mode"] == mode and row["r"] == r])
+    for filename, mode, title in [("means", "conditional", "Conditional centres after the observed IQ-150 block"),
+                                  ("population-means", "population", "Whole-battery population centres")]:
+        write_table(directory.joinpath(filename + ".tex"), ["$r$", "$k$", "Target IQ", "Observed IQ", "MC SE (IQ)", "$|z_{mean}|$"],
+                    [[format_number(int(row["r"])), format_number(int(row["k"]))] +
+                     [format_number(float(row[key]), 4) for key in ("theory_mean_iq", "mean_iq", "mean_se_iq", "mean_error_se")] for row in finite if row["mode"] == mode], title)
+    with directory.joinpath("means.tex").open("a", encoding="utf-8") as stream:
+        stream.write("\\input{simulation-data/population-means.tex}\n")
+    for filename, mode, title in [("sds", "conditional", "Conditional SD of actual outcomes (IQ points)"),
+                                  ("population-sds", "population", "Whole-battery population SD (IQ points)")]:
+        write_table(directory.joinpath(filename + ".tex"), ["$r$", "$k$", "Target SD", "Observed SD", "95\\% lower", "95\\% upper"],
+                    [[format_number(int(row["r"])), format_number(int(row["k"]))] +
+                     [format_number(float(row[key]), 4) for key in ("theory_sd_iq", "sd_iq", "sd_low_iq", "sd_high_iq")] for row in finite if row["mode"] == mode], title)
+    with directory.joinpath("sds.tex").open("a", encoding="utf-8") as stream:
+        stream.write("\\input{simulation-data/population-sds.tex}\n")
+    write_table(directory.joinpath("limits.tex"), ["$r$", "Law", "Target IQ", "Observed IQ", "Target SD", "Observed SD"],
+                [[format_number(int(row["r"])), "Pop." if row["mode"] == "population_limit" else "Cond."] +
+                 [format_number(float(row[key]), 4) for key in ("theory_mean_iq", "mean_iq", "theory_sd_iq", "sd_iq")] for row in pooled if row["mode"].endswith("_limit")],
+                "Gaussian laws with the analytically calculated limiting parameters")
+    seed_rows = []
+    for replicate, seed in enumerate(config["seeds"], 1):
+        # Each r has a derived stream seed; group by replicate identity,
+        # and display the base seed alongside the selected r=3 result.
+        subset = [row for row in replicas if row["replicate"] == replicate]
+        selected = next((row for row in subset if row["r"] == 3 and row["k"] == 10 and row["mode"] == "conditional"), None)
+        if selected is None:
+            raise ValueError("Each sequential replicate must include r=3,k=10 conditional")
+        seed_rows.append([format_number(int(selected["replicate"])), format_number(int(seed)),
+                          format_number(max(abs(float(row["mean_error_se"])) for row in subset), 3),
+                          format_number(float(selected["mean_iq"]), 4), format_number(float(selected["sd_iq"]), 4)])
+    write_table(directory.joinpath("replicates.tex"), ["Replicate", "Base seed", "Max $|z_{mean}|$", "$r=3,k=10$ mean IQ", "SD IQ"], seed_rows,
+                "Separate seeded runs; maxima cover all 24 laws")
+
+
 @deal.pre(lambda project, data: isinstance(project, str) and project in PROJECTS)
 @deal.pre(lambda project, data: isinstance(data, dict) and {"pooled", "replicates", "config"} <= data.keys())
 @deal.pre(lambda project, data: all(isinstance(data[key], list) and bool(data[key]) and all(isinstance(row, dict) for row in data[key]) for key in ("pooled", "replicates")))
@@ -281,42 +364,7 @@ def write_assets(project, data):
         rare_min, rare_max = min(rare_counts), max(rare_counts)
 
     else:
-        write_csv(directory.joinpath("moments.csv"), pooled)
-        finite = [row for row in pooled if row["mode"] in {"population", "conditional"}]
-        for mode in ("population", "conditional"):
-            for r in (1, 2, 3):
-                write_csv(directory.joinpath(mode + "-r" + str(r) + ".csv"), [row for row in finite if row["mode"] == mode and row["r"] == r])
-        for filename, mode, title in [("means", "conditional", "Conditional centres after the observed IQ-150 block"),
-                                      ("population-means", "population", "Whole-battery population centres")]:
-            write_table(directory.joinpath(filename + ".tex"), ["$r$", "$k$", "Target IQ", "Observed IQ", "MC SE (IQ)", "$|z_{mean}|$"],
-                        [[format_number(int(row["r"])), format_number(int(row["k"]))] +
-                         [format_number(float(row[key]), 4) for key in ("theory_mean_iq", "mean_iq", "mean_se_iq", "mean_error_se")] for row in finite if row["mode"] == mode], title)
-        with directory.joinpath("means.tex").open("a", encoding="utf-8") as stream:
-            stream.write("\\input{simulation-data/population-means.tex}\n")
-        for filename, mode, title in [("sds", "conditional", "Conditional SD of actual outcomes (IQ points)"),
-                                      ("population-sds", "population", "Whole-battery population SD (IQ points)")]:
-            write_table(directory.joinpath(filename + ".tex"), ["$r$", "$k$", "Target SD", "Observed SD", "95\\% lower", "95\\% upper"],
-                        [[format_number(int(row["r"])), format_number(int(row["k"]))] +
-                         [format_number(float(row[key]), 4) for key in ("theory_sd_iq", "sd_iq", "sd_low_iq", "sd_high_iq")] for row in finite if row["mode"] == mode], title)
-        with directory.joinpath("sds.tex").open("a", encoding="utf-8") as stream:
-            stream.write("\\input{simulation-data/population-sds.tex}\n")
-        write_table(directory.joinpath("limits.tex"), ["$r$", "Law", "Target IQ", "Observed IQ", "Target SD", "Observed SD"],
-                    [[format_number(int(row["r"])), "Pop." if row["mode"] == "population_limit" else "Cond."] +
-                     [format_number(float(row[key]), 4) for key in ("theory_mean_iq", "mean_iq", "theory_sd_iq", "sd_iq")] for row in pooled if row["mode"].endswith("_limit")],
-                    "Gaussian laws with the analytically calculated limiting parameters")
-        seed_rows = []
-        for replicate, seed in enumerate(config["seeds"], 1):
-            # Each r has a derived stream seed; group by replicate identity,
-            # and display the base seed alongside the selected r=3 result.
-            subset = [row for row in replicas if row["replicate"] == replicate]
-            selected = next((row for row in subset if row["r"] == 3 and row["k"] == 10 and row["mode"] == "conditional"), None)
-            if selected is None:
-                raise ValueError("Each sequential replicate must include r=3,k=10 conditional")
-            seed_rows.append([format_number(int(selected["replicate"])), format_number(int(seed)),
-                              format_number(max(abs(float(row["mean_error_se"])) for row in subset), 3),
-                              format_number(float(selected["mean_iq"]), 4), format_number(float(selected["sd_iq"]), 4)])
-        write_table(directory.joinpath("replicates.tex"), ["Replicate", "Base seed", "Max $|z_{mean}|$", "$r=3,k=10$ mean IQ", "SD IQ"], seed_rows,
-                    "Separate seeded runs; maxima cover all 24 laws")
+        write_sequential_tables(directory, pooled, replicas, config)
     # Narrative values are generated with the tables, so a different trial
     # count or seed configuration cannot leave hardcoded observations behind.
     if project == "hoeflin-ferguson":

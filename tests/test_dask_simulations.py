@@ -371,11 +371,11 @@ def small_config():
 
 
 @pytest.mark.parametrize("project", [HOEFLIN, SEQUENTIAL])
-@deal.pre(lambda small_config, project: protected_history_intact())
-@deal.pre(lambda small_config, project: reference_inputs_intact())
-@deal.pre(lambda small_config, project: project in {HOEFLIN, SEQUENTIAL})
-@deal.ensure(lambda small_config, project, result: protected_history_intact())
-@deal.ensure(lambda small_config, project, result: reference_inputs_intact())
+@deal.pre(lambda small_config, project, tmp_path: protected_history_intact())
+@deal.pre(lambda small_config, project, tmp_path: reference_inputs_intact())
+@deal.pre(lambda small_config, project, tmp_path: project in {HOEFLIN, SEQUENTIAL})
+@deal.ensure(lambda small_config, project, tmp_path, result: protected_history_intact())
+@deal.ensure(lambda small_config, project, tmp_path, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("network", "read", "write", "random", "global", "import", "syscall")
 # Independently guard source ownership, input integrity and required test infrastructure.
@@ -387,7 +387,7 @@ def small_config():
 @deal.pre(lambda *args, **kwargs: callable(statistics.event_result))
 @deal.pre(lambda *args, **kwargs: callable(statistics.pool_rows))
 @deal.pre(lambda *args, **kwargs: callable(assets.write_assets))
-def test_small_dask_moment_graph_is_lazy_reproducible_and_on_correct_scale(small_config, project):
+def test_small_dask_moment_graph_is_lazy_reproducible_and_on_correct_scale(small_config, project, tmp_path):
     """Fixed seeds/chunks reproduce rows; whole-vector SDs use the stated scale."""
     from reporting import simulate
     from dask.delayed import Delayed
@@ -410,6 +410,36 @@ def test_small_dask_moment_graph_is_lazy_reproducible_and_on_correct_scale(small
         assert specific["theory_sd_iq"] ** 2 == pytest.approx(475 / 16)
         populations = [row for row in first if row["mode"].startswith("population")]
         assert all(row["theory_mean_iq"] == 100.0 for row in populations)
+        # Render the real small Dask result into disposable test assets.
+        # The complete pooled CSV retains all laws; each finite subset
+        # contains only its specified history size and conditioning mode.
+        pooled = assets.public_scalar_rows(
+            statistics.pool_rows(project, list(first))
+        )
+        replicas = assets.public_scalar_rows(list(first))
+        before = copy.deepcopy((pooled, replicas, small_config))
+        assets.write_sequential_tables(tmp_path, pooled, replicas, small_config)
+        expected = {"moments.csv", "means.tex", "population-means.tex",
+                    "sds.tex", "population-sds.tex", "limits.tex", "replicates.tex"}
+        expected.update(f"{mode}-r{r}.csv"
+                        for mode in ("population", "conditional") for r in (1, 2, 3))
+        assert {path.name for path in tmp_path.iterdir()} == expected
+        with tmp_path.joinpath("moments.csv").open(encoding="utf-8", newline="") as stream:
+            assert len(list(csv.DictReader(stream))) == len(pooled)
+        for mode in ("population", "conditional"):
+            for r in (1, 2, 3):
+                path = tmp_path.joinpath(f"{mode}-r{r}.csv")
+                with path.open(encoding="utf-8", newline="") as stream:
+                    records = list(csv.DictReader(stream))
+                assert len(records) == sum(
+                    row["mode"] == mode and row["r"] == r for row in pooled
+                )
+                assert all(row["mode"] == mode and int(row["r"]) == r
+                           for row in records)
+        assert r"\input{simulation-data/population-means.tex}" in (
+            tmp_path.joinpath("means.tex").read_text(encoding="utf-8")
+        )
+        assert (pooled, replicas, small_config) == before
 
 
 @deal.pre(lambda small_config: protected_history_intact())
