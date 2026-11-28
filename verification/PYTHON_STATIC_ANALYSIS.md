@@ -19,14 +19,14 @@ All eight requested tools scan the tracked Python inventory, including tests and
 
 | Tool | Report | Initial policy |
 | --- | --- | --- |
-| Pylint | Full default messages, score and reports | Findings baseline; fatal/usage errors fail |
+| Pylint | Full default messages, score and reports | Full report baseline; separate errors-only gate; fatal/usage errors fail |
 | Flake8 | Default style and Pyflakes rules, McCabe threshold 10 | Baseline |
-| Pyflakes | Independent binding/import scan | Baseline |
+| Pyflakes | Independent binding/import scan | Gate (zero findings required) |
 | Bandit | All severity/confidence levels in JSON | Baseline; separate high-severity/high-confidence gate |
 | Vulture | Unused-code candidates, confidence >=60 | Baseline; dynamic uses need review |
 | Radon | CC, MI, raw and Halstead JSON metrics | Metrics; errors fail |
 | Prospector | High strictness, test and doc warnings, unblended JSON | Baseline; tool errors fail |
-| Ruff | E/F/W/I/UP/B/S/SIM/C90 JSON | Baseline; F63/F7/F82 and unconditional syntax-error correctness gate |
+| Ruff | E/F/W/I/UP/B/S/SIM/C90 JSON | Baseline; F63/F7/F82/B905 and unconditional syntax-error correctness gate |
 
 `make check` includes the extended suite in addition to all previous Deal checks and runtime tests. `make static-analysis` runs only the extended checks. `make static-analysis-strict` additionally fails on any baseline finding; Radon measurements themselves are not findings. No automatic edits or baseline-wide suppression. Strict mode is deliberately not the initial default because existing findings have not yet been triaged. Review each warning, especially Dask delayed objects, public compatibility imports, pytest fixtures and security warnings about deliberate test assertions or seeded numerical simulation. A heuristic finding is not proof of dead code or exploitability.
 
@@ -37,6 +37,10 @@ Initial correctness/security gates are intentionally narrow, not a claim that al
 ## Initial diagnostic triage
 
 At 42a1814 all eight tools installed successfully. Seven completed their scans; the Flake8 traceback identified Deal's synthetic AST range error in its automatically loaded plugin, not a native Flake8 defect. The runner now reuses the same location-only compatibility function as the standalone Deal lint, without modifying the installed package. Pyflakes identified ten intentional re-exports in reporting/statistics.py (now explicitly declared in __all__) and one unused math import in a test (removed). Vulture identified the pytest fixture contracts_enabled, two deliberate lint-fixture functions, the dynamically loaded compile_fixed_locations helper and MOMENT_RTOL. Retain the first four; review references to the constant before removal. These changes are pending execution regression. Full native analysis findings remain necessary before broader refactoring.
+
+## R4 regression and strengthened gates
+
+At 6108e96 the complete make check passed. All 26 positive Deal inputs were clean, the negative control was detected, 140 named functions retained 2232 contracts, and all 122 runtime tests passed. All eight analyzers completed. The R4 archive shows zero Pyflakes findings, zero Pylint E-category messages and zero Ruff B905 findings, so those previously clean categories now become mandatory gates. Full Pylint/Ruff diagnostic reports remain available and no style or security rule is silently suppressed. Radon metrics are still not pass/fail complexity thresholds. The new gates must be validated on the next run.
 
 ## Complete AI disclosure
 

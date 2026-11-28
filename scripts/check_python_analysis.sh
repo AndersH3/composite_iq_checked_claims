@@ -79,7 +79,7 @@ from flake8.main.cli import main
 Contract.bytecode = cached_property(compile_fixed_locations)
 raise SystemExit(main())'
 run_check flake8 baseline 1 "$python" -c "$flake8_bootstrap" --isolated --jobs=1 --extend-ignore=DEL --max-complexity=10 --statistics "${files[@]}"
-run_check pyflakes baseline 1 "$python" -m pyflakes "${files[@]}"
+run_check pyflakes gate 1 "$python" -m pyflakes "${files[@]}"
 run_check bandit baseline 1 "$python" -m bandit -f json "${files[@]}"
 run_check vulture baseline 3 "$python" -m vulture --min-confidence 60 "${files[@]}"
 # Resolve Radon's installed console entry point in the selected environment.
@@ -97,7 +97,8 @@ run_check ruff baseline 1 "$python" -m ruff check --isolated --target-version py
 # Ruff reports syntax errors unconditionally. Undefined names, invalid
 # control flow and high-confidence/high-
 # severity security findings are not merely style debt.
-run_check ruff-correctness gate 1 "$python" -m ruff check --isolated --target-version py313 --select F63,F7,F82 "${files[@]}"
+run_check pylint-errors gate pylint "$python" -m pylint --errors-only --persistent=n "${files[@]}"
+run_check ruff-correctness gate 1 "$python" -m ruff check --isolated --target-version py313 --select F63,F7,F82,B905 "${files[@]}"
 run_check bandit-high gate 1 "$python" -m bandit -lll -iii "${files[@]}"
 
 # Validate machine-readable report structure; malformed reports fail,

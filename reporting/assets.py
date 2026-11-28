@@ -82,7 +82,7 @@ def write_csv(path, rows):
 @deal.pre(lambda path, headers, rows, title: all(isinstance(value, str) and "\n" not in value for row in rows for value in row))
 @deal.pre(lambda path, headers, rows, title: isinstance(title, str) and bool(title) and "\n" not in title)
 @deal.post(lambda result: result is None)
-@deal.ensure(lambda path, headers, rows, title, result: path.is_file() and path.read_text().count(r"\toprule") == 1 and path.read_text().count(r"\bottomrule") == 1)
+@deal.ensure(lambda path, headers, rows, title, result: path.is_file() and path.read_text(encoding="utf-8").count(r"\toprule") == 1 and path.read_text(encoding="utf-8").count(r"\bottomrule") == 1)
 @deal.raises(OSError)
 @deal.has("network", "write", "read")
 @deal.ensure(lambda path, headers, rows, title, result: r"\begin{longtable}" in path.read_text(encoding="utf-8"))
@@ -108,6 +108,52 @@ def write_table(path, headers, rows, title):
                + "".join(" & ".join(row) + r" \\" + "\n" for row in rows)
                + "\\end{longtable}\n\\endgroup\n")
     path.write_text(content, encoding="utf-8")
+
+
+# The JSON record keeps private metadata and nested structures. CSV inputs
+# are a separate projection, preserving scalar values and insertion order.
+@deal.pre(lambda rows: isinstance(rows, list))
+@deal.pre(lambda rows: all(isinstance(row, dict) for row in rows))
+@deal.pre(lambda rows: all(isinstance(key, str) for row in rows for key in row))
+@deal.post(lambda result: isinstance(result, list))
+@deal.ensure(lambda rows, result: len(result) == len(rows))
+@deal.post(lambda result: all(isinstance(row, dict) for row in result))
+@deal.post(lambda result: all(not key.startswith("_") for row in result for key in row))
+@deal.post(lambda result: all(value is None or isinstance(value, (str, int, float, bool))
+                             for row in result for value in row.values()))
+@deal.ensure(lambda rows, result: all(
+    key in rows[index] and value is rows[index][key]
+    for index, row in enumerate(result) for key, value in row.items()))
+@deal.ensure(lambda rows, result: all(
+    key in result[index]
+    for index, row in enumerate(rows) for key, value in row.items()
+    if not key.startswith("_") and (value is None or isinstance(value, (str, int, float, bool)))))
+@deal.ensure(lambda rows, result: all(
+    list(row) == [key for key in rows[index] if key in row]
+    for index, row in enumerate(result)))
+@deal.ensure(lambda rows, result: result is not rows)
+@deal.ensure(lambda rows, result: all(
+    row is not rows[index] for index, row in enumerate(result)))
+@deal.raises()
+@deal.has("network")
+def public_scalar_rows(rows):
+    """Project report records onto their public scalar CSV columns.
+
+    Preserve the number and order of rows, the original insertion order
+    of retained keys, and the exact value objects, without numerical
+    coercion. Exclude private keys and nested values. Return new list
+    and dictionary containers; the full input remains available for
+    the JSON provenance record. No files or samples are produced.
+    """
+    return [
+        {
+            key: value
+            for key, value in row.items()
+            if not key.startswith("_")
+            and (value is None or isinstance(value, (str, int, float, bool)))
+        }
+        for row in rows
+    ]
 
 
 @deal.pre(lambda project, data: isinstance(project, str) and project in PROJECTS)
@@ -139,8 +185,8 @@ def write_assets(project, data):
     directory.joinpath("summary.json").write_text(json.dumps(data, indent=2, allow_nan=False) + "\n", encoding="utf-8")
     # Private per-case metadata is retained losslessly in summary.json. Plot
     # CSVs contain scalar fields only: PGFPlots is not a general JSON decoder.
-    pooled = [{key: value for key, value in row.items() if not key.startswith("_") and (value is None or isinstance(value, (str, int, float, bool)))} for row in pooled]
-    replicas = [{key: value for key, value in row.items() if not key.startswith("_") and (value is None or isinstance(value, (str, int, float, bool)))} for row in replicas]
+    pooled = public_scalar_rows(pooled)
+    replicas = public_scalar_rows(replicas)
     write_csv(directory.joinpath("replicate-records.csv"), replicas)
     max_mean = max(abs(float(row.get("mean_error_se", 0))) for row in pooled)
     max_event = max(abs(float(row.get("mean_error_se", 0))) for row in pooled + replicas)

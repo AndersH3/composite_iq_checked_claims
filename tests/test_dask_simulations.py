@@ -313,8 +313,28 @@ def test_csv_writer_preserves_numeric_rows_and_rejects_heterogeneous_schema(tmp_
     destination = tmp_path.joinpath("numeric.csv")
     rows = [{"count": 0, "rate": 0.0}, {"count": 3, "rate": 0.125}]
     untouched = copy.deepcopy(rows)
+    # The CSV projection must not mutate full JSON records or drop zero,
+    # False, None, or the empty string merely because they are falsey.
+    source = [
+        {"count": 0, "_meta": {"seed": 42}, "rate": 0.0,
+         "flag": False, "missing": None, "label": "", "nested": [1, 2]},
+        {"label": "next", "count": 3},
+    ]
+    original = copy.deepcopy(source)
+    projected = assets.public_scalar_rows(source)
+    assert projected == [
+        {"count": 0, "rate": 0.0, "flag": False, "missing": None, "label": ""},
+        {"label": "next", "count": 3},
+    ]
+    assert list(projected[0]) == ["count", "rate", "flag", "missing", "label"]
+    assert projected is not source and projected[0] is not source[0]
+    assert source == original
+    assert assets.public_scalar_rows([]) == []
+    assert assets.public_scalar_rows([{"_hidden": 1}]) == [{}]
+    with pytest.raises(deal.PreContractError):
+        assets.public_scalar_rows([{1: "not a CSV column name"}])
     assets.write_csv(destination, rows)
-    with destination.open(newline="") as stream:
+    with destination.open(newline="", encoding="utf-8") as stream:
         observed = list(csv.DictReader(stream))
     assert len(observed) == 2
     assert int(observed[1]["count"]) == 3
