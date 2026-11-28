@@ -7,3 +7,18 @@ from library.python.statistics import (
     HOEFLIN, TOWERS, SEQUENTIAL, PROJECTS, COMMON, MOMENT_META, EVENT_META,
     moment_result, event_result, pool_rows,
 )
+
+# Explicitly preserve the historical public API. These imports are
+# intentional re-exports, not unused implementations.
+__all__ = [
+    "HOEFLIN",
+    "TOWERS",
+    "SEQUENTIAL",
+    "PROJECTS",
+    "COMMON",
+    "MOMENT_META",
+    "EVENT_META",
+    "moment_result",
+    "event_result",
+    "pool_rows",
+]

@@ -70,7 +70,7 @@ jobs:
             exit 1
           fi
 
-      - name: Kernel-check all proofs with Rocq 9.2
+      - name: Compile and independently replay all canonical Rocq modules with Rocq 9.2
         shell: bash
         run: |
-          docker run --rm -v "$PWD:/workspace:ro" rocq/rocq-prover:9.2.0 sh /workspace/scripts/compile_rocq.sh
+          docker run --rm -v "$PWD:/workspace:ro" rocq/rocq-prover:9.2.0 sh /workspace/scripts/compile_rocq.sh --independent-check

@@ -4,18 +4,18 @@
 
 > **AI disclosure:** This numerical/reporting code and the accompanying source and documentation received substantial AI assistance. Results are model-based computations, not independent empirical psychometric validation.
 
-The active pipeline is Python/Dask/NumPy/SciPy with Deal contracts. All three analysis projects have a mathematical report and a separate Python/Dask simulation-methods/results report. The former native simulation path is no longer shipped. Older proof, runtime and publication snapshots remain recoverable in Git history but are not current-source evidence.
+The active pipeline is Python/Dask/NumPy/SciPy with Deal contracts. All four analysis projects have a mathematical report and a separate Python/Dask simulation-methods/results report. The former native simulation path is no longer shipped. Older proof, runtime and publication snapshots remain recoverable in Git history but are not current-source evidence.
 
 - `simulate.py`: one shared Dask graph for reference calculations, block tasks, seeded replicates, pooling, output generation and optional PDFs. The default is the block-summary engine; `--engine arrays` retains the older Dask Array implementation as a cross-check for up to one million samples per replicate.
 - `block_simulations.py`: vectorized, worker-local NumPy normal draws inside Dask delayed blocks. Every block evaluates all coupled rules/counts, transmits only small sufficient statistics, and combines centered variances with the parallel Chan merge. This avoids shipping full sample matrices across worker boundaries.
 - `assets.py`: reproducible numerical tables and CSV/TeX plot data. Report displays round values; the underlying records retain numerical precision.
 - `provenance.py`: SHA-256 and JSON source/output manifests.
-- `rebuild_proofs.py`: document-only XeLaTeX/KOMA-Script rebuild for six books from current recorded Dask assets, without generating fresh random draws.
+- `rebuild_proofs.py`: document-only XeLaTeX/KOMA-Script rebuild for eight books from current recorded Dask assets, without generating fresh random draws.
 - `../library/latex/report_style.tex` and `../library/latex/simulation_style.tex`: canonical shared book typography and title pages. The `reporting/*_style.tex` files and `reporting/ai_disclosure.tex` are compatibility aliases only. The canonical full AI-use disclosure lives in `library/latex/ai_disclosure.tex` and is included once per report through `\ProjectReportAIAppendix`. Shared mathematical proof inputs remain here.
 
 ## Scaled runs and memory model
 
-The prior baseline run used four seeds × 1,000,000 samples per seed (4,000,000 per case), 50,000-row chunks, and 31,254 tasks. The optimized **default configuration** specifies **eight seeds × 5,000,000 samples per seed = 40,000,000 per case** with 500,000-row blocks; its no-execution task graph has **3,303 tasks**. This is 10× the baseline sample budget with about 89% fewer Dask scheduling tasks. The actual executed sample count, engine, seed set and output hashes are recorded in **`reporting/run.json`**, and the six PDFs must be read alongside that manifest. A source default alone does not certify that samples were drawn.
+The prior baseline run used four seeds × 1,000,000 samples per seed (4,000,000 per case), 50,000-row chunks, and 31,254 tasks. The optimized **default configuration** specifies **eight seeds × 5,000,000 samples per seed = 40,000,000 per case** with 500,000-row blocks; its no-execution task graph has **3,303 tasks**. This is 10× the baseline sample budget with about 89% fewer Dask scheduling tasks. The actual executed sample count, engine, seed set and output hashes for the original three-study campaign are recorded in **`reporting/run.json`**, and its six PDFs must be read alongside that manifest. The fourth study has a specialized campaign and separate evidence. A source default alone does not certify that samples were drawn.
 
 ### Measured 40-million-sample run
 

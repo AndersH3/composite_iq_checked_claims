@@ -16,57 +16,15 @@ import re
 import sys
 from pathlib import Path
 
-# Canonical source ownership manifest. The initial 18 modules remain unchanged;
-# the new SequentialSensitivity module is owned by its report subproject.
-# Generic mathematical files live only in library/rocq; specialized proofs
-# are owned by their corresponding report project.
-paths_by_module = {
-    "FiniteSum": Path("library/rocq/FiniteSum.v"),
-    "FiniteUnion": Path("library/rocq/FiniteUnion.v"),
-    "FiniteMoments": Path("library/rocq/FiniteMoments.v"),
-    "FiniteBridge": Path("library/rocq/FiniteBridge.v"),
-    "EquicorrelationSpectral": Path("analyses/sequential-conditional-means/rocq/EquicorrelationSpectral.v"),
-    "EquicorrelationVectors": Path("analyses/sequential-conditional-means/rocq/EquicorrelationVectors.v"),
-    "EquicorrelationInverseVectors": Path("analyses/sequential-conditional-means/rocq/EquicorrelationInverseVectors.v"),
-    "FiniteTwoCellProjection": Path("library/rocq/FiniteTwoCellProjection.v"),
-    "FiniteNestedProjection": Path("library/rocq/FiniteNestedProjection.v"),
-    "FiniteConditionalCovariance": Path("library/rocq/FiniteConditionalCovariance.v"),
-    "FiniteConditionalResidual": Path("library/rocq/FiniteConditionalResidual.v"),
-    "TwoObservationSchur": Path("library/rocq/TwoObservationSchur.v"),
-    "Hoeflin": Path("analyses/hoeflin-ferguson/rocq/Hoeflin.v"),
-    "Admissions": Path("analyses/towers-multiple-test-admissions/rocq/Admissions.v"),
-    "FourCellBridge": Path("analyses/towers-multiple-test-admissions/rocq/FourCellBridge.v"),
-    "ThreeTestAdmissions": Path("analyses/towers-multiple-test-admissions/rocq/ThreeTestAdmissions.v"),
-    "ThreeTestPairBridge": Path("analyses/towers-multiple-test-admissions/rocq/ThreeTestPairBridge.v"),
-    "ThreeTestConditionalStrata": Path("analyses/towers-multiple-test-admissions/rocq/ThreeTestConditionalStrata.v"),
-    "TwoStratumAssociation": Path("library/rocq/TwoStratumAssociation.v"),
-    "TwoStratumReversal": Path("library/rocq/TwoStratumReversal.v"),
-    "TrivariateSchur": Path("library/rocq/TrivariateSchur.v"),
-    "WilsonScoreAlgebra": Path("library/rocq/WilsonScoreAlgebra.v"),
-    "SamplingPrecision": Path("library/rocq/SamplingPrecision.v"),
-    "ConditionalRatioStability": Path("library/rocq/ConditionalRatioStability.v"),
-    "PooledMomentsAlgebra": Path("library/rocq/PooledMomentsAlgebra.v"),
-    "ListPoolingAlgebra": Path("library/rocq/ListPoolingAlgebra.v"),
-    "FourContrastCovariance": Path("library/rocq/FourContrastCovariance.v"),
-    "SampleContrastCauchy": Path("library/rocq/SampleContrastCauchy.v"),
-    "ThreeGroupPooling": Path("library/rocq/ThreeGroupPooling.v"),
-    "TwoRatePrecision": Path("library/rocq/TwoRatePrecision.v"),
-    "StratifiedBernoulli": Path("library/rocq/StratifiedBernoulli.v"),
-    "ThreeTestSelectionDecomposition": Path("analyses/towers-multiple-test-admissions/rocq/ThreeTestSelectionDecomposition.v"),
-    "ThreeTestReversalCriteria": Path("analyses/towers-multiple-test-admissions/rocq/ThreeTestReversalCriteria.v"),
-    "ThreeTestSchur": Path("analyses/towers-multiple-test-admissions/rocq/ThreeTestSchur.v"),
-    "SequentialReport": Path("analyses/sequential-conditional-means/rocq/SequentialReport.v"),
-    "SequentialSensitivity": Path("analyses/sequential-conditional-means/rocq/SequentialSensitivity.v"),
-    "UnequalHistoryLinearPrediction": Path("analyses/sequential-conditional-means/rocq/UnequalHistoryLinearPrediction.v"),
-    "GaussianConditionalKernel": Path("analyses/sequential-conditional-means/rocq/GaussianConditionalKernel.v"),
-    "GaussianCovarianceDomain": Path("analyses/sequential-conditional-means/rocq/GaussianCovarianceDomain.v"),
-    "GaussianInnovationBounds": Path("analyses/sequential-conditional-means/rocq/GaussianInnovationBounds.v"),
-    "GaussianBatchBalance": Path("analyses/sequential-conditional-means/rocq/GaussianBatchBalance.v"),
-    "GaussianFiniteHistoryPosterior": Path("analyses/sequential-conditional-means/rocq/GaussianFiniteHistoryPosterior.v"),
-    "ReportRounding": Path("analyses/sequential-conditional-means/rocq/ReportRounding.v"),
-    "IQDifferenceAlgebra": Path("analyses/iq-test-differences/rocq/IQDifferenceAlgebra.v"),
-    "ReportCounterexample": Path("analyses/sequential-conditional-means/rocq/ReportCounterexample.v"),
-}
+# The compiler and documentation audit consume the same source inventory.
+# Preserve module basenames as the stable keys for historical proof registers.
+manifest = Path("rocq/canonical-modules.txt")
+manifest_paths = [Path(line) for line in manifest.read_text(encoding="utf-8").splitlines()]
+paths_by_module = {path.stem: path for path in manifest_paths}
+if not manifest_paths or len(paths_by_module) != len(manifest_paths):
+    raise SystemExit("Canonical Rocq manifest empty or duplicate module basename")
+if any(path.suffix != ".v" or path.is_absolute() or ".." in path.parts for path in manifest_paths):
+    raise SystemExit("Invalid canonical Rocq manifest path")
 modules = tuple(paths_by_module)
 canonical = set(paths_by_module.values())
 present = set(Path("library/rocq").glob("*.v"))

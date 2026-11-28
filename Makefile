@@ -1,7 +1,10 @@
 PYTHON ?= python3
+PROSPECTOR_PYTHON ?= .venv-prospector/bin/python
+ANALYSIS_OUTPUT ?= .analysis-results
 
-.PHONY: check contracts lint test simulations library report-template proof-reports report-books simulation-reports
-check: library report-template contracts lint test
+
+.PHONY: static-analysis static-analysis-strict shellcheck check contracts lint test simulations library report-template proof-reports report-books simulation-reports
+check: library report-template contracts lint test static-analysis
 
 contracts:
 	$(PYTHON) verification/check_contract_coverage.py
@@ -9,13 +12,23 @@ contracts:
 lint:
 	$(PYTHON) verification/check_static_lint.py
 
+static-analysis: shellcheck
+	bash scripts/check_python_analysis.sh "$(PYTHON)" "$(PROSPECTOR_PYTHON)" "$(ANALYSIS_OUTPUT)" baseline
+
+static-analysis-strict: shellcheck
+	bash scripts/check_python_analysis.sh "$(PYTHON)" "$(PROSPECTOR_PYTHON)" "$(ANALYSIS_OUTPUT)" strict
+
 test:
 	$(PYTHON) -m pytest -q tests
 
-report-template:
+shellcheck:
+	command -v shellcheck
+	git ls-files -z '*.sh' | xargs -0 -r shellcheck --severity=warning
+
+report-template: shellcheck
 	bash scripts/check_report_template.sh
 
-library:
+library: shellcheck
 	bash scripts/check_library_layout.sh
 
 simulations:

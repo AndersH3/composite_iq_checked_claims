@@ -1260,6 +1260,12 @@ Proof.
 Qed.
 
 
+(** Centralize repeated rational covariance normalization while keeping
+    the exact existing hypotheses, unfolding list and Stdlib Field/Nra
+    solver order. This local tactic proves no new mathematical claim. *)
+Local Ltac gcd_rational_normalize :=
+  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+
 (** [d051_d_at_zero] (theorem).
  Mathematical meaning: Zero previous observations leave precisely the contrast eigenvalue in the denominator.
  Exact checked proposition: forall c:R, sequential_d 0 c=1-c.
@@ -1270,7 +1276,7 @@ Qed.
 *)
 Theorem d051_d_at_zero : forall c:R, sequential_d 0 c=1-c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_d_at_one] (theorem).
@@ -1283,7 +1289,7 @@ Qed.
 *)
 Theorem d051_d_at_one : forall c:R, sequential_d 1 c=1.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_d_at_two] (theorem).
@@ -1296,7 +1302,7 @@ Qed.
 *)
 Theorem d051_d_at_two : forall c:R, sequential_d 2 c=1+c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_d_at_three] (theorem).
@@ -1309,7 +1315,7 @@ Qed.
 *)
 Theorem d051_d_at_three : forall c:R, sequential_d 3 c=1+2*c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_d_at_four] (theorem).
@@ -1322,7 +1328,7 @@ Qed.
 *)
 Theorem d051_d_at_four : forall c:R, sequential_d 4 c=1+3*c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_d_at_five] (theorem).
@@ -1335,7 +1341,7 @@ Qed.
 *)
 Theorem d051_d_at_five : forall c:R, sequential_d 5 c=1+4*c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_d_successor] (theorem).
@@ -1348,7 +1354,7 @@ Qed.
 *)
 Theorem d051_d_successor : forall n c:R, sequential_d (n+1) c=sequential_d n c+c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_d_two_successors] (theorem).
@@ -1361,7 +1367,7 @@ Qed.
 *)
 Theorem d051_d_two_successors : forall n c:R, sequential_d (n+2) c=sequential_d n c+2*c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_d_three_successors] (theorem).
@@ -1374,7 +1380,7 @@ Qed.
 *)
 Theorem d051_d_three_successors : forall n c:R, sequential_d (n+3) c=sequential_d n c+3*c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_d_correlation_difference] (theorem).
@@ -1387,7 +1393,7 @@ Qed.
 *)
 Theorem d051_d_correlation_difference : forall n c d:R, sequential_d n c-sequential_d n d=(n-1)*(c-d).
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_d_correlation_perturbation] (theorem).
@@ -1400,7 +1406,7 @@ Qed.
 *)
 Theorem d051_d_correlation_perturbation : forall n c h:R, sequential_d n (c+h)=sequential_d n c+(n-1)*h.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_d_correlation_interpolation] (theorem).
@@ -1413,7 +1419,7 @@ Qed.
 *)
 Theorem d051_d_correlation_interpolation : forall n c d t:R, sequential_d n (t*c+(1-t)*d)=t*sequential_d n c+(1-t)*sequential_d n d.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_d_compensated_blocks] (theorem).
@@ -1426,7 +1432,7 @@ Qed.
 *)
 Theorem d051_d_compensated_blocks : forall n k c:R, sequential_d (n+k) c=sequential_d n c+sequential_d (k+1) c-1.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_d_mixed_zero] (theorem).
@@ -1439,7 +1445,7 @@ Qed.
 *)
 Theorem d051_d_mixed_zero : forall n k l c:R, sequential_d (n+k+l) c-sequential_d (n+k) c-sequential_d (n+l) c+sequential_d n c=0.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_d_reverse_difference] (theorem).
@@ -1452,7 +1458,7 @@ Qed.
 *)
 Theorem d051_d_reverse_difference : forall n k c:R, sequential_d n c-sequential_d (n+k) c=-(k*c).
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_cov_independence_diag] (theorem).
@@ -1465,7 +1471,7 @@ Qed.
 *)
 Theorem d051_cov_independence_diag : forall n:R, equicorr_schur_diagonal n 0=1.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_cov_independence_cross] (theorem).
@@ -1478,7 +1484,7 @@ Qed.
 *)
 Theorem d051_cov_independence_cross : forall n:R, equicorr_schur_cross n 0=0.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_cov_zero_history_diag] (theorem).
@@ -1491,7 +1497,7 @@ Qed.
 *)
 Theorem d051_cov_zero_history_diag : forall c:R, 1-c<>0 -> equicorr_schur_diagonal 0 c=1.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_cov_zero_history_cross] (theorem).
@@ -1504,7 +1510,7 @@ Qed.
 *)
 Theorem d051_cov_zero_history_cross : forall c:R, 1-c<>0 -> equicorr_schur_cross 0 c=c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_cov_third_diagonal] (theorem).
@@ -1517,7 +1523,7 @@ Qed.
 *)
 Theorem d051_cov_third_diagonal : forall c:R, 1+2*c<>0 -> equicorr_schur_diagonal 3 c=(1-c)*(1+3*c)/(1+2*c).
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_cov_third_cross] (theorem).
@@ -1530,7 +1536,7 @@ Qed.
 *)
 Theorem d051_cov_third_cross : forall c:R, 1+2*c<>0 -> equicorr_schur_cross 3 c=c*(1-c)/(1+2*c).
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_cov_fourth_diagonal] (theorem).
@@ -1543,7 +1549,7 @@ Qed.
 *)
 Theorem d051_cov_fourth_diagonal : forall c:R, 1+3*c<>0 -> equicorr_schur_diagonal 4 c=(1-c)*(1+4*c)/(1+3*c).
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_cov_fourth_cross] (theorem).
@@ -1556,7 +1562,7 @@ Qed.
 *)
 Theorem d051_cov_fourth_cross : forall c:R, 1+3*c<>0 -> equicorr_schur_cross 4 c=c*(1-c)/(1+3*c).
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_cov_fifth_diagonal] (theorem).
@@ -1569,7 +1575,7 @@ Qed.
 *)
 Theorem d051_cov_fifth_diagonal : forall c:R, 1+4*c<>0 -> equicorr_schur_diagonal 5 c=(1-c)*(1+5*c)/(1+4*c).
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_cov_fifth_cross] (theorem).
@@ -1582,7 +1588,7 @@ Qed.
 *)
 Theorem d051_cov_fifth_cross : forall c:R, 1+4*c<>0 -> equicorr_schur_cross 5 c=c*(1-c)/(1+4*c).
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_cov_cross_weighted] (theorem).
@@ -1595,7 +1601,7 @@ Qed.
 *)
 Theorem d051_cov_cross_weighted : forall n c:R, sequential_d n c<>0 -> sequential_d n c*equicorr_schur_cross n c=c*(1-c).
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_cov_diag_weighted] (theorem).
@@ -1608,7 +1614,7 @@ Qed.
 *)
 Theorem d051_cov_diag_weighted : forall n c:R, sequential_d n c<>0 -> sequential_d n c*equicorr_schur_diagonal n c=(1-c)*(1+n*c).
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_cov_two_future_common] (theorem).
@@ -1621,7 +1627,7 @@ Qed.
 *)
 Theorem d051_cov_two_future_common : forall n c:R, sequential_d n c<>0 -> equicorr_schur_diagonal n c+equicorr_schur_cross n c=(1-c)*sequential_d (n+2) c/sequential_d n c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_cov_three_future_common] (theorem).
@@ -1634,7 +1640,7 @@ Qed.
 *)
 Theorem d051_cov_three_future_common : forall n c:R, sequential_d n c<>0 -> equicorr_schur_diagonal n c+2*equicorr_schur_cross n c=(1-c)*sequential_d (n+3) c/sequential_d n c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_cov_diagonal_variance_drop] (theorem).
@@ -1647,7 +1653,7 @@ Qed.
 *)
 Theorem d051_cov_diagonal_variance_drop : forall n k c:R, sequential_d n c<>0 -> sequential_d (n+k) c<>0 -> equicorr_schur_diagonal n c-equicorr_schur_diagonal (n+k) c=k*c*c*(1-c)/(sequential_d n c*sequential_d (n+k) c).
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_cov_cross_variance_drop] (theorem).
@@ -1660,7 +1666,7 @@ Qed.
 *)
 Theorem d051_cov_cross_variance_drop : forall n k c:R, sequential_d n c<>0 -> sequential_d (n+k) c<>0 -> equicorr_schur_cross n c-equicorr_schur_cross (n+k) c=k*c*c*(1-c)/(sequential_d n c*sequential_d (n+k) c).
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_cov_common_unfolded] (theorem).
@@ -1673,7 +1679,7 @@ Qed.
 *)
 Theorem d051_cov_common_unfolded : forall n k c:R, sequential_d n c<>0 -> equicorr_schur_diagonal n c+(k-1)*equicorr_schur_cross n c=(1-c)*(1+(n+k-1)*c)/sequential_d n c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_cov_future_sum_contrast] (theorem).
@@ -1702,7 +1708,7 @@ Qed.
 *)
 Theorem d051_cov_future_sum_closed : forall n k c:R, sequential_d n c<>0 -> k*equicorr_schur_diagonal n c+k*(k-1)*equicorr_schur_cross n c=k*(1-c)+k*k*c*(1-c)/sequential_d n c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_cov_cross_pairs_closed] (theorem).
@@ -1715,7 +1721,7 @@ Qed.
 *)
 Theorem d051_cov_cross_pairs_closed : forall n k c:R, sequential_d n c<>0 -> k*(k-1)*equicorr_schur_cross n c=k*(k-1)*c*(1-c)/sequential_d n c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_cov_two_score_contrast] (theorem).
@@ -1728,7 +1734,7 @@ Qed.
 *)
 Theorem d051_cov_two_score_contrast : forall n c:R, sequential_d n c<>0 -> 2*equicorr_schur_diagonal n c-2*equicorr_schur_cross n c=2*(1-c).
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_cov_three_score_contrast] (theorem).
@@ -1741,7 +1747,7 @@ Qed.
 *)
 Theorem d051_cov_three_score_contrast : forall n c:R, sequential_d n c<>0 -> 3*equicorr_schur_diagonal n c-3*equicorr_schur_cross n c=3*(1-c).
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_cov_cross_normalized] (theorem).
@@ -1754,7 +1760,7 @@ Qed.
 *)
 Theorem d051_cov_cross_normalized : forall n c:R, sequential_d n c<>0 -> 1-c<>0 -> equicorr_schur_cross n c/(1-c)=c/sequential_d n c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_mean_zero_batch_response] (theorem).
@@ -1767,7 +1773,7 @@ Qed.
 *)
 Theorem d051_mean_zero_batch_response : forall n k c s:R, sequential_d n c<>0 -> sequential_d (n+k) c<>0 -> hp (n+k) c s=sequential_d n c/sequential_d (n+k) c*hp n c s.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_mean_weighted_update_balance] (theorem).
@@ -1780,7 +1786,7 @@ Qed.
 *)
 Theorem d051_mean_weighted_update_balance : forall n k c s t:R, sequential_d n c<>0 -> sequential_d (n+k) c<>0 -> sequential_d (n+k) c*hp (n+k) c (s+t)=sequential_d n c*hp n c s+c*t.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_mean_innovation_balance] (theorem).
@@ -1793,7 +1799,7 @@ Qed.
 *)
 Theorem d051_mean_innovation_balance : forall n k c s t:R, sequential_d n c<>0 -> sequential_d (n+k) c<>0 -> sequential_d (n+k) c*(hp (n+k) c (s+t)-hp n c s)=c*(t-k*hp n c s).
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_mean_batch_innovation] (theorem).
@@ -1806,7 +1812,7 @@ Qed.
 *)
 Theorem d051_mean_batch_innovation : forall n k c s t:R, sequential_d n c<>0 -> sequential_d (n+k) c<>0 -> hp (n+k) c (s+t)=hp n c s+c*(t-k*hp n c s)/sequential_d (n+k) c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_mean_centered_batch] (theorem).
@@ -1819,7 +1825,7 @@ Qed.
 *)
 Theorem d051_mean_centered_batch : forall n k c s u:R, sequential_d n c<>0 -> sequential_d (n+k) c<>0 -> hp (n+k) c (s+k*hp n c s+u)=hp n c s+c*u/sequential_d (n+k) c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_mean_first_observation] (theorem).
@@ -1832,7 +1838,7 @@ Qed.
 *)
 Theorem d051_mean_first_observation : forall c s:R, hp 1 c s=c*s.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_mean_second_observation] (theorem).
@@ -1845,7 +1851,7 @@ Qed.
 *)
 Theorem d051_mean_second_observation : forall c s:R, 1+c<>0 -> hp 2 c s=c*s/(1+c).
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_mean_third_observation] (theorem).
@@ -1858,7 +1864,7 @@ Qed.
 *)
 Theorem d051_mean_third_observation : forall c s:R, 1+2*c<>0 -> hp 3 c s=c*s/(1+2*c).
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_mean_fourth_observation] (theorem).
@@ -1871,7 +1877,7 @@ Qed.
 *)
 Theorem d051_mean_fourth_observation : forall c s:R, 1+3*c<>0 -> hp 4 c s=c*s/(1+3*c).
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_mean_fifth_observation] (theorem).
@@ -1884,7 +1890,7 @@ Qed.
 *)
 Theorem d051_mean_fifth_observation : forall c s:R, 1+4*c<>0 -> hp 5 c s=c*s/(1+4*c).
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_mean_batch_response] (theorem).
@@ -1897,7 +1903,7 @@ Qed.
 *)
 Theorem d051_mean_batch_response : forall n k c s t:R, sequential_d (n+k) c<>0 -> hp (n+k) c (s+t)-hp (n+k) c s=c*t/sequential_d (n+k) c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_mean_third_stage] (theorem).
@@ -1910,7 +1916,7 @@ Qed.
 *)
 Theorem d051_mean_third_stage : forall n k l c s t u:R, sequential_d (n+k) c<>0 -> sequential_d (n+k+l) c<>0 -> hp (n+k+l) c (s+t+u)=(sequential_d (n+k) c*hp (n+k) c (s+t)+c*u)/sequential_d (n+k+l) c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_mean_prediction_average] (theorem).
@@ -1923,7 +1929,7 @@ Qed.
 *)
 Theorem d051_mean_prediction_average : forall n c s:R, n<>0 -> sequential_d n c<>0 -> hp n c s=sequential_prediction n c (s/n).
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_mean_one_score_gain] (theorem).
@@ -1936,7 +1942,7 @@ Qed.
 *)
 Theorem d051_mean_one_score_gain : forall n c s x:R, sequential_d n c<>0 -> sequential_d (n+1) c<>0 -> hp (n+1) c (s+x)=hp n c s+c*(x-hp n c s)/sequential_d (n+1) c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_mean_two_score_gain] (theorem).
@@ -1949,7 +1955,7 @@ Qed.
 *)
 Theorem d051_mean_two_score_gain : forall n c s x y:R, sequential_d n c<>0 -> sequential_d (n+2) c<>0 -> hp (n+2) c (s+x+y)=hp n c s+c*(x+y-2*hp n c s)/sequential_d (n+2) c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_mean_future_two_batches_difference] (theorem).
@@ -1962,7 +1968,7 @@ Qed.
 *)
 Theorem d051_mean_future_two_batches_difference : forall n k l c s t u:R, sequential_d (n+k) c<>0 -> sequential_d (n+l) c<>0 -> hp (n+k) c (s+t)-hp (n+l) c (s+u)=c*((s+t)*sequential_d (n+l) c-(s+u)*sequential_d (n+k) c)/(sequential_d (n+k) c*sequential_d (n+l) c).
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_mean_one_score_residual] (theorem).
@@ -1975,7 +1981,7 @@ Qed.
 *)
 Theorem d051_mean_one_score_residual : forall n c s x:R, sequential_d n c<>0 -> sequential_d (n+1) c<>0 -> x-hp (n+1) c (s+x)=sequential_d n c*(x-hp n c s)/sequential_d (n+1) c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_mean_batch_residual] (theorem).
@@ -1988,7 +1994,7 @@ Qed.
 *)
 Theorem d051_mean_batch_residual : forall n k c s t:R, sequential_d n c<>0 -> sequential_d (n+k) c<>0 -> t-k*hp (n+k) c (s+t)=sequential_d n c*(t-k*hp n c s)/sequential_d (n+k) c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_mean_negative_single_update] (theorem).
@@ -2001,7 +2007,7 @@ Qed.
 *)
 Theorem d051_mean_negative_single_update : forall n c s x:R, sequential_d n c<>0 -> sequential_d (n+1) c<>0 -> hp (n+1) c (s-x)=(sequential_d n c*hp n c s-c*x)/sequential_d (n+1) c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_mean_second_stage_zero_sum] (theorem).
@@ -2014,7 +2020,7 @@ Qed.
 *)
 Theorem d051_mean_second_stage_zero_sum : forall n k l c s t:R, sequential_d (n+k) c<>0 -> sequential_d (n+k+l) c<>0 -> hp (n+k+l) c (s+t)=sequential_d (n+k) c*hp (n+k) c (s+t)/sequential_d (n+k+l) c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_gk_shared_variance] (theorem).
@@ -2027,7 +2033,7 @@ Qed.
 *)
 Theorem d051_gk_shared_variance : forall xs:list R, forall c:R, gk_d xs c<>0 -> gk_variance xs c=equicorr_schur_cross (gk_mass xs) c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_gk_future_variance_decomposition] (theorem).
@@ -2040,7 +2046,7 @@ Qed.
 *)
 Theorem d051_gk_future_variance_decomposition : forall xs:list R, forall c:R, gk_d xs c<>0 -> equicorr_schur_diagonal (gk_mass xs) c=(1-c)+gk_variance xs c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_gk_variance_reduction] (theorem).
@@ -2053,7 +2059,7 @@ Qed.
 *)
 Theorem d051_gk_variance_reduction : forall xs:list R, forall c:R, gk_d xs c<>0 -> gk_variance xs c=c-gk_mass xs*c*c/gk_d xs c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_gk_variance_zero_correlation] (theorem).
@@ -2066,7 +2072,7 @@ Qed.
 *)
 Theorem d051_gk_variance_zero_correlation : forall xs:list R, gk_variance xs 0=0.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_gk_variance_empty] (theorem).
@@ -2109,7 +2115,7 @@ Qed.
 *)
 Theorem d051_gk_precision_scaled : forall xs:list R, forall c:R, c<>0 -> 1-c<>0 -> gk_precision xs c*(c*(1-c))=gk_d xs c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  gcd_rational_normalize.
 Qed.
 
 (** [d051_gk_variance_times_precision] (theorem).

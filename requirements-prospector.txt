@@ -1,0 +1,5 @@
+# Separate environment for the aggregator: its transitive linter constraints
+# need not agree with the standalone Flake8/Pyflakes environment.
+-r requirements-dev.txt
+pylint==3.3.8
+prospector==1.17.3

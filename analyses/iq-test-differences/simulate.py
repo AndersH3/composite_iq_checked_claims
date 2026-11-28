@@ -16,7 +16,7 @@ import numpy as np
 from scipy.integrate import quad
 from scipy.stats import foldnorm, norm
 
-from reporting.block_simulations import merge_moments, partial_moment
+from library.python.moments import merge_moments, partial_moment
 from reporting.provenance import digest, dump
 
 MODES = ("Gaussian", "Shared mixture", "Smooth mixture", "Block", "Conditional")
@@ -229,7 +229,7 @@ if __name__ == "__main__":
                     source_sha256=digest(Path(__file__)),
                     bit_generator="PCG64", scheduler="threads",
                     shared_reducer_sha256=digest(
-                        Path(__file__).resolve().parents[2] / "reporting/block_simulations.py"),
+                        Path(__file__).resolve().parents[2] / "library/python/moments.py"),
                     provenance_sha256=digest(Path(__file__).resolve().parents[2] / "reporting/provenance.py"),
                     python=platform.python_version(),
                     versions={name: version(name) for name in ("numpy", "scipy", "dask", "deal")},

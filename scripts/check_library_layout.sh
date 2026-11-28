@@ -5,7 +5,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 for source in \
-  library/python/numeric.py library/python/statistics.py \
+  library/python/numeric.py library/python/statistics.py library/python/moments.py \
   library/rocq/FiniteSum.v library/rocq/FiniteConditionalCovariance.v \
   library/rocq/ListPoolingAlgebra.v library/rocq/FourContrastCovariance.v \
   library/rocq/SampleContrastCauchy.v \
@@ -27,6 +27,11 @@ do
     fi
   fi
 done
+
+if git grep -n -E '^def (partial_moment|merge_moments)\(' -- '*.py' ':(exclude)library/python/moments.py'; then
+  echo 'Duplicate centered-moment implementation outside canonical library' >&2
+  exit 1
+fi
 
 if find . -path './.git' -prune -o -type f \( -name '*.adb' -o -name '*.ads' -o -name '*.gpr' \) -print | grep -q .; then
   echo "Retired compiler source or intermediate found in the working tree" >&2

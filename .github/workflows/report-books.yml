@@ -27,30 +27,32 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate manifest and shared report layout
+        run: |
+          git ls-files -z '*.sh' | xargs -0 -r shellcheck --severity=warning
+          bash scripts/check_report_template.sh
+      - name: Generate matrix from canonical book inventory
+        id: matrix
+        shell: bash
+        run: |
+          matrix=$(jq -Rsc 'split("\n") | map(select(length > 0) | [scan("\\S+")] | {project: .[0], stem: .[1]}) | {include: .}' library/latex/books.txt)
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
   compile:
+    needs: inventory
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - { project: hoeflin-ferguson, stem: composite_iq_analysis }
-          - { project: hoeflin-ferguson, stem: hoeflin_simulations }
-          - { project: towers-multiple-test-admissions, stem: towers_admissions_analysis }
-          - { project: towers-multiple-test-admissions, stem: towers_simulations }
-          - { project: sequential-conditional-means, stem: sequential_conditional_means }
-          - { project: sequential-conditional-means, stem: sequential_simulations }
-          - { project: iq-test-differences, stem: iq_test_differences }
-          - { project: iq-test-differences, stem: iq_difference_simulations }
+      matrix: ${{ fromJSON(needs.inventory.outputs.matrix) }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
-      - name: ShellCheck all tracked shell scripts before report validation
-        shell: bash
-        run: |
-          command -v shellcheck
-          git ls-files -z '*.sh' | xargs -0 -r shellcheck --severity=warning
-      - name: Check shared report layout and AI disclosure structure
-        run: bash scripts/check_report_template.sh
       # The new simulation book is built from a freshly executed campaign.
       # The other books continue to use their previously retained inputs.
       - uses: actions/setup-python@v5
@@ -120,25 +122,20 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          # Keep the downloaded PDF worktree bytes while taking the latest
-          # source branch as the parent. Rebasing two independently generated
-          # PDF commits causes unmergeable binary conflicts.
-          # If the branch advances during the push, retry from its latest
-          # head with the same freshly compiled PDF bytes.
-          for attempt in 1 2 3 4; do
-            git fetch origin "refs/heads/${GITHUB_REF_NAME}:refs/remotes/origin/${GITHUB_REF_NAME}"
-            git reset --mixed "refs/remotes/origin/${GITHUB_REF_NAME}"
-            git add analyses/*/output/pdf/*.pdf
-            git add analyses/iq-test-differences/simulation-data/{summary.json,results.tex,run.tex}
-            if git diff --cached --quiet; then
-              echo 'Compiled PDFs already match tracked bytes'
-              exit 0
-            fi
-            git commit -m 'Rebuild all eight books from Python/Dask/Deal XeLaTeX source'
-            if git push origin "HEAD:${GITHUB_REF_NAME}"; then
-              exit 0
-            fi
-            echo "Branch advanced during PDF publication; retry ${attempt}" >&2
-          done
-          echo 'Unable to publish PDF set after four optimistic retries' >&2
-          exit 1
+          # Publish only against the exact source revision that was built.
+          # Never reparent older PDF/data bytes onto a newer source commit.
+          git fetch origin "refs/heads/${GITHUB_REF_NAME}:refs/remotes/origin/${GITHUB_REF_NAME}"
+          if [[ "$(git rev-parse "refs/remotes/origin/${GITHUB_REF_NAME}")" != "$GITHUB_SHA" ]]; then
+            echo 'Source branch advanced; refusing stale PDF publication' >&2
+            exit 1
+          fi
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git add analyses/*/output/pdf/*.pdf
+          git add analyses/iq-test-differences/simulation-data/{summary.json,results.tex,run.tex}
+          if git diff --cached --quiet; then
+            echo 'Compiled PDFs already match tracked bytes'
+            exit 0
+          fi
+          git commit -m 'Rebuild all eight books from Python/Dask/Deal XeLaTeX source'
+          # A non-force push fails if another writer advances the ref.
+          git push origin "HEAD:${GITHUB_REF_NAME}"

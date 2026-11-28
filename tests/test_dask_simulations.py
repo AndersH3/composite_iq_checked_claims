@@ -292,11 +292,12 @@ def test_nonfinite_numbers_cannot_be_formatted_as_report_evidence(value):
         assets.format_number(value)
 
 
-@deal.pre(lambda tmp_path: protected_history_intact())
-@deal.pre(lambda tmp_path: reference_inputs_intact())
-@deal.pre(lambda tmp_path: isinstance(tmp_path, Path) and tmp_path.is_dir())
-@deal.ensure(lambda tmp_path, result: protected_history_intact())
-@deal.ensure(lambda tmp_path, result: reference_inputs_intact())
+@pytest.mark.parametrize("invalid_key", [1, None, ("column",)])
+@deal.pre(lambda tmp_path, invalid_key: protected_history_intact())
+@deal.pre(lambda tmp_path, invalid_key: reference_inputs_intact())
+@deal.pre(lambda tmp_path, invalid_key: isinstance(tmp_path, Path) and tmp_path.is_dir())
+@deal.ensure(lambda tmp_path, invalid_key, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, invalid_key, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("network", "read", "write")
 # Independently guard source ownership, input integrity and required test infrastructure.
@@ -308,13 +309,36 @@ def test_nonfinite_numbers_cannot_be_formatted_as_report_evidence(value):
 @deal.pre(lambda *args, **kwargs: callable(statistics.event_result))
 @deal.pre(lambda *args, **kwargs: callable(statistics.pool_rows))
 @deal.pre(lambda *args, **kwargs: callable(assets.write_assets))
-def test_csv_writer_preserves_numeric_rows_and_rejects_heterogeneous_schema(tmp_path):
-    """CSV transport retains values and refuses a missing-cell schema."""
+def test_csv_writer_preserves_numeric_rows_and_rejects_heterogeneous_schema(tmp_path, invalid_key):
+    """Preserve scalar CSV records and reject invalid keys or differing schemas."""
     destination = tmp_path.joinpath("numeric.csv")
     rows = [{"count": 0, "rate": 0.0}, {"count": 3, "rate": 0.125}]
     untouched = copy.deepcopy(rows)
+    # The CSV projection must not mutate full JSON records or drop zero,
+    # False, None, or the empty string merely because they are falsey.
+    source = [
+        {"count": 0, "_meta": {"seed": 42}, "rate": 0.0,
+         "flag": False, "missing": None, "label": "", "nested": [1, 2]},
+        {"label": "next", "count": 3},
+    ]
+    original = copy.deepcopy(source)
+    projected = assets.public_scalar_rows(source)
+    assert projected == [
+        {"count": 0, "rate": 0.0, "flag": False, "missing": None, "label": ""},
+        {"label": "next", "count": 3},
+    ]
+    assert list(projected[0]) == ["count", "rate", "flag", "missing", "label"]
+    assert projected is not source and projected[0] is not source[0]
+    assert source == original
+    assert assets.public_scalar_rows([]) == []
+    assert assets.public_scalar_rows([{"_hidden": 1}]) == [{}]
+    # Parameterized negative cases exercise the runtime precondition, just
+    # as the numeric domain tests do, without a statically invalid literal
+    # call in the positive Deal lint inventory.
+    with pytest.raises(deal.PreContractError):
+        assets.public_scalar_rows([{invalid_key: "not a CSV column name"}])
     assets.write_csv(destination, rows)
-    with destination.open(newline="") as stream:
+    with destination.open(newline="", encoding="utf-8") as stream:
         observed = list(csv.DictReader(stream))
     assert len(observed) == 2
     assert int(observed[1]["count"]) == 3
@@ -347,11 +371,11 @@ def small_config():
 
 
 @pytest.mark.parametrize("project", [HOEFLIN, SEQUENTIAL])
-@deal.pre(lambda small_config, project: protected_history_intact())
-@deal.pre(lambda small_config, project: reference_inputs_intact())
-@deal.pre(lambda small_config, project: project in {HOEFLIN, SEQUENTIAL})
-@deal.ensure(lambda small_config, project, result: protected_history_intact())
-@deal.ensure(lambda small_config, project, result: reference_inputs_intact())
+@deal.pre(lambda small_config, project, tmp_path: protected_history_intact())
+@deal.pre(lambda small_config, project, tmp_path: reference_inputs_intact())
+@deal.pre(lambda small_config, project, tmp_path: project in {HOEFLIN, SEQUENTIAL})
+@deal.ensure(lambda small_config, project, tmp_path, result: protected_history_intact())
+@deal.ensure(lambda small_config, project, tmp_path, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("network", "read", "write", "random", "global", "import", "syscall")
 # Independently guard source ownership, input integrity and required test infrastructure.
@@ -363,7 +387,7 @@ def small_config():
 @deal.pre(lambda *args, **kwargs: callable(statistics.event_result))
 @deal.pre(lambda *args, **kwargs: callable(statistics.pool_rows))
 @deal.pre(lambda *args, **kwargs: callable(assets.write_assets))
-def test_small_dask_moment_graph_is_lazy_reproducible_and_on_correct_scale(small_config, project):
+def test_small_dask_moment_graph_is_lazy_reproducible_and_on_correct_scale(small_config, project, tmp_path):
     """Fixed seeds/chunks reproduce rows; whole-vector SDs use the stated scale."""
     from reporting import simulate
     from dask.delayed import Delayed
@@ -386,6 +410,36 @@ def test_small_dask_moment_graph_is_lazy_reproducible_and_on_correct_scale(small
         assert specific["theory_sd_iq"] ** 2 == pytest.approx(475 / 16)
         populations = [row for row in first if row["mode"].startswith("population")]
         assert all(row["theory_mean_iq"] == 100.0 for row in populations)
+        # Render the real small Dask result into disposable test assets.
+        # The complete pooled CSV retains all laws; each finite subset
+        # contains only its specified history size and conditioning mode.
+        pooled = assets.public_scalar_rows(
+            statistics.pool_rows(project, list(first))
+        )
+        replicas = assets.public_scalar_rows(list(first))
+        before = copy.deepcopy((pooled, replicas, small_config))
+        assets.write_sequential_tables(tmp_path, pooled, replicas, small_config)
+        expected = {"moments.csv", "means.tex", "population-means.tex",
+                    "sds.tex", "population-sds.tex", "limits.tex", "replicates.tex"}
+        expected.update(f"{mode}-r{r}.csv"
+                        for mode in ("population", "conditional") for r in (1, 2, 3))
+        assert {path.name for path in tmp_path.iterdir()} == expected
+        with tmp_path.joinpath("moments.csv").open(encoding="utf-8", newline="") as stream:
+            assert len(list(csv.DictReader(stream))) == len(pooled)
+        for mode in ("population", "conditional"):
+            for r in (1, 2, 3):
+                path = tmp_path.joinpath(f"{mode}-r{r}.csv")
+                with path.open(encoding="utf-8", newline="") as stream:
+                    records = list(csv.DictReader(stream))
+                assert len(records) == sum(
+                    row["mode"] == mode and row["r"] == r for row in pooled
+                )
+                assert all(row["mode"] == mode and int(row["r"]) == r
+                           for row in records)
+        assert r"\input{simulation-data/population-means.tex}" in (
+            tmp_path.joinpath("means.tex").read_text(encoding="utf-8")
+        )
+        assert (pooled, replicas, small_config) == before
 
 
 @deal.pre(lambda small_config: protected_history_intact())

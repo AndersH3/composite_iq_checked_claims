@@ -25,7 +25,7 @@ The complete AI disclosure is deliberate and distinct from the short title-page 
 
 ## Verification
 
-Run `bash scripts/check_report_template.sh` or `make report-template` for structural checks. The six-book workflow runs the structural audit and then builds all six PDFs, checking unresolved citations and references. The workflow watches changes to `library/latex/**` and the audit script.
+Run `make report-template` (which first runs ShellCheck) for structural checks. The eight-book workflow runs the structural audit and then builds all eight PDFs, checking unresolved citations and references. The four local analysis Makefiles reuse `book_targets.mk` for XeLaTeX targets while retaining specialized data commands. The workflow watches changes to `library/latex/**` and the audit script.
 
 Build one book from the individual analysis directory:
 
@@ -35,3 +35,5 @@ latexmk -xelatex -interaction=nonstopmode -halt-on-error -outdir=output/pdf comp
 ```
 
 All documents follow the reference supplied as `iq_test_differences_report.tex`, while retaining mathematical conventions and bibliographic compatibility from the original six books.
+
+The canonical eight-book inventory is `books.txt` (project, source stem, template style). The template audit, Dask document builder, and CI build matrix consume it directly. The audit requires eight unique books across four projects, with one analytical and one simulation style in each project.

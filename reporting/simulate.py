@@ -35,6 +35,7 @@ from scipy import optimize, stats
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+from library.python.numeric import valid_seed_values
 from library.python.statistics import moment_result, event_result, pool_rows
 from reporting.assets import write_assets
 from reporting.provenance import digest, dump
@@ -93,12 +94,12 @@ def reference_data(project):
 @deal.pre(lambda config: isinstance(config, dict) and {"trials", "chunk", "seeds"} <= config.keys())
 @deal.pre(lambda config: type(config["trials"]) is int and 2 <= config["trials"] <= 1_000_000)
 @deal.pre(lambda config: type(config["chunk"]) is int and 1 <= config["chunk"] <= config["trials"])
-@deal.pre(lambda config: bool(config["seeds"]) and len(set(config["seeds"])) == len(config["seeds"]) and all(type(seed) is int and 0 <= seed < 2 ** 32 for seed in config["seeds"]))
+@deal.pre(lambda config: len(set(config["seeds"])) == len(config["seeds"]))
 @deal.ensure(lambda config, result: isinstance(result, list) and bool(result) and all(isinstance(item, Delayed) for item in result))
 @deal.ensure(lambda config, result: len(result) == len(config["seeds"]) * len(COUNTS))
 @deal.has("network", "read", "import", "random")
 @deal.raises(ValueError, TypeError, OverflowError, NotImplementedError)
-@deal.pre(lambda config: all(type(seed) is int and 0 <= seed < 2 ** 32 for seed in config["seeds"]))
+@deal.pre(lambda config: valid_seed_values(config["seeds"]))
 @deal.pre(lambda config: 1 <= len(config["seeds"]) <= len(SEEDS))
 @deal.ensure(lambda config, result: all(isinstance(row.key, str) and bool(row.key) for row in result))
 @deal.ensure(lambda config, result: len({row.key for row in result}) == len(result))
@@ -142,7 +143,7 @@ def graph_hoeflin(config):
 @deal.ensure(lambda config, reference, result: len(result) == 5 * len(config["seeds"]))
 @deal.raises(ValueError, TypeError, OverflowError, NotImplementedError)
 @deal.has("network", "read", "import", "random")
-@deal.pre(lambda config, reference: all(type(seed) is int and 0 <= seed < 2 ** 32 for seed in config["seeds"]))
+@deal.pre(lambda config, reference: valid_seed_values(config["seeds"]))
 @deal.pre(lambda config, reference: 1 <= len(config["seeds"]) <= len(SEEDS))
 @deal.ensure(lambda config, reference, result: all(isinstance(row.key, str) and bool(row.key) for row in result))
 @deal.ensure(lambda config, reference, result: len({row.key for row in result}) == len(result))
@@ -181,7 +182,7 @@ def graph_towers(config, reference):
 @deal.ensure(lambda config, result: len(result) == 24 * len(config["seeds"]))
 @deal.raises(ValueError, TypeError, OverflowError, NotImplementedError)
 @deal.has("network", "read", "import", "random")
-@deal.pre(lambda config: all(type(seed) is int and 0 <= seed < 2 ** 32 for seed in config["seeds"]))
+@deal.pre(lambda config: valid_seed_values(config["seeds"]))
 @deal.pre(lambda config: 1 <= len(config["seeds"]) <= len(SEEDS))
 @deal.ensure(lambda config, result: all(isinstance(row.key, str) and bool(row.key) for row in result))
 @deal.ensure(lambda config, result: len({row.key for row in result}) == len(result))
@@ -256,7 +257,7 @@ def block_sizes(trials, chunk):
 @deal.pre(lambda config: type(config["trials"]) is int and 2 <= config["trials"] <= 100_000_000)
 @deal.pre(lambda config: type(config["chunk"]) is int and 1 <= config["chunk"] <= 2_000_000)
 @deal.pre(lambda config: bool(config["seeds"]) and len(set(config["seeds"])) == len(config["seeds"]))
-@deal.pre(lambda config: all(type(seed) is int and 0 <= seed < 2**32 for seed in config["seeds"]))
+@deal.pre(lambda config: valid_seed_values(config["seeds"]))
 @deal.pre(lambda config: (config["trials"] + config["chunk"] - 1) // config["chunk"] <= 1024)
 @deal.ensure(lambda config, result: isinstance(result, list) and len(result) == len(config["seeds"]) * len(COUNTS))
 @deal.ensure(lambda config, result: all(isinstance(row, Delayed) for row in result))
@@ -302,7 +303,8 @@ def graph_hoeflin_blocks(config):
 @deal.ensure(lambda config, reference, result: all(row.key for row in result))
 @deal.raises(ValueError, TypeError, OverflowError, KeyError, NotImplementedError)
 @deal.has("network", "import")
-@deal.pre(lambda config, reference: all(type(seed) is int and 0 <= seed < 2**32 for seed in config["seeds"]))
+# The worker receives seed + 1000, not the unshifted base seed.
+@deal.pre(lambda config, reference: valid_seed_values(config["seeds"], offset=1000))
 @deal.ensure(lambda config, reference, result: all(isinstance(row.key, str) for row in result))
 @deal.ensure(lambda config, reference, result: len(result) % 5 == 0)
 def graph_towers_blocks(config, reference):
@@ -323,7 +325,8 @@ def graph_towers_blocks(config, reference):
 @deal.pre(lambda config: type(config["trials"]) is int and 2 <= config["trials"] <= 100_000_000)
 @deal.pre(lambda config: type(config["chunk"]) is int and 1 <= config["chunk"] <= 2_000_000)
 @deal.pre(lambda config: bool(config["seeds"]) and len(set(config["seeds"])) == len(config["seeds"]))
-@deal.pre(lambda config: all(type(seed) is int and 0 <= seed < 2**32 for seed in config["seeds"]))
+# The largest history offset is 2000 + 100 * 3.
+@deal.pre(lambda config: valid_seed_values(config["seeds"], offset=2300))
 @deal.pre(lambda config: (config["trials"] + config["chunk"] - 1) // config["chunk"] <= 1024)
 @deal.ensure(lambda config, result: isinstance(result, list) and len(result) == 24 * len(config["seeds"]))
 @deal.ensure(lambda config, result: all(isinstance(row, Delayed) for row in result))
@@ -466,7 +469,7 @@ def build_report(result):
     stem = {PROJECTS[0]: "hoeflin_simulations", PROJECTS[1]: "towers_simulations", PROJECTS[2]: "sequential_simulations"}[project]
     directory = ROOT.joinpath("analyses", project)
     log_directory = directory.joinpath("simulation-data")
-    with log_directory.joinpath("build.log").open("w") as stream:
+    with log_directory.joinpath("build.log").open("w", encoding="utf-8") as stream:
         subprocess.run(["latexmk", "-xelatex", "-outdir=output/pdf", "-interaction=nonstopmode", "-halt-on-error", stem + ".tex"], cwd=directory, env={**os.environ, "BIBINPUTS": str(ROOT.joinpath("reporting")) + os.pathsep + str(directory) + os.pathsep}, stdout=stream, stderr=subprocess.STDOUT, check=True, timeout=180)
     pdf = directory.joinpath("output/pdf", stem + ".pdf")
     info = subprocess.run(["pdfinfo", str(pdf)], capture_output=True, text=True, check=True, timeout=30).stdout
@@ -500,6 +503,9 @@ def finalize_run(results, config, task_count):
     Fresh figures are TeX/PGFPlots output; no plotting runtime is imported.
     """
     source_paths = list(ROOT.joinpath("reporting").glob("*.py")) + list(ROOT.joinpath("reporting").glob("*.tex")) + list(ROOT.joinpath("reporting").glob("*.bib"))
+    # Include the implementations behind the shared reporting imports.
+    source_paths += list(ROOT.joinpath("library", "python").glob("*.py"))
+    source_paths += list(ROOT.joinpath("library", "latex").glob("*.tex"))
     source_paths += [ROOT.joinpath("requirements-dev.txt")]
     output_paths = []
     for project in PROJECTS:
@@ -595,6 +601,9 @@ def main(argv=None):
         return 0
     terminal = dask.delayed(finalize_run)(terminals, config, task_count)
     started = time.monotonic()
+    # A scheduler context manager must not suppress a failed computation
+    # and allow publication without a completed manifest.
+    record = None
     try:
         if args.scheduler == "distributed":
             # Optional worker memory spilling and live observability. No nested
@@ -618,6 +627,8 @@ def main(argv=None):
     except RemoteException as error:
         # Dynamic remote exception classes need a stable typed failure boundary.
         raise RuntimeError("Dask worker task failed; inspect the chained error and build logs") from error
+    if not isinstance(record, dict):
+        raise RuntimeError("Dask did not return a completed report manifest")
     elapsed = time.monotonic() - started
     print(json.dumps({"execution_seconds": elapsed,
                       "performance_report": args.performance_report,

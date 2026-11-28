@@ -2,6 +2,7 @@
 from conftest import ROOT, protected_history_intact, reference_inputs_intact
 import math
 import csv
+from itertools import pairwise
 
 import deal
 from hypothesis import given, settings, strategies as st
@@ -423,7 +424,7 @@ def test_higher_correlation_increases_mixed_overlap(towers):
     """
     a, b = float(norm.isf(.02)), float(norm.isf(.001))
     results = [towers.joint_tail(a, b, r) for r in (.3, .5, .7, .9)]
-    assert all(left < right for left, right in zip(results, results[1:]))
+    assert all(left < right for left, right in pairwise(results))
 
 
 @deal.pre(lambda towers: protected_history_intact())
@@ -464,6 +465,10 @@ def test_towers_reference_csvs(towers):
     # Negative controls: the admissions validator must reject individually
     # corrupted correlations, feasible-mass bounds and derived probabilities.
     assert towers._valid_admissions(admissions)
+    # Cardinality errors must reject the table without a zip exception.
+    assert not towers._valid_admissions([])
+    assert not towers._valid_admissions(admissions[:-1])
+    assert not towers._valid_admissions(admissions + [dict(admissions[-1])])
     for field, bad_value in (
         ("rho", 0.6),
         ("joint", admissions[0]["p_a"] + 0.001),

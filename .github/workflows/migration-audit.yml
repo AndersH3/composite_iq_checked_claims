@@ -34,7 +34,8 @@ jobs:
           echo '=== Retired compiler source count ==='
           find . -type f \( -name '*.ads' -o -name '*.adb' -o -name '*.gpr' \) -print
           echo '=== Main report source count ==='
-          for p in analyses/hoeflin-ferguson/composite_iq_analysis.tex analyses/hoeflin-ferguson/hoeflin_simulations.tex analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex analyses/towers-multiple-test-admissions/towers_simulations.tex analyses/sequential-conditional-means/sequential_conditional_means.tex analyses/sequential-conditional-means/sequential_simulations.tex analyses/iq-test-differences/iq_test_differences.tex analyses/iq-test-differences/iq_difference_simulations.tex; do test -s "$p"; done
+          git ls-files -z '*.sh' | xargs -0 -r shellcheck --severity=warning
+          bash scripts/check_report_template.sh
           echo '=== Inspect existing published PDF artifacts for obsolete methodology ==='
           command -v pdftotext || { sudo apt-get update -qq; sudo apt-get install -y poppler-utils; }
           count=0
