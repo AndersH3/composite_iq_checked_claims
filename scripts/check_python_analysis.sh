@@ -53,7 +53,7 @@ run_check() {
       result=execution-error
     fi
     # A traceback or missing module is an execution error even when its
-    # exit status happens to coincide with the tool\u0027s findings status.
+    # exit status happens to coincide with the tool's findings status.
     if grep -Eq 'Traceback \(most recent call last\)|No module named |^Fatal Python error:' "$out/$name.stderr"; then
       result=execution-error
     fi
@@ -67,7 +67,18 @@ run_check() {
 # Full reports are retained even where existing debt is not yet a gate.
 # Pylint's fatal (1) and usage (32) bits always fail the run.
 run_check pylint baseline pylint "$python" -m pylint --reports=y --score=y --persistent=n "${files[@]}"
-run_check flake8 baseline 1 "$python" -m flake8 --isolated --max-complexity=10 --statistics "${files[@]}"
+# Deal registers a Flake8 AST plugin through package entry points. Apply
+# the same already-tested location repair as the standalone Deal audit.
+# Serial execution keeps the process-local compatibility patch active
+# regardless of multiprocessing start method. Deal diagnostics (including
+# DEL012) remain the responsibility of the separate mandatory Deal audit.
+flake8_bootstrap='from deal._cached_property import cached_property
+from deal.linter._contract import Contract
+from verification.deal_lint_compat import compile_fixed_locations
+from flake8.main.cli import main
+Contract.bytecode = cached_property(compile_fixed_locations)
+raise SystemExit(main())'
+run_check flake8 baseline 1 "$python" -c "$flake8_bootstrap" --isolated --jobs=1 --extend-ignore=DEL --max-complexity=10 --statistics "${files[@]}"
 run_check pyflakes baseline 1 "$python" -m pyflakes "${files[@]}"
 run_check bandit baseline 1 "$python" -m bandit -f json "${files[@]}"
 run_check vulture baseline 3 "$python" -m vulture --min-confidence 60 "${files[@]}"

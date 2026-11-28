@@ -14,7 +14,6 @@ from json import JSONDecodeError
 import csv
 import subprocess
 from subprocess import CalledProcessError, TimeoutExpired
-import math
 
 import dask
 import deal
