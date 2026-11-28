@@ -3,3 +3,6 @@
 .pytest_cache/
 .hypothesis/
 __pycache__/
+.venv-prospector/
+.analysis-results/
+.ruff_cache/

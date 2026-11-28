@@ -1,4 +1,4 @@
-name: Python contracts and Dask tests
+name: Python contracts, static analysis and Dask tests
 
 on:
   push:
@@ -99,3 +99,36 @@ jobs:
       - run: python -m pip install -r requirements-dev.txt
       - name: Full repository Deal lint and deliberate negative control (Python 3.12)
         run: python verification/check_static_lint.py
+
+  extended-static-analysis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: |
+            requirements-dev.txt
+            requirements-analysis.txt
+            requirements-prospector.txt
+      - name: Install standalone analyzers without changing Deal pins
+        run: |
+          python -m pip install -r requirements-analysis.txt
+          python -m pip check
+      - name: Install Prospector in isolated environment
+        run: |
+          python -m venv .venv-prospector
+          .venv-prospector/bin/python -m pip install -r requirements-prospector.txt
+          .venv-prospector/bin/python -m pip check
+      - name: Run eight analyzers and enforce correctness/security gates
+        run: make static-analysis PYTHON=python PROSPECTOR_PYTHON=.venv-prospector/bin/python
+      - name: Retain complete analysis reports and exit status inventory
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-static-analysis
+          path: .analysis-results/
+          include-hidden-files: true
+          if-no-files-found: warn
