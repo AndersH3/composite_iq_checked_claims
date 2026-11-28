@@ -25,7 +25,7 @@ The complete AI disclosure is deliberate and distinct from the short title-page 
 
 ## Verification
 
-Run `bash scripts/check_report_template.sh` or `make report-template` for structural checks. The six-book workflow runs the structural audit and then builds all six PDFs, checking unresolved citations and references. The workflow watches changes to `library/latex/**` and the audit script.
+Run `make report-template` (which first runs ShellCheck) for structural checks. The eight-book workflow runs the structural audit and then builds all eight PDFs, checking unresolved citations and references. The four local analysis Makefiles reuse `book_targets.mk` for XeLaTeX targets while retaining specialized data commands. The workflow watches changes to `library/latex/**` and the audit script.
 
 Build one book from the individual analysis directory:
 

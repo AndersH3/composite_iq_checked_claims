@@ -195,6 +195,12 @@ def record_revision(results, retained, graph_tasks):
     if retained_data() != retained:
         raise ValueError("Dask numerical assets changed during document build")
     sources = list(ROOT.joinpath("reporting").glob("*.tex")) + list(ROOT.joinpath("reporting").glob("*.bib"))
+    # Hash the canonical templates as well as compatibility wrappers;
+    # the wrappers alone cannot identify the actual typesetting inputs.
+    sources += list(ROOT.joinpath("library", "latex").glob("*.tex"))
+    # The IQ discrepancy report also uses separately labeled offline evidence.
+    sources += list(ROOT.joinpath("analyses", "iq-test-differences", "offline-validation").glob("*.tex"))
+    sources += list(ROOT.joinpath("analyses", "iq-test-differences", "offline-validation").glob("*.json"))
     sources += [Path(__file__).resolve(), ROOT.joinpath("reporting", "provenance.py"),
                 ROOT.joinpath("library", "python", "statistics.py"),
                 ROOT.joinpath("AGENTS.md"), ROOT.joinpath("requirements-dev.txt")]

@@ -10,7 +10,7 @@
 
 Every analysis retains specialized calculations and checks in its own `analyses/<project>/scripts/` directory. Keep statistical metadata, report interpretation, CSV I/O and numerical model assumptions in those adapters; move only genuinely reusable algorithms into this library.
 
-Verify with `python verification/check_contract_coverage.py`, `python -m pytest -q tests`, `bash scripts/check_library_layout.sh` and the CI workflows.
+Verify with `python verification/check_contract_coverage.py`, `python -m pytest -q tests`, `make library` and the CI workflows.
 
 ## Complete AI disclosure
 
