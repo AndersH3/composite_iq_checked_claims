@@ -247,7 +247,10 @@ def write_sequential_tables(directory, pooled, replicas, config):
 @deal.ensure(lambda project, data, result: result["project"] == project and result["n_rows"] == len(data["pooled"]) and result["n_replicates"] == len(data["replicates"]))
 @deal.ensure(lambda project, data, result: Path(result["directory"]) == ROOT.joinpath("analyses", project, "simulation-data"))
 @deal.post(lambda result: bool(result["files"]) and len(result["files"]) == len(set(result["files"])) and all(Path(path).is_file() for path in result["files"]))
-@deal.raises(OSError, ValueError, TypeError, KeyError, csv.Error)
+# Formatting can overflow when converting out-of-domain numeric fields.
+# Keep the public writer aligned with its project-specific helpers and
+# the enclosing simulation publication task, which already allows this.
+@deal.raises(OSError, ValueError, TypeError, KeyError, csv.Error, OverflowError)
 @deal.has("network", "write", "read")
 @deal.ensure(lambda project, data, result: len(result["files"]) >= 3)
 @deal.ensure(lambda project, data, result: all(Path(path).is_relative_to(Path(result["directory"])) for path in result["files"]))
