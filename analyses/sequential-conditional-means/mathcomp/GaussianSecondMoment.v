@@ -8,7 +8,9 @@
     Researcher/requester: Anders Hellström.
     AI disclosure: AI-assisted proof candidates; validation pending.
 *)
-From mathcomp Require Import boot order ssralg ssrnum.
+(* Import the core interval predicate instance explicitly, as in
+   MathComp-Analysis set_interval and normal_distribution. *)
+From mathcomp Require Import boot order ssralg ssrnum interval.
 From mathcomp Require Import boolp classical_sets set_interval functions reals ereal topology normedtype.
 From mathcomp Require Import numfun measure lebesgue_integral
   lebesgue_stieltjes_measure lebesgue_measure measurable_realfun.
@@ -47,7 +49,10 @@ have Hw : w != 0.
      indicator. Use the classical set lemma explicitly, rather than
      the overloaded inE multirule from the finite-set libraries. *)
   have Hout : ((-1 : R) \in (`[0, 1]%classic : set R)) = false.
-  { apply/negP.
+  { (* First reduce the Boolean equality to negated membership,
+       then use the Prop-valued classical membership equality. *)
+    apply: negbTE.
+    apply/negP.
     rewrite in_setE set_itvcc /=.
     by rewrite (lt_geF Hlt). }
   have Hz : normal_pdf 0 0 (-1 : R) = 0.
