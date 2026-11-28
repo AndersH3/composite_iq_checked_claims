@@ -165,8 +165,15 @@ Theorem gmc_standard_coordinate_second_moment n (i : 'I_n) :
     [set: n.-tuple (measurableTypeR R)]
     (fun t => ((tnth t i ^+ 2)%R)%:E).
 Proof.
-apply: gmc_standard_coordinate_integrable.
-apply: gmc_centered_normal_second_moment_integrable.
-exact: oner_neq0.
+(* Supply the dimension, ordinal and scalar integrand explicitly.
+   Backward inference cannot recover the dependent coordinate index
+   and outer function reliably from their composed lambda. *)
+have Hs : (1%R : R) != 0%R.
+{ exact: oner_neq0. }
+have Hi : (normal_prob (0%R : R) (1%R : R)).-integrable
+    [set: R] (fun x : R => ((x ^+ 2)%R)%:E).
+{ exact (@gmc_centered_normal_second_moment_integrable 1%R Hs). }
+exact (@gmc_standard_coordinate_integrable R n i
+  (fun x : R => ((x ^+ 2)%R)%:E) Hi).
 Qed.
 End SecondMoment.
