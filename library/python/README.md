@@ -17,3 +17,5 @@ Verify with `python verification/check_contract_coverage.py`, `python -m pytest 
 ## Complete AI disclosure
 
 ChatGPT performed this source consolidation and documentation. Deal contracts test declared pre/postconditions in their supported execution scope, not empirical IQ-model validity or correctness of arbitrary scientific assumptions. Historical hashes and datasets remain separate immutable evidence.
+
+`numeric.valid_seed_values` is the shared named predicate for the six Dask graph constructors. It validates exact integer seeds and an optional nonnegative substream offset without performing random draws. Towers and Sequential block graphs validate their largest worker offsets before dispatch. Replicate count and uniqueness remain separate graph conditions. The predicate itself has fifteen Deal contracts; invalid shifted seeds now fail at graph construction rather than later in a worker.

@@ -35,6 +35,7 @@ from scipy import optimize, stats
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+from library.python.numeric import valid_seed_values
 from library.python.statistics import moment_result, event_result, pool_rows
 from reporting.assets import write_assets
 from reporting.provenance import digest, dump
@@ -93,12 +94,12 @@ def reference_data(project):
 @deal.pre(lambda config: isinstance(config, dict) and {"trials", "chunk", "seeds"} <= config.keys())
 @deal.pre(lambda config: type(config["trials"]) is int and 2 <= config["trials"] <= 1_000_000)
 @deal.pre(lambda config: type(config["chunk"]) is int and 1 <= config["chunk"] <= config["trials"])
-@deal.pre(lambda config: bool(config["seeds"]) and len(set(config["seeds"])) == len(config["seeds"]) and all(type(seed) is int and 0 <= seed < 2 ** 32 for seed in config["seeds"]))
+@deal.pre(lambda config: len(set(config["seeds"])) == len(config["seeds"]))
 @deal.ensure(lambda config, result: isinstance(result, list) and bool(result) and all(isinstance(item, Delayed) for item in result))
 @deal.ensure(lambda config, result: len(result) == len(config["seeds"]) * len(COUNTS))
 @deal.has("network", "read", "import", "random")
 @deal.raises(ValueError, TypeError, OverflowError, NotImplementedError)
-@deal.pre(lambda config: all(type(seed) is int and 0 <= seed < 2 ** 32 for seed in config["seeds"]))
+@deal.pre(lambda config: valid_seed_values(config["seeds"]))
 @deal.pre(lambda config: 1 <= len(config["seeds"]) <= len(SEEDS))
 @deal.ensure(lambda config, result: all(isinstance(row.key, str) and bool(row.key) for row in result))
 @deal.ensure(lambda config, result: len({row.key for row in result}) == len(result))
@@ -142,7 +143,7 @@ def graph_hoeflin(config):
 @deal.ensure(lambda config, reference, result: len(result) == 5 * len(config["seeds"]))
 @deal.raises(ValueError, TypeError, OverflowError, NotImplementedError)
 @deal.has("network", "read", "import", "random")
-@deal.pre(lambda config, reference: all(type(seed) is int and 0 <= seed < 2 ** 32 for seed in config["seeds"]))
+@deal.pre(lambda config, reference: valid_seed_values(config["seeds"]))
 @deal.pre(lambda config, reference: 1 <= len(config["seeds"]) <= len(SEEDS))
 @deal.ensure(lambda config, reference, result: all(isinstance(row.key, str) and bool(row.key) for row in result))
 @deal.ensure(lambda config, reference, result: len({row.key for row in result}) == len(result))
@@ -181,7 +182,7 @@ def graph_towers(config, reference):
 @deal.ensure(lambda config, result: len(result) == 24 * len(config["seeds"]))
 @deal.raises(ValueError, TypeError, OverflowError, NotImplementedError)
 @deal.has("network", "read", "import", "random")
-@deal.pre(lambda config: all(type(seed) is int and 0 <= seed < 2 ** 32 for seed in config["seeds"]))
+@deal.pre(lambda config: valid_seed_values(config["seeds"]))
 @deal.pre(lambda config: 1 <= len(config["seeds"]) <= len(SEEDS))
 @deal.ensure(lambda config, result: all(isinstance(row.key, str) and bool(row.key) for row in result))
 @deal.ensure(lambda config, result: len({row.key for row in result}) == len(result))
@@ -256,7 +257,7 @@ def block_sizes(trials, chunk):
 @deal.pre(lambda config: type(config["trials"]) is int and 2 <= config["trials"] <= 100_000_000)
 @deal.pre(lambda config: type(config["chunk"]) is int and 1 <= config["chunk"] <= 2_000_000)
 @deal.pre(lambda config: bool(config["seeds"]) and len(set(config["seeds"])) == len(config["seeds"]))
-@deal.pre(lambda config: all(type(seed) is int and 0 <= seed < 2**32 for seed in config["seeds"]))
+@deal.pre(lambda config: valid_seed_values(config["seeds"]))
 @deal.pre(lambda config: (config["trials"] + config["chunk"] - 1) // config["chunk"] <= 1024)
 @deal.ensure(lambda config, result: isinstance(result, list) and len(result) == len(config["seeds"]) * len(COUNTS))
 @deal.ensure(lambda config, result: all(isinstance(row, Delayed) for row in result))
@@ -302,7 +303,8 @@ def graph_hoeflin_blocks(config):
 @deal.ensure(lambda config, reference, result: all(row.key for row in result))
 @deal.raises(ValueError, TypeError, OverflowError, KeyError, NotImplementedError)
 @deal.has("network", "import")
-@deal.pre(lambda config, reference: all(type(seed) is int and 0 <= seed < 2**32 for seed in config["seeds"]))
+# The worker receives seed + 1000, not the unshifted base seed.
+@deal.pre(lambda config, reference: valid_seed_values(config["seeds"], offset=1000))
 @deal.ensure(lambda config, reference, result: all(isinstance(row.key, str) for row in result))
 @deal.ensure(lambda config, reference, result: len(result) % 5 == 0)
 def graph_towers_blocks(config, reference):
@@ -323,7 +325,8 @@ def graph_towers_blocks(config, reference):
 @deal.pre(lambda config: type(config["trials"]) is int and 2 <= config["trials"] <= 100_000_000)
 @deal.pre(lambda config: type(config["chunk"]) is int and 1 <= config["chunk"] <= 2_000_000)
 @deal.pre(lambda config: bool(config["seeds"]) and len(set(config["seeds"])) == len(config["seeds"]))
-@deal.pre(lambda config: all(type(seed) is int and 0 <= seed < 2**32 for seed in config["seeds"]))
+# The largest history offset is 2000 + 100 * 3.
+@deal.pre(lambda config: valid_seed_values(config["seeds"], offset=2300))
 @deal.pre(lambda config: (config["trials"] + config["chunk"] - 1) // config["chunk"] <= 1024)
 @deal.ensure(lambda config, result: isinstance(result, list) and len(result) == 24 * len(config["seeds"]))
 @deal.ensure(lambda config, result: all(isinstance(row, Delayed) for row in result))

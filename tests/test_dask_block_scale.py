@@ -24,6 +24,7 @@ import pytest
 from conftest import protected_history_intact, reference_inputs_intact
 from reporting import block_simulations, simulate
 from library.python import moments
+from library.python.numeric import valid_seed_values
 
 
 @deal.pre(lambda: protected_history_intact())
@@ -97,6 +98,30 @@ def test_large_default_graph_has_fewer_tasks_than_recorded_small_graph():
     assert len(graphs[2]) == 24 * 8
     assert tasks < 5_000, tasks
     assert tasks < 31_254  # Former recorded 4x1M/50k Dask Array run.
+
+    # Test seed validity independently of the graph and worker implementation.
+    # Exact upper endpoints are legal; shifting by one more must fail early.
+    assert valid_seed_values([], offset=2300)
+    assert valid_seed_values([0, 2**32 - 1])
+    assert not valid_seed_values([True])
+    assert not valid_seed_values([1.0])
+    assert not valid_seed_values([np.int64(1)])
+    assert not valid_seed_values(["1"])
+    assert not valid_seed_values([-1])
+    assert valid_seed_values([2**32 - 1001], offset=1000)
+    assert not valid_seed_values([2**32 - 1000], offset=1000)
+    assert valid_seed_values([2**32 - 2301], offset=2300)
+    assert not valid_seed_values([2**32 - 2300], offset=2300)
+    # These are lazy graph operations: no samples or production assets change.
+    boundary = {"trials": 2, "chunk": 2, "seeds": [2**32 - 1001]}
+    assert len(simulate.graph_towers_blocks(boundary, ref)) == 5
+    with pytest.raises(deal.PreContractError):
+        simulate.graph_towers_blocks(boundary | {"seeds": [2**32 - 1000]}, ref)
+    boundary = boundary | {"seeds": [2**32 - 2301]}
+    assert len(simulate.graph_sequential_blocks(boundary)) == 24
+    with pytest.raises(deal.PreContractError):
+        simulate.graph_sequential_blocks(boundary | {"seeds": [2**32 - 2300]})
+
     assert config["trials"] * len(config["seeds"]) == 40_000_000
     plan = simulate.execution_plan(config | {"workers": 4, "engine": "blocks",
                                              "scheduler": "processes"}, tasks)
