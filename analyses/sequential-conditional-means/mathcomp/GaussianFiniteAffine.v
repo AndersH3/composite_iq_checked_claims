@@ -114,7 +114,8 @@ Theorem gmc_standard_coordinate_mean_zero :
 Proof.
 (* Explicit ring scope distinguishes the scalar standard deviation
    from the extended-real integral codomain. *)
-have Hs : (1%R : R) != 0%R := oner_neq0.
+have Hs : (1%R : R) != 0%R.
+{ exact: oner_neq0. }
 have H := @gmc_standard_coordinate_signed (fun x : R => x%:E)
   (@gmc_centered_normal_first_moment_integrable R 1%R Hs).
 rewrite (@gmc_centered_normal_mean_zero R 1%R Hs) in H.
