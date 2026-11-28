@@ -3,8 +3,8 @@
     by the defining event-integral characterization on the actual
     observation/latent joint measure. Derive joint integrability
     and zero residual integrals from the checked residual product
-    law and MathComp-Analysis Tonelli/Fubini, not from an independence
-    or conditional expectation axiom.
+    law and the reusable GaussianProductHistory integration lemmas,
+    not from an independence or conditional expectation axiom.
     Researcher/requester: Anders Hellström.
     AI disclosure: AI-assisted proof candidates; validation pending.
 *)
@@ -15,7 +15,7 @@ From mathcomp Require Import numfun measure lebesgue_integral
 From mathcomp.analysis Require Import normal_distribution.
 Require Import GaussianJointDensityMeasure GaussianResidualPushforward
   GaussianPosteriorKernel GaussianFirstMoment GaussianSignedMean
-  GaussianLocationMean GaussianResidualIntegral.
+  GaussianLocationMean GaussianResidualIntegral GaussianProductHistory.
 
 Set Implicit Arguments.
 Unset Strict Implicit.
@@ -47,27 +47,11 @@ Theorem gmc_product_observation_integrable (f : R -> \bar R) :
   QX.-integrable [set: R] f ->
   P.-integrable [set: BorelPair] (fun z => f z.1).
 Proof.
+(* Specialize the independently verified heterogeneous product lemma.
+   Preserve this declaration's public statement for existing clients. *)
 move=> fi.
-have /integrableP [mf Hfin] := fi.
-pose h := fun z : BorelPair => f z.1.
-have mh : measurable_fun [set: BorelPair] h.
-{ exact (@measurableT_comp _ _ _ BorelPair (measurableTypeR R) _
-    f setT (fst : BorelPair -> R) mf measurable_fst). }
-have Hp : QE [set: R] = 1.
-{ exact: probability_setT. }
-have Hinner (x : R) : \int[QE]_y `|h (x,y)| = `|f x|.
-{ transitivity (`|f x| * QE [set: R]).
-  - exact (@integral_cst _ (measurableTypeR R) R QE setT measurableT (`|f x|)).
-  - transitivity (`|f x| * 1).
-    + exact (f_equal (fun z : \bar R => `|f x| * z) Hp).
-    + exact: mule1. }
-have Hwhole : \int[QX]_x \int[QE]_y `|h (x,y)| =
-    \int[QX]_x `|f x|.
-{ apply: eq_integral => x _.
-  exact: Hinner. }
-apply (proj2 (@integrable12ltyP _ _ (measurableTypeR R)
-  (measurableTypeR R) R QX QE h mh)).
-by rewrite Hwhole.
+exact (@gmc_product_fst_integrable _ _ (measurableTypeR R)
+  (measurableTypeR R) R QX QE f fi).
 Qed.
 
 (** The corresponding lift of an integrable residual function follows
@@ -76,27 +60,11 @@ Theorem gmc_product_residual_integrable (f : R -> \bar R) :
   QE.-integrable [set: R] f ->
   P.-integrable [set: BorelPair] (fun z => f z.2).
 Proof.
+(* Specialize the independently verified heterogeneous product lemma.
+   Preserve this declaration's public statement for existing clients. *)
 move=> fi.
-have /integrableP [mf Hfin] := fi.
-pose h := fun z : BorelPair => f z.2.
-have mh : measurable_fun [set: BorelPair] h.
-{ exact (@measurableT_comp _ _ _ BorelPair (measurableTypeR R) _
-    f setT (snd : BorelPair -> R) mf measurable_snd). }
-have Hp : QX [set: R] = 1.
-{ exact: probability_setT. }
-have Hinner (y : R) : \int[QX]_x `|h (x,y)| = `|f y|.
-{ transitivity (`|f y| * QX [set: R]).
-  - exact (@integral_cst _ (measurableTypeR R) R QX setT measurableT (`|f y|)).
-  - transitivity (`|f y| * 1).
-    + exact (f_equal (fun z : \bar R => `|f y| * z) Hp).
-    + exact: mule1. }
-have Hwhole : \int[QE]_y \int[QX]_x `|h (x,y)| =
-    \int[QE]_y `|f y|.
-{ apply: eq_integral => y _.
-  exact: Hinner. }
-apply (proj2 (@integrable21ltyP _ _ (measurableTypeR R)
-  (measurableTypeR R) R QX QE h mh)).
-by rewrite Hwhole.
+exact (@gmc_product_snd_integrable _ _ (measurableTypeR R)
+  (measurableTypeR R) R QX QE f fi).
 Qed.
 
 (** The affine posterior center is integrable under the observation
@@ -232,25 +200,18 @@ have ai : P.-integrable A f.
 { exact: (integrableS measurableT mA (subsetT _) pi). }
 have hi : P.-integrable [set: BorelPair] h.
 { exact ((proj1 (integrable_mkcond f mA)) ai). }
-have Hinner (x : R) : \int[QE]_y h (x,y) = 0.
-{ case: (boolP (x \in U)) => Hx.
-  - transitivity (\int[QE]_y y%:E).
-    + apply: eq_integral => y _.
-      by rewrite /h /f /A patchE in_setX in_setT andbT Hx.
-    + exact (@gmc_centered_normal_mean_zero R (post_stddev s0 s) hn).
-  - transitivity (\int[QE]_y (0 : \bar R)).
-    + apply: eq_integral => y _.
-      by rewrite /h /f /A patchE in_setX in_setT andbT (negbTE Hx).
-    + exact: integral0. }
+(* The generic zero-residual event theorem already proves the
+   product-space Fubini argument. Only transport to J is specific
+   to the constructed scalar Gaussian law. *)
+have ez : \int[QE]_y y%:E = 0.
+{ exact (@gmc_centered_normal_mean_zero R (post_stddev s0 s) hn). }
+have Hzero : \int[P]_(z in A) f z = 0.
+{ exact (@gmc_product_residual_zero_event _ _ (measurableTypeR R)
+    (measurableTypeR R) R QX QE (fun y : R => y%:E) U ri ez mU). }
 have Hprod : \int[P]_z h z = 0.
-{ transitivity (\int[QX]_x \int[QE]_y h (x,y)).
-  - symmetry.
-    exact (@integral12_prod_meas1 _ _ (measurableTypeR R)
-      (measurableTypeR R) R QX QE h hi).
-  - transitivity (\int[QX]_x (0 : \bar R)).
-    + apply: eq_integral => x _.
-      exact: Hinner.
-    + exact: integral0. }
+{ transitivity (\int[P]_(z in A) f z).
+  - symmetry; exact (integral_mkcond A f).
+  - exact Hzero. }
 have Htr := @gmc_residual_signed_integral R m0 s0 s Hs0 Hs h hi.
 transitivity (\int[J]_z h (phi z)).
 - transitivity (\int[J]_z (g \_ A) z).
