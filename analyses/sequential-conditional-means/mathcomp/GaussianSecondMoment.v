@@ -35,7 +35,7 @@ Local Abbreviation mu := (@lebesgue_measure R).
 Lemma gmc_weighted_pdf_nonzero_witness (s : R) :
   s != 0 ->
   exists w c : R, w != 0 /\ 0 <= c /\
-    forall x : R, `x| * normal_pdf 0 s x <= c * normal_pdf 0 w x.
+    forall x : R, `|x| * normal_pdf 0 s x <= c * normal_pdf 0 w x.
 Proof.
 move=> Hs.
 have [w [c [c0 Hbound]]] := @gmc_centered_weighted_pdf_bound R s Hs.
@@ -78,20 +78,25 @@ have gi : mu.-integrable [set: R] g.
 { exact (@integrableZl _ (measurableTypeR R) R mu setT
     measurableT c (fun x : R => ((x * normal_pdf 0%R w x)%R)%:E)
     (@gmc_centered_weighted_pdf_integrable R w Hw)). }
-have fg x : [set: R] x -> `f x| <= `g x|.
+have fg x : [set: R] x -> `|f x| <= `|g x|.
 { move=> _; rewrite /f /g -EFinM !abse_EFin lee_fin.
   rewrite !normrM (ger0_norm c0)
     (ger0_norm (@normal_pdf_ge0 R 0%R s x))
     (ger0_norm (@normal_pdf_ge0 R 0%R w x))
     (ger0_norm (sqr_ge0 x)).
   have H := Hbound x.
-  have Hm : (`x| * (`x| * normal_pdf 0 s x) <=
-      `x| * (c * normal_pdf 0 w x))%R.
+  have Hm : (`|x| * (`|x| * normal_pdf 0 s x) <=
+      `|x| * (c * normal_pdf 0 w x))%R.
   { exact: ler_wpM2l (normr_ge0 x) H. }
-  have Hsq : (`x| * `x| = x ^+ 2)%R.
+  have Hsq : (`|x| * `|x| = x ^+ 2)%R.
   { by rewrite -expr2 -normrX ger0_norm ?sqr_ge0. }
-  rewrite mulrA Hsq (mulrCA `x| c _) in Hm.
-  exact Hm. }
+  have Hl : (`|x| * (`|x| * normal_pdf 0 s x) =
+      x ^+ 2 * normal_pdf 0 s x)%R.
+  { by rewrite mulrA Hsq. }
+  have Hr : (`|x| * (c * normal_pdf 0 w x) =
+      c * (`|x| * normal_pdf 0 w x))%R.
+  { exact: mulrCA. }
+  by rewrite Hl Hr in Hm. }
 exact (@le_integrable _ (measurableTypeR R) R mu setT
   measurableT f g mf fg gi).
 Qed.
@@ -115,15 +120,15 @@ have f0 (x : R) : 0 <= f x.
 { by rewrite /f lee_fin sqr_ge0. }
 have ma : measurable_fun [set: \bar R] (@abse R).
 { exact: abse_measurable. }
-have maf : measurable_fun [set: R] (fun x : R => `f x|).
+have maf : measurable_fun [set: R] (fun x : R => `|f x|).
 { exact: measurableT_comp ma mf. }
 have /integrableP [_ Hfin] := @gmc_centered_square_pdf_integrable s Hs.
 apply/integrableP; split; first exact: mf.
 rewrite (@gmc_normal_nonnegative_integral R 0%R s
-  (fun x : R => `f x|) (fun x => abse_ge0 (f x)) maf).
+  (fun x : R => `|f x|) (fun x => abse_ge0 (f x)) maf).
 have Heq :
-    \int[mu]_x (`f x| * (normal_pdf 0%R s x)%:E) =
-    \int[mu]_x `((x ^+ 2 * normal_pdf 0%R s x)%R)%:E|.
+    \int[mu]_x (`|f x| * (normal_pdf 0%R s x)%:E) =
+    \int[mu]_x `|((x ^+ 2 * normal_pdf 0%R s x)%R)%:E|.
 { apply: eq_integral => x _.
   rewrite /f EFinM abseM.
   have Hp : 0 <= (normal_pdf 0%R s x)%:E.
