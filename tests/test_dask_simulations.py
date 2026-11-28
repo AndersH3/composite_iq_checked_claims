@@ -292,11 +292,12 @@ def test_nonfinite_numbers_cannot_be_formatted_as_report_evidence(value):
         assets.format_number(value)
 
 
-@deal.pre(lambda tmp_path: protected_history_intact())
-@deal.pre(lambda tmp_path: reference_inputs_intact())
-@deal.pre(lambda tmp_path: isinstance(tmp_path, Path) and tmp_path.is_dir())
-@deal.ensure(lambda tmp_path, result: protected_history_intact())
-@deal.ensure(lambda tmp_path, result: reference_inputs_intact())
+@pytest.mark.parametrize("invalid_key", [1, None, ("column",)])
+@deal.pre(lambda tmp_path, invalid_key: protected_history_intact())
+@deal.pre(lambda tmp_path, invalid_key: reference_inputs_intact())
+@deal.pre(lambda tmp_path, invalid_key: isinstance(tmp_path, Path) and tmp_path.is_dir())
+@deal.ensure(lambda tmp_path, invalid_key, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, invalid_key, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("network", "read", "write")
 # Independently guard source ownership, input integrity and required test infrastructure.
@@ -308,8 +309,8 @@ def test_nonfinite_numbers_cannot_be_formatted_as_report_evidence(value):
 @deal.pre(lambda *args, **kwargs: callable(statistics.event_result))
 @deal.pre(lambda *args, **kwargs: callable(statistics.pool_rows))
 @deal.pre(lambda *args, **kwargs: callable(assets.write_assets))
-def test_csv_writer_preserves_numeric_rows_and_rejects_heterogeneous_schema(tmp_path):
-    """CSV transport retains values and refuses a missing-cell schema."""
+def test_csv_writer_preserves_numeric_rows_and_rejects_heterogeneous_schema(tmp_path, invalid_key):
+    """Preserve scalar CSV records and reject invalid keys or differing schemas."""
     destination = tmp_path.joinpath("numeric.csv")
     rows = [{"count": 0, "rate": 0.0}, {"count": 3, "rate": 0.125}]
     untouched = copy.deepcopy(rows)
@@ -331,8 +332,11 @@ def test_csv_writer_preserves_numeric_rows_and_rejects_heterogeneous_schema(tmp_
     assert source == original
     assert assets.public_scalar_rows([]) == []
     assert assets.public_scalar_rows([{"_hidden": 1}]) == [{}]
+    # Parameterized negative cases exercise the runtime precondition, just
+    # as the numeric domain tests do, without a statically invalid literal
+    # call in the positive Deal lint inventory.
     with pytest.raises(deal.PreContractError):
-        assets.public_scalar_rows([{1: "not a CSV column name"}])
+        assets.public_scalar_rows([{invalid_key: "not a CSV column name"}])
     assets.write_csv(destination, rows)
     with destination.open(newline="", encoding="utf-8") as stream:
         observed = list(csv.DictReader(stream))
