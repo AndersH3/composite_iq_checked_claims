@@ -330,6 +330,11 @@ Proof.
   intros; unfold rate_var; ring.
 Qed.
 
+(** Normalize the two-rate variance using the existing sampling variance
+    definition and Stdlib Ring. *)
+Local Ltac rate_variance_normalize :=
+  intros; unfold rate_var,sampling_bernoulli_variance; ring.
+
 (** [rate_var_complement_left] (theorem).
  Mathematical meaning: Complementing only the first event does not change Bernoulli variance.
  Exact proposition: The displayed universal claim is about exact real
@@ -347,7 +352,7 @@ Qed.
 *)
 Theorem rate_var_complement_left : forall p q, rate_var (1-p) q=rate_var p q.
 Proof.
-  intros; unfold rate_var,sampling_bernoulli_variance; ring.
+  rate_variance_normalize.
 Qed.
 
 (** [rate_var_complement_right] (theorem).
@@ -367,7 +372,7 @@ Qed.
 *)
 Theorem rate_var_complement_right : forall p q, rate_var p (1-q)=rate_var p q.
 Proof.
-  intros; unfold rate_var,sampling_bernoulli_variance; ring.
+  rate_variance_normalize.
 Qed.
 
 (** [rate_var_complement_both] (theorem).
@@ -387,7 +392,7 @@ Qed.
 *)
 Theorem rate_var_complement_both : forall p q, rate_var (1-p) (1-q)=rate_var p q.
 Proof.
-  intros; unfold rate_var,sampling_bernoulli_variance; ring.
+  rate_variance_normalize.
 Qed.
 
 (** [rate_var_zero_endpoints] (theorem).
@@ -527,7 +532,7 @@ Qed.
 *)
 Theorem rate_var_shift_first : forall p q r, rate_var r q-rate_var p q=(r-p)*(1-r-p).
 Proof.
-  intros; unfold rate_var,sampling_bernoulli_variance; ring.
+  rate_variance_normalize.
 Qed.
 
 (** [rate_var_shift_second] (theorem).
@@ -547,7 +552,7 @@ Qed.
 *)
 Theorem rate_var_shift_second : forall p q r, rate_var p r-rate_var p q=(r-q)*(1-r-q).
 Proof.
-  intros; unfold rate_var,sampling_bernoulli_variance; ring.
+  rate_variance_normalize.
 Qed.
 
 (** [rate_var_increasing_lower_first] (theorem).
@@ -897,6 +902,11 @@ Proof.
   intros; unfold rate_count_variance; ring.
 Qed.
 
+(** Normalize the two-rate count variance through the existing Bernoulli
+    variance definition and Stdlib Ring. *)
+Local Ltac rate_count_normalize :=
+  intros; unfold rate_count_variance,sampling_bernoulli_variance; ring.
+
 (** [rate_count_variance_complement] (theorem).
  Mathematical meaning: Complementing successes into failures leaves Bernoulli count variance expressions unchanged.
  Exact proposition: The displayed universal claim is about exact real
@@ -914,7 +924,7 @@ Qed.
 *)
 Theorem rate_count_variance_complement : forall n m p q, rate_count_variance n m (1-p) (1-q)=rate_count_variance n m p q.
 Proof.
-  intros; unfold rate_count_variance,sampling_bernoulli_variance; ring.
+  rate_count_normalize.
 Qed.
 
 (** [rate_count_variance_add_size] (theorem).
@@ -1008,7 +1018,7 @@ Qed.
 *)
 Theorem rate_count_variance_zero_deterministic : forall n m, rate_count_variance n m 0 1=0.
 Proof.
-  intros; unfold rate_count_variance,sampling_bernoulli_variance; ring.
+  rate_count_normalize.
 Qed.
 
 (** [rate_count_variance_equal_rate] (theorem).
@@ -1066,7 +1076,7 @@ Qed.
 *)
 Theorem rate_var_one_certain : forall p, rate_var p 1=sampling_bernoulli_variance p.
 Proof.
-  intros; unfold rate_var,sampling_bernoulli_variance; ring.
+  rate_variance_normalize.
 Qed.
 
 (** [rate_var_one_impossible] (theorem).
@@ -1085,7 +1095,7 @@ Qed.
 *)
 Theorem rate_var_one_impossible : forall p, rate_var p 0=sampling_bernoulli_variance p.
 Proof.
-  intros; unfold rate_var,sampling_bernoulli_variance; ring.
+  rate_variance_normalize.
 Qed.
 
 (** [rate_var_first_balanced] (theorem).
@@ -1322,7 +1332,7 @@ Qed.
 *)
 Theorem rate_count_variance_zero_all_impossible : forall n m, rate_count_variance n m 0 0=0.
 Proof.
-  intros; unfold rate_count_variance,sampling_bernoulli_variance; ring.
+  rate_count_normalize.
 Qed.
 
 (** [rate_count_variance_zero_all_certain] (theorem).
@@ -1341,7 +1351,7 @@ Qed.
 *)
 Theorem rate_count_variance_zero_all_certain : forall n m, rate_count_variance n m 1 1=0.
 Proof.
-  intros; unfold rate_count_variance,sampling_bernoulli_variance; ring.
+  rate_count_normalize.
 Qed.
 
 (** [rate_count_variance_balanced] (theorem).
@@ -1398,7 +1408,7 @@ Qed.
 *)
 Theorem rate_count_variance_first_rate_difference : forall n m p q r, rate_count_variance n m r q-rate_count_variance n m p q=n*(r-p)*(1-r-p).
 Proof.
-  intros; unfold rate_count_variance,sampling_bernoulli_variance; ring.
+  rate_count_normalize.
 Qed.
 
 (** [rate_count_variance_second_rate_difference] (theorem).
@@ -1417,7 +1427,7 @@ Qed.
 *)
 Theorem rate_count_variance_second_rate_difference : forall n m p q r, rate_count_variance n m p r-rate_count_variance n m p q=m*(r-q)*(1-r-q).
 Proof.
-  intros; unfold rate_count_variance,sampling_bernoulli_variance; ring.
+  rate_count_normalize.
 Qed.
 
 (** [rate_count_variance_add_second_size] (theorem).
@@ -1455,7 +1465,7 @@ Qed.
 *)
 Theorem rate_count_variance_complement_first : forall n m p q, rate_count_variance n m (1-p) q=rate_count_variance n m p q.
 Proof.
-  intros; unfold rate_count_variance,sampling_bernoulli_variance; ring.
+  rate_count_normalize.
 Qed.
 
 (** [rate_count_variance_complement_second] (theorem).
@@ -1474,7 +1484,7 @@ Qed.
 *)
 Theorem rate_count_variance_complement_second : forall n m p q, rate_count_variance n m p (1-q)=rate_count_variance n m p q.
 Proof.
-  intros; unfold rate_count_variance,sampling_bernoulli_variance; ring.
+  rate_count_normalize.
 Qed.
 
 (** [rate_count_variance_below_count] (theorem).
