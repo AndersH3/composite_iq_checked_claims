@@ -62,7 +62,8 @@ jobs:
             opam exec -- rocq compile GaussianProductHistory.v
             opam exec -- rocq compile GaussianScalarConditionalMean.v
             opam exec -- rocq compile GaussianObservationSigma.v
-            opam exec -- rocq check GaussianObservationSigma GaussianProductHistory
+            opam exec -- rocq compile GaussianHistoryJointLaw.v
+            opam exec -- rocq check GaussianObservationSigma GaussianHistoryJointLaw
             # Keep transitive assumption audits in separate processes.
             opam exec -- rocq compile AuditGaussianPosteriorMeasure.v
             opam exec -- rocq compile AuditGaussianResidualMeasure.v
@@ -77,4 +78,5 @@ jobs:
             opam exec -- rocq compile AuditGaussianScalarConditionalMean.v
             opam exec -- rocq compile AuditGaussianObservationSigma.v
             opam exec -- rocq compile AuditGaussianProductHistory.v
+            opam exec -- rocq compile AuditGaussianHistoryJointLaw.v
           '
