@@ -268,7 +268,7 @@ def _valid_admissions(rows) -> bool:
     """
     if not _valid_fields_rows(ADMISSION_FIELDS, rows) or len(rows) != len(CASES):
         return False
-    for row, (label, p_a, p_b) in zip(rows, CASES):
+    for row, (label, p_a, p_b) in zip(rows, CASES, strict=True):
         if row["case"] != label or row["p_a"] != p_a or row["p_b"] != p_b:
             return False
         for field in ("joint", "union", "conditional_b_given_a", "conditional_a_given_b"):
@@ -345,7 +345,7 @@ def _valid_grid(rows) -> bool:
            [label for label, _, _ in CASES])
 @deal.post(lambda result: all(row["rho"] == RHO for row in result))
 @deal.post(lambda result: all(row["p_a"] == p_a and row["p_b"] == p_b
-                              for row, (_, p_a, p_b) in zip(result, CASES)))
+                              for row, (_, p_a, p_b) in zip(result, CASES, strict=True)))
 @deal.post(lambda result: all(row["union"] ==
                               row["p_a"] + row["p_b"] - row["joint"]
                               for row in result))
@@ -375,7 +375,7 @@ def admission_rows() -> list[dict]:
         rows.append(dict(zip(ADMISSION_FIELDS, (
             label, RHO, a, b, p_a, p_b, j, union,
             conditional_probability(j, p_a), conditional_probability(j, p_b), phi,
-        ))))
+        ), strict=True)))
     return rows
 
 
@@ -440,7 +440,7 @@ def basic_grid() -> list[dict]:
             conditional_probability(grid_joint, grid_marginal), rounded_p,
             conditional_probability(grid_joint, rounded_p),
             published, grid_joint-published,
-        ))))
+        ), strict=True)))
     return rows
 
 
@@ -514,7 +514,7 @@ def verify_csv(path: Path, fields: tuple[str, ...], expected: list[dict]) -> Non
         actual = list(reader)
     if len(actual) != len(expected):
         raise ValueError(f"Unexpected row count in {path.name}")
-    for stored, calculated in zip(actual, expected):
+    for stored, calculated in zip(actual, expected, strict=True):
         for field in fields:
             value = calculated[field]
             if isinstance(value, str):
@@ -556,7 +556,7 @@ def verify_known_results(admissions: list[dict], grid: list[dict]) -> None:
         0.006276274020528095, 0.00015958919471554256,
         0.000002312497921350349, 0.0006585888039150674,
     )
-    for row, expected in zip(admissions, expected_joint):
+    for row, expected in zip(admissions, expected_joint, strict=True):
         close(row["joint"], expected, row["case"])
     close(admissions[0]["conditional_b_given_a"], 0.31381370102640477, "equal 2% conditional")
     close(admissions[3]["conditional_a_given_b"], 0.6585888039150675, "mixed high-group conditional")

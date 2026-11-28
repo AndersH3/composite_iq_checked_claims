@@ -133,7 +133,7 @@ def _valid_rows(rows) -> bool:
     """
     if not isinstance(rows, (list, tuple)) or len(rows) != len(COUNTS) + 1:
         return False
-    for row, label in zip(rows, [str(n) for n in COUNTS] + ["infinity"]):
+    for row, label in zip(rows, [str(n) for n in COUNTS] + ["infinity"], strict=True):
         if not isinstance(row, (list, tuple)) or len(row) != 3 or row[0] != label:
             return False
         if not _finite(row[1]) or not _finite(row[2]) or row[1] < 0:
@@ -292,7 +292,7 @@ def verify_csv(rows: list[tuple[str, float, float]]) -> None:
         stored = list(reader)
     if len(stored) != len(rows):
         raise ValueError("CSV row count differs from the expected table")
-    for record, (n, z, score) in zip(stored, rows):
+    for record, (n, z, score) in zip(stored, rows, strict=True):
         if record["tests"] != n:
             raise ValueError(f"Unexpected test count: {record['tests']!r}")
         try:
@@ -339,7 +339,7 @@ def verify_source_values(rows: list[tuple[str, float, float]]) -> None:
     )
     if len(table_rows) != len(rows):
         raise ValueError("XeLaTeX table row count differs from the expected table")
-    for (label, displayed_z, displayed_score), (n, z, score) in zip(table_rows, rows):
+    for (label, displayed_z, displayed_score), (n, z, score) in zip(table_rows, rows, strict=True):
         expected_label = r"Limit as \(n\) increases" if n == "infinity" else f"{int(n):,}"
         if label != expected_label or displayed_z != f"{z:.4f}" or displayed_score != f"{score:.2f}":
             raise ValueError(f"XeLaTeX table row for n={n} does not match the calculation")

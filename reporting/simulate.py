@@ -469,7 +469,7 @@ def build_report(result):
     stem = {PROJECTS[0]: "hoeflin_simulations", PROJECTS[1]: "towers_simulations", PROJECTS[2]: "sequential_simulations"}[project]
     directory = ROOT.joinpath("analyses", project)
     log_directory = directory.joinpath("simulation-data")
-    with log_directory.joinpath("build.log").open("w") as stream:
+    with log_directory.joinpath("build.log").open("w", encoding="utf-8") as stream:
         subprocess.run(["latexmk", "-xelatex", "-outdir=output/pdf", "-interaction=nonstopmode", "-halt-on-error", stem + ".tex"], cwd=directory, env={**os.environ, "BIBINPUTS": str(ROOT.joinpath("reporting")) + os.pathsep + str(directory) + os.pathsep}, stdout=stream, stderr=subprocess.STDOUT, check=True, timeout=180)
     pdf = directory.joinpath("output/pdf", stem + ".pdf")
     info = subprocess.run(["pdfinfo", str(pdf)], capture_output=True, text=True, check=True, timeout=30).stdout
@@ -601,6 +601,9 @@ def main(argv=None):
         return 0
     terminal = dask.delayed(finalize_run)(terminals, config, task_count)
     started = time.monotonic()
+    # A scheduler context manager must not suppress a failed computation
+    # and allow publication without a completed manifest.
+    record = None
     try:
         if args.scheduler == "distributed":
             # Optional worker memory spilling and live observability. No nested
@@ -624,6 +627,8 @@ def main(argv=None):
     except RemoteException as error:
         # Dynamic remote exception classes need a stable typed failure boundary.
         raise RuntimeError("Dask worker task failed; inspect the chained error and build logs") from error
+    if not isinstance(record, dict):
+        raise RuntimeError("Dask did not return a completed report manifest")
     elapsed = time.monotonic() - started
     print(json.dumps({"execution_seconds": elapsed,
                       "performance_report": args.performance_report,
