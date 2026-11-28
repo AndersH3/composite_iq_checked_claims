@@ -103,7 +103,12 @@ have fg x : [set: R] x -> `|f x| <= `|g x|.
   have H := Hbound x.
   have Hm : (`|x| * (`|x| * normal_pdf 0 s x) <=
       `|x| * (c * normal_pdf 0 w x))%R.
-  { exact: ler_wpM2l (normr_ge0 x) H. }
+  { (* Follow the verified first-moment proof pattern: infer the
+       multiplier and compared terms from the goal, then discharge
+       nonnegativity and the original density bound separately. *)
+    apply: ler_wpM2l.
+    - exact: normr_ge0.
+    - exact H. }
   have Hsq : (`|x| * `|x| = x ^+ 2)%R.
   { by rewrite -expr2 -normrX ger0_norm ?sqr_ge0. }
   have Hl : (`|x| * (`|x| * normal_pdf 0 s x) =
