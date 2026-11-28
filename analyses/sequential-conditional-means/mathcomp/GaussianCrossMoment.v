@@ -77,7 +77,9 @@ have Hinner (x : R) : \int[G]_y `|h (x,y)| = a x * C.
     by rewrite abseM (abse_EFin x).
   - transitivity ((`|x|%R)%:E * C).
     + rewrite /C.
-      exact: integralZl ai.
+      (* Explicitly supply the measurable integration domain and
+         scalar, matching the pinned integralZl section signature. *)
+      exact (@integralZl _ B R G setT measurableT a ai (`|x|%R)).
     + by rewrite /a abse_EFin. }
 have Hwhole : \int[G]_x \int[G]_y `|h (x,y)| =
     \int[G]_x (a x * (fine C)%:E).
@@ -85,11 +87,12 @@ have Hwhole : \int[G]_x \int[G]_y `|h (x,y)| =
   by rewrite Hinner CK. }
 have si : G.-integrable [set: R]
     (fun x => a x * (fine C)%:E).
-{ exact: integrableZr ai. }
+{ exact (@integrableZr _ B R G setT measurableT (fine C) a ai). }
 apply (proj2 (@integrable12ltyP _ _ B B R G G h
   gmc_standard_pair_product_measurable)).
 rewrite Hwhole.
-exact: integrable_lty si.
+exact (@integrable_lty _ B R G setT measurableT
+  (fun x => a x * (fine C)%:E) si).
 Qed.
 
 (** The independent scalar product has zero signed cross moment:
@@ -111,7 +114,9 @@ transitivity (\int[G]_x \int[G]_y h (x,y)).
 - transitivity (\int[G]_x (0 : \bar R)).
   + apply: eq_integral => x _.
     transitivity (x%:E * (\int[G]_y f y)).
-    * exact: integralZl fi.
+    * (* Use the same explicit domain and scalar instantiation for
+         the signed moment, with no sign restriction on x. *)
+      exact (@integralZl _ B R G setT measurableT f fi x).
     * by rewrite Hz mule0.
   + exact: integral0.
 Qed.
