@@ -7,62 +7,19 @@ set -eu
 ROOT=$(CDPATH="" cd -- "$(dirname -- "$0")/.." && pwd)
 WORK=$(mktemp -d)
 trap 'rm -rf "$WORK"' EXIT HUP INT TERM
-for f in "$ROOT"/library/rocq/*.v \
-  "$ROOT"/analyses/hoeflin-ferguson/rocq/*.v \
-  "$ROOT"/analyses/towers-multiple-test-admissions/rocq/*.v \
-  "$ROOT"/analyses/sequential-conditional-means/rocq/*.v \
-  "$ROOT"/analyses/iq-test-differences/rocq/*.v
-do
+# The same ordered source inventory is consumed by the documentation audit.
+manifest="$ROOT/rocq/canonical-modules.txt"
+test -s "$manifest"
+while IFS= read -r relative; do
+  f="$ROOT/$relative"
   [ -f "$f" ] || { echo "Missing proof source: $f" >&2; exit 1; }
   name=$(basename "$f")
   [ ! -e "$WORK/$name" ] || { echo "Duplicate Rocq module: $name" >&2; exit 1; }
   cp "$f" "$WORK/$name"
-done
+done < "$manifest"
 cd "$WORK"
 rocq --version
-rocq compile FiniteSum.v
-rocq compile Hoeflin.v
-rocq compile Admissions.v
-rocq compile FiniteUnion.v
-rocq compile FiniteMoments.v
-rocq compile FiniteBridge.v
-rocq compile FourCellBridge.v
-rocq compile ThreeTestAdmissions.v
-rocq compile ThreeTestPairBridge.v
-rocq compile ThreeTestConditionalStrata.v
-rocq compile TwoStratumAssociation.v
-rocq compile TwoStratumReversal.v
-rocq compile ThreeTestSelectionDecomposition.v
-rocq compile ThreeTestReversalCriteria.v
-rocq compile SequentialReport.v
-rocq compile SequentialSensitivity.v
-rocq compile ReportRounding.v
-rocq compile ReportCounterexample.v
-rocq compile EquicorrelationSpectral.v
-rocq compile EquicorrelationVectors.v
-rocq compile EquicorrelationInverseVectors.v
-rocq compile UnequalHistoryLinearPrediction.v
-rocq compile GaussianConditionalKernel.v
-rocq compile GaussianCovarianceDomain.v
-rocq compile GaussianInnovationBounds.v
-rocq compile GaussianBatchBalance.v
-rocq compile GaussianFiniteHistoryPosterior.v
-rocq compile FiniteTwoCellProjection.v
-rocq compile FiniteNestedProjection.v
-rocq compile FiniteConditionalCovariance.v
-rocq compile FiniteConditionalResidual.v
-rocq compile TwoObservationSchur.v
-rocq compile TrivariateSchur.v
-rocq compile WilsonScoreAlgebra.v
-rocq compile SamplingPrecision.v
-rocq compile ConditionalRatioStability.v
-rocq compile PooledMomentsAlgebra.v
-rocq compile ListPoolingAlgebra.v
-rocq compile FourContrastCovariance.v
-rocq compile SampleContrastCauchy.v
-rocq compile ThreeGroupPooling.v
-rocq compile TwoRatePrecision.v
-rocq compile StratifiedBernoulli.v
-rocq compile ThreeTestSchur.v
-rocq compile IQDifferenceAlgebra.v
+while IFS= read -r relative; do
+  rocq compile "$(basename "$relative")"
+done < "$manifest"
 printf '%s\n' 'Rocq kernel compilation passed for all 45 modules.'
