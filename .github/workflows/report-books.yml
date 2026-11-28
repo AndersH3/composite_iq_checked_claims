@@ -41,7 +41,7 @@ jobs:
         id: matrix
         shell: bash
         run: |
-          matrix=$(jq -Rsc 'split("\n") | map(select(length > 0) | split(" ") | {project: .[0], stem: .[1]}) | {include: .}' library/latex/books.txt)
+          matrix=$(jq -Rsc 'split("\n") | map(select(length > 0) | [scan("\\S+")] | {project: .[0], stem: .[1]}) | {include: .}' library/latex/books.txt)
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
 
   compile:

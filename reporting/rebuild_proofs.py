@@ -244,7 +244,9 @@ def main(argv=None):
     parser.add_argument("--simulations-only", action="store_true",
                         help="Build the four simulation books; leave analytical PDFs untouched")
     args = parser.parse_args(argv)
-    documents = tuple(document for document in DOCUMENTS if not args.simulations_only or document[1].endswith("simulations"))
+    # Select simulation books by their canonical declared style, not filenames.
+    documents = tuple((project, stem) for project, stem, style in BOOK_ROWS
+                      if not args.simulations_only or style == "simulation_style")
     retained = dask.delayed(retained_data)()
     builds = [dask.delayed(build_document)(document, retained) for document in documents]
     graph_tasks = len(dask.highlevelgraph.HighLevelGraph.merge(*(item.dask for item in builds))) + 1
